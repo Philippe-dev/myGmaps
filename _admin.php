@@ -193,20 +193,20 @@ class myGmapsPostBehaviors
 		}
 
 		return
-		'<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key='.$s->myGmaps_API_key.'&amp;libraries=places"></script>'."\n".
-		'<script type="text/javascript">'."\n".
+		'<script src="https://maps.googleapis.com/maps/api/js?key='.$s->myGmaps_API_key.'&amp;libraries=places"></script>'."\n".
+		'<script>'."\n".
 		'$(document).ready(function() {'."\n".
 			'$(\'#gmap-area label\').toggleWithLegend($(\'#post-gmap\'), {'."\n".
 				'legend_click: true,'."\n".
 				'cookie: \'dcx_gmap_detail\''."\n".
 			'})'."\n".
-			'$(\'a.map-remove\').click(function() {'."\n".
+			'$(\'a.map-remove\').on(\'click\', function() {'."\n".
 			'msg = \''.__('Are you sure you want to remove this map?').'\';'."\n".
 			'if (!window.confirm(msg)) {'."\n".
 				'return false;'."\n".
 			'}'."\n".
 			'});'."\n".
-			'$(\'a.element-remove\').click(function() {'."\n".
+			'$(\'a.element-remove\').on(\'click\', function() {'."\n".
 			'msg = \''.__('Are you sure you want to remove this element?').'\';'."\n".
 			'if (!window.confirm(msg)) {'."\n".
 				'return false;'."\n".
@@ -297,8 +297,8 @@ class myGmapsPostBehaviors
 		}
 
 		$map_js =
-		'<script type="text/javascript" src="'.DC_ADMIN_URL.'?pf=myGmaps/js/add.map.js"></script>'.
-		'<script type="text/javascript">'."\n".
+		'<script src="'.DC_ADMIN_URL.'?pf=myGmaps/js/add.map.js"></script>'.
+		'<script>'."\n".
 		'//<![CDATA['."\n".
 		'var neutral_blue_styles = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#193341"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#2c5a71"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#29768a"},{"lightness":-37}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#3e606f"},{"weight":2},{"gamma":0.84}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"weight":0.6},{"color":"#1a3541"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#2c5a71"}]}];'."\n".
 		'var neutral_blue = new google.maps.StyledMapType(neutral_blue_styles,{name: "Neutral Blue"});'."\n";
@@ -399,7 +399,7 @@ class myGmapsPostBehaviors
 
 			# Display map elements on post map
 			$item .=
-			'<script type="text/javascript">'."\n".
+			'<script>'."\n".
 			'//<![CDATA['."\n".
 			'$(document).ready(function() {'."\n";
 

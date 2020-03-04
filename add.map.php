@@ -319,7 +319,7 @@ if (isset($_POST['updlist'])) {
 		$starting_script  = dcPage::jsLoad(DC_ADMIN_URL.'js/_posts_list.js');
 		$starting_script .= dcPage::jsLoad(DC_ADMIN_URL.'?pf=myGmaps/js/filter-controls.js');
 		$starting_script .=
-		'<script type="text/javascript">'."\n".
+		'<script>'."\n".
 		"//<![CDATA["."\n".
 		dcPage::jsVar('dotclear.msg.show_filters', $show_filters ? 'true':'false')."\n".
 		dcPage::jsVar('dotclear.msg.filter_posts_list',$form_filter_title)."\n".

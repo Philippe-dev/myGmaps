@@ -313,7 +313,7 @@ if (!empty($_POST['saveconfig'])) {
 <html>
 	<head>
 		<title><?php echo $page_title; ?></title>
-		<script type="text/javascript" src="<?php echo 'https://maps.googleapis.com/maps/api/js?key='.$s->myGmaps_API_key.'&amp;libraries=places'; ?>"></script>
+		<script src="<?php echo 'https://maps.googleapis.com/maps/api/js?key='.$s->myGmaps_API_key.'&amp;libraries=places'; ?>"></script>
 
 		<?php
 		$form_filter_title = __('Show filters and display options');
@@ -322,7 +322,7 @@ if (!empty($_POST['saveconfig'])) {
 		$starting_script .= dcPage::jsLoad(DC_ADMIN_URL.'?pf=myGmaps/js/config.map.js');
 		$starting_script .= dcPage::jsPageTabs($default_tab);
 		$starting_script .=
-		'<script type="text/javascript">'."\n".
+		'<script>'."\n".
 		"//<![CDATA["."\n".
 		dcPage::jsVar('dotclear.msg.show_filters', $show_filters ? 'true':'false')."\n".
 		dcPage::jsVar('dotclear.msg.filter_posts_list',$form_filter_title)."\n".
@@ -336,7 +336,7 @@ if (!empty($_POST['saveconfig'])) {
 		// Add default and user map styles
 
 		echo
-	'<script type="text/javascript">'."\n".
+	'<script>'."\n".
 		'//<![CDATA['."\n";
 
 	echo

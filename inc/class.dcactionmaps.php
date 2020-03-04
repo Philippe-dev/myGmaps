@@ -312,7 +312,7 @@ class dcDefaultMapsActions
 						$ap->getCallerTitle() => $ap->getRedirection(true),
 						__('Change author for this selection') => '')),
 					dcPage::jsLoad('js/jquery/jquery.autocomplete.js').
-					'<script type="text/javascript">'."\n".
+					'<script>'."\n".
 					"//<![CDATA[\n".
 					'usersList = ['.$usersList.']'."\n".
 					"\n//]]>\n".

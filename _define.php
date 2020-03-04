@@ -16,11 +16,11 @@ $this->registerModule(
 	/* Name */				"Google Maps",
 	/* Description*/		"Add custom maps to your blog",
 	/* Author */			"Philippe aka amalgame and contributors",
-	/* Version */			'5.7.2',
+	/* Version */			'5.7.3',
 	/* Permissions */		array(
 								'permissions' =>	'usage,contentadmin',
 								'type' => 'plugin',
-								'dc_min' => '2.10',
+								'dc_min' => '2.16',
 								'settings'	=>	array(
 								'self' => '&do=list#settings')
 							)

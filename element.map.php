@@ -497,7 +497,7 @@ if ($post_id) {
 
 
 	echo
-	'<script type="text/javascript">'."\n".
+	'<script>'."\n".
 		'//<![CDATA['."\n".
 		'var stroke_color_msg = \''.__('Stroke color').'\';'."\n".
 		'var stroke_opacity_msg = \''.__('Stroke opacity').'\';'."\n".
@@ -518,7 +518,7 @@ if ($post_id) {
 	// Add default and user map styles
 
 	echo
-	'<script type="text/javascript">'."\n".
+	'<script>'."\n".
 		'//<![CDATA['."\n";
 
 	echo
