@@ -1,0 +1,451 @@
+# Language: Français
+# Module: myGmaps - 5.7.1
+# Date: 2018-02-24 10:17:52
+# Translated with translater 2013.05.11
+
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: myGmaps 5.7.1\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2018-02-24T10:17:52+00:00\n"
+"Last-Translator: Philippe\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: _admin.php:17
+#: _admin.php:78
+#: _admin.php:93
+#: _admin.php:95
+#: add.map.php:353
+#: config.maps.php:23
+#: config.maps.php:374
+#: element.map.php:554
+#: inc/class.dcactionmaps.php:21
+#: inc/class.dcactionmaps.php:36
+#: inc/class.dcactionmaps.php:43
+msgid "Google Maps"
+msgstr "Cartes Google"
+
+#: _admin.php:92
+msgid "%d map elements"
+msgstr "%d éléments"
+
+#: _admin.php:92
+msgid "%d map element"
+msgstr "%d élément"
+
+#: _admin.php:204
+msgid "Are you sure you want to remove this map?"
+msgstr "Voulez-vous vraiment supprimer cette carte ?"
+
+#: _admin.php:210
+msgid "Are you sure you want to remove this element?"
+msgstr "Voulez-vous vraiment supprimer cet élément ?"
+
+#: _admin.php:328
+#: _admin.php:339
+#: _admin.php:363
+msgid "Google Map:"
+msgstr "Carte Google :"
+
+#: _admin.php:330
+msgid "No map"
+msgstr "Pas de carte"
+
+#: _admin.php:331
+msgid "Add a map to entry"
+msgstr "Ajouter une carte au billet"
+
+#: _admin.php:346
+#: _admin.php:370
+#: config.maps.php:506
+msgid "Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls."
+msgstr "Choisir le centre de la carte en la déplaçant ou en cherchant une adresse. Choisir le niveau de zoom et le type de carte en utilisant les boutons.."
+
+#: _admin.php:352
+msgid "Empty map"
+msgstr "Carte vide"
+
+#: _admin.php:353
+#: _admin.php:395
+#: add.map.php:25
+msgid "Add elements"
+msgstr "Ajouter des éléments"
+
+#: _admin.php:354
+#: _admin.php:396
+msgid "Remove map"
+msgstr "Supprimer la carte"
+
+#: _admin.php:392
+msgid "Included elements list"
+msgstr "Liste des éléments inclus"
+
+#: add.map.php:115
+#: config.maps.php:121
+msgid "point of interest"
+msgstr "point d'intérêt"
+
+#: add.map.php:116
+#: config.maps.php:122
+msgid "polyline"
+msgstr "ligne brisée"
+
+#: add.map.php:117
+#: config.maps.php:123
+msgid "polygon"
+msgstr "polygone"
+
+#: add.map.php:118
+#: config.maps.php:124
+msgid "rectangle"
+msgstr "rectangle"
+
+#: add.map.php:119
+#: config.maps.php:125
+msgid "circle"
+msgstr "cercle"
+
+#: add.map.php:120
+#: config.maps.php:126
+msgid "included kml file"
+msgstr "fichier kml inclus"
+
+#: add.map.php:121
+#: config.maps.php:127
+msgid "GeoRSS feed"
+msgstr "flux GeoRSS"
+
+#: add.map.php:122
+#: config.maps.php:128
+msgid "directions"
+msgstr "itinéraire"
+
+#: add.map.php:358
+msgid "Select map elements for map attached to post:"
+msgstr "Choisir les éléments de la carte attachée au billet :"
+
+#: add.map.php:416
+#: config.maps.php:439
+msgid "Map elements per page"
+msgstr "Éléments de carte par page"
+
+#: add.map.php:448
+msgid "Add selected map elements"
+msgstr "Ajouter les éléments de carte sélectionnés"
+
+#: config.maps.php:386
+msgid "Configuration has been saved."
+msgstr "La configuration a été mise à jour."
+
+#: config.maps.php:387
+msgid "Elements status has been successfully updated"
+msgstr "Le statut des éléments a été mis à jour"
+
+#: config.maps.php:388
+msgid "Elements have been successfully marked as selected"
+msgstr "Les éléments ont été marqués comme sélectionnés"
+
+#: config.maps.php:389
+msgid "Elements have been successfully marked as deselected"
+msgstr "Les éléments ont été marqués comme désélectionnés"
+
+#: config.maps.php:390
+msgid "Elements have been successfully deleted"
+msgstr "Les éléments ont été supprimés"
+
+#: config.maps.php:391
+msgid "Elements category has been successfully changed"
+msgstr "La catégorie des éléments a été changée"
+
+#: config.maps.php:392
+msgid "Elements author has been successfully changed"
+msgstr "L'auteur des éléments a été changé"
+
+#: config.maps.php:393
+msgid "Elements language has been successfully changed"
+msgstr "La langue des éléments a été changée"
+
+#: config.maps.php:402
+msgid "Map elements"
+msgstr "Éléments de carte"
+
+#: config.maps.php:404
+msgid "New element"
+msgstr "Nouvel élément"
+
+#: config.maps.php:460
+msgid "Selected elements action:"
+msgstr "Action sur les éléments sélectionnés :"
+
+#: config.maps.php:490
+msgid "Enable extension for this blog"
+msgstr "Activer l'extension pour ce blog"
+
+#: config.maps.php:492
+msgid "API key"
+msgstr "Clé d'API"
+
+#: config.maps.php:493
+msgid "Google Maps Javascript browser API key:"
+msgstr "Clé d'API Google Maps Javascript pour navigateur :"
+
+#: config.maps.php:497
+msgid "You are currently using a <em>shared</em> API key. To avoid map display restrictions on your blog, use your own API key."
+msgstr "Vous utilisez actuellement une clé d'API <em>partagée</em>. Pour éviter des restrictions d'affichage des cartes sur votre blog, utilisez votre propre clé d'API"
+
+#: config.maps.php:501
+msgid "Default map options"
+msgstr "Options des cartes par défaut"
+
+#: element.map.php:50
+#: element.map.php:719
+msgid "New map element"
+msgstr "Nouvel élément de carte"
+
+#: element.map.php:170
+msgid "This map element does not exist."
+msgstr "Cet élément de carte n'existe pas"
+
+#: element.map.php:195
+#: element.map.php:719
+#: element.map.php:724
+#: inc/lib.pager.php:266
+msgid "Edit map element"
+msgstr "Éditer l'élément de carte"
+
+#: element.map.php:205
+msgid "Next element"
+msgstr "Élément suivant"
+
+#: element.map.php:212
+msgid "Previous element"
+msgstr "Élément précédent"
+
+#: element.map.php:294
+#: element.map.php:294
+#: element.map.php:296
+#: element.map.php:299
+msgid "No description."
+msgstr "Pas de description."
+
+#: element.map.php:502
+msgid "Stroke color"
+msgstr "Couleur du trait"
+
+#: element.map.php:503
+msgid "Stroke opacity"
+msgstr "Opacité du trait"
+
+#: element.map.php:504
+msgid "Stroke weight"
+msgstr "Épaisseur du trait"
+
+#: element.map.php:505
+msgid "Fill color"
+msgstr "Couleur du fond"
+
+#: element.map.php:506
+msgid "Fill opacity"
+msgstr "Opacité du fond"
+
+#: element.map.php:507
+msgid "Default icons"
+msgstr "Icônes par défaut"
+
+#: element.map.php:508
+msgid "Custom icons"
+msgstr "Icônes personnelles"
+
+#: element.map.php:511
+msgid "Custom Kml files"
+msgstr "Fichiers kml personnels"
+
+#: element.map.php:512
+msgid "Start:"
+msgstr "Départ :"
+
+#: element.map.php:513
+msgid "End:"
+msgstr "Arrivée :"
+
+#: element.map.php:514
+msgid "Display directions panel in public map"
+msgstr "Afficher les détails sur la carte publique"
+
+#: element.map.php:572
+msgid "Map element has been updated."
+msgstr "L'élément de carte a été mis à jour."
+
+#: element.map.php:575
+msgid "Map element has been created."
+msgstr "L'élément de carte a été créé."
+
+#: element.map.php:605
+msgid "Map element status"
+msgstr "État de l'élément"
+
+#: element.map.php:613
+msgid "Element language"
+msgstr "Langue de l'élément"
+
+#: element.map.php:631
+msgid "Selected element"
+msgstr "Élément sélectionné"
+
+#: element.map.php:675
+msgid "Position:"
+msgstr "Position :"
+
+#: element.map.php:679
+#: element.map.php:679
+msgid "Point of interest"
+msgstr "Point d'intérêt"
+
+#: element.map.php:680
+#: element.map.php:680
+msgid "Polyline"
+msgstr "Ligne brisée"
+
+#: element.map.php:681
+#: element.map.php:681
+msgid "Polygon"
+msgstr "Polygone"
+
+#: element.map.php:682
+#: element.map.php:682
+msgid "Rectangle"
+msgstr "Rectangle"
+
+#: element.map.php:683
+#: element.map.php:683
+msgid "Circle"
+msgstr "Cercle"
+
+#: element.map.php:684
+#: element.map.php:684
+msgid "Included Kml file"
+msgstr "Fichier kml inclus"
+
+#: element.map.php:685
+#: element.map.php:685
+msgid "GeoRSS Feed"
+msgstr "Flux GeoRSS"
+
+#: element.map.php:686
+#: element.map.php:686
+msgid "Directions"
+msgstr "Itinéraire"
+
+#: element.map.php:687
+#: element.map.php:687
+msgid "Initialize map"
+msgstr "Initialiser la carte"
+
+#: element.map.php:690
+msgid "This map will not be displayed on the blog and is meant only to create, edit and position only one element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties."
+msgstr "Cette carte ne sera pas affichée sur le blog, et n'est destinée qu'à créer, positionner ou éditer un seul élément à la fois. Choisissez un outil, cliquez sur la carte pour créer votre élément, puis cliquer sur l'élément pour modifier ses propriétés."
+
+#: inc/class.dcactionmaps.php:49
+msgid "Back to map elements list"
+msgstr "Retour à la liste des éléments"
+
+#: inc/class.dcactionmaps.php:66
+msgid "Map elements actions"
+msgstr "Actions sur les éléments"
+
+#: inc/class.dcactionmaps.php:163
+#: inc/class.dcactionmaps.php:173
+#: inc/class.dcactionmaps.php:189
+#: inc/class.dcactionmaps.php:210
+#: inc/class.dcactionmaps.php:284
+#: inc/class.dcactionmaps.php:339
+msgid "No element selected"
+msgstr "Pas d'élement sélectionné"
+
+#: inc/class.dcactionmaps.php:259
+msgid "Create a new category for the element(s)"
+msgstr "Créer une nouvelle catégorie pour le(s) éléments(s)"
+
+#: inc/class.dcactionmaps.php:376
+msgid "Element language:"
+msgstr "Langue de l'élément :"
+
+#: inc/class.mygmaps.public.php:27
+msgid "Sorry, javascript must be activated in your browser to see this map."
+msgstr "Désolé, javascript doit être activé dans votre navigateur pour voir cette carte."
+
+#: inc/lib.pager.php:22
+msgid "No element matches the filter"
+msgstr "Aucun élément correspondant au filtre"
+
+#: inc/lib.pager.php:24
+msgid "No map element"
+msgstr "Aucun élément"
+
+#: inc/lib.pager.php:41
+msgid "List of %s elements match the filter."
+msgstr "Liste des %s éléments correspondant au filtre"
+
+#: inc/lib.pager.php:48
+msgid "Elements list (%s)"
+msgstr "Liste des éléments (%s)"
+
+#: inc/lib.pager.php:183
+msgid "Elements list"
+msgstr "Liste des éléments"
+
+#: inc/lib.pager.php:271
+msgid "Remove map element"
+msgstr "Supprimer l'élément de carte"
+
+msgid "weather"
+msgstr "météo"
+
+msgid "Google Maps JavaScript API key:"
+msgstr "Clé d'API Google Maps JavaScript :"
+
+msgid "Add custom maps to your blog"
+msgstr "Ajouter des cartes personnalisées dans votre blog"
+
+msgid "Choose default map center by moving target marker or searching a location. Choose zoom level and map type by using map controls."
+msgstr "Choisir le centre de la carte en déplaçant la cible ou en cherchant une adresse. Choisir le niveau de zoom et le type de carte en utilisant les contrôles de la carte."
+
+msgid "Choose map center by dragging map or searching for a location. Choose zoom level and map type by using map controls."
+msgstr "Choisir le centre de la carte en la déplaçant ou en cherchant une adresse. Choisir le niveau de zoom et le type de carte en utilisant les contrôles de la carte."
+
+msgid "Edit map"
+msgstr "Modifier la carte"
+
+msgid "Map parameters"
+msgstr "Paramètres de la carte"
+
+msgid "Choose options for map attached to post:"
+msgstr "Choisir les options pour la carte attachée au billet :"
+
+msgid "This map will not be displayed on the blog and is meant only to create, edit and position one element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties."
+msgstr "Cette carte ne sera pas affichée sur le blog, et n'est destinée qu'à créer, postionner ou éditer un élément à la fois. Choisissez un outil, cliquez sur la carte pour créer votre élément, puis cliquer sur l'élément pour modifier ses propriétés."
+
+msgid "This map will not be displayed on the blog. Choose a tool and click on the map to create your element, then click on the element to edit its properties."
+msgstr "Cette carte ne sera pas affichée sur le blog. Choisissez un outil et cliquez sur la carte pour créer votre élément, puis cliquez sur l'élément pour modifier ses propriétés."
+
+msgid "This map will not be displayed on the blog. It is here only for positioning your element."
+msgstr "Cette carte ne sera pas affichée sur le blog, elle n'est destinée qu'à positionner votre élément."
+
+msgid "Choose your tool"
+msgstr "Sélectionnez votre outil"
+
+msgid "Click on map"
+msgstr "Cliquez sur la carte"
+
+msgid "Enhance render and parameters"
+msgstr "Améliorez le rendu et les différents réglages"
+
+msgid "Save your map element"
+msgstr "Enregistrez votre élément de carte"
+
+msgid "Create a new one"
+msgstr "Créez-en un nouveau"
+

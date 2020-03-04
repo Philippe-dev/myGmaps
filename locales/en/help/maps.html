@@ -1,0 +1,161 @@
+<html>
+	<head>
+		<title>Managing map elements</title>
+	</head>
+	<body>
+		<h4>Presentation</h4>
+		<dl>
+			<dt>Insert Gmap maps in your blog</dt>
+			<dd>This plugin allows you to create and edit map elements. These elements will be used to insert maps in your posts or in any of your theme's template files.</dd>
+			<dd>To insert a map, you must create first the elements that will be included in it.</dd>
+		</dl>
+		<h4>Configuration</h4>
+		<dl>
+			<dt>Activation</dt>
+			<dd>Plugin must be activated to work on the blog. Desactivation does not delete maps or maps elements, but merely stops their display.</dd>
+		</dl>
+		<dl>
+			<dt>API key</dt>
+			<dd>Plugin uses by default a shared Google Maps API key. It is recommended to replace this key by your own domain's key. You will need to creat a key on this page: <a href="https://console.developers.google.com/apis/api/maps_backend/">Google Developers Console > Google Maps JavaScript API</a>. Once generated, paste you key into the field and save.</dd>
+		</dl>
+		<dl>
+			<dt>Default options for maps</dt>
+			<dd>Click on the marker and drag or search for an address to set default map center. Zoom and map style will also be saved. 
+				These options will be used when creating a new map.
+			</dd>
+		</dl>
+		<h4>Maps styles</h4>
+		<p>You may style your maps by adding configuration files from your media manager.</p>
+		<dl>
+			<dt>Styles path</dt>
+			<dd>
+				<ul>
+					<li>to add styles, creaye a folder named <em>myGmaps</em> in your media manager</li>
+					<li>in this folder, create another folder named <em>styles</em></li>
+					<li>keep in this folder your personal styles</li>
+				</ul>
+			</dd>
+		</dl>
+		<dl>
+			<dt>Name and content of style files</dt>
+			<dd>
+				<ul>
+					<li>file name must use the following pattern : <em>my_style_styles.js</em> where <em>my_style</em> is the name you can change (it is only an identifier and will not be displayed on public maps).</li>
+					<li>
+						file content must be a JSON array of this type : 
+						<code>[{featureType: '',elementType: '',stylers: [{hue: ''},{saturation: ''},{lightness: ''},// etc...]},{featureType: '',// etc...}]</code>
+					</li>
+				</ul>
+				<p>You may get lots of styles from <a href="http://snazzymaps.com/">Snazzy Maps</a>.</p>
+			</dd>
+		</dl>
+		<h4>Personal icons and kml files</h4>
+		<dl>
+			<dt>Custom icons</dt>
+			<dd>
+				You may choose the icon for a point of interest by cliking on it. Only a few default icons are included, but it is very easy to add your own:
+				<ul>
+					<li>in your media manager, create a folder named <em>myGmaps</em></li>
+					<li>in the <em>myGmaps</em> folder, create another folder named <em>icons</em></li>
+					<li>keep in this folder your custom icons</li>
+				</ul>
+			</dd>
+		</dl>
+		<dl>
+			<dt>Custom Kml files</dt>
+			<dd>
+				You may use any valid URL to include a Kml file. However, you may also use kml files from your media manager. It is very easy to add them:
+				<ul>
+					<li>in your media manager, create a folder named <em>myGmaps</em></li>
+					<li>in the <em>myGmaps</em> folder, create another folder named <em>kml_files</em></li>
+					<li>keep in this folder your kml files</li>
+				</ul>
+			</dd>
+		</dl>
+		<h4>Map element types</h4>
+		<p><em>All elements are editable, see help in element editing page.</p>
+		<dl>
+			<dt>Point of interest</dt>
+			<dd>Only one marker is on the map. It will be displayed with a <em>title</em> attribute containing element title. On the public side, a click on the marker will display this element's content in the infowindow. On this page, a clic allows to change the element icon.</dd>
+			<dt>Polyline</dt>
+			<dd>Several markers are on the map to form a polyline. The polyline will be displayed on the map. On the public side, a click on the line will display this element's content in the infowindow. On this page, a clic allows to change the element diplay options.</dd>
+			<dt>Polygon</dt>
+			<dd>Several markers are on the map to form a polygon. The polygon will be displayed on the map. On the public side, a click on the polygon will display this element's content in the infowindow. On this page, a clic allows to change the element diplay options.</dd>
+			<dt>Rectangle</dt>
+			<dd>A rectangle is displayed on the map. On the public side, a click on the rectangle will display this element's content in the infowindow. On this page, a clic allows to change the element diplay options.</dd>
+			<dt>Circle</dt>
+			<dd>A circle is displayed on the map. On the public side, a click on the circle will display this element's content in the infowindow. On this page, a clic allows to change the element diplay options.</dd>
+			<dt>Included kml file</dt>
+			<dd>Map displays objects from a kml file. They are not editable. <em>This type of element cannot have a description.</em></dd>
+			<dt>GeoRSS feed</dt>
+			<dd>Map displays objects from a GeoRSS feed. They are not editable. <em>This type of element cannot have a description.</em></dd>
+			<dt>Directions</dt>
+			<dd>Map displays a route between two points, and a side panel with driving directions. <em>You may use only one directions element on the same map.</em></dd>
+		</dl>
+		<h4>Filters for the map elements list</h4>
+		<dl>
+			<dt>Author</dt>
+			<dd>Allows you to filter by author.</dd>
+			<dt>Category</dt>
+			<dd>Filter by category.</dd>
+			<dt>Status</dt>
+			<dd>
+				<ul>
+					<li><strong>Pending</strong>: elements whose publication status has not yet been decided.</li>
+					<li><strong>Scheduled</strong>: elements will be online at day and hour specified in the field <em>Published on</em>.</li>
+					<li><strong>Offline</strong>: elements are offline.</li>
+					<li><strong>Published</strong>: element are online.</li>
+				</ul>
+			</dd>
+			<dt>Month</dt>
+			<dd>Filter on a specific month and year.</dd>
+			<dt>Map element type</dt>
+			<dd>Filter on the different map elements types.</dd>
+			<dt>Order by</dt>
+			<dd>Defines the list order, either on the date, the title, the author,
+				or the status.
+			</dd>
+			<dt>Sort</dt>
+			<dd>Choose whether the list will be sorted in ascending or descending order.</dd>
+			<dt>Map elements per page</dt>
+			<dd>Number of map elements that will be displayed on each page of the resulting
+				set.
+			</dd>
+		</dl>
+		<h4>Selected map elements actions</h4>
+		<p>If your user permission level allows it, you can perform batch operations on the
+			map elements you select in the list.
+		</p>
+		<ul>
+			<li><strong>Publish</strong>: set the map elements online.</li>
+			<li><strong>Mark as pending</strong>: erase other publication status.</li>
+			<li><strong>Change category</strong>: directs you to the category list to choose a
+				new one for the map elements.
+			</li>
+			<li><strong>Change author</strong>: allows you to change the map elements' author by
+				entering the new author's ID.
+			</li>
+			<li><strong>Delete</strong>: suppress the map elements (this operation cannot be undone).</li>
+		</ul>
+		<h4>Display map in a template</h4>
+		<p>You can display a map in your templates. Use the following code: 
+		<code>{{tpl:myGmaps id="home" center="47.389982,0.688877" zoom="12" style="roadmap" width="80%" height="200px" elements="2,4" category="4"}}</code>
+		</p>
+		<dl>
+			<dt>id</dt>
+			<dd>Specify a unique id. If none specified, an id will be generated for each view.</dd>
+			<dt>center</dt>
+			<dd>Indicate the geographical center of your map (Ex: Tours, France - Latitude : 47.389982, Longitude : 0.688877)</dd>
+			<dt>zoom</dt>
+			<dd>Between 0 and 19 (0 to see the world)</dd>
+			<dt>style</dt>
+			<dd>Choice: roadmap, satellite, hybrid, terrain, OpenStreetMap et neutral_blue. You may call your own style (see above)</dd>
+			<dt>width, height</dt>
+			<dd>width or height, in CSS sizes (px, em, %, etc.)</dd>
+			<dt>elements</dt>
+			<dd>Map elements ids, separated by commas</dd>
+			<dt>category</dt>
+			<dd>Category ids, separated by commas</dd>
+		</dl>
+	</body>
+</html>

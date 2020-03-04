@@ -1,0 +1,215 @@
+a.map-remove {
+	color : #900;
+	}
+#map_canvas{
+	height: 400px;
+	border: 1px solid #ccc;
+	border-top: none;
+	margin-bottom: .5em
+	}
+
+#infowindow_icons {
+	min-width: 200px
+	}
+#infowindow_icons  #custom_icons_list {
+	max-height: 100px;
+	overflow: auto;
+	border: 1px solid #ccc;
+	padding: 5px;
+	margin-bottom: 10px
+	}
+#infowindow_polyline {
+	min-width: 150px
+	}
+#infowindow_polygon, #infowindow_rectangle, #infowindow_circle  {
+	min-width: 300px
+	}
+#infowindow_directions  {
+	min-width: 400px
+	}
+#infowindow_kml li:hover, #infowindow_kml li:focus  {
+	background-color: #ccc;
+	}
+.gm-iw {min-width: 150px}
+
+/* Map Toolbar */
+
+.map_toolbar {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 0 32px 0 1rem;
+	border: 1px solid #dfdfdf;
+	overflow: hidden;
+	background: #f5f5f5;
+	border-radius: 4px 4px 0 0;
+	position: relative;
+	line-height: 30px;
+	}
+.map_toolbar select, .map_toolbar button {
+	vertical-align: middle;
+	}
+.map_toolbar select {
+	width: 12em;
+	margin-right: .6rem;
+	border: 1px solid #ddd;
+	}
+.map_toolbar button {
+	width: 30px;
+	height: 28px;
+	border-style: solid;
+	border-width: 1px;
+	margin-left: 2px;
+	margin-bottom: 2px;
+	border-color: #e5e5e5 #ccc #ccc #e5e5e5;
+	background-color : #f7f7f7;
+	background-position : 50% 50%;
+	background-repeat: no-repeat;
+	}
+.map_toolbar button:hover, .map_toolbar button:focus {
+	border-color : #ddd;
+	background-color: #fff;
+	}
+.map_toolbar button.inactive:hover, .map_toolbar button.inactive:focus {
+	border-color : #e5e5e5 #ccc #ccc #e5e5e5;
+	background-color: #f7f7f7;
+	}
+.map_toolbar button span {
+	display: none;
+	}
+.map_toolbar span {
+	display : inline-block;
+	vertical-align: top;
+	}
+span.map_spacer {
+	width : 8px;
+	}
+.map_toolbar input  {
+	vertical-align: top;margin: 0.05em 0 0 0;height: 2.35em
+	}
+
+button.add_marker,
+button.add_marker.inactive:hover {
+	background-image: url(index.php?pf=myGmaps/css/img/marker-bw.png);
+	}
+button.add_marker:hover, button.add_marker.active {
+	background-image: url(index.php?pf=myGmaps/css/img/marker.png);
+	background-color: #fff
+	}
+	
+button.add_polyline,
+button.add_polyline.inactive:hover {
+	background-image: url(index.php?pf=myGmaps/css/img/polyline-bw.png);
+	}
+button.add_polyline:hover, button.add_polyline.active {
+	background-image: url(index.php?pf=myGmaps/css/img/polyline.png);
+	background-color: #fff
+	}
+	
+button.add_polygon,
+button.add_polygon.inactive:hover {
+	background-image: url(index.php?pf=myGmaps/css/img/polygon-bw.png);
+	}
+button.add_polygon:hover, button.add_polygon.active {
+	background-image: url(index.php?pf=myGmaps/css/img/polygon.png);
+	background-color: #fff
+	}
+	
+button.add_rectangle,
+button.add_rectangle.inactive:hover {
+	background-image: url(index.php?pf=myGmaps/css/img/rectangle-bw.png);
+	}
+button.add_rectangle:hover, button.add_rectangle.active {
+	background-image: url(index.php?pf=myGmaps/css/img/rectangle.png);
+	background-color: #fff
+	}
+	
+button.add_circle,
+button.add_circle.inactive:hover {
+	background-image: url(index.php?pf=myGmaps/css/img/circle-bw.png);
+	}
+button.add_circle:hover, button.add_circle.active {
+	background-image: url(index.php?pf=myGmaps/css/img/circle.png);
+	background-color: #fff
+	}
+	
+button.add_kml,
+button.add_kml.inactive:hover {
+	background-image: url(index.php?pf=myGmaps/css/img/kml-bw.png);
+	}
+button.add_kml:hover, button.add_kml.active {
+	background-image: url(index.php?pf=myGmaps/css/img/kml.png);
+	background-color: #fff
+	}
+	
+button.add_georss,
+button.add_georss.inactive:hover {
+	background-image: url(index.php?pf=myGmaps/css/img/feed-bw.png);
+	}
+button.add_georss:hover, button.add_georss.active {
+	background-image: url(index.php?pf=myGmaps/css/img/feed.png);
+	background-color: #fff
+	}
+
+button.add_directions,
+button.add_directions.inactive:hover {
+	background-image: url(index.php?pf=myGmaps/css/img/directions-bw.png);
+	}
+button.add_directions:hover, button.add_directions.active {
+	background-image: url(index.php?pf=myGmaps/css/img/directions.png);
+	background-color: #fff
+	}
+	
+button.delete_map {
+	background-color: #e5e5e5;
+	background-image: url(index.php?pf=myGmaps/css/img/clean.png);
+	position: absolute;
+	right: 2px;
+	top: 1px;
+	border-color: #ccc;
+	}
+.map_toolbar .qx {
+	border-bottom-left-radius: .3em;
+	border-top-left-radius: .3em;
+	background: #fff url(index.php?pf=myGmaps/css/img/search.png) no-repeat 4px center !important;
+	text-indent: 18px;
+	padding: 0;
+	border: 1px solid #ccc;
+	}
+.map_toolbar .qx:focus {
+	border: 1px solid #bee74b;
+	}
+.map_toolbar input[type="submit"] {
+	padding: 0 0.4em;
+    margin: 0.05em 0 0 -0.2em;
+	background: #dfdfdf;
+	border-color: #ccc;
+	color: #333;
+	border-bottom-right-radius: .3em;
+	border-top-right-radius: .3em;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	text-shadow: none;
+	border-left: 1px solid #ccc;
+	font-size: .91em;
+height: 2.55em
+	}
+.map_toolbar input[type="submit"]:hover,
+.map_toolbar input[type="submit"]:focus {
+	background: #676e78;
+	color: #fff;
+	}
+#directions_start, #directions_end {
+	background: #fff url(index.php?pf=myGmaps/css/img/search.png) no-repeat 4px center !important;
+	text-indent: 18px;
+	}
+#credit-control {
+	background: #E2EAEA;
+	opacity: 0.7;
+	padding: 0 5px;
+	font-size: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 0;
+	white-space: nowrap;
+	}
+#credit-control a {color: #000}

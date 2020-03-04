@@ -1,0 +1,141 @@
+<html>
+	<head>
+		<title>Rédaction d'un élément de carte</title>
+	</head>
+	<body>
+		<h4>Style des cartes</h4>
+		<p>Les cartes peuvent être stylées au moyen de <em>fichiers de style</em>. À titre d'exemple, un fichier de style est inclus dans le plugin, il se nomme <em>Neutral Blue</em> et apparaît à côté des boutons habituels 
+			<em>Plan</em> et <em>Satellite</em>.
+		</p>
+		<p>Vous pouvez ajouter des styles personnels provenant de votre médiathèque, qui apparaîtront alors sur cette ligne de boutons. Voici comment procéder :</p>
+		<dl>
+			<dt>Emplacement des fichiers de style</dt>
+			<dd>
+				<ul>
+					<li>pour ajouter des styles, créez un dossier nommé <em>myGmaps</em> dans votre médiathèque</li>
+					<li>dans ce dossier, créez un autre dossier nommé <em>styles</em></li>
+					<li>ranger dans ce dossier vos styles personnels</li>
+				</ul>
+			</dd>
+		</dl>
+		<dl>
+			<dt>Nom et contenu des fichiers de style</dt>
+			<dd>
+				<ul>
+					<li>le nom d'un fichier de style doit correspondre au masque suivant : <em>mon_style_styles.js</em> où <em>mon_style</em> est le nom que vous pouvez modifier (ce nom n'est qu'un simple identifiant et n'apparaîtra pas en partie publique).</li>
+					<li>
+						le contenu du fichier doit contenir un tableau JSON de type : 
+						<pre>[{featureType: '',elementType: '',stylers: [{hue: ''},{saturation: ''},{lightness: ''},// etc...]},{featureType: '',// etc...}]</pre>
+					</li>
+				</ul>
+				<p>Vous pouvez obtenir de nombreux styles pour vos cartes sur le site <a href="http://snazzymaps.com/">Snazzy Maps</a>.</p>
+			</dd>
+		</dl>
+		<h4>Icônes et fichiers kml personnels</h4>
+		<dl>
+			<dt>Icônes personnelles</dt>
+			<dd>
+				Par défaut, seules quelques icônes sont fournies, mais il est très simple d'ajouter les vôtres&nbsp;:
+				<ul>
+					<li>dans votre médiathèque, créez un dossier nommé <em>myGmaps</em></li>
+					<li>dans le dossier <em>myGmaps</em> créez un autre dossier nommé <em>icons</em></li>
+					<li>ranger dans ce dossier vos icônes personnelles.</li>
+				</ul>
+			</dd>
+		</dl>
+		<dl>
+			<dt>Fichiers Kml personnels</dt>
+			<dd>
+				Vous pouvez inclure un fichier Kml en fournissant son URL, ou utiliser un fichier de votre médiathèque. Il est très simple d'ajouter les vôtres&nbsp;:
+				<ul>
+					<li>dans votre médiathèque, créez un dossier nommé <em>myGmaps</em></li>
+					<li>dans le dossier <em>myGmaps</em> créez un autre dossier nommé <em>kml_files</em></li>
+					<li>ranger dans ce dossier vos fichiers kml personnels.</li>
+				</ul>
+			</dd>
+		</dl>
+		<h4>Types d'élements de cartes</h4>
+		<p>Choisissez dans la barre d'outils le type d'élément que vous voulez ajouter puis cliquez sur la carte. 
+			Un élément de carte peut avoir les types suivants :
+		</p>
+		<dl>
+			<dt>Type non défini</dt>
+			<dd>Aucun marqueur n'est présent sur la carte, cet élément ne peut être utilisé et doit être considéré comme un brouillon.</dd>
+			<dt>Point d'intérêt</dt>
+			<dd>Une icône est affichée sur la carte.</dd>
+			<dt>Ligne brisée</dt>
+			<dd>Plusieurs points sont présents sur la carte, reliés par une ligne polygonale.</dd>
+			<dt>Polygone</dt>
+			<dd>Plusieurs points sont présents sur la carte, reliés par une ligne fermée matérialisant un polygone.</dd>
+			<dt>Rectangle</dt>
+			<dd>Un rectangle est affiché sur la carte.</dd>
+			<dt>Cercle</dt>
+			<dd>Un cercle est affiché sur la carte.</dd>
+			<dt>Fichier kml inclus</dt>
+			<dd>La carte affiche des objets issus d'un fichier kml. Ils ne sont toutefois pas modifiables. <em>Ce type d'élément ne peut avoir de description.</em>.</dd>
+			<dt>Flux GeoRSS</dt>
+			<dd>La carte affiche des objets issus d'un flux GeoRSS. Ils ne sont toutefois pas modifiables. <em>Ce type d'élément ne peut avoir de description.</em></dd>
+			<dt>Itinéraire</dt>
+			<dd>La carte affiche un itinéraire routier entre deux points et un panneau latéral comportant des indications de conduite. <em>Vous ne pouvez utiliser qu'un seul itinéraire sur une même carte.</em></dd>
+		</dl>
+		<h4>Rédaction de l'élément de carte</h4>
+		<dl>
+			<dt>Titre de l'élément</dt>
+			<dd>Le titre de l'élément de carte. Ce champ est obligatoire. Côté public, le titre s'affichera dans une infobulle lors du clic sur l'élément, suivi éventuellement de sa description.</dd>
+			<dt>Coordonnées</dt>
+			<dd>Choisissez un type d'élément dans la barre d'outils, puis cliquez sur la carte pour le positionner. <em>Pour insérer un autre type d'élément, il faut auparavant initialiser la carte, elle ne peut en effet
+				contenir qu'un seul type d'élément à la fois.</em>.
+			</dd>
+			<dt>Action du clic sur les éléments</dt>
+			<dd>
+				<ul>
+					<li>si une icône est affichée, un clic permet d'en changer en choisissant parmi les icônes par défaut ou vos icônes personnelles.</li>
+					<li>si une ligne brisée, un polygone, un rectangle ou un cercle sont affichés, le clic permet de choisir la couleur du trait, celle de remplissage, ainsi que l'épaisseur du trait.</li>
+					<li>si une ligne brisée ou un polygone sont affichés, le clic droit sur un point d'ancrage permet de le supprimer.</li>
+					<li>si un fichier kml ou un flux GeoRSS sont affichés, le clic permet de modifier la source de l'élément.</li>
+				</ul>
+				<p><em>Côté public, un clic sur un élément affichera son titre et sa description dans une infobulle, sauf pour les fichiers Kml, Kmz ou GeoRSS qui gèrent directement leurs descriptions.</em></p>
+			</dd>
+			<dt>Description</dt>
+			<dd>La description du point d'intérêt, de la ligne brisée, du polygone, du rectangle ou du cercle contenus dans la carte. Côté public, cette description s'affichera dans une infobulle lors du clic sur l'élément. 
+				Si ce champ est laissé vide, seul le titre de l'élément s'affichera dans l'infobulle. <em>Un fichier Kml ou GéoRSS inclus ne peut pas avoir de description, 
+				c'est en effet le fichier qui fournit lui-même le contenu des infobulles.</em>
+			</dd>
+			<dt>Notes</dt>
+			<dd>Cette zone de texte sert à la prise de notes ou pense-bête divers. Elle ne sera jamais affichée.</dd>
+			<dt>État de l'élément de carte</dt>
+			<dd>
+				Permet de choisir l'état de l'élément de carte après enregistrement&nbsp;:
+				<ul>
+					<li><strong>En attente</strong>&nbsp;: l'élément de carte est en attente de publication. Il ne peut pas être inséré dans un billet</li>
+					<li><strong>Programmé</strong>&nbsp;: l'élément de carte sera mis en ligne aux date et heure
+						indiquées dans le champ <em>Publié le</em>.
+					</li>
+					<li><strong>Non publié</strong>&nbsp;: élément de carte hors ligne.</li>
+					<li><strong>Publié</strong>&nbsp;: l'élément de carte est disponible pour l'ajout dans une carte.</li>
+				</ul>
+			</dd>
+			<dt>Publié le</dt>
+			<dd>Permet de modifier la date et l'heure de publication de l'élément de carte.</dd>
+			<dt>Langue de l'élément</dt>
+			<dd>Code langue de votre élément. Par défaut, il s'agit du code de votre
+				langue. Vous pouvez le changer, par le code d'une autre langue, par
+				exemple "en", "fr-qc". Ce code est libre, il sera utilisé lors de l'affichage
+				de l'élément.
+			</dd>
+			<dt>Format du texte</dt>
+			<dd>Permet de choisir la syntaxe de saisie utilisée pour la description de l'élément de carte. Le wiki est une syntaxe
+				simplifiée et sera converti en xhtml valide ; à moins que vous maîtrisiez
+				parfaitement le HTML nous vous conseillons de la choisir de préférence.
+				Consultez la référence de la syntaxe Wiki pour plus
+				d'informations.
+			</dd>
+			<dt>Élement sélectionné</dt>
+			<dd>Les éléments marqués comme sélectionnés peuvent être retrouvés plus simplement avec un filtre dans la liste des éléments.</dd>
+			<dt>Catégorie</dt>
+			<dd>La catégorie de votre élément de carte. Vous pouvez créer une nouvelle catégorie, ou n'affecter
+				votre élément de carte à aucune catégorie en choisissant la ligne vide.
+			</dd>
+		</dl>
+	</body>
+</html>

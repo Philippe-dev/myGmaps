@@ -1,0 +1,117 @@
+<html>
+	<head>
+		<title>Editing a map element</title>
+	</head>
+	<body>
+		<h4>Maps styles</h4>
+		<p>You may style your maps by adding configuration files from your media manager.</p>
+		<dl>
+			<dt>Styles path</dt>
+			<dd>
+				<ul>
+					<li>to add styles, creaye a folder named <em>myGmaps</em> in your media manager</li>
+					<li>in this folder, create another folder named <em>styles</em></li>
+					<li>keep in this folder your personal styles</li>
+				</ul>
+			</dd>
+		</dl>
+		<dl>
+			<dt>Name and content of style files</dt>
+			<dd>
+				<ul>
+					<li>file name must use the following pattern : <em>my_style_styles.js</em> where <em>my_style</em> is the name you can change (it is only an identifier and will not be displayed on public maps).</li>
+					<li>
+						file content must be a JSON array of this type : 
+						<pre>[{featureType: '',elementType: '',stylers: [{hue: ''},{saturation: ''},{lightness: ''},// etc...]},{featureType: '',// etc...}]</pre>
+					</li>
+				</ul>
+				<p>You may get lots of styles from <a href="http://snazzymaps.com/">Snazzy Maps</a>.</p>
+			</dd>
+		</dl>
+		<h4>Personal icons and kml files</h4>
+		<dt>Custom icons</dt>
+		<dd>
+			You may choose the icon for a point of interest by cliking on it. Only a few default icons are included, but it is very easy to add your own:
+			<ul>
+				<li>in your media manager, create a folder named <em>myGmaps</em></li>
+				<li>in the <em>myGmaps</em> folder, create another folder named <em>icons</em></li>
+				<li>keep in this folder your custom icons</li>
+			</ul>
+		</dd>
+		<dt>Custom Kml files</dt>
+		<dd>
+			You may use any valid URL to include a Kml file. However, you may also use kml files from your media manager. It is very easy to add them:
+			<ul>
+				<li>in your media manager, create a folder named <em>myGmaps</em></li>
+				<li>in the <em>myGmaps</em> folder, create another folder named <em>kml_files</em></li>
+				<li>keep in this folder your kml files</li>
+			</ul>
+		</dd>
+		<h4>Map element types</h4>
+		<p>Choose in the toolbar the element you want to add and click on the map. A map element may be of the following types:</p>
+		<dl>
+			<dt>Undefined type</dt>
+			<dd>No marker appears on the map. This element cannot be used and can be considered as a draft.</dd>
+			<dt>Point of interest</dt>
+			<dd>Only one marker is on the map. It will be displayed with a <em>title</em> attribute containing element title. On the public side, a click on the marker will display this element's content in the infowindow. On this page, a clic allows to change the element icon.</dd>
+			<dt>Polyline</dt>
+			<dd>Several markers are on the map to form a polyline. The polyline will be displayed on the map. On the public side, a click on the line will display this element's content in the infowindow. On this page, a clic allows to change the element diplay options.</dd>
+			<dt>Polygon</dt>
+			<dd>Several markers are on the map to form a polygon. The polygon will be displayed on the map. On the public side, a click on the polygon will display this element's content in the infowindow. On this page, a clic allows to change the element diplay options.</dd>
+			<dt>Rectangle</dt>
+			<dd>A rectangle is displayed on the map. On the public side, a click on the rectangle will display this element's content in the infowindow. On this page, a clic allows to change the element diplay options.</dd>
+			<dt>Circle</dt>
+			<dd>A circle is displayed on the map. On the public side, a click on the circle will display this element's content in the infowindow. On this page, a clic allows to change the element diplay options.</dd>
+			<dt>Included kml file</dt>
+			<dd>Map displays objects from a kml file. They are not editable. <em>This type of element cannot have a description.</em></dd>
+			<dt>GeoRSS feed</dt>
+			<dd>Map displays objects from a GeoRSS feed. They are not editable. <em>This type of element cannot have a description.</em></dd>
+			<dt>Directions</dt>
+			<dd>Map displays a route between two points, and a side panel with driving directions. <em>You may use only one directions element on the same map.</em></dd>
+		</dl>
+		<h4>Editing a map element</h4>
+		<dl>
+			<dt>Map element title</dt>
+			<dd>Type in the map element title. This field is mandatory.</dd>
+			<dt>Coordinates</dt>
+			<dd>Clic on the map, one or several markers will be inserted and the map will be refreshed. Markers can be dragged on the map. 
+				If only one marker is displayed, one clic on it will allow to choose its icon. If several markers are displayed, one clic on any of them will allow to choose the polyline or polygon color.
+			</dd>
+			<dt>Description</dt>
+			<dd>Enter here a description for the point of interest or polyline included in the map element. This description will be displayed on the blog in an infowindow when users click on the markers or the polyline. If this field is left empty, only the title will be displayed in the infowindow.</dd>
+			<dt>Notes</dt>
+			<dd>This text area is for personal use, for notes or memos. What you enter here
+				will never be displayed on the blog..
+			</dd>
+			<dt>Category</dt>
+			<dd>Your map element's category. You can create a new category. You can choose to leave
+				your map element without a category by selecting the blank line.
+			</dd>
+			<dt>Map element status</dt>
+			<dd>
+				Allows you to choose your map element's status:
+				<ul>
+					<li><strong>Pending:</strong> The element is pending completion, it is not available for use in a post.</li>
+					<li><strong>Scheduled:</strong> The element will be set online at the time and date set in the <strong>Published on</strong> field.</li>
+					<li><strong>Unpublished:</strong> The element is offline.</li>
+					<li><strong>Published:</strong> The element is ready to be included in a post.</li>
+				</ul>
+			</dd>
+			<dt>Publication date and hour</dt>
+			<dd>Here you can change the entry's publication date and time. If the entry's
+				status is <strong>Scheduled</strong>, it will be online at the given date and time.
+			</dd>
+			<dt>Entry language</dt>
+			<dd>Select the language code of your element. It defaults to your (as a
+				user) language but you can change it to whatever language code you want, e.g.
+				"en" or "es-ar". This code is used for the element's display.
+			</dd>
+			<dt>Text formating</dt>
+			<dd>To choose the map element editing syntax. Wiki is a simplified syntax
+				and will be converted to valid xhtml&nbsp;; Unless you have a good
+				understanding of html, we advise you to choose the wiki syntax.
+				See the Wiki syntax reference for more information.
+			</dd>
+		</dl>
+	</body>
+</html>
