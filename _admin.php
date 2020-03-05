@@ -44,9 +44,9 @@ class myGmapsBehaviors
 		}
 
 		if (isset($csp['img-src'])) {
-			$csp['img-src'] .= ' *.google.com *.gstatic.com *.googleapis.com tile.openstreetmap.org';
+			$csp['img-src'] .= ' *.google.com *.googleusercontent.com *.gstatic.com *.googleapis.com tile.openstreetmap.org';
 		} else {
-			$csp['img-src'] = '*.google.com *.gstatic.com *.googleapis.com tile.openstreetmap.org';
+			$csp['img-src'] = '*.google.com *.googleusercontent.com *.gstatic.com *.googleapis.com tile.openstreetmap.org';
 		}
 
 		if (isset($csp['style-src'])) {
