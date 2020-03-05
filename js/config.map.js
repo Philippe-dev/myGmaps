@@ -181,7 +181,7 @@ $(function () {
 			}
 		}
 
-		$('#geocode').click(function () {
+		$('#geocode').on('click', function () {
 			geocode();
 			return false;
 		});

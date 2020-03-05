@@ -11,7 +11,7 @@ $(function () {
 			.text(dotclear.msg.cancel_the_filter);
 	}
 
-	$('#filter-control').click(function () {
+	$('#filter-control').on('click', function () {
 		if ($(this).hasClass('open')) {
 			if (dotclear.msg.show_filters == 'true') {
 				return true;

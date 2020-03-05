@@ -26,7 +26,7 @@ $(function () {
         var post_dtPick = new datePicker($('#post_dt').get(0));
         post_dtPick.img_top = '1.5em';
         post_dtPick.draw();
-        $('input[name="delete"]').click(function () {
+        $('input[name="delete"]').on('click', function () {
             return window.confirm(dotclear.msg.confirm_delete_post);
         });
         var v = $('<div class="format_control"><p><a id="a-validator"></a></p><div/>').get(0);
@@ -34,7 +34,7 @@ $(function () {
         var a = $('#a-validator').get(0);
         a.href = '#';
         a.className = 'button ';
-        $(a).click(function () {
+        $(a).on('click', function () {
             excerpt_content = $('#post_excerpt').css('display') != 'none' ? $('#post_excerpt').val() : $('#excerpt-area iframe').contents().find('body').html();
             post_content = $('#post_content').css('display') != 'none' ? $('#post_content').val() : $('#content-area iframe').contents().find('body').html();
             var params = {
@@ -145,7 +145,7 @@ $(function () {
         });
         contentTb.switchMode(formatField.value);
 
-        $('a.attachment-remove').click(function () {
+        $('a.attachment-remove').on('click', function () {
             this.href = '';
             var m_name = $(this).parents('ul').find('li:first>a').attr('title');
             if (window.confirm(dotclear.msg.confirm_remove_attachment.replace('%s', m_name))) {
@@ -157,7 +157,7 @@ $(function () {
         });
         var excerpt = $('#post_excerpt').val();
         var content = $('#post_content').val();
-        $('#convert-xhtml').click(function () {
+        $('#convert-xhtml').on('click', function () {
             if (excerpt != $('#post_excerpt').val() || content != $('#post_content').val()) {
                 return window.confirm(dotclear.msg.confirm_change_post_format);
             }
