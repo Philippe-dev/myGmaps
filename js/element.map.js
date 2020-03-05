@@ -18,9 +18,7 @@ $(function () {
     }
 
     // Toolbar actions
-
-    $(".map_toolbar button").on('click', function () {
-
+    $(document).on('click', '.map_toolbar button', function () {
       if ($(this).attr('id') == 'delete_map') {
         deleteMap();
       } else {
@@ -210,8 +208,7 @@ $(function () {
         alert("Geocode was not successful for the following reason: " + status);
       }
     }
-
-    $('#geocode').on('click', function () {
+    $(document).on('click', '#geocode', function () {
       geocode();
       return false;
 

@@ -15,7 +15,7 @@ $(function () {
 			resizeMap();
 		});
 
-		$('#gmap-area label').on('click', function () {
+		$(document).on('click', '#gmap-area label', function () {
 			resizeMap();
 		});
 
@@ -205,8 +205,7 @@ $(function () {
 				alert("Geocode was not successful for the following reason: " + status);
 			}
 		}
-
-		$('#geocode').on('click', function () {
+		$(document).on('click', '#geocode', function () {
 			geocode();
 			return false;
 		});
