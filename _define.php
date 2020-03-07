@@ -19,13 +19,12 @@ $this->registerModule(
     "Google Maps",           					// Name
     "Add custom maps to your blog", 			// Description
     "Philippe aka amalgame and contributors",   // Author
-    '5.7.3',                   					// Version
+    '5.7.4',                   					// Version
     [
         'requires'    => [['core', '2.16']],   	// Dependencies
         'permissions' => 'usage,contentadmin', 	// Permissions
         'type'        => 'plugin',             	// Type
         'priority'    => 2000,                 	// Priority
-        'settings'	  => array(
-            'self' => '&do=list#settings')
+        'settings'	  => ['self' => '&do=list#settings']
     ]
 );
