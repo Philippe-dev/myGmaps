@@ -231,47 +231,59 @@ msgstr "Élément précédent"
 msgid "No description."
 msgstr "Pas de description."
 
-#: element.map.php:502
+#: element.map.php:503
 msgid "Stroke color"
 msgstr "Couleur du trait"
 
-#: element.map.php:503
+#: element.map.php:504
 msgid "Stroke opacity"
 msgstr "Opacité du trait"
 
-#: element.map.php:504
+#: element.map.php:505
 msgid "Stroke weight"
 msgstr "Épaisseur du trait"
 
-#: element.map.php:505
+#: element.map.php:506
+msgid "Circle radius"
+msgstr "Rayon du cercle"
+
+#: element.map.php:507
 msgid "Fill color"
 msgstr "Couleur du fond"
 
-#: element.map.php:506
+#: element.map.php:508
 msgid "Fill opacity"
 msgstr "Opacité du fond"
 
-#: element.map.php:507
+#: element.map.php:509
 msgid "Default icons"
 msgstr "Icônes par défaut"
 
-#: element.map.php:508
+#: element.map.php:510
 msgid "Custom icons"
 msgstr "Icônes personnelles"
 
 #: element.map.php:511
+msgid "File URL:"
+msgstr "URL du fichier :"
+
+#: element.map.php:512
+msgid "Feed URL:"
+msgstr "URL du flux :"
+
+#: element.map.php:513
 msgid "Custom Kml files"
 msgstr "Fichiers kml personnels"
 
-#: element.map.php:512
+#: element.map.php:514
 msgid "Start:"
 msgstr "Départ :"
 
-#: element.map.php:513
+#: element.map.php:515
 msgid "End:"
 msgstr "Arrivée :"
 
-#: element.map.php:514
+#: element.map.php:516
 msgid "Display directions panel in public map"
 msgstr "Afficher les détails sur la carte publique"
 

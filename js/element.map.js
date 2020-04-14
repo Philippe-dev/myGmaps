@@ -135,7 +135,7 @@ $(function () {
 
     var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
-    // Credit OSM if we can ;)
+    // Credit OSM if used ;)
 
     var credit = '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap Contributors</a>';
 
@@ -267,7 +267,8 @@ $(function () {
       fillOpacity: 0.35,
       center: latlng,
       draggable: true,
-      editable: true
+      editable: true,
+      radius: 1000
     };
     circle = new google.maps.Circle(circleOptions);
 
@@ -490,6 +491,7 @@ $(function () {
         '<div class="two-boxes"' +
         '<p><label for="fill_color">' + fill_color_msg + '</label><input type="text" id="fill_color" size="10" value="' + this.fillColor + '" /></p>' +
         '<p><label for="fill_opacity">' + fill_opacity_msg + '</label><input type="text" id="fill_opacity" size="10" value="' + this.fillOpacity + '" /></p>' +
+        '<p><label for="circle_radius">' + circle_radius_msg + '</label><input type="text" id="circle_radius" size="10" value="' + this.radius + '" /></p>' +
         '</div>' +
         '<p><input type="button" id="save" value="OK" /></p>' +
         '</div>';
@@ -666,8 +668,8 @@ $(function () {
       var weight = $('#stroke_weight').val();
       polyline.setOptions({
         strokeColor: color,
-        strokeOpacity: opacity,
-        strokeWeight: weight
+        strokeOpacity: parseFloat(opacity),
+        strokeWeight: parseFloat(weight)
       });
 
       updatePolyline();
@@ -683,10 +685,10 @@ $(function () {
       var fill_opacity = $('#fill_opacity').val();
       polygon.setOptions({
         strokeColor: color,
-        strokeOpacity: opacity,
-        strokeWeight: weight,
+        strokeOpacity: parseFloat(opacity),
+        strokeWeight: parseFloat(weight),
         fillColor: fill_color,
-        fillOpacity: fill_opacity
+        fillOpacity: parseFloat(fill_opacity)
       });
 
       updatePolygon();
@@ -703,10 +705,10 @@ $(function () {
 
       rectangle.setOptions({
         strokeColor: color,
-        strokeOpacity: opacity,
-        strokeWeight: weight,
+        strokeOpacity: parseFloat(opacity),
+        strokeWeight: parseFloat(weight),
         fillColor: fill_color,
-        fillOpacity: fill_opacity
+        fillOpacity: parseFloat(fill_opacity)
       });
 
       updateRectangle();
@@ -720,13 +722,15 @@ $(function () {
       var color = $('#stroke_color').val();
       var fill_color = $('#fill_color').val();
       var fill_opacity = $('#fill_opacity').val();
+      var radius = $('#circle_radius').val();
 
       circle.setOptions({
         strokeColor: color,
-        strokeOpacity: opacity,
-        strokeWeight: weight,
+        strokeOpacity: parseFloat(opacity),
+        strokeWeight: parseFloat(weight),
         fillColor: fill_color,
-        fillOpacity: fill_opacity
+        fillOpacity: parseFloat(fill_opacity),
+        radius: parseFloat(radius)
       });
 
       updateCircle();
@@ -884,8 +888,8 @@ $(function () {
 
       polyline.setOptions({
         strokeColor: color,
-        strokeOpacity: opacity,
-        strokeWeight: weight
+        strokeOpacity: parseFloat(opacity),
+        strokeWeight: parseFloat(weight)
       });
 
       polylinePath = polyline.getPath();
@@ -916,10 +920,10 @@ $(function () {
 
       polygon.setOptions({
         strokeColor: color,
-        strokeOpacity: opacity,
-        strokeWeight: weight,
+        strokeOpacity: parseFloat(opacity),
+        strokeWeight: parseFloat(weight),
         fillColor: fill_color,
-        fillOpacity: fill_opacity
+        fillOpacity: parseFloat(fill_opacity)
       });
 
       polygonPath = polygon.getPath();
@@ -953,10 +957,10 @@ $(function () {
 
       rectangle.setOptions({
         strokeColor: color,
-        strokeOpacity: opacity,
-        strokeWeight: weight,
+        strokeOpacity: parseFloat(opacity),
+        strokeWeight: parseFloat(weight),
         fillColor: fill_color,
-        fillOpacity: fill_opacity
+        fillOpacity: parseFloat(fill_opacity)
       });
 
       $('#add_rectangle').addClass("active");
@@ -983,12 +987,12 @@ $(function () {
 
       circle.setOptions({
         strokeColor: color,
-        strokeOpacity: opacity,
-        strokeWeight: weight,
+        strokeOpacity: parseFloat(opacity),
+        strokeWeight: parseFloat(weight),
         fillColor: fill_color,
-        fillOpacity: fill_opacity,
+        fillOpacity: parseFloat(fill_opacity),
         center: location,
-        radius: radius
+        radius: parseFloat(radius)
       });
 
       $('#add_circle').addClass("active");

@@ -503,6 +503,7 @@ if ($post_id) {
 		'var stroke_color_msg = \''.__('Stroke color').'\';'."\n".
 		'var stroke_opacity_msg = \''.__('Stroke opacity').'\';'."\n".
 		'var stroke_weight_msg = \''.__('Stroke weight').'\';'."\n".
+		'var circle_radius_msg = \''.__('Circle radius').'\';'."\n".
 		'var fill_color_msg = \''.__('Fill color').'\';'."\n".
 		'var fill_opacity_msg = \''.__('Fill opacity').'\';'."\n".
 		'var default_icons_msg = \''.__('Default icons').'\';'."\n".
