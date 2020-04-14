@@ -15,10 +15,6 @@ if (!defined('DC_CONTEXT_ADMIN')) {
     return;
 }
 
-if ($_SERVER['HTTP_REFERER'] == DC_ADMIN_URL.'plugins.php') {
-    require_once dirname(__FILE__).'/config.maps.php';
-}
-
 $edit = '';
 
 if (isset($_REQUEST['do']) &&  $_REQUEST['do'] == 'edit') {
