@@ -72,13 +72,13 @@ a.map-remove {
 
 .map_toolbar button {
   width: 40px;
-  height: 40x;
+  height: 40px;
   border-style: solid;
   border-width: 1px;
   margin-left: 2px;
   margin-bottom: 2px;
-  border-color: #e5e5e5 #ccc #ccc #e5e5e5;
-  background-color: #f7f7f7;
+  border-color: #ccc;
+  background-color: #fff;
   background-position: 50% 50%;
   background-repeat: no-repeat;
 }
@@ -91,8 +91,8 @@ a.map-remove {
 
 .map_toolbar button.inactive:hover,
 .map_toolbar button.inactive:focus {
-  border-color: #e5e5e5 #ccc #ccc #e5e5e5;
-  background-color: #f7f7f7;
+  border-color: #aaa;
+  background-color: #ccc;
 }
 
 .map_toolbar button span {
