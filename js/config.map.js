@@ -11,7 +11,7 @@ $(function () {
 			return myString.replace(/^\s+/g, '').replace(/\s+$/g, '')
 		}
 
-		$('#settings').onetabload(function () {
+		$('#settings').on('onetabload',function () {
 			resizeMap();
 		});
 
