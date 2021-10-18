@@ -12,8 +12,8 @@
 
 class mygmapsPublic
 {
-
-    public static function publicHtmlContent(array $aOptions) {
+    public static function publicHtmlContent(array $aOptions)
+    {
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
@@ -37,7 +37,8 @@ EOT;
         return $sOutput;
     }
 
-    public static function publicCssContent(array $aOptions) {
+    public static function publicCssContent(array $aOptions)
+    {
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
@@ -47,13 +48,15 @@ EOT;
         return '<link rel="stylesheet" type="text/css" href="' . $sPublicPath . '/css/public.css" />'."\n";
     }
 
-    public static function publicJsContent(array $aOptions) {
-		global $core;
-		$s =& $core->blog->settings->myGmaps;
-		return '<script src="https://maps.googleapis.com/maps/api/js?key='.$s->myGmaps_API_key.'"></script>'."\n";
+    public static function publicJsContent(array $aOptions)
+    {
+        global $core;
+        $s =& $core->blog->settings->myGmaps;
+        return '<script src="https://maps.googleapis.com/maps/api/js?key='.$s->myGmaps_API_key.'"></script>'."\n";
     }
 
-    public static function getMapOptions(array $aOptions) {
+    public static function getMapOptions(array $aOptions)
+    {
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
@@ -101,7 +104,8 @@ EOT;
         return $sOutput;
     }
 
-    protected static function getMapStyles(array $aOptions) {
+    protected static function getMapStyles(array $aOptions)
+    {
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
@@ -128,7 +132,7 @@ EOT;
             $sStyle = 'google.maps.MapTypeId.HYBRID';
         } elseif ($sStyle == 'terrain') {
             $sStyle = 'google.maps.MapTypeId.TERRAIN';
-        }  elseif ($sStyle == 'OpenStreetMap') {
+        } elseif ($sStyle == 'OpenStreetMap') {
             $sStyle = 'OpenStreetMap';
         } else {
             $custom_style = true;
@@ -137,9 +141,8 @@ EOT;
         // Create map and listener
         if ($sStyle == 'neutral_blue') {
             $sOutput .= $sNeutralBlueStyle;
-        }
-        elseif ($sStyle != 'neutral_blue' && $custom_style) {
-            if(is_dir($sStylesPath) ) {
+        } elseif ($sStyle != 'neutral_blue' && $custom_style) {
+            if (is_dir($sStylesPath)) {
                 $sStyleId = $sStyle . '_styles';
                 $sStyleDefinition = file_get_contents($sStylesPath . '/' . $sStyleId . '.js');
                 $sStyleName = preg_replace('/_styles/s', '', $sStyleId);
@@ -170,8 +173,7 @@ EOT;
 map_{$sMapId}.mapTypes.set("{$aOptions['style']}", {$aOptions['style']});
 map_{$sMapId}.setMapTypeId("{$aOptions['style']}");\n
 EOT;
-        }
-        elseif ($custom_style == false && $sStyle == 'OpenStreetMap') {
+        } elseif ($custom_style == false && $sStyle == 'OpenStreetMap') {
             $sOutput .= <<<EOT
 var credit = '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap Contributors</a>';
 var creditNode = document.createElement('div');
@@ -189,15 +191,15 @@ map_{$sMapId}.mapTypes.set("OpenStreetMap", new google.maps.ImageMapType({
 }));
 map_{$sMapId}.setMapTypeId("{$sStyle}");\n
 EOT;
-        }
-        else {
+        } else {
             $sOutput .= 'map_'.$sMapId.'.setOptions({mapTypeId: '.$sStyle.'});'."\n";
         }
 
         return $sOutput;
     }
 
-    protected static function getMapEvents(array $aOptions) {
+    protected static function getMapEvents(array $aOptions)
+    {
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
@@ -224,7 +226,8 @@ EOT;
         return $sOutput;
     }
 
-    public static function getMapElementOptions(array $aElementOptions) {
+    public static function getMapElementOptions(array $aElementOptions)
+    {
         self::checkOptions(
             get_called_class(),
             array_keys($aElementOptions),
@@ -243,30 +246,25 @@ EOT;
 
         if ($sType == 'point of interest') {
             $sOutput .= self::getMapElementMarkerOptions($aElementOptions);
-        }
-        elseif ($sType == 'polyline') {
+        } elseif ($sType == 'polyline') {
             $sOutput .= self::getMapElementPolylineOptions($aElementOptions);
-        }
-        elseif ($sType == 'polygon') {
+        } elseif ($sType == 'polygon') {
             $sOutput .= self::getMapElementPolygonOptions($aElementOptions);
-        }
-        elseif ($sType == 'rectangle') {
+        } elseif ($sType == 'rectangle') {
             $sOutput .= self::getMapElementRectangleOptions($aElementOptions);
-        }
-        elseif ($sType == 'circle') {
+        } elseif ($sType == 'circle') {
             $sOutput .= self::getMapElementCircleOptions($aElementOptions);
-        }
-        elseif ($sType == 'included kml file' || $sType == 'GeoRSS feed') {
+        } elseif ($sType == 'included kml file' || $sType == 'GeoRSS feed') {
             $sOutput .= self::getMapElementKmlOptions($aElementOptions);
-        }
-        elseif ($sType == 'directions') {
+        } elseif ($sType == 'directions') {
             $sOutput .= self::getMapElementDirectionsOptions($aElementOptions);
         }
 
         return $sOutput;
     }
 
-    protected static function getMapElementMarkerOptions(array $aOptions) {
+    protected static function getMapElementMarkerOptions(array $aOptions)
+    {
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
@@ -291,7 +289,8 @@ EOT;
         return $sOutput;
     }
 
-    protected static function getMapElementPolylineOptions(array $aOptions) {
+    protected static function getMapElementPolylineOptions(array $aOptions)
+    {
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
@@ -305,7 +304,7 @@ EOT;
         $sStrokeWeight = $aOptions['stroke_weight'];
 
         $sPath = '';
-        foreach($sCoordinates as $sPoint) {
+        foreach ($sCoordinates as $sPoint) {
             $sPath .= 'new google.maps.LatLng(' . $sPoint . '),';
         }
         $sPath = substr($sPath, 0, -1);
@@ -326,7 +325,8 @@ EOT;
         return $sOutput;
     }
 
-    protected static function getMapElementPolygonOptions(array $aOptions) {
+    protected static function getMapElementPolygonOptions(array $aOptions)
+    {
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
@@ -342,7 +342,7 @@ EOT;
         $sFillOpacity = $aOptions['fill_opacity'];
 
         $sPath = '';
-        foreach($sCoordinates as $sPoint) {
+        foreach ($sCoordinates as $sPoint) {
             $sPath .= 'new google.maps.LatLng(' . $sPoint . '),';
         }
         $sPath = substr($sPath, 0, -1);
@@ -365,7 +365,8 @@ EOT;
         return $sOutput;
     }
 
-    protected static function getMapElementRectangleOptions(array $aOptions) {
+    protected static function getMapElementRectangleOptions(array $aOptions)
+    {
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
@@ -404,7 +405,8 @@ EOT;
         return $sOutput;
     }
 
-    protected static function getMapElementCircleOptions(array $aOptions) {
+    protected static function getMapElementCircleOptions(array $aOptions)
+    {
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
@@ -439,7 +441,8 @@ EOT;
         return $sOutput;
     }
 
-    protected static function getMapElementKmlOptions(array $aOptions) {
+    protected static function getMapElementKmlOptions(array $aOptions)
+    {
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
@@ -455,7 +458,8 @@ EOT;
         return $sOutput;
     }
 
-    protected static function getMapElementDirectionsOptions(array $aOptions) {
+    protected static function getMapElementDirectionsOptions(array $aOptions)
+    {
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
@@ -498,8 +502,7 @@ var request = {
 EOT;
         if ($bDisplayDirection == 'true') {
             $sOutput .= '$("#map_box_'.$sMapId.'").addClass( "directions" );'."\n";
-        }
-        else {
+        } else {
             $sOutput .= '$("#map_box_'.$sMapId.'").addClass( "no-directions" );'."\n";
         }
 
@@ -525,7 +528,8 @@ EOT;
         return $sOutput;
     }
 
-    protected static function getMarkerInfoWindow(array $aOptions) {
+    protected static function getMarkerInfoWindow(array $aOptions)
+    {
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
@@ -546,7 +550,8 @@ EOT;
         return $sOutput;
     }
 
-    protected static function getPolyInfoWindow(array $aOptions) {
+    protected static function getPolyInfoWindow(array $aOptions)
+    {
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
@@ -575,7 +580,8 @@ EOT;
      * @param array $aRequiredOptions all keys to check
      * @return bool false if an error
      */
-    protected static function checkOptions($sMethod, array $aKeysOptions, array $aRequiredOptions) {
+    protected static function checkOptions($sMethod, array $aKeysOptions, array $aRequiredOptions)
+    {
         $aErrors = array();
         foreach ($aRequiredOptions as $sRequiredOption) {
             if (! in_array($sRequiredOption, $aKeysOptions)) {

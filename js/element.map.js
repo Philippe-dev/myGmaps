@@ -716,7 +716,7 @@ $(function () {
       infowindow.close();
     });
 
-	$(document).on('click', '#infowindow_circle #save', function () {
+    $(document).on('click', '#infowindow_circle #save', function () {
       var weight = $('#stroke_weight').val();
       var opacity = $('#stroke_opacity').val();
       var color = $('#stroke_color').val();
@@ -738,13 +738,13 @@ $(function () {
       infowindow.close();
     });
 
-	$(document).on('click', '#infowindow_kml li', function () {
+    $(document).on('click', '#infowindow_kml li', function () {
       var li_clicked_url = $("#kmls_base_url").val() + $(this).text();
 
       $('#kml_url').val(li_clicked_url).focus();
     });
 
-	$(document).on('click', '#infowindow_kml #save', function () {
+    $(document).on('click', '#infowindow_kml #save', function () {
       kmlLayer.setMap(null);
       var url = $('#kml_url').val();
       if (url != null && url != '' && is_url(url)) {
@@ -764,7 +764,7 @@ $(function () {
       infowindow.close();
     });
 
-	$(document).on('click', '#infowindow_georss #save', function () {
+    $(document).on('click', '#infowindow_georss #save', function () {
       geoRssLayer.setMap(null);
       var url = $('#geoRss_url').val();
       if (url != null && url != '' && is_url(url)) {
@@ -784,7 +784,7 @@ $(function () {
       infowindow.close();
     });
 
-	$(document).on('click', '#infowindow_directions #save', function () {
+    $(document).on('click', '#infowindow_directions #save', function () {
       var start = $('#directions_start').val();
       var end = $('#directions_end').val();
       var show = $('#directions_show').prop('checked');

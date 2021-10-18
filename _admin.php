@@ -16,7 +16,6 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 }
 
 $_menu['Blog']->addItem(
-
     __('Google Maps'),
     'plugin.php?p=myGmaps&amp;do=list',
     'index.php?pf=myGmaps/icon.png',

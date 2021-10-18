@@ -106,9 +106,9 @@ class adminMapsList extends adminGenericList
     private function postLine($checked)
     {
         global $core;
-		$s =& $core->blog->settings->myGmaps;
-		
-		if ($this->core->auth->check('categories', $this->core->blog->id)) {
+        $s =& $core->blog->settings->myGmaps;
+        
+        if ($this->core->auth->check('categories', $this->core->blog->id)) {
             $cat_link = '<a href="category.php?id=%s">%s</a>';
         } else {
             $cat_link = '%2$s';
