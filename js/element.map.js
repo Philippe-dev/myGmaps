@@ -1,11 +1,10 @@
-$(function () {
+$(() => {
 
   if (!document.getElementById) {
     return;
   }
 
   if (document.getElementById('edit-entry')) {
-
     // Misc functions
 
     function trim(myString) {
@@ -13,7 +12,7 @@ $(function () {
     }
 
     function is_url(str) {
-      var exp = new RegExp("^(http://)[a-zA-Z0-9.-]*[a-zA-Z0-9/_-]", "g");
+      const exp = new RegExp("^(http(s)://)[a-zA-Z0-9.-]*[a-zA-Z0-9/_-]", "g");
       return exp.test(str);
     }
 
@@ -23,13 +22,11 @@ $(function () {
 
       if ($(this).attr('id') == 'delete_map') {
         deleteMap();
-      } else {
-        if ($('#post_excerpt').val() == '') {
-          $(".map_toolbar button").each(function () {
-            $(this).removeClass("active");
-          });
-          $(this).addClass("active");
-        }
+      } else if ($('#post_excerpt').val() == '') {
+        $(".map_toolbar button").each(function () {
+          $(this).removeClass("active");
+        });
+        $(this).addClass("active");
       }
     });
 
@@ -37,12 +34,12 @@ $(function () {
 
     function updatePolyline() {
       vertexArray.length = 0;
-      var len = polylinePath.getLength();
-      for (var i = 0; i < len; i++) {
-        vertexArray.push(polylinePath.getAt(i).lat() + "|" + polylinePath.getAt(i).lng());
+      const len = polylinePath.getLength();
+      for (let i = 0; i < len; i++) {
+        vertexArray.push(`${polylinePath.getAt(i).lat()}|${polylinePath.getAt(i).lng()}`);
       }
       element_values = vertexArray.join('\n');
-      element_values = element_values + '\n' + polyline.strokeWeight +
+      element_values = `${element_values}\n${polyline.strokeWeight}` +
         "|" + polyline.strokeOpacity + "|" + polyline.strokeColor;
       $('#element_type').val('polyline');
       $('#post_excerpt').val(element_values);
@@ -50,12 +47,12 @@ $(function () {
 
     function updatePolygon() {
       vertexArray.length = 0;
-      var len = polygonPath.getLength();
-      for (var i = 0; i < len; i++) {
-        vertexArray.push(polygonPath.getAt(i).lat() + "|" + polygonPath.getAt(i).lng());
+      const len = polygonPath.getLength();
+      for (let i = 0; i < len; i++) {
+        vertexArray.push(`${polygonPath.getAt(i).lat()}|${polygonPath.getAt(i).lng()}`);
       }
       element_values = vertexArray.join('\n');
-      element_values = element_values + '\n' + polygon.strokeWeight +
+      element_values = `${element_values}\n${polygon.strokeWeight}` +
         "|" + polygon.strokeOpacity + "|" + polygon.strokeColor +
         "|" + polygon.fillColor + "|" + polygon.fillOpacity;
       $('#element_type').val('polygon');
@@ -63,13 +60,13 @@ $(function () {
     }
 
     function updateRectangle() {
-      var square = rectangle.getBounds();
-      var NE = square.getNorthEast();
-      var SW = square.getSouthWest();
-      var ne = new google.maps.LatLng(NE.lat(), SW.lng());
-      var sw = new google.maps.LatLng(SW.lat(), NE.lng());
-      element_values = sw.lat() + "|" + ne.lng() + "|" + ne.lat() + "|" + sw.lng();
-      element_values = element_values + '\n' + rectangle.strokeWeight +
+      const square = rectangle.getBounds();
+      const NE = square.getNorthEast();
+      const SW = square.getSouthWest();
+      const ne = new google.maps.LatLng(NE.lat(), SW.lng());
+      const sw = new google.maps.LatLng(SW.lat(), NE.lng());
+      element_values = `${sw.lat()}|${ne.lng()}|${ne.lat()}|${sw.lng()}`;
+      element_values = `${element_values}\n${rectangle.strokeWeight}` +
         "|" + rectangle.strokeOpacity + "|" + rectangle.strokeColor +
         "|" + rectangle.fillColor + "|" + rectangle.fillOpacity;
       $('#element_type').val('rectangle');
@@ -77,11 +74,11 @@ $(function () {
     }
 
     function updateCircle() {
-      var center = circle.getCenter();
-      var radius = circle.getRadius();
+      const center = circle.getCenter();
+      const radius = circle.getRadius();
 
-      element_values = center.lat() + "|" + center.lng() + "|" + radius;
-      element_values = element_values + '\n' + circle.strokeWeight +
+      element_values = `${center.lat()}|${center.lng()}|${radius}`;
+      element_values = `${element_values}\n${circle.strokeWeight}` +
         "|" + circle.strokeOpacity + "|" + circle.strokeColor +
         "|" + circle.fillColor + "|" + circle.fillOpacity;
       $('#element_type').val('circle');
@@ -107,7 +104,7 @@ $(function () {
 
     // Map styles. Get more styles from http://snazzymaps.com/
 
-    var mapTypeIds = [google.maps.MapTypeId.ROADMAP,
+    const mapTypeIds = [google.maps.MapTypeId.ROADMAP,
       google.maps.MapTypeId.HYBRID,
       google.maps.MapTypeId.SATELLITE,
       google.maps.MapTypeId.TERRAIN,
@@ -115,31 +112,31 @@ $(function () {
       'neutral_blue'
     ];
 
-    var map_styles_list = $('#map_styles_list').val();
-    var styles_array = map_styles_list.split(',');
+    const map_styles_list = $('#map_styles_list').val();
+    const styles_array = map_styles_list.split(',');
     for (i in styles_array) {
       value = styles_array[i].replace("_styles.js", "");
       mapTypeIds.push(value);
     }
 
-    var myOptions = {
+    const myOptions = {
       zoom: parseFloat(default_zoom),
       center: latlng,
       scrollwheel: false,
       mapTypeControl: true,
       overviewMapControl: true,
       mapTypeControlOptions: {
-        mapTypeIds: mapTypeIds
+        mapTypeIds
       }
     };
 
-    var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    const map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
     // Credit OSM if used ;)
 
-    var credit = '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap Contributors</a>';
+    const credit = '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap Contributors</a>';
 
-    var creditNode = document.createElement('div');
+    const creditNode = document.createElement('div');
     creditNode.id = 'credit-control';
     creditNode.index = 0;
 
@@ -175,8 +172,8 @@ $(function () {
     map.mapTypes.set('neutral_blue', neutral_blue);
 
     map.mapTypes.set('OpenStreetMap', new google.maps.ImageMapType({
-      getTileUrl: function (coord, zoom) {
-        return "https://tile.openstreetmap.org/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+      getTileUrl(coord, zoom) {
+        return `https://tile.openstreetmap.org/${zoom}/${coord.x}/${coord.y}.png`;
       },
       tileSize: new google.maps.Size(256, 256),
       name: "OpenStreetMap",
@@ -196,7 +193,7 @@ $(function () {
     geocoder = new google.maps.Geocoder();
 
     function geocode() {
-      var address = document.getElementById("address").value;
+      const address = document.getElementById("address").value;
       geocoder.geocode({
         'address': address,
         'partialmatch': true
@@ -207,11 +204,11 @@ $(function () {
       if (status == 'OK' && results.length > 0) {
         map.fitBounds(results[0].geometry.viewport);
       } else {
-        alert("Geocode was not successful for the following reason: " + status);
+        alert(`Geocode was not successful for the following reason: ${status}`);
       }
     }
 
-    $('#geocode').on('click', function () {
+    $('#geocode').on('click', () => {
       geocode();
       return false;
 
@@ -223,7 +220,7 @@ $(function () {
     var vertexArray = [];
 
     var polyline;
-    var polylineOptions = {
+    const polylineOptions = {
       strokeColor: '#555',
       strokeOpacity: 0.8,
       strokeWeight: 3,
@@ -234,7 +231,7 @@ $(function () {
     var polylinePath = polyline.getPath();
 
     var polygon;
-    var polygonOptions = {
+    const polygonOptions = {
       strokeColor: '#555',
       strokeOpacity: 0.8,
       strokeWeight: 3,
@@ -247,7 +244,7 @@ $(function () {
     var polygonPath = polygon.getPath();
 
     var rectangle;
-    var rectangleOptions = {
+    const rectangleOptions = {
       strokeColor: '#555',
       strokeOpacity: 0.8,
       strokeWeight: 3,
@@ -259,7 +256,7 @@ $(function () {
     rectangle = new google.maps.Rectangle(rectangleOptions);
 
     var circle;
-    var circleOptions = {
+    const circleOptions = {
       strokeColor: '#555',
       strokeOpacity: 0.8,
       strokeWeight: 3,
@@ -278,7 +275,7 @@ $(function () {
     var geoRssLayer;
     geoRssLayer = new google.maps.KmlLayer({});
 
-    var directionsService = new google.maps.DirectionsService();
+    const directionsService = new google.maps.DirectionsService();
 
     var polylineRendererOptions = {
       strokeColor: '#555',
@@ -292,7 +289,7 @@ $(function () {
 
 
     var routePolyline;
-    var routePolylineOptions = {
+    const routePolylineOptions = {
       strokeColor: '#555',
       strokeOpacity: 0,
       strokeWeight: 20,
@@ -301,18 +298,18 @@ $(function () {
     routePolyline = new google.maps.Polyline(routePolylineOptions);
     var routePolylinePath = routePolyline.getPath();
 
-    var input = document.getElementById('address');
-    var autocomplete = new google.maps.places.Autocomplete(input);
+    const input = document.getElementById('address');
+    const autocomplete = new google.maps.places.Autocomplete(input);
 
     // OBJECTS LISTENERS
 
     // Map listeners
 
-    google.maps.event.addListener(map, 'click', function (event) {
+    google.maps.event.addListener(map, 'click', (event) => {
       infowindow.close();
 
-      var action = 'none';
-      var hasButtonActive = ($(".map_toolbar button.active").length > 0 ? true : false);
+      let action = 'none';
+      const hasButtonActive = ($(".map_toolbar button.active").length > 0 ? true : false);
       $(".map_toolbar button").each(function () {
         if ($(this).hasClass("active")) {
           action = ($(this).attr('id'));
@@ -347,15 +344,13 @@ $(function () {
         if ($('#post_excerpt').val() == '') {
           addCircle(event.latLng);
         }
-      } else if (action == 'add_directions') {
-        if ($('#post_excerpt').val() == '') {
-          addDirections(event.latLng);
-        }
+      } else if (action == 'add_directions' && $('#post_excerpt').val() == '') {
+        addDirections(event.latLng);
       }
     });
 
 
-    google.maps.event.addListener(map, 'maptypeid_changed', function () {
+    google.maps.event.addListener(map, 'maptypeid_changed', () => {
       if (map.getMapTypeId() == 'OpenStreetMap') {
         map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(creditNode);
         creditNode.innerHTML = credit;
@@ -367,27 +362,26 @@ $(function () {
 
     // Polyline listeners
 
-    google.maps.event.addListener(polyline, 'rightclick', function (mev) {
+    google.maps.event.addListener(polyline, 'rightclick', (mev) => {
       if (mev.vertex != null) {
         polyline.getPath().removeAt(mev.vertex);
       }
     });
 
-    google.maps.event.addListener(polylinePath, 'insert_at', function () {
+    google.maps.event.addListener(polylinePath, 'insert_at', () => {
       updatePolyline();
     });
 
-    google.maps.event.addListener(polylinePath, 'remove_at', function () {
+    google.maps.event.addListener(polylinePath, 'remove_at', () => {
       updatePolyline();
     });
 
-    google.maps.event.addListener(polylinePath, 'set_at', function () {
+    google.maps.event.addListener(polylinePath, 'set_at', () => {
       updatePolyline();
     });
 
     google.maps.event.addListener(polyline, 'click', function (event) {
-
-      var infowindowPolyline =
+      const infowindowPolyline =
         '<div id="infowindow_polyline" class="col">' +
         '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '" /></p>' +
         '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + this.strokeOpacity + '" /></p>' +
@@ -402,27 +396,26 @@ $(function () {
 
     // Polygon listeners
 
-    google.maps.event.addListener(polygon, 'rightclick', function (mev) {
+    google.maps.event.addListener(polygon, 'rightclick', (mev) => {
       if (mev.vertex != null) {
         polygon.getPath().removeAt(mev.vertex);
       }
     });
 
-    google.maps.event.addListener(polygonPath, 'insert_at', function () {
+    google.maps.event.addListener(polygonPath, 'insert_at', () => {
       updatePolygon();
     });
 
-    google.maps.event.addListener(polygonPath, 'remove_at', function () {
+    google.maps.event.addListener(polygonPath, 'remove_at', () => {
       updatePolygon();
     });
 
-    google.maps.event.addListener(polygonPath, 'set_at', function () {
+    google.maps.event.addListener(polygonPath, 'set_at', () => {
       updatePolygon();
     });
 
     google.maps.event.addListener(polygon, 'click', function (event) {
-
-      var infowindowPolygon =
+      const infowindowPolygon =
         '<div id="infowindow_polygon">' +
         '<div class="two-boxes"' +
         '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '" /></p>' +
@@ -443,16 +436,16 @@ $(function () {
 
     // Rectangle listeners
 
-    google.maps.event.addListener(rectangle, 'bounds_changed', function (event) {
+    google.maps.event.addListener(rectangle, 'bounds_changed', (event) => {
       updateRectangle();
     });
 
-    google.maps.event.addListener(rectangle, 'dragend', function (event) {
+    google.maps.event.addListener(rectangle, 'dragend', (event) => {
       updateRectangle();
     });
 
     google.maps.event.addListener(rectangle, 'click', function (event) {
-      var infowindowRectangle =
+      const infowindowRectangle =
         '<div id="infowindow_rectangle">' +
         '<div class="two-boxes"' +
         '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '" /></p>' +
@@ -472,16 +465,16 @@ $(function () {
 
     //Circle listeners
 
-    google.maps.event.addListener(circle, 'center_changed', function (event) {
+    google.maps.event.addListener(circle, 'center_changed', (event) => {
       updateCircle();
     });
 
-    google.maps.event.addListener(circle, 'radius_changed', function (event) {
+    google.maps.event.addListener(circle, 'radius_changed', (event) => {
       updateCircle();
     });
 
     google.maps.event.addListener(circle, 'click', function (event) {
-      var infowindowCircle =
+      const infowindowCircle =
         '<div id="infowindow_circle">' +
         '<div class="two-boxes"' +
         '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '" /></p>' +
@@ -502,23 +495,23 @@ $(function () {
 
     //Kml listener
 
-    google.maps.event.addListener(kmlLayer, 'click', function (event) {
-      var myKmls = [];
+    google.maps.event.addListener(kmlLayer, 'click', (event) => {
+      const myKmls = [];
       if ($("#kmls_list").val() != '') {
-        var kmls_base_url = $("#kmls_base_url").val();
-        var kmls_list = $("#kmls_list").val();
-        var kmls_array = kmls_list.split(',');
+        const kmls_base_url = $("#kmls_base_url").val();
+        const kmls_list = $("#kmls_list").val();
+        const kmls_array = kmls_list.split(',');
         for (i in kmls_array) {
-          this_kml = '<li>' + kmls_array[i] + '</li>';
+          this_kml = `<li>${kmls_array[i]}</li>`;
           myKmls.push(this_kml);
         }
       }
 
-      var custom_kmls = myKmls.join();
-      custom_kmls = '<ul>' + custom_kmls.replace(/\,/g, '') + '</ul>';
+      let custom_kmls = myKmls.join();
+      custom_kmls = `<ul>${custom_kmls.replace(/\,/g, '')}</ul>`;
 
       if (myKmls != '') {
-        var has_custom_kmls = '<h4>' + custom_kmls_msg + '</h4>' +
+        var has_custom_kmls = `<h4>${custom_kmls_msg}</h4>` +
           '<div style="max-height: 100px;overflow: auto">' +
           custom_kmls +
           '</div>' +
@@ -527,7 +520,7 @@ $(function () {
         var has_custom_kmls = '';
       }
 
-      var infowindowKml =
+      const infowindowKml =
         '<div id="infowindow_kml" style="cursor: pointer">' +
         has_custom_kmls +
         '<h4>' + kml_url_msg + '</h4>' +
@@ -541,9 +534,8 @@ $(function () {
 
     // GeoRSS listener
 
-    google.maps.event.addListener(geoRssLayer, 'click', function (event) {
-
-      var infowindowgeoRss =
+    google.maps.event.addListener(geoRssLayer, 'click', (event) => {
+      const infowindowgeoRss =
         '<div id="infowindow_georss" style="cursor: pointer">' +
         '<h4>' + geoRss_url_msg + '</h4>' +
         '<p><input type="text" id="geoRss_url" size="80" value="' + $('#post_excerpt').val() + '" /></p>' +
@@ -556,16 +548,15 @@ $(function () {
 
     // directions listener
 
-    google.maps.event.addListener(routePolyline, 'click', function (event) {
+    google.maps.event.addListener(routePolyline, 'click', (event) => {
+      const parts = element_values.split("|");
 
-      var parts = element_values.split("|");
-
-      var start = parts[0];
-      var end = parts[1];
-      var weight = parts[2];
-      var opacity = parts[3];
-      var color = parts[4];
-      var show = parts[5];
+      const start = parts[0];
+      const end = parts[1];
+      const weight = parts[2];
+      const opacity = parts[3];
+      const color = parts[4];
+      const show = parts[5];
 
       if (show == 'true') {
         var state = 'checked = "checked"';
@@ -573,7 +564,7 @@ $(function () {
         var state = '';
       }
 
-      var infowindowDirections =
+      const infowindowDirections =
         '<div id="infowindow_directions" style="cursor: pointer">' +
         '<div class="two-cols clearfix">' +
         '<div class="col70">' +
@@ -594,10 +585,10 @@ $(function () {
       infowindow.setContent(infowindowDirections);
       infowindow.open(map);
 
-      var input1 = document.getElementById('directions_start');
+      const input1 = document.getElementById('directions_start');
       var autocomplete = new google.maps.places.Autocomplete(input1);
 
-      var input2 = document.getElementById('directions_end');
+      const input2 = document.getElementById('directions_end');
       var autocomplete = new google.maps.places.Autocomplete(input2);
 
     });
@@ -608,24 +599,24 @@ $(function () {
 
     // Icons infowindow
 
-    var myIcons = [];
+    const myIcons = [];
     if ($("#icons_list").val() != '') {
-      var icons_base_url = $("#icons_base_url").val();
-      var icons_list = $("#icons_list").val();
-      var icons_array = icons_list.split(',');
+      const icons_base_url = $("#icons_base_url").val();
+      const icons_list = $("#icons_list").val();
+      const icons_array = icons_list.split(',');
       for (i in icons_array) {
-        var this_icon = '<img src="' + icons_base_url + '' + icons_array[i] + '" alt="' + icons_array[i] + '" />';
+        const this_icon = `<img src="${icons_base_url}${icons_array[i]}" alt="${icons_array[i]}" />`;
         myIcons.push(this_icon);
       }
     }
 
-    var custom_icons = myIcons.join();
+    let custom_icons = myIcons.join();
     custom_icons = custom_icons.replace(/\,/g, '');
 
     var default_icons_url = $("#plugin_QmarkURL").val();
 
     if (custom_icons != '') {
-      var has_custom_icons = '<h4>' + custom_icons_msg + '</h4>' +
+      var has_custom_icons = `<h4>${custom_icons_msg}</h4>` +
         '<div id="custom_icons_list">' +
         custom_icons +
         '</div>' +
@@ -651,21 +642,21 @@ $(function () {
     // Infowindows actions
 
     $(document).on('click', '#infowindow_icons img', function () {
-      var element_values = $('#post_excerpt').val();
-      var parts = element_values.split("|");
-      var lat = parseFloat(parts[0]);
-      var lng = parseFloat(parts[1]);
+      let element_values = $('#post_excerpt').val();
+      const parts = element_values.split("|");
+      const lat = parseFloat(parts[0]);
+      const lng = parseFloat(parts[1]);
       marker.setIcon($(this).attr("src"));
-      var icon = $(this).attr("src");
-      element_values = marker.position.lat() + "|" + marker.position.lng() + "|" + icon;
+      const icon = $(this).attr("src");
+      element_values = `${marker.position.lat()}|${marker.position.lng()}|${icon}`;
       $('#post_excerpt').val(element_values);
       infowindow.close();
     });
 
-    $(document).on('click', '#infowindow_polyline #save', function () {
-      var color = $('#stroke_color').val();
-      var opacity = $('#stroke_opacity').val();
-      var weight = $('#stroke_weight').val();
+    $(document).on('click', '#infowindow_polyline #save', () => {
+      const color = $('#stroke_color').val();
+      const opacity = $('#stroke_opacity').val();
+      const weight = $('#stroke_weight').val();
       polyline.setOptions({
         strokeColor: color,
         strokeOpacity: parseFloat(opacity),
@@ -677,12 +668,12 @@ $(function () {
       infowindow.close();
     });
 
-    $(document).on('click', '#infowindow_polygon #save', function () {
-      var color = $('#stroke_color').val();
-      var opacity = $('#stroke_opacity').val();
-      var weight = $('#stroke_weight').val();
-      var fill_color = $('#fill_color').val();
-      var fill_opacity = $('#fill_opacity').val();
+    $(document).on('click', '#infowindow_polygon #save', () => {
+      const color = $('#stroke_color').val();
+      const opacity = $('#stroke_opacity').val();
+      const weight = $('#stroke_weight').val();
+      const fill_color = $('#fill_color').val();
+      const fill_opacity = $('#fill_opacity').val();
       polygon.setOptions({
         strokeColor: color,
         strokeOpacity: parseFloat(opacity),
@@ -696,12 +687,12 @@ $(function () {
       infowindow.close();
     });
 
-    $(document).on('click', '#infowindow_rectangle #save', function () {
-      var weight = $('#stroke_weight').val();
-      var opacity = $('#stroke_opacity').val();
-      var color = $('#stroke_color').val();
-      var fill_color = $('#fill_color').val();
-      var fill_opacity = $('#fill_opacity').val();
+    $(document).on('click', '#infowindow_rectangle #save', () => {
+      const weight = $('#stroke_weight').val();
+      const opacity = $('#stroke_opacity').val();
+      const color = $('#stroke_color').val();
+      const fill_color = $('#fill_color').val();
+      const fill_opacity = $('#fill_opacity').val();
 
       rectangle.setOptions({
         strokeColor: color,
@@ -716,13 +707,13 @@ $(function () {
       infowindow.close();
     });
 
-    $(document).on('click', '#infowindow_circle #save', function () {
-      var weight = $('#stroke_weight').val();
-      var opacity = $('#stroke_opacity').val();
-      var color = $('#stroke_color').val();
-      var fill_color = $('#fill_color').val();
-      var fill_opacity = $('#fill_opacity').val();
-      var radius = $('#circle_radius').val();
+    $(document).on('click', '#infowindow_circle #save', () => {
+      const weight = $('#stroke_weight').val();
+      const opacity = $('#stroke_opacity').val();
+      const color = $('#stroke_color').val();
+      const fill_color = $('#fill_color').val();
+      const fill_opacity = $('#fill_opacity').val();
+      const radius = $('#circle_radius').val();
 
       circle.setOptions({
         strokeColor: color,
@@ -739,17 +730,16 @@ $(function () {
     });
 
     $(document).on('click', '#infowindow_kml li', function () {
-      var li_clicked_url = $("#kmls_base_url").val() + $(this).text();
-
+      const li_clicked_url = $("#kmls_base_url").val() + $(this).text();
       $('#kml_url').val(li_clicked_url).focus();
     });
 
-    $(document).on('click', '#infowindow_kml #save', function () {
+    $(document).on('click', '#infowindow_kml #save', () => {
       kmlLayer.setMap(null);
-      var url = $('#kml_url').val();
+      const url = $('#kml_url').val();
       if (url != null && url != '' && is_url(url)) {
         kmlLayer.setOptions({
-          url: url,
+          url,
           preserveViewport: true,
           suppressInfoWindows: true
         });
@@ -759,17 +749,17 @@ $(function () {
         $('#element_type').val('included kml file');
         $('#post_excerpt').val(url);
       }
-
+      
       kmlLayer.setMap(map);
       infowindow.close();
     });
 
-    $(document).on('click', '#infowindow_georss #save', function () {
+    $(document).on('click', '#infowindow_georss #save', () => {
       geoRssLayer.setMap(null);
-      var url = $('#geoRss_url').val();
+      const url = $('#geoRss_url').val();
       if (url != null && url != '' && is_url(url)) {
         geoRssLayer.setOptions({
-          url: url,
+          url,
           preserveViewport: true,
           suppressInfoWindows: true
         });
@@ -784,33 +774,33 @@ $(function () {
       infowindow.close();
     });
 
-    $(document).on('click', '#infowindow_directions #save', function () {
-      var start = $('#directions_start').val();
-      var end = $('#directions_end').val();
-      var show = $('#directions_show').prop('checked');
-      var color = $('#stroke_color').val();
-      var opacity = $('#stroke_opacity').val();
-      var weight = $('#stroke_weight').val();
+    $(document).on('click', '#infowindow_directions #save', () => {
+      const start = $('#directions_start').val();
+      const end = $('#directions_end').val();
+      const show = $('#directions_show').prop('checked');
+      const color = $('#stroke_color').val();
+      const opacity = $('#stroke_opacity').val();
+      const weight = $('#stroke_weight').val();
 
-      var polylineRendererOptions = {
+      const polylineRendererOptions = {
         strokeColor: color,
         strokeOpacity: opacity,
         strokeWeight: weight
-      }
+      };
 
-      var rendererOptions = {
+      const rendererOptions = {
         polylineOptions: polylineRendererOptions
-      }
+      };
 
-      var request = {
+      const request = {
         origin: start,
         destination: end,
         travelMode: google.maps.TravelMode.DRIVING
       };
 
-      directionsService.route(request, function (result, status) {
+      directionsService.route(request, (result, status) => {
         if (status == google.maps.DirectionsStatus.OK) {
-          var routePath = result.routes[0].overview_path;
+          const routePath = result.routes[0].overview_path;
           routePolyline.setPath(routePath);
           directionsDisplay.setOptions({
             options: rendererOptions
@@ -822,7 +812,7 @@ $(function () {
 
       // Save values and type
 
-      element_values = start + "|" + end + "|" + weight +
+      element_values = `${start}|${end}|${weight}` +
         "|" + opacity + "|" + color + "|" + show;
 
       $('#element_type').val('directions');
@@ -836,7 +826,7 @@ $(function () {
     // PLACE EXISTING ELEMENTS
 
     var element_values = $('#post_excerpt').val();
-    var element_type = $('input[name=element_type]').val();
+    const element_type = $('input[name=element_type]').val();
 
     // Place existing marker if any
 
@@ -844,13 +834,13 @@ $(function () {
       var parts = element_values.split("|");
       var lat = parseFloat(parts[0]);
       var lng = parseFloat(parts[1]);
-      var icon = parts[2];
+      const icon = parts[2];
       var location = new google.maps.LatLng(lat, lng);
       marker = new google.maps.Marker({
         position: location,
         draggable: true,
-        icon: icon,
-        map: map
+        icon,
+        map
       });
       markersArray.push(marker);
       $('#add_marker').addClass("active");
@@ -862,15 +852,14 @@ $(function () {
         infowindow.open(map, this);
       });
 
-      google.maps.event.addListener(marker, "dragend", function () {
-        element_values = marker.position.lat() + "|" + marker.position.lng() + "|" + icon
+      google.maps.event.addListener(marker, "dragend", () => {
+        element_values = `${marker.position.lat()}|${marker.position.lng()}|${icon}`
         $('#post_excerpt').val(element_values);
       });
 
       // Place existing polyline if any
 
     } else if (element_type == 'polyline') {
-
       var lines = element_values.split("\n");
       for (var i = 0; i < lines.length - 1; i++) {
         var parts = lines[i].split("|");
@@ -880,7 +869,7 @@ $(function () {
         polylinePath.push(location);
       }
 
-      var polyline_options = lines.pop();
+      const polyline_options = lines.pop();
       var parts = polyline_options.split("|");
       var weight = parseFloat(parts[0]);
       var opacity = parseFloat(parts[1]);
@@ -900,7 +889,6 @@ $(function () {
       // Place existing polygon if any
 
     } else if (element_type == 'polygon') {
-
       var lines = element_values.split("\n");
       for (var i = 0; i < lines.length - 1; i++) {
         var parts = lines[i].split("|");
@@ -910,7 +898,7 @@ $(function () {
         polygonPath.push(location);
       }
 
-      var polygon_options = lines.pop();
+      const polygon_options = lines.pop();
       var parts = polygon_options.split("|");
       var weight = parseFloat(parts[0]);
       var opacity = parseFloat(parts[1]);
@@ -934,14 +922,13 @@ $(function () {
       // Place existing rectangle if any
 
     } else if (element_type == 'rectangle') {
-
       var lines = element_values.split("\n");
 
       var parts = lines[0].split("|");
-      var swlat = parseFloat(parts[0]);
-      var nelng = parseFloat(parts[1]);
-      var nelat = parseFloat(parts[2]);
-      var swlng = parseFloat(parts[3]);
+      const swlat = parseFloat(parts[0]);
+      const nelng = parseFloat(parts[1]);
+      const nelat = parseFloat(parts[2]);
+      const swlng = parseFloat(parts[3]);
       bounds = new google.maps.LatLngBounds(
         new google.maps.LatLng(swlat, nelng),
         new google.maps.LatLng(nelat, swlng));
@@ -969,13 +956,12 @@ $(function () {
       // Place existing circle if any
 
     } else if (element_type == 'circle') {
-
       var lines = element_values.split("\n");
 
       var parts = lines[0].split("|");
       var lat = parseFloat(parts[0]);
       var lng = parseFloat(parts[1]);
-      var radius = parseFloat(parts[2]);
+      const radius = parseFloat(parts[2]);
       var location = new google.maps.LatLng(lat, lng);
 
       var parts2 = lines[1].split("|");
@@ -1027,11 +1013,10 @@ $(function () {
       // Place existing directions if any
 
     } else if (element_type == 'directions') {
-
       var parts = element_values.split("|");
 
-      var start = parts[0];
-      var end = parts[1];
+      const start = parts[0];
+      const end = parts[1];
       var weight = parts[2];
       var opacity = parts[3];
       var color = parts[4];
@@ -1046,15 +1031,15 @@ $(function () {
         polylineOptions: polylineRendererOptions
       }
 
-      var request = {
+      const request = {
         origin: start,
         destination: end,
         travelMode: google.maps.TravelMode.DRIVING
       };
 
-      directionsService.route(request, function (result, status) {
+      directionsService.route(request, (result, status) => {
         if (status == google.maps.DirectionsStatus.OK) {
-          var routePath = result.routes[0].overview_path;
+          const routePath = result.routes[0].overview_path;
           routePolyline.setPath(routePath);
           directionsDisplay.setOptions({
             options: rendererOptions
@@ -1086,9 +1071,9 @@ $(function () {
 
       marker = new google.maps.Marker({
         position: location,
-        icon: default_icons_url + 'pf=myGmaps/icons/marker.png',
+        icon: `${default_icons_url}pf=myGmaps/icons/marker.png`,
         draggable: true,
-        map: map
+        map
       });
       markersArray.push(marker);
 
@@ -1100,14 +1085,14 @@ $(function () {
         infowindow.open(map, this);
       });
 
-      google.maps.event.addListener(marker, "dragend", function () {
-        element_values = marker.position.lat() + "|" + marker.position.lng() + "|" + marker.icon;
+      google.maps.event.addListener(marker, "dragend", () => {
+        element_values = `${marker.position.lat()}|${marker.position.lng()}|${marker.icon}`;
         $('#post_excerpt').val(element_values);
       });
 
       // Save values
 
-      element_values = marker.position.lat() + "|" + marker.position.lng() + "|" + marker.icon;
+      element_values = `${marker.position.lat()}|${marker.position.lng()}|${marker.icon}`;
 
       $('#element_type').val('point of interest');
       $('#post_excerpt').val(element_values);
@@ -1147,9 +1132,8 @@ $(function () {
     // Add rectangle
 
     function addRectangle(location) {
-
       // Initialize
-      var scale = Math.pow(2, map.getZoom());
+      const scale = 2 ** map.getZoom();
 
       rectangle.setBounds(new google.maps.LatLngBounds(
         new google.maps.LatLng(((location.lat() * scale) - 50) / scale, ((location.lng() * scale) - 75) / scale),
@@ -1166,13 +1150,12 @@ $(function () {
     // Add circle
 
     function addCircle(location) {
-
       // Initialize
 
-      var scale = Math.pow(2, (Math.PI * 10) - map.getZoom());
-      var radius = scale / 500;
+      const scale = 2 ** ((Math.PI * 10) - map.getZoom());
+      const radius = scale / 500;
       circle.setOptions({
-        radius: radius,
+        radius,
         center: location
       });
       circle.setMap(map);
@@ -1186,22 +1169,22 @@ $(function () {
     // Add kml
 
     function addKml(location) {
-      var myKmls = [];
+      const myKmls = [];
       if ($("#kmls_list").val() != '') {
-        var kmls_base_url = $("#kmls_base_url").val();
-        var kmls_list = $("#kmls_list").val();
-        var kmls_array = kmls_list.split(',');
+        const kmls_base_url = $("#kmls_base_url").val();
+        const kmls_list = $("#kmls_list").val();
+        const kmls_array = kmls_list.split(',');
         for (i in kmls_array) {
-          this_kml = '<li>' + kmls_array[i] + '</li>';
+          this_kml = `<li>${kmls_array[i]}</li>`;
           myKmls.push(this_kml);
         }
       }
 
-      var custom_kmls = myKmls.join();
-      custom_kmls = '<ul>' + custom_kmls.replace(/\,/g, '') + '</ul>';
+      let custom_kmls = myKmls.join();
+      custom_kmls = `<ul>${custom_kmls.replace(/\,/g, '')}</ul>`;
 
       if (myKmls != '') {
-        var has_custom_kmls = '<h4>' + custom_kmls_msg + '</h4>' +
+        var has_custom_kmls = `<h4>${custom_kmls_msg}</h4>` +
           '<div style="max-height: 100px;overflow: auto">' +
           custom_kmls +
           '</div>' +
@@ -1210,7 +1193,7 @@ $(function () {
         var has_custom_kmls = '';
       }
 
-      var infowindowKml =
+      const infowindowKml =
         '<div id="infowindow_kml" style="cursor: pointer">' +
         has_custom_kmls +
         '<h4>' + kml_url_msg + '</h4>' +
@@ -1225,8 +1208,7 @@ $(function () {
     // Add geoRSS
 
     function addgeoRSS(location) {
-
-      var infowindowgeoRss =
+      const infowindowgeoRss =
         '<div id="infowindow_georss" style="cursor: pointer">' +
         '<h4>' + geoRss_url_msg + '</h4>' +
         '<p><input type="text" id="geoRss_url" size="80" value="' + $('#post_excerpt').val() + '" /></p>' +
@@ -1240,12 +1222,11 @@ $(function () {
     // Add directions
 
     function addDirections(location) {
+      const color = '#555';
+      const opacity = 0.8;
+      const weight = 3;
 
-      var color = '#555';
-      var opacity = 0.8;
-      var weight = 3;
-
-      var infowindowDirections =
+      const infowindowDirections =
         '<div id="infowindow_directions" style="cursor: pointer">' +
         '<div class="two-cols clearfix">' +
         '<div class="col70">' +
@@ -1266,10 +1247,10 @@ $(function () {
       infowindow.setContent(infowindowDirections);
       infowindow.open(map);
 
-      var input1 = document.getElementById('directions_start');
+      const input1 = document.getElementById('directions_start');
       var autocomplete = new google.maps.places.Autocomplete(input1);
 
-      var input2 = document.getElementById('directions_end');
+      const input2 = document.getElementById('directions_end');
       var autocomplete = new google.maps.places.Autocomplete(input2);
     }
 
@@ -1348,15 +1329,15 @@ $(function () {
 
     // SUBMIT FORM AND SAVE ELEMENT
 
-    $('#entry-form').submit(function () {
-      var element_type = $('#element_type').val();
+    $('#entry-form').submit(() => {
+      const element_type = $('#element_type').val();
       if (element_type == '') {
         $('#element_type').val('none');
       }
 
-      var default_location = map.getCenter().lat() + ',' + map.getCenter().lng();
-      var default_zoom = map.getZoom();
-      var default_type = map.getMapTypeId();
+      const default_location = `${map.getCenter().lat()},${map.getCenter().lng()}`;
+      const default_zoom = map.getZoom();
+      const default_type = map.getMapTypeId();
 
       $('input[name=myGmaps_center]').attr('value', default_location);
       $('input[name=myGmaps_zoom]').attr('value', default_zoom);

@@ -1,4 +1,4 @@
-$(function () {
+$(() => {
 
 	if (!document.getElementById) {
 		return;
@@ -11,7 +11,7 @@ $(function () {
 			return myString.replace(/^\s+/g, '').replace(/\s+$/g, '')
 		}
 
-		$('#settings').on('onetabload', function () {
+		$('#settings').on('onetabload', () => {
 			resizeMap();
 		});
 
@@ -22,9 +22,9 @@ $(function () {
 				var default_zoom = '12';
 				var default_type = 'roadmap';
 			} else {
-				var parts = $('input[name="myGmaps_center"]').attr('value').split(",");
-				var lat = parseFloat(trim(parts[0]));
-				var lng = parseFloat(trim(parts[1]));
+				const parts = $('input[name="myGmaps_center"]').attr('value').split(",");
+				const lat = parseFloat(trim(parts[0]));
+				const lng = parseFloat(trim(parts[1]));
 				var default_location = new google.maps.LatLng(lat, lng);
 				var default_zoom = $('input[name="myGmaps_zoom"]').attr('value');
 				var default_type = $('input[name="myGmaps_type"]').attr('value');
@@ -41,9 +41,9 @@ $(function () {
 			var default_zoom = '12';
 			var default_type = 'roadmap';
 		} else {
-			var parts = $('input[name="myGmaps_center"]').attr('value').split(",");
-			var lat = parseFloat(trim(parts[0]));
-			var lng = parseFloat(trim(parts[1]));
+			const parts = $('input[name="myGmaps_center"]').attr('value').split(",");
+			const lat = parseFloat(trim(parts[0]));
+			const lng = parseFloat(trim(parts[1]));
 			var default_location = new google.maps.LatLng(lat, lng);
 			var default_zoom = $('input[name="myGmaps_zoom"]').attr('value');
 			var default_type = $('input[name="myGmaps_type"]').attr('value');
@@ -51,7 +51,7 @@ $(function () {
 
 		// Map styles. Get more styles from http://snazzymaps.com/
 
-		var mapTypeIds = [google.maps.MapTypeId.ROADMAP,
+		const mapTypeIds = [google.maps.MapTypeId.ROADMAP,
 			google.maps.MapTypeId.HYBRID,
 			google.maps.MapTypeId.SATELLITE,
 			google.maps.MapTypeId.TERRAIN,
@@ -60,20 +60,20 @@ $(function () {
 		];
 
 
-		var map_styles_list = $('#map_styles_list').attr('value');
-		var styles_array = map_styles_list.split(',');
+		const map_styles_list = $('#map_styles_list').attr('value');
+		const styles_array = map_styles_list.split(',');
 		for (i in styles_array) {
 			value = styles_array[i].replace("_styles.js", "");
 			mapTypeIds.push(value);
 
 		}
-		var myOptions = {
+		const myOptions = {
 			zoom: parseFloat(default_zoom),
 			center: default_location,
 			scrollwheel: false,
 			mapTypeControl: true,
 			mapTypeControlOptions: {
-				mapTypeIds: mapTypeIds
+				mapTypeIds
 			}
 		};
 
@@ -81,9 +81,9 @@ $(function () {
 
 		// Credit OSM if we can ;)
 
-		var credit = '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap Contributors</a>';
+		const credit = '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap Contributors</a>';
 
-		var creditNode = document.createElement('div');
+		const creditNode = document.createElement('div');
 		creditNode.id = 'credit-control';
 		creditNode.style.fontSize = '10px';
 		creditNode.style.fontFamily = 'Arial, sans-serif';
@@ -123,8 +123,8 @@ $(function () {
 		map.mapTypes.set('neutral_blue', neutral_blue);
 
 		map.mapTypes.set('OpenStreetMap', new google.maps.ImageMapType({
-			getTileUrl: function (coord, zoom) {
-				return "https://tile.openstreetmap.org/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+			getTileUrl(coord, zoom) {
+				return `https://tile.openstreetmap.org/${zoom}/${coord.x}/${coord.y}.png`;
 			},
 			tileSize: new google.maps.Size(256, 256),
 			name: "OpenStreetMap",
@@ -142,18 +142,18 @@ $(function () {
 		// Geocoding
 
 		geocoder = new google.maps.Geocoder();
-		var input = document.getElementById('address');
-		var autocomplete = new google.maps.places.Autocomplete(input);
+		const input = document.getElementById('address');
+		const autocomplete = new google.maps.places.Autocomplete(input);
 
 		// Map listeners
 
-		google.maps.event.addListener(map, 'center_changed', function () {
-			window.setTimeout(function () {
-				var center = map.getCenter();
+		google.maps.event.addListener(map, 'center_changed', () => {
+			window.setTimeout(() => {
+				const center = map.getCenter();
 			}, 100);
 		});
 
-		google.maps.event.addListener(map, 'maptypeid_changed', function () {
+		google.maps.event.addListener(map, 'maptypeid_changed', () => {
 			if (map.getMapTypeId() == 'OpenStreetMap') {
 				map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(creditNode);
 				creditNode.innerHTML = credit;
@@ -165,7 +165,7 @@ $(function () {
 		// Geocoding
 
 		function geocode() {
-			var address = document.getElementById("address").value;
+			const address = document.getElementById("address").value;
 			geocoder.geocode({
 				'address': address,
 				'partialmatch': true
@@ -177,22 +177,22 @@ $(function () {
 			if (status == 'OK' && results.length > 0) {
 				map.fitBounds(results[0].geometry.viewport);
 			} else {
-				alert("Geocode was not successful for the following reason: " + status);
+				alert(`Geocode was not successful for the following reason: ${status}`);
 			}
 		}
 
-		$('#geocode').on('click', function () {
+		$('#geocode').on('click', () => {
 			geocode();
 			return false;
 		});
 
 		// Submit form and save
 
-		$('#settings-form').submit(function () {
-			var default_location = map.getCenter().lat() + ', ' + map.getCenter().lng();
+		$('#settings-form').submit(() => {
+			const default_location = `${map.getCenter().lat()}, ${map.getCenter().lng()}`;
 
-			var default_zoom = map.getZoom();
-			var default_type = map.getMapTypeId();
+			const default_zoom = map.getZoom();
+			const default_type = map.getMapTypeId();
 
 			$('input[name="myGmaps_center"]').attr('value', default_location);
 			$('input[name="myGmaps_zoom"]').attr('value', default_zoom);

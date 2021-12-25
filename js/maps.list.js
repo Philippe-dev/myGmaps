@@ -1,12 +1,12 @@
-dotclear.viewPostContent = function (line, action) {
+dotclear.viewPostContent = (line, action) => {
 	var action = action || 'toggle';
-	var postId = $(line).attr('id').substr(1);
-	var tr = document.getElementById('pe' + postId);
+	const postId = $(line).attr('id').substr(1);
+	let tr = document.getElementById(`pe${postId}`);
 
 	if (!tr && (action == 'toggle' || action == 'open')) {
 		tr = document.createElement('tr');
-		tr.id = 'pe' + postId;
-		var td = document.createElement('td');
+		tr.id = `pe${postId}`;
+		const td = document.createElement('td');
 		td.colSpan = 8;
 		td.className = 'expand';
 		tr.appendChild(td);
@@ -16,13 +16,13 @@ dotclear.viewPostContent = function (line, action) {
 			f: 'getPostById',
 			id: postId,
 			post_type: ''
-		}, function (data) {
-			var rsp = $(data).children('rsp')[0];
+		}, (data) => {
+			const rsp = $(data).children('rsp')[0];
 
 			if (rsp.attributes[0].value == 'ok') {
-				var post = $(rsp).find('post_display_content').text();
+				const post = $(rsp).find('post_display_content').text();
 
-				var res = '';
+				let res = '';
 
 				if (post) {
 
@@ -45,7 +45,7 @@ dotclear.viewPostContent = function (line, action) {
 	}
 };
 
-$(function () {
+$(() => {
 	// Entry type switcher
 	$('#type').change(function () {
 		this.form.submit();

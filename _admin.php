@@ -36,9 +36,9 @@ class myGmapsBehaviors
     public static function adminPageHTTPHeaderCSP($csp)
     {
         if (isset($csp['default-src'])) {
-            $csp['default-src'] .= ' fonts.gstatic.com';
+            $csp['default-src'] .= ' fonts.gstatic.com maps.googleapis.com';
         } else {
-            $csp['default-src'] = 'fonts.gstatic.com';
+            $csp['default-src'] = 'fonts.gstatic.com maps.googleapis.com';
         }
 
         if (isset($csp['script-src'])) {
@@ -219,14 +219,14 @@ class myGmapsPostBehaviors
     public static function adminBeforePostUpdate($cur, $post_id)
     {
         global $core;
-        $s =& $core->blog->settings->myGmaps;
+        $s = $core->blog->settings->myGmaps;
 
         $my_params['post_id'] = $post_id;
         $my_params['no_content'] = true;
 
         $rs = $core->blog->getPosts($my_params);
 
-        if (!$s->myGmaps_enabled || $rs->post_type != 'post') {
+        if (!$s->myGmaps_enabled) {
             return;
         }
 
@@ -246,7 +246,7 @@ class myGmapsPostBehaviors
     public static function adminPostFormItems($main_items, $sidebar_items, $post)
     {
         global $core;
-        $s =& $core->blog->settings->myGmaps;
+        $s = $core->blog->settings->myGmaps;
 
         if (!$s->myGmaps_enabled) {
             return;

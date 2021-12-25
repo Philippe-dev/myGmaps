@@ -360,12 +360,8 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
         try {
             # --BEHAVIOR-- adminBeforePostUpdate
             $core->callBehavior('adminBeforePostUpdate', $cur, $post_id);
-
+            $core->con->begin();
             $core->blog->updPost($post_id, $cur);
-
-            # --BEHAVIOR-- adminAfterPostUpdate
-            $core->callBehavior('adminAfterPostUpdate', $cur, $post_id);
-
             if (isset($_POST['element_type'])) {
                 $tags = $_POST['element_type'];
                 $myGmaps_center = $_POST['myGmaps_center'];
@@ -384,6 +380,11 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
                 $meta->setPostMeta($post_id, 'map_options', $map_options);
                 $meta->setPostMeta($post_id, 'description', $description);
             }
+            $core->con->commit();
+            # --BEHAVIOR-- adminAfterPostUpdate
+            $core->callBehavior('adminAfterPostUpdate', $cur, $post_id);
+
+            
             http::redirect(''.$p_url.'&do=edit&id='.$post_id.'&upd=1');
         } catch (Exception $e) {
             $core->error->add($e->getMessage());
