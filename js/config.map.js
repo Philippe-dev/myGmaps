@@ -49,7 +49,7 @@ $(() => {
 			var default_type = $('input[name="myGmaps_type"]').attr('value');
 		}
 
-		// Map styles. Get more styles from s://snazzymaps.com/
+		// Map styles. Get more styles from https://snazzymaps.com/
 
 		const mapTypeIds = [google.maps.MapTypeId.ROADMAP,
 			google.maps.MapTypeId.HYBRID,
