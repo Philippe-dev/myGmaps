@@ -485,8 +485,6 @@ if ($post_id) {
 		<title><?php echo $page_title; ?></title>
 		<?php
         echo
-        dcPage::jsDatePicker().
-        dcPage::jsToolBar().
         dcPage::jsModal().
         dcPage::jsMetaEditor().
         $admin_post_behavior.
@@ -614,9 +612,11 @@ if ($can_edit_post) {
                     '<p class="entry-status"><label for="post_status">'.__('Map element status').' '.$img_status.'</label>'.
                     form::combo('post_status', $status_combo, $post_status, 'maximal', '', !$can_publish).
                     '</p>',
-                'post_dt' =>
-                    '<p><label for="post_dt">'.__('Publication date and hour').'</label>'.
-                    form::field('post_dt', 16, 16, $post_dt, ($bad_dt ? 'invalid' : '')).
+                'post_dt' => '<p><label for="post_dt">' . __('Publication date and hour') . '</label>' .
+                    form::datetime('post_dt', [
+                        'default' => html::escapeHTML(dt::str('%Y-%m-%d\T%H:%M', strtotime($post_dt))),
+                        'class'   => ($bad_dt ? 'invalid' : ''),
+                    ]) .
                     '</p>',
                 'post_lang' =>
                     '<p><label for="post_lang">'.__('Element language').'</label>'.
