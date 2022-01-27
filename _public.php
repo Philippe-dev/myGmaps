@@ -27,7 +27,7 @@ class dcMyGmapsPublic
         $meta =& $core->meta;
         $my_params['post_id'] = $post_id;
         $my_params['no_content'] = true;
-        $my_params['post_type'] = ['post','page'];
+        $my_params['post_type'] = ['post'];
 
         $rs = $core->blog->getPosts($my_params);
         return $meta->getMetaStr($rs->post_meta, 'map_options');
@@ -38,7 +38,7 @@ class dcMyGmapsPublic
         $meta =& $core->meta;
         $my_params['post_id'] = $post_id;
         $my_params['no_content'] = true;
-        $my_params['post_type'] = ['post','page'];
+        $my_params['post_type'] = ['post'];
 
         $rs = $core->blog->getPosts($my_params);
         return $meta->getMetaStr($rs->post_meta, 'map');
