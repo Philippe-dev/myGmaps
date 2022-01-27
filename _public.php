@@ -114,7 +114,6 @@ class dcMyGmapsPublic
         global $core;
         $s =& $core->blog->settings->myGmaps;
         $url = $core->blog->getQmarkURL().'pf='.basename(dirname(__FILE__));
-        $postTypes = ['post','page'];
 
         if ($s->myGmaps_enabled) {
             // Appel depuis un billet, ou depuis une balise de template
@@ -122,7 +121,7 @@ class dcMyGmapsPublic
             $isTemplateTag = (! empty($aElements)) ? true : false ;
             $sPostId = ($isTemplateTag) ? $aElements['id'] : $_ctx->posts->post_id ;
 
-            if ($isTemplateTag || (in_array($_ctx->posts->post_type, $postTypes) && self::hasMap($sPostId) != '')) {
+            if ($isTemplateTag || ($_ctx->posts->post_type == 'post' && self::hasMap($sPostId) != '')) {
 
             // Map styles. Get more styles from http://snazzymaps.com/
 
