@@ -7,7 +7,6 @@
  *
  * @author Philippe aka amalgame and contributors
  *
- * @copyright Philippe Hénaff philippe@dissitou.org
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
 
