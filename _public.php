@@ -27,7 +27,7 @@ class dcMyGmapsPublic
         $meta =& $core->meta;
         $my_params['post_id'] = $post_id;
         $my_params['no_content'] = true;
-        $my_params['post_type'] = ['post'];
+        $my_params['post_type'] = ['post','page'];
 
         $rs = $core->blog->getPosts($my_params);
         return $meta->getMetaStr($rs->post_meta, 'map_options');
@@ -38,7 +38,7 @@ class dcMyGmapsPublic
         $meta =& $core->meta;
         $my_params['post_id'] = $post_id;
         $my_params['no_content'] = true;
-        $my_params['post_type'] = ['post'];
+        $my_params['post_type'] = ['post','page'];
 
         $rs = $core->blog->getPosts($my_params);
         return $meta->getMetaStr($rs->post_meta, 'map');
@@ -114,6 +114,7 @@ class dcMyGmapsPublic
         global $core;
         $s =& $core->blog->settings->myGmaps;
         $url = $core->blog->getQmarkURL().'pf='.basename(dirname(__FILE__));
+        $postTypes = ['post','page'];
 
         if ($s->myGmaps_enabled) {
             // Appel depuis un billet, ou depuis une balise de template
@@ -121,7 +122,7 @@ class dcMyGmapsPublic
             $isTemplateTag = (! empty($aElements)) ? true : false ;
             $sPostId = ($isTemplateTag) ? $aElements['id'] : $_ctx->posts->post_id ;
 
-            if ($isTemplateTag || ($_ctx->posts->post_type == 'post' && self::hasMap($sPostId) != '')) {
+            if ($isTemplateTag || (in_array($_ctx->posts->post_type, $postTypes) && self::hasMap($sPostId) != '')) {
 
             // Map styles. Get more styles from http://snazzymaps.com/
 

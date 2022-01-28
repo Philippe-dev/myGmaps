@@ -118,10 +118,10 @@ if (isset($_GET['remove']) && $_GET['remove'] == 'map') {
 
         $core->blog->triggerBlog();
 
-        if (isset($_GET['post_type']) && $_GET['post_type'] == 'page') {
-            http::redirect('plugin.php?p=pages&act=page&id='.$post_id.'#gmap-area');
+        if (isset($_GET['p']) && $_GET['p'] == 'pages') {
+            http::redirect(DC_ADMIN_URL.'plugin.php?p=pages&act=page&id='.$post_id.'&upd=1#gmap-area');
         } else {
-            http::redirect(DC_ADMIN_URL.'post.php?id='.$post_id.'#gmap-area');
+            http::redirect(DC_ADMIN_URL.'post.php?id='.$post_id.'&upd=1#gmap-area');
         }
     } catch (Exception $e) {
         $core->error->add($e->getMessage());
@@ -137,10 +137,10 @@ if (isset($_GET['remove']) && $_GET['remove'] == 'map') {
 
         $core->blog->triggerBlog();
 
-        if (isset($_GET['post_type']) && $_GET['post_type'] == 'page') {
-            http::redirect('plugin.php?p=pages&act=page&id='.$post_id.'#gmap-area');
+        if (isset($_GET['p']) && $_GET['p'] == 'pages') {
+            http::redirect(DC_ADMIN_URL.'plugin.php?p=pages&act=page&id='.$post_id.'&upd=1#gmap-area');
         } else {
-            http::redirect(DC_ADMIN_URL.'post.php?id='.$post_id.'#gmap-area');
+            http::redirect(DC_ADMIN_URL.'post.php?id='.$post_id.'&upd=1#gmap-area');
         }
     } catch (Exception $e) {
         $core->error->add($e->getMessage());
@@ -162,10 +162,10 @@ if (isset($_GET['remove']) && $_GET['remove'] == 'map') {
 
         $core->blog->triggerBlog();
 
-        if (isset($_GET['post_type']) && $_GET['post_type'] == 'page') {
-            http::redirect('plugin.php?p=pages&act=page&id='.$post_id.'#gmap-area');
+        if (isset($_GET['p']) && $_GET['p'] == 'pages') {
+            http::redirect(DC_ADMIN_URL.'plugin.php?p=pages&act=page&id='.$post_id.'&upd=1#gmap-area');
         } else {
-            http::redirect(DC_ADMIN_URL.'post.php?id='.$post_id.'#gmap-area');
+            http::redirect(DC_ADMIN_URL.'post.php?id='.$post_id.'&upd=1#gmap-area');
         }
     } catch (Exception $e) {
         $core->error->add($e->getMessage());
@@ -177,7 +177,9 @@ if (isset($_GET['remove']) && $_GET['remove'] == 'map') {
 $core->addBehavior('adminPostHeaders', array('myGmapsPostBehaviors','postHeaders'));
 $core->addBehavior('adminPageHeaders', array('myGmapsPostBehaviors','postHeaders'));
 $core->addBehavior('adminPostFormItems', array('myGmapsPostBehaviors','adminPostFormItems'));
+$core->addBehavior('adminPageFormItems', array('myGmapsPostBehaviors','adminPostFormItems'));
 $core->addBehavior('adminBeforePostUpdate', array('myGmapsPostBehaviors','adminBeforePostUpdate'));
+$core->addBehavior('adminBeforePageUpdate', array('myGmapsPostBehaviors','adminBeforePostUpdate'));
 
 class myGmapsPostBehaviors
 {
@@ -223,6 +225,7 @@ class myGmapsPostBehaviors
 
         $my_params['post_id'] = $post_id;
         $my_params['no_content'] = true;
+        $my_params['post_type'] = ['post','page'];
 
         $rs = $core->blog->getPosts($my_params);
 
@@ -247,14 +250,16 @@ class myGmapsPostBehaviors
     {
         global $core;
         $s = $core->blog->settings->myGmaps;
+        $postTypes = ['post','page'];
 
         if (!$s->myGmaps_enabled) {
             return;
         }
-        if (is_null($post) || $post->post_type != 'post') {
+        if (is_null($post) || !in_array($post->post_type,$postTypes)) {
             return;
         }
         $id = $post->post_id;
+        $type = $post->post_type;
 
         $meta =& $GLOBALS['core']->meta;
         $elements_list = $meta->getMetaStr($post->post_meta, 'map');
@@ -318,6 +323,15 @@ class myGmapsPostBehaviors
         '//]]>'."\n".
         '</script>';
 
+        # redirection URLs
+        if ($type == 'page') {
+            $addmapurl = DC_ADMIN_URL.'plugin.php?p=pages&amp;act=page&amp;id='.$id.'&amp;add=map&amp;center='.$myGmaps_center.'&amp;zoom='.$myGmaps_zoom.'&amp;type='.$myGmaps_type.'&amp;upd=1';
+            $removemapurl = DC_ADMIN_URL.'plugin.php?p=pages&amp;act=page&amp;id='.$id.'&amp;remove=map&amp;upd=1';
+        } elseif ($type == 'post') {
+            $addmapurl = DC_ADMIN_URL.'post.php?id='.$id.'&amp;add=map&amp;center='.$myGmaps_center.'&amp;zoom='.$myGmaps_zoom.'&amp;type='.$myGmaps_type.'&amp;upd=1';
+            $removemapurl = DC_ADMIN_URL.'post.php?id='.$id.'&amp;remove=map&amp;upd=1';
+        }
+
 
         if ($elements_list == '' && $map_options == '') {
             $item =
@@ -325,7 +339,7 @@ class myGmapsPostBehaviors
             '<label for="post-gmap" class="bold">'.__('Google Map:').'</label>'.
             '<div id="post-gmap" >'.
             '<p>'.__('No map').'</p>'.
-            '<p><a href="'.DC_ADMIN_URL.'post.php?id='.$id.'&amp;add=map&amp;center='.$myGmaps_center.'&amp;zoom='.$myGmaps_zoom.'&amp;type='.$myGmaps_type.'">'.__('Add a map to entry').'</a></p>'.
+            '<p><a href="'.$addmapurl.'">'.__('Add a map to entry').'</a></p>'.
             '</div>'.
             '</div>';
         } elseif ($elements_list == '' && $map_options != '') {
@@ -346,7 +360,7 @@ class myGmapsPostBehaviors
             '<input type="hidden" name="map_styles_base_url" id="map_styles_base_url" value="'.$map_styles_base_url.'" /></p>'.
             '<p>'.__('Empty map').'</p>'.
             '<p class="two-boxes"><a href="plugin.php?p=myGmaps&amp;post_id='.$id.'"><strong>'.__('Add elements').'</strong></a></p>'.
-            '<p class="two-boxes right"><a class="map-remove delete" href="'.DC_ADMIN_URL.'post.php?id='.$id.'&amp;remove=map"><strong>'.__('Remove map').'</strong></a></p>'.
+            '<p class="two-boxes right"><a class="map-remove delete" href="'.$removemapurl.'"><strong>'.__('Remove map').'</strong></a></p>'.
             '</div>'.
             '</div>';
         } else {
@@ -382,7 +396,7 @@ class myGmapsPostBehaviors
             $item .=
             '<div id="form-entries">'.
             '<p>'.__('Included elements list').'</p>'.
-            $post_list->display($page, $nb_per_page, $enclose_block='', $id).
+            $post_list->display($page, $nb_per_page, $enclose_block='', $id, $type).
             '</div>'.
             '<p class="two-boxes"><a href="'.DC_ADMIN_URL.'plugin.php?p=myGmaps&amp;post_id='.$id.'"><strong>'.__('Add elements').'</strong></a></p>'.
             '<p class="two-boxes right"><a class="map-remove delete" href="'.DC_ADMIN_URL.'post.php?id='.$id.'&amp;remove=map"><strong>'.__('Remove map').'</strong></a></p>'.

@@ -30,10 +30,12 @@ $meta =& $GLOBALS['core']->meta;
 $post_id = !empty($_GET['post_id']) ?	$_GET['post_id'] : '';
 $my_params['post_id'] = $post_id;
 $my_params['no_content'] = true;
+$my_params['post_type'] = ['post','page'];
 
 $rs = $core->blog->getPosts($my_params);
 
 $elements_list = $meta->getMetaStr($rs->post_meta, 'map');
+$post_type = $rs->post_type;
 
 if ($elements_list !='') {
     $maps_array = explode(",", $elements_list);
@@ -154,7 +156,7 @@ if (!$core->error->flag()) {
 -------------------------------------------------------- */
 $id = !empty($_GET['id']) ?	$_GET['id'] : '';
 $post_id = !empty($_GET['post_id']) ?	$_GET['post_id'] : '';
-$post_type = !empty($_GET['post_type']) ?	$_GET['post_type'] : '';
+// = !empty($_GET['post_type']) ?	$_GET['post_type'] : '';
 $user_id = !empty($_GET['user_id']) ?	$_GET['user_id'] : '';
 $cat_id = !empty($_GET['cat_id']) ?	$_GET['cat_id'] : '';
 $status = isset($_GET['status']) ?	$_GET['status'] : '';
@@ -282,6 +284,7 @@ if (isset($_POST['updlist'])) {
 
         $entries = $_POST['entries'];
         $post_id = $_POST['post_id'];
+        $post_type = $_POST['post_type'];
 
         $meta =& $GLOBALS['core']->meta;
 
@@ -294,10 +297,10 @@ if (isset($_POST['updlist'])) {
 
         $core->blog->triggerBlog();
 
-        if ($_POST['post_type'] == 'page') {
-            http::redirect('plugin.php?p=pages&act=page&id='.$post_id);
+        if ($post_type == 'page') {
+            http::redirect('plugin.php?p=pages&act=page&id='.$post_id.'&upd=1');
         } else {
-            http::redirect(DC_ADMIN_URL.'post.php?id='.$post_id);
+            http::redirect(DC_ADMIN_URL.'post.php?id='.$post_id.'&upd=1');
         }
     } catch (Exception $e) {
         $core->error->add($e->getMessage());
@@ -336,7 +339,7 @@ if (!$core->error->flag()) {
     $id = $post_id;
     $my_params['post_id'] = $id;
     $my_params['no_content'] = true;
-    $my_params['post_type'] = array('post');
+    $my_params['post_type'] = array('post','page');
 
     $rs = $core->blog->getPosts($my_params);
     $post_title = $rs->post_title;

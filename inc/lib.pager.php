@@ -194,7 +194,7 @@ class adminMapsList extends adminGenericList
 }
 class adminMapsMiniList extends adminGenericList
 {
-    public function display($page, $nb_per_page, $enclose_block='', $id)
+    public function display($page, $nb_per_page, $enclose_block='', $id, $type)
     {
         if ($this->rs->isEmpty()) {
             $res = '<p><strong>'.__('No entry').'</strong></p>';
@@ -221,7 +221,7 @@ class adminMapsMiniList extends adminGenericList
             $res = $blocks[0];
 
             while ($this->rs->fetch()) {
-                $res .= $this->postLine($id);
+                $res .= $this->postLine($id, $type);
             }
 
             $res .= $blocks[1];
@@ -230,7 +230,7 @@ class adminMapsMiniList extends adminGenericList
         }
     }
 
-    private function postLine($id)
+    private function postLine($id, $type)
     {
         $img = '<img alt="%1$s" title="%1$s" src="images/%2$s" />';
         switch ($this->rs->post_status) {
@@ -292,9 +292,13 @@ class adminMapsMiniList extends adminGenericList
         '<td class="nowrap count">'.dt::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt).'</td>'.
         '<td class="nowrap">'.$cat_title.'</td>'.
         '<td class="nowrap">'.__($meta_rs).'</td>'.
-        '<td class="nowrap status">'.$img_status.' '.$selected.' '.$protected.' '.$attach.'</td>'.
-        '<td class="nowrap count"><a class="element-remove" href="'.DC_ADMIN_URL.'post.php?id='.$id.'&amp;remove='.$this->rs->post_id.'" title="'.__('Remove map element').' : '.html::escapeHTML($this->rs->post_title).'"><img src="images/trash.png" alt="supprimer" /></a></td>'.
-        '</tr>';
+        '<td class="nowrap status">'.$img_status.' '.$selected.' '.$protected.' '.$attach.'</td>';
+        if ($type == 'post') {
+            $res .= '<td class="nowrap count"><a class="element-remove" href="'.DC_ADMIN_URL.'post.php?id='.$id.'&amp;remove='.$this->rs->post_id.'" title="'.__('Remove map element').' : '.html::escapeHTML($this->rs->post_title).'"><img src="images/trash.png" alt="supprimer" /></a></td>';
+        } elseif ($type == 'page') {
+            $res .= '<td class="nowrap count"><a class="element-remove" href="'.DC_ADMIN_URL.'plugin.php?p=pages&amp;act=page&amp;id='.$id.'&amp;upd=1&amp;remove='.$this->rs->post_id.'" title="'.__('Remove map element').' : '.html::escapeHTML($this->rs->post_title).'"><img src="images/trash.png" alt="supprimer" /></a></td>';
+        }
+        $res .= '</tr>';
 
         return $res;
     }
