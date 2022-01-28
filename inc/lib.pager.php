@@ -193,7 +193,7 @@ class adminMapsList extends adminGenericList
 }
 class adminMapsMiniList extends adminGenericList
 {
-    public function display($page, $nb_per_page, $enclose_block='', $id, $type)
+    public function display($page, $nb_per_page, $enclose_block, $id, $type)
     {
         if ($this->rs->isEmpty()) {
             $res = '<p><strong>'.__('No entry').'</strong></p>';
