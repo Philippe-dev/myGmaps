@@ -105,7 +105,7 @@ class myGmapsBehaviors
 
 $p_url	= 'plugin.php?p='.basename(dirname(__FILE__));
 
-
+(isset($_GET['p']) && $_GET['p'] == 'pages') ? $type = 'page' : $type = 'post';
 
 if (isset($_GET['remove']) && $_GET['remove'] == 'map') {
     try {
@@ -118,9 +118,9 @@ if (isset($_GET['remove']) && $_GET['remove'] == 'map') {
 
         $core->blog->triggerBlog();
 
-        if (isset($_GET['p']) && $_GET['p'] == 'pages') {
+        if ($type == 'page') {
             http::redirect(DC_ADMIN_URL.'plugin.php?p=pages&act=page&id='.$post_id.'&upd=1#gmap-area');
-        } else {
+        } elseif($type == 'post') {
             http::redirect(DC_ADMIN_URL.'post.php?id='.$post_id.'&upd=1#gmap-area');
         }
     } catch (Exception $e) {
@@ -137,9 +137,9 @@ if (isset($_GET['remove']) && $_GET['remove'] == 'map') {
 
         $core->blog->triggerBlog();
 
-        if (isset($_GET['p']) && $_GET['p'] == 'pages') {
+        if ($type == 'page') {
             http::redirect(DC_ADMIN_URL.'plugin.php?p=pages&act=page&id='.$post_id.'&upd=1#gmap-area');
-        } else {
+        } elseif($type == 'post') {
             http::redirect(DC_ADMIN_URL.'post.php?id='.$post_id.'&upd=1#gmap-area');
         }
     } catch (Exception $e) {
@@ -162,9 +162,9 @@ if (isset($_GET['remove']) && $_GET['remove'] == 'map') {
 
         $core->blog->triggerBlog();
 
-        if (isset($_GET['p']) && $_GET['p'] == 'pages') {
+        if ($type == 'page') {
             http::redirect(DC_ADMIN_URL.'plugin.php?p=pages&act=page&id='.$post_id.'&upd=1#gmap-area');
-        } else {
+        } elseif($type == 'post') {
             http::redirect(DC_ADMIN_URL.'post.php?id='.$post_id.'&upd=1#gmap-area');
         }
     } catch (Exception $e) {
