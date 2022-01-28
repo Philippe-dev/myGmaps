@@ -682,8 +682,7 @@ if ($can_edit_post) {
 
 
         "post_excerpt" =>
-            '<p class="area"><strong>'.__('Position:').'</strong></p>'.
-
+            '<label class="bold">'.__('Position:').'</label>'.
             '<div class="map_toolbar">'.__('Search:').'<span class="map_spacer">&nbsp;</span>'.
             '<input size="40" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="'.__('OK').'" /><span class="map_spacer">&nbsp;</span>'.
             '<button id="add_marker" class="add_marker" type="button" title="'.__('Point of interest').'"><span>'.__('Point of interest').'</span></button>'.

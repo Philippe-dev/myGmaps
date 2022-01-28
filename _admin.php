@@ -336,7 +336,7 @@ class myGmapsPostBehaviors
         if ($elements_list == '' && $map_options == '') {
             $item =
             '<div class="area" id="gmap-area">'.
-            '<h3 class="smart-title">'.__('Google Map:').'</h3>'.
+            '<p class="smart-title">'.__('Google Map:').'</p>'.
             '<div id="post-gmap" >'.
             '<p>'.__('No map').'</p>'.
             '<p><a href="'.$addmapurl.'">'.__('Add a map to entry').'</a></p>'.
@@ -345,7 +345,7 @@ class myGmapsPostBehaviors
         } elseif ($elements_list == '' && $map_options != '') {
             $item =
             '<div class="area" id="gmap-area">'.
-            '<h3 class="smart-title">'.__('Google Map:').'</h3>'.
+            '<p class="smart-title">'.__('Google Map:').'</p>'.
             '<div id="post-gmap" >'.
             '<div class="map_toolbar">'.__('Search:').'<span class="map_spacer">&nbsp;</span>'.
                 '<input size="50" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="'.__('OK').'" />'.
@@ -366,7 +366,7 @@ class myGmapsPostBehaviors
         } else {
             $item =
             '<div class="area" id="gmap-area">'.
-            '<h3 class="smart-title">'.__('Google Map:').'</h3>'.
+            '<p class="smart-title">'.__('Google Map:').'</p>'.
             '<div id="post-gmap" >'.
             '<div class="map_toolbar">'.__('Search:').'<span class="map_spacer">&nbsp;</span>'.
                 '<input size="50" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="'.__('OK').'" />'.
