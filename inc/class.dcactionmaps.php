@@ -67,12 +67,12 @@ class dcMapsActionsPage extends dcActionsPage
         $this->core->error->add($e->getMessage());
         $this->beginPage(
             dcPage::breadcrumb(
-            array(
+                array(
                 html::escapeHTML($this->core->blog->name) => '',
                 $this->getCallerTitle() => $this->getRedirection(true),
                 __('Map elements actions') => ''
+                )
             )
-        )
         );
         $this->endPage();
     }

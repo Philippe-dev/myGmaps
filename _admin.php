@@ -119,7 +119,7 @@ if (isset($_GET['remove']) && $_GET['remove'] == 'map') {
 
         if ($type == 'page') {
             http::redirect(DC_ADMIN_URL.'plugin.php?p=pages&act=page&id='.$post_id.'&upd=1#gmap-area');
-        } elseif($type == 'post') {
+        } elseif ($type == 'post') {
             http::redirect(DC_ADMIN_URL.'post.php?id='.$post_id.'&upd=1#gmap-area');
         }
     } catch (Exception $e) {
@@ -138,7 +138,7 @@ if (isset($_GET['remove']) && $_GET['remove'] == 'map') {
 
         if ($type == 'page') {
             http::redirect(DC_ADMIN_URL.'plugin.php?p=pages&act=page&id='.$post_id.'&upd=1#gmap-area');
-        } elseif($type == 'post') {
+        } elseif ($type == 'post') {
             http::redirect(DC_ADMIN_URL.'post.php?id='.$post_id.'&upd=1#gmap-area');
         }
     } catch (Exception $e) {
@@ -163,7 +163,7 @@ if (isset($_GET['remove']) && $_GET['remove'] == 'map') {
 
         if ($type == 'page') {
             http::redirect(DC_ADMIN_URL.'plugin.php?p=pages&act=page&id='.$post_id.'&upd=1#gmap-area');
-        } elseif($type == 'post') {
+        } elseif ($type == 'post') {
             http::redirect(DC_ADMIN_URL.'post.php?id='.$post_id.'&upd=1#gmap-area');
         }
     } catch (Exception $e) {
@@ -254,7 +254,7 @@ class myGmapsPostBehaviors
         if (!$s->myGmaps_enabled) {
             return;
         }
-        if (is_null($post) || !in_array($post->post_type,$postTypes)) {
+        if (is_null($post) || !in_array($post->post_type, $postTypes)) {
             return;
         }
         $id = $post->post_id;
