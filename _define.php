@@ -18,7 +18,7 @@ $this->registerModule(
     "Google Maps",           					// Name
     "Add custom maps to your blog", 			// Description
     "Philippe aka amalgame and contributors",   // Author
-    '5.8.1',                   					// Version
+    '5.8.2',                   					// Version
     [
         'requires'    => [['core', '2.16']],   	// Dependencies
         'permissions' => 'usage,contentadmin', 	// Permissions

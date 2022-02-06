@@ -17,7 +17,7 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 $_menu['Blog']->addItem(
     __('Google Maps'),
     'plugin.php?p=myGmaps&amp;do=list',
-    'index.php?pf=myGmaps/icon.png',
+    'index.php?pf=myGmaps/icon.svg',
     preg_match('/plugin.php\?p=myGmaps(&.*)?$/', $_SERVER['REQUEST_URI']),
     $core->auth->check('usage,contentadmin', $core->blog->id)
 );
@@ -80,8 +80,8 @@ class myGmapsBehaviors
             'myGmaps',
             __('Google Maps'),
             'plugin.php?p=myGmaps&amp;do=list',
-            'index.php?pf=myGmaps/icon.png',
-            'index.php?pf=myGmaps/icon-big.png',
+            'index.php?pf=myGmaps/icon.svg',
+            'index.php?pf=myGmaps/icon.svg',
             'usage,contentadmin',
             null,
             null));
