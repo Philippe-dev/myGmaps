@@ -17,7 +17,7 @@ class mygmapsPublic
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
-            array('id', 'mapContainerStyles', 'mapCanvasStyles')
+            ['id', 'mapContainerStyles', 'mapCanvasStyles']
         );
 
         $sId = $aOptions['id'];
@@ -42,17 +42,17 @@ EOT;
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
-            array('public_path')
+            ['public_path']
         );
         $sPublicPath = $aOptions['public_path'];
-        return '<link rel="stylesheet" type="text/css" href="' . $sPublicPath . '/css/public.css" />'."\n";
+        return '<link rel="stylesheet" type="text/css" href="' . $sPublicPath . '/css/public.css" />' . "\n";
     }
 
     public static function publicJsContent(array $aOptions)
     {
         global $core;
-        $s =& $core->blog->settings->myGmaps;
-        return '<script src="https://maps.googleapis.com/maps/api/js?key='.$s->myGmaps_API_key.'"></script>'."\n";
+        $s = &$core->blog->settings->myGmaps;
+        return '<script src="https://maps.googleapis.com/maps/api/js?key=' . $s->myGmaps_API_key . '"></script>' . "\n";
     }
 
     public static function getMapOptions(array $aOptions)
@@ -60,7 +60,7 @@ EOT;
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
-            array('elements', 'style', 'styles_path', 'zoom', 'center', 'map_id', 'has_marker', 'has_poly')
+            ['elements', 'style', 'styles_path', 'zoom', 'center', 'map_id', 'has_marker', 'has_poly']
         );
         $sElements = $aOptions['elements'];
         $sStyle = $aOptions['style'];
@@ -78,20 +78,20 @@ $(function () {
 EOT;
 
         // Set map styles
-        $sOutput .= self::getMapStyles(array(
+        $sOutput .= self::getMapStyles([
             'style' => $sStyle,
             'styles_path' => $sStylesPath,
             'zoom' => $sZoom,
             'center' => $sCenter,
             'map_id' => $sMapId,
-        ));
+        ]);
 
         // Set map events
-        $sOutput .= self::getMapEvents(array(
+        $sOutput .= self::getMapEvents([
             'map_id' => $sMapId,
             'has_marker' => $bHasMarker,
             'has_poly' => $bHasPoly
-        ));
+        ]);
 
         // Map elements
         $sOutput .= $sElements;
@@ -109,7 +109,7 @@ EOT;
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
-            array('style', 'styles_path', 'zoom', 'center', 'map_id')
+            ['style', 'styles_path', 'zoom', 'center', 'map_id']
         );
         $sStyle = $aOptions['style'];
         $sStylesPath = $aOptions['styles_path'];
@@ -192,7 +192,7 @@ map_{$sMapId}.mapTypes.set("OpenStreetMap", new google.maps.ImageMapType({
 map_{$sMapId}.setMapTypeId("{$sStyle}");\n
 EOT;
         } else {
-            $sOutput .= 'map_'.$sMapId.'.setOptions({mapTypeId: '.$sStyle.'});'."\n";
+            $sOutput .= 'map_' . $sMapId . '.setOptions({mapTypeId: ' . $sStyle . '});' . "\n";
         }
 
         return $sOutput;
@@ -203,7 +203,7 @@ EOT;
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
-            array('map_id', 'has_marker', 'has_poly')
+            ['map_id', 'has_marker', 'has_poly']
         );
         $sMapId = $aOptions['map_id'];
         $bHasMarker = $aOptions['has_marker'];
@@ -211,10 +211,10 @@ EOT;
         $sOutput = '';
 
         if ($bHasMarker) {
-            $sOutput .= self::getMarkerInfoWindow(array('map_id' => $sMapId));
+            $sOutput .= self::getMarkerInfoWindow(['map_id' => $sMapId]);
         }
         if ($bHasPoly) {
-            $sOutput .= self::getPolyInfoWindow(array('map_id' => $sMapId));
+            $sOutput .= self::getPolyInfoWindow(['map_id' => $sMapId]);
         }
 
         $sOutput .= <<<EOT
@@ -231,7 +231,7 @@ EOT;
         self::checkOptions(
             get_called_class(),
             array_keys($aElementOptions),
-            array('map_id','element_id', 'title', 'description', 'type')
+            ['map_id', 'element_id', 'title', 'description', 'type']
         );
         $sMapId = $aElementOptions['map_id'];
         $sId = $aElementOptions['element_id'];
@@ -268,7 +268,7 @@ EOT;
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
-            array('map_id', 'element_id', 'position', 'icon')
+            ['map_id', 'element_id', 'position', 'icon']
         );
         $sMapId = $aOptions['map_id'];
         $sId = $aOptions['element_id'];
@@ -294,7 +294,7 @@ EOT;
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
-            array('map_id', 'element_id', 'coordinates', 'stroke_color', 'stroke_opacity', 'stroke_weight')
+            ['map_id', 'element_id', 'coordinates', 'stroke_color', 'stroke_opacity', 'stroke_weight']
         );
         $sMapId = $aOptions['map_id'];
         $sId = $aOptions['element_id'];
@@ -330,7 +330,7 @@ EOT;
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
-            array('map_id', 'element_id', 'coordinates', 'stroke_color', 'stroke_opacity', 'stroke_weight', 'fill_color', 'fill_opacity')
+            ['map_id', 'element_id', 'coordinates', 'stroke_color', 'stroke_opacity', 'stroke_weight', 'fill_color', 'fill_opacity']
         );
         $sMapId = $aOptions['map_id'];
         $sId = $aOptions['element_id'];
@@ -370,7 +370,7 @@ EOT;
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
-            array('map_id', 'element_id', 'bound1', 'bound2', 'stroke_color', 'stroke_opacity', 'stroke_weight', 'fill_color', 'fill_opacity')
+            ['map_id', 'element_id', 'bound1', 'bound2', 'stroke_color', 'stroke_opacity', 'stroke_weight', 'fill_color', 'fill_opacity']
         );
         $sMapId = $aOptions['map_id'];
         $sId = $aOptions['element_id'];
@@ -410,7 +410,7 @@ EOT;
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
-            array('map_id', 'element_id', 'center', 'radius', 'stroke_color', 'stroke_opacity', 'stroke_weight', 'fill_color', 'fill_opacity')
+            ['map_id', 'element_id', 'center', 'radius', 'stroke_color', 'stroke_opacity', 'stroke_weight', 'fill_color', 'fill_opacity']
         );
         $sMapId = $aOptions['map_id'];
         $sId = $aOptions['element_id'];
@@ -446,7 +446,7 @@ EOT;
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
-            array('map_id', 'layer')
+            ['map_id', 'layer']
         );
         $sMapId = $aOptions['map_id'];
         $sLayer = $aOptions['layer'];
@@ -463,7 +463,7 @@ EOT;
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
-            array('map_id', 'element_id', 'stroke_color', 'stroke_opacity', 'stroke_weight', 'origin', 'destination', 'display_direction')
+            ['map_id', 'element_id', 'stroke_color', 'stroke_opacity', 'stroke_weight', 'origin', 'destination', 'display_direction']
         );
         $sMapId = $aOptions['map_id'];
         $sId = $aOptions['element_id'];
@@ -501,9 +501,9 @@ var request = {
 };
 EOT;
         if ($bDisplayDirection == 'true') {
-            $sOutput .= '$("#map_box_'.$sMapId.'").addClass( "directions" );'."\n";
+            $sOutput .= '$("#map_box_' . $sMapId . '").addClass( "directions" );' . "\n";
         } else {
-            $sOutput .= '$("#map_box_'.$sMapId.'").addClass( "no-directions" );'."\n";
+            $sOutput .= '$("#map_box_' . $sMapId . '").addClass( "no-directions" );' . "\n";
         }
 
         $sOutput .= <<<EOT
@@ -533,7 +533,7 @@ EOT;
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
-            array('map_id')
+            ['map_id']
         );
         $sMapId = $aOptions['map_id'];
 
@@ -555,7 +555,7 @@ EOT;
         self::checkOptions(
             get_called_class(),
             array_keys($aOptions),
-            array('map_id')
+            ['map_id']
         );
         $sMapId = $aOptions['map_id'];
 
@@ -582,13 +582,13 @@ EOT;
      */
     protected static function checkOptions($sMethod, array $aKeysOptions, array $aRequiredOptions)
     {
-        $aErrors = array();
+        $aErrors = [];
         foreach ($aRequiredOptions as $sRequiredOption) {
-            if (! in_array($sRequiredOption, $aKeysOptions)) {
+            if (!in_array($sRequiredOption, $aKeysOptions)) {
                 $aErrors[] = $sRequiredOption;
             }
         }
-        if (! empty($aErrors)) {
+        if (!empty($aErrors)) {
             //throw new Exception('Option ' . implode(', ', $aErrors) . ' missing from method ' . $sMethod);
             var_dump('Options ' . implode(', ', $aErrors) . ' missing when method ' . $sMethod . ' call.');
             return false;

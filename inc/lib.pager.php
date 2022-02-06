@@ -16,71 +16,71 @@ if (!defined('DC_RC_PATH')) {
 
 class adminMapsList extends adminGenericList
 {
-    public function display($page, $nb_per_page, $enclose_block='', $filter=false)
+    public function display($page, $nb_per_page, $enclose_block = '', $filter = false)
     {
-        $p_url	= 'plugin.php?p=myGmaps';
+        $p_url = 'plugin.php?p=myGmaps';
 
         if ($this->rs->isEmpty()) {
             if ($filter) {
-                echo '<p><strong>'.__('No element matches the filter').'</strong></p>';
+                echo '<p><strong>' . __('No element matches the filter') . '</strong></p>';
             } else {
-                echo '<p><strong>'.__('No map element').'</strong></p>';
+                echo '<p><strong>' . __('No map element') . '</strong></p>';
             }
         } else {
             $pager = new dcPager($page, $this->rs_count, $nb_per_page, 10);
-            $entries = array();
+            $entries = [];
             if (isset($_REQUEST['entries'])) {
                 foreach ($_REQUEST['entries'] as $v) {
-                    $entries[(integer)$v]=true;
+                    $entries[(integer)$v] = true;
                 }
             }
             $html_block =
-            '<div class="table-outer">'.
+            '<div class="table-outer">' .
             '<table>';
 
             if ($filter) {
-                $html_block .= '<caption>'.sprintf(__('List of %s elements match the filter.'), $this->rs_count).'</caption>';
+                $html_block .= '<caption>' . sprintf(__('List of %s elements match the filter.'), $this->rs_count) . '</caption>';
             } else {
-                $nb_published   = $this->core->blog->getPosts(array('post_type' => 'map','post_status' => 1), true)->f(0);
-                $nb_pending     = $this->core->blog->getPosts(array('post_type' => 'map','post_status' => -2), true)->f(0);
-                $nb_programmed  = $this->core->blog->getPosts(array('post_type' => 'map','post_status' => -1), true)->f(0);
-                $nb_unpublished = $this->core->blog->getPosts(array('post_type' => 'map','post_status' => 0), true)->f(0);
+                $nb_published = $this->core->blog->getPosts(['post_type' => 'map', 'post_status' => 1], true)->f(0);
+                $nb_pending = $this->core->blog->getPosts(['post_type' => 'map', 'post_status' => -2], true)->f(0);
+                $nb_programmed = $this->core->blog->getPosts(['post_type' => 'map', 'post_status' => -1], true)->f(0);
+                $nb_unpublished = $this->core->blog->getPosts(['post_type' => 'map', 'post_status' => 0], true)->f(0);
                 $html_block .= '<caption>' .
                 sprintf(__('Elements list (%s)'), $this->rs_count) .
                     ($nb_published ?
                     sprintf(
                         __(', <a href="%s">published</a> (1)', ', <a href="%s">published</a> (%s)', $nb_published),
-                        $p_url.'&amp;do=list&status=1',
+                        $p_url . '&amp;do=list&status=1',
                         $nb_published
                     ) : '') .
                     ($nb_pending ?
                     sprintf(
                         __(', <a href="%s">pending</a> (1)', ', <a href="%s">pending</a> (%s)', $nb_pending),
-                        $p_url.'&amp;do=list&status=-2',
+                        $p_url . '&amp;do=list&status=-2',
                         $nb_pending
                     ) : '') .
                     ($nb_programmed ?
                     sprintf(
                         __(', <a href="%s">programmed</a> (1)', ', <a href="%s">programmed</a> (%s)', $nb_programmed),
-                        $p_url.'&amp;do=list&status=-1',
+                        $p_url . '&amp;do=list&status=-1',
                         $nb_programmed
                     ) : '') .
                     ($nb_unpublished ?
                     sprintf(
                         __(', <a href="%s">unpublished</a> (1)', ', <a href="%s">unpublished</a> (%s)', $nb_unpublished),
-                        $p_url.'&amp;do=list&status=0',
+                        $p_url . '&amp;do=list&status=0',
                         $nb_unpublished
                     ) : '') .
                     '</caption>';
             }
 
-            $html_block .= '<tr>'.
-            '<th colspan="2" class="first">'.__('Title').'</th>'.
-            '<th scope="col">'.__('Date').'</th>'.
-            '<th scope="col">'.__('Category').'</th>'.
-            '<th scope="col">'.__('Author').'</th>'.
-            '<th scope="col" class="nowrap">'.__('Type').'</th>'.
-            '<th scope="col">'.__('Status').'</th>'.
+            $html_block .= '<tr>' .
+            '<th colspan="2" class="first">' . __('Title') . '</th>' .
+            '<th scope="col">' . __('Date') . '</th>' .
+            '<th scope="col">' . __('Category') . '</th>' .
+            '<th scope="col">' . __('Author') . '</th>' .
+            '<th scope="col" class="nowrap">' . __('Type') . '</th>' .
+            '<th scope="col">' . __('Status') . '</th>' .
             '</tr>%s</table></div>';
 
             if ($enclose_block) {
@@ -106,14 +106,14 @@ class adminMapsList extends adminGenericList
     private function postLine($checked)
     {
         global $core;
-        $s =& $core->blog->settings->myGmaps;
-        
+        $s = &$core->blog->settings->myGmaps;
+
         if ($this->core->auth->check('categories', $this->core->blog->id)) {
             $cat_link = '<a href="category.php?id=%s">%s</a>';
         } else {
             $cat_link = '%2$s';
         }
-        $p_url	= 'plugin.php?p=myGmaps';
+        $p_url = 'plugin.php?p=myGmaps';
         if ($this->rs->cat_title) {
             $cat_title = sprintf(
                 $cat_link,
@@ -157,35 +157,35 @@ class adminMapsList extends adminGenericList
             $attach = sprintf($img, sprintf($attach_str, $nb_media), 'attach.png');
         }
 
-        $res = '<tr class="line'.($this->rs->post_status != 1 ? ' offline' : '').'"'.
-        ' id="p'.$this->rs->post_id.'">';
+        $res = '<tr class="line' . ($this->rs->post_status != 1 ? ' offline' : '') . '"' .
+        ' id="p' . $this->rs->post_id . '">';
 
-        $meta =& $GLOBALS['core']->meta;
+        $meta = &$GLOBALS['core']->meta;
         $meta_rs = $meta->getMetaStr($this->rs->post_meta, 'map');
 
         if ($s->myGmaps_enabled) {
             $res .=
-        '<td class="nowrap">'.
-        form::checkbox(array('entries[]'), $this->rs->post_id, $checked, '', '', !$this->rs->isEditable()).'</td>'.
-        '<td class="maximal"><a href="'.$p_url.'&amp;do=edit&amp;id='.$this->rs->post_id.'">'.
-        html::escapeHTML($this->rs->post_title).'</a></td>'.
-        '<td class="nowrap count">'.dt::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt).'</td>'.
-        '<td class="nowrap">'.$cat_title.'</td>'.
-        '<td class="nowrap">'.html::escapeHTML($this->rs->user_id).'</td>'.
-        '<td class="nowrap">'.__($meta_rs).'</td>'.
-        '<td class="nowrap status">'.$img_status.' '.$selected.' '.$protected.' '.$attach.'</td>'.
+        '<td class="nowrap">' .
+        form::checkbox(['entries[]'], $this->rs->post_id, $checked, '', '', !$this->rs->isEditable()) . '</td>' .
+        '<td class="maximal"><a href="' . $p_url . '&amp;do=edit&amp;id=' . $this->rs->post_id . '">' .
+        html::escapeHTML($this->rs->post_title) . '</a></td>' .
+        '<td class="nowrap count">' . dt::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt) . '</td>' .
+        '<td class="nowrap">' . $cat_title . '</td>' .
+        '<td class="nowrap">' . html::escapeHTML($this->rs->user_id) . '</td>' .
+        '<td class="nowrap">' . __($meta_rs) . '</td>' .
+        '<td class="nowrap status">' . $img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach . '</td>' .
         '</tr>';
         } else {
             $res .=
-        '<td class="nowrap">'.
-        form::checkbox(array('entries[]'), $this->rs->post_id, $checked, '', '', !$this->rs->isEditable()).'</td>'.
-        '<td class="maximal">'.
-        html::escapeHTML($this->rs->post_title).'</td>'.
-        '<td class="nowrap count">'.dt::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt).'</td>'.
-        '<td class="nowrap">'.$cat_title.'</td>'.
-        '<td class="nowrap">'.html::escapeHTML($this->rs->user_id).'</td>'.
-        '<td class="nowrap">'.__($meta_rs).'</td>'.
-        '<td class="nowrap status">'.$img_status.' '.$selected.' '.$protected.' '.$attach.'</td>'.
+        '<td class="nowrap">' .
+        form::checkbox(['entries[]'], $this->rs->post_id, $checked, '', '', !$this->rs->isEditable()) . '</td>' .
+        '<td class="maximal">' .
+        html::escapeHTML($this->rs->post_title) . '</td>' .
+        '<td class="nowrap count">' . dt::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt) . '</td>' .
+        '<td class="nowrap">' . $cat_title . '</td>' .
+        '<td class="nowrap">' . html::escapeHTML($this->rs->user_id) . '</td>' .
+        '<td class="nowrap">' . __($meta_rs) . '</td>' .
+        '<td class="nowrap status">' . $img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach . '</td>' .
         '</tr>';
         }
         return $res;
@@ -196,19 +196,19 @@ class adminMapsMiniList extends adminGenericList
     public function display($page, $nb_per_page, $enclose_block, $id, $type)
     {
         if ($this->rs->isEmpty()) {
-            $res = '<p><strong>'.__('No entry').'</strong></p>';
+            $res = '<p><strong>' . __('No entry') . '</strong></p>';
         } else {
             $pager = new dcPager($page, $this->rs_count, $nb_per_page, 10);
 
             $html_block =
-            '<div class="table-outer clear">'.
-            '<table><caption class="hidden">'.__('Elements list').'</caption><tr>'.
-            '<th scope="col">'.__('Title').'</th>'.
-            '<th scope="col">'.__('Date').'</th>'.
-            '<th scope="col">'.__('Category').'</th>'.
-            '<th scope="col">'.__('Type').'</th>'.
-            '<th scope="col">'.__('Status').'</th>'.
-            '<th scope="col">'.__('Actions').'</th>'.
+            '<div class="table-outer clear">' .
+            '<table><caption class="hidden">' . __('Elements list') . '</caption><tr>' .
+            '<th scope="col">' . __('Title') . '</th>' .
+            '<th scope="col">' . __('Date') . '</th>' .
+            '<th scope="col">' . __('Category') . '</th>' .
+            '<th scope="col">' . __('Type') . '</th>' .
+            '<th scope="col">' . __('Status') . '</th>' .
+            '<th scope="col">' . __('Actions') . '</th>' .
             '</tr>%s</table></div>';
 
             if ($enclose_block) {
@@ -280,22 +280,22 @@ class adminMapsMiniList extends adminGenericList
             $cat_title = __('None');
         }
 
-        $meta =& $GLOBALS['core']->meta;
+        $meta = &$GLOBALS['core']->meta;
         $meta_rs = $meta->getMetaStr($this->rs->post_meta, 'map');
 
-        $res = '<tr class="line'.($this->rs->post_status != 1 ? ' offline' : '').'"'.
-        ' id="p'.$this->rs->post_id.'">';
+        $res = '<tr class="line' . ($this->rs->post_status != 1 ? ' offline' : '') . '"' .
+        ' id="p' . $this->rs->post_id . '">';
 
         $res .=
-        '<td class="maximal"><a href="plugin.php?p=myGmaps&amp;do=edit&amp;id='.$this->rs->post_id.'" title="'.__('Edit map element').' : '.html::escapeHTML($this->rs->post_title).'">'.html::escapeHTML($this->rs->post_title).'</a></td>'.
-        '<td class="nowrap count">'.dt::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt).'</td>'.
-        '<td class="nowrap">'.$cat_title.'</td>'.
-        '<td class="nowrap">'.__($meta_rs).'</td>'.
-        '<td class="nowrap status">'.$img_status.' '.$selected.' '.$protected.' '.$attach.'</td>';
+        '<td class="maximal"><a href="plugin.php?p=myGmaps&amp;do=edit&amp;id=' . $this->rs->post_id . '" title="' . __('Edit map element') . ' : ' . html::escapeHTML($this->rs->post_title) . '">' . html::escapeHTML($this->rs->post_title) . '</a></td>' .
+        '<td class="nowrap count">' . dt::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt) . '</td>' .
+        '<td class="nowrap">' . $cat_title . '</td>' .
+        '<td class="nowrap">' . __($meta_rs) . '</td>' .
+        '<td class="nowrap status">' . $img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach . '</td>';
         if ($type == 'post') {
-            $res .= '<td class="nowrap count"><a class="element-remove" href="'.DC_ADMIN_URL.'post.php?id='.$id.'&amp;remove='.$this->rs->post_id.'" title="'.__('Remove map element').' : '.html::escapeHTML($this->rs->post_title).'"><img src="images/trash.png" alt="supprimer" /></a></td>';
+            $res .= '<td class="nowrap count"><a class="element-remove" href="' . DC_ADMIN_URL . 'post.php?id=' . $id . '&amp;remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.png" alt="supprimer" /></a></td>';
         } elseif ($type == 'page') {
-            $res .= '<td class="nowrap count"><a class="element-remove" href="'.DC_ADMIN_URL.'plugin.php?p=pages&amp;act=page&amp;id='.$id.'&amp;upd=1&amp;remove='.$this->rs->post_id.'" title="'.__('Remove map element').' : '.html::escapeHTML($this->rs->post_title).'"><img src="images/trash.png" alt="supprimer" /></a></td>';
+            $res .= '<td class="nowrap count"><a class="element-remove" href="' . DC_ADMIN_URL . 'plugin.php?p=pages&amp;act=page&amp;id=' . $id . '&amp;upd=1&amp;remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.png" alt="supprimer" /></a></td>';
         }
         $res .= '</tr>';
 
