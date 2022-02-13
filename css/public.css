@@ -67,6 +67,10 @@
 	color: blue;
 }
 
+.map_canvas button {
+	box-shadow: none
+}
+
 .gm-iw {
 	min-width: 150px;
 	white-space: normal
