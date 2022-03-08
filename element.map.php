@@ -14,6 +14,8 @@ require_once DC_ROOT . '/inc/admin/prepend.php';
 
 dcPage::check('usage,contentadmin');
 
+dt::setTZ($core->auth->getInfo('user_tz'));
+
 $p_url = 'plugin.php?p=' . basename(dirname(__FILE__));
 
 $s = &$core->blog->settings->myGmaps;
@@ -354,6 +356,9 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
         $cur->post_url = $post_url;
     }
 
+    // Back to UTC in order to keep UTC datetime for creadt/upddt
+    dt::setTZ('UTC');
+
     // Update post
     if ($post_id) {
         try {
@@ -608,7 +613,7 @@ if ($can_edit_post) {
                     '</p>',
                 'post_dt' => '<p><label for="post_dt">' . __('Publication date and hour') . '</label>' .
                     form::datetime('post_dt', [
-                        'default' => html::escapeHTML(dt::str('%Y-%m-%d\T%H:%M', strtotime($post_dt))),
+                        'default' => html::escapeHTML(dt::str('%Y-%m-%dT%H:%M', strtotime($post_dt))),
                         'class' => ($bad_dt ? 'invalid' : ''),
                     ]) .
                     '</p>',
