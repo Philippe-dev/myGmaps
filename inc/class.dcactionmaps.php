@@ -85,7 +85,7 @@ class dcMapsActionsPage extends dcActionsPage
             $entries = $from['entries'];
 
             foreach ($entries as $k => $v) {
-                $entries[$k] = (integer) $v;
+                $entries[$k] = (int) $v;
             }
 
             $params['sql'] = 'AND P.post_id IN(' . implode(',', $entries) . ') ';
@@ -113,7 +113,7 @@ class dcDefaultMapsActions
 {
     public static function adminMapsActionsPage($core, $ap)
     {
-        if ($core->auth->check('publish,contentadmin', $core->blog->id)) {
+        if (dcCore::app()->auth->check('publish,contentadmin', dcCore::app()->blog->id)) {
             $ap->addAction(
                 [__('Status') => [
                     __('Publish') => 'publish',
@@ -143,14 +143,14 @@ class dcDefaultMapsActions
             ]],
             ['dcDefaultMapsActions', 'doChangeMapLang']
         );
-        if ($core->auth->check('admin', $core->blog->id)) {
+        if (dcCore::app()->auth->check('admin', dcCore::app()->blog->id)) {
             $ap->addAction(
                 [__('Change') => [
                     __('Change author') => 'author']],
                 ['dcDefaultMapsActions', 'doChangeMapAuthor']
             );
         }
-        if ($core->auth->check('delete,contentadmin', $core->blog->id)) {
+        if (dcCore::app()->auth->check('delete,contentadmin', dcCore::app()->blog->id)) {
             $ap->addAction(
                 [__('Delete') => [
                     __('Delete') => 'delete']],
@@ -162,16 +162,20 @@ class dcDefaultMapsActions
     public static function doChangeMapStatus($core, dcMapsActionsPage $ap, $post)
     {
         switch ($ap->getAction()) {
-            case 'unpublish': $status = 0; break;
-            case 'schedule': $status = -1; break;
-            case 'pending': $status = -2; break;
-            default: $status = 1; break;
+            case 'unpublish': $status = 0;
+                break;
+            case 'schedule': $status = -1;
+                break;
+            case 'pending': $status = -2;
+                break;
+            default: $status = 1;
+                break;
         }
         $posts_ids = $ap->getIDs();
         if (empty($posts_ids)) {
             throw new Exception(__('No element selected'));
         }
-        $core->blog->updPostsStatus($posts_ids, $status);
+        dcCore::app()->blog->updPostsStatus($posts_ids, $status);
 
         $ap->redirect(true, ['upd' => 2]);
     }
@@ -183,7 +187,7 @@ class dcDefaultMapsActions
             throw new Exception(__('No element selected'));
         }
         $action = $ap->getAction();
-        $core->blog->updPostsSelected($posts_ids, $action == 'selected');
+        dcCore::app()->blog->updPostsSelected($posts_ids, $action == 'selected');
         if ($action == 'selected') {
             $ap->redirect(true, ['upd' => 3]);
         } else {
@@ -200,13 +204,13 @@ class dcDefaultMapsActions
         // Backward compatibility
         foreach ($posts_ids as $post_id) {
             // --BEHAVIOR-- adminBeforePostDelete
-            $core->callBehavior('adminBeforePostDelete', (integer) $post_id);
+            dcCore::app()->callBehavior('adminBeforePostDelete', (int) $post_id);
         }
 
         // --BEHAVIOR-- adminBeforePostsDelete
-        $core->callBehavior('adminBeforePostsDelete', $posts_ids);
+        dcCore::app()->callBehavior('adminBeforePostsDelete', $posts_ids);
 
-        $core->blog->delPosts($posts_ids);
+        dcCore::app()->blog->delPosts($posts_ids);
 
         $ap->redirect(true, ['upd' => 5]);
     }
@@ -219,8 +223,8 @@ class dcDefaultMapsActions
                 throw new Exception(__('No element selected'));
             }
             $new_cat_id = $post['new_cat_id'];
-            if (!empty($post['new_cat_title']) && $core->auth->check('categories', $core->blog->id)) {
-                $cur_cat = $core->con->openCursor($core->prefix . 'category');
+            if (!empty($post['new_cat_title']) && dcCore::app()->auth->check('categories', dcCore::app()->blog->id)) {
+                $cur_cat = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'category');
                 $cur_cat->cat_title = $post['new_cat_title'];
                 $cur_cat->cat_url = '';
                 $title = $cur_cat->cat_title;
@@ -228,23 +232,23 @@ class dcDefaultMapsActions
                 $parent_cat = !empty($post['new_cat_parent']) ? $post['new_cat_parent'] : '';
 
                 // --BEHAVIOR-- adminBeforeCategoryCreate
-                $core->callBehavior('adminBeforeCategoryCreate', $cur_cat);
+                dcCore::app()->callBehavior('adminBeforeCategoryCreate', $cur_cat);
 
-                $new_cat_id = $core->blog->addCategory($cur_cat, (integer) $parent_cat);
+                $new_cat_id = dcCore::app()->blog->addCategory($cur_cat, (int) $parent_cat);
 
                 // --BEHAVIOR-- adminAfterCategoryCreate
-                $core->callBehavior('adminAfterCategoryCreate', $cur_cat, $new_cat_id);
+                dcCore::app()->callBehavior('adminAfterCategoryCreate', $cur_cat, $new_cat_id);
             }
 
-            $core->blog->updPostsCategory($posts_ids, $new_cat_id);
-            $title = $core->blog->getCategory($new_cat_id);
+            dcCore::app()->blog->updPostsCategory($posts_ids, $new_cat_id);
+            $title = dcCore::app()->blog->getCategory($new_cat_id);
 
             $ap->redirect(true, ['upd' => 6]);
         } else {
             $ap->beginPage(
                 dcPage::breadcrumb(
                     [
-                        html::escapeHTML($core->blog->name) => '',
+                        html::escapeHTML(dcCore::app()->blog->name) => '',
                         $ap->getCallerTitle() => $ap->getRedirection(true),
                         __('Change category for this selection') => ''
                     ]
@@ -253,7 +257,7 @@ class dcDefaultMapsActions
             // categories list
             // Getting categories
             $categories_combo = dcAdminCombos::getCategoriesCombo(
-                $core->blog->getCategories()
+                dcCore::app()->blog->getCategories()
             );
             echo
             '<form action="' . $ap->getURI() . '" method="post">' .
@@ -261,7 +265,7 @@ class dcDefaultMapsActions
             '<p><label for="new_cat_id" class="classic">' . __('Category:') . '</label> ' .
             form::combo(['new_cat_id'], $categories_combo, '');
 
-            if ($core->auth->check('categories', $core->blog->id)) {
+            if (dcCore::app()->auth->check('categories', dcCore::app()->blog->id)) {
                 echo
                 '<div>' .
                 '<p id="new_cat">' . __('Create a new category for the element(s)') . '</p>' .
@@ -274,7 +278,7 @@ class dcDefaultMapsActions
             }
 
             echo
-            $core->formNonce() .
+            dcCore::app()->formNonce() .
             $ap->getHiddenFields() .
             form::hidden(['action'], 'category') .
             '<input type="submit" value="' . __('Save') . '" /></p>' .
@@ -285,29 +289,29 @@ class dcDefaultMapsActions
 
     public static function doChangeMapAuthor($core, dcMapsActionsPage $ap, $post)
     {
-        if (isset($post['new_auth_id']) && $core->auth->check('admin', $core->blog->id)) {
+        if (isset($post['new_auth_id']) && dcCore::app()->auth->check('admin', dcCore::app()->blog->id)) {
             $new_user_id = $post['new_auth_id'];
             $posts_ids = $_POST['entries'];
             if (empty($posts_ids)) {
                 throw new Exception(__('No element selected'));
             }
-            if ($core->getUser($new_user_id)->isEmpty()) {
+            if (dcCore::app()->getUser($new_user_id)->isEmpty()) {
                 throw new Exception(__('This user does not exist'));
             }
 
-            $cur = $core->con->openCursor($core->prefix . 'post');
+            $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'post');
             $cur->user_id = $new_user_id;
-            $cur->update('WHERE post_id ' . $core->con->in($posts_ids));
+            $cur->update('WHERE post_id ' . dcCore::app()->con->in($posts_ids));
 
             $ap->redirect(true, ['upd' => 7]);
         } else {
             $usersList = '';
-            if ($core->auth->check('admin', $core->blog->id)) {
+            if (dcCore::app()->auth->check('admin', dcCore::app()->blog->id)) {
                 $params = [
                     'limit' => 100,
                     'order' => 'nb_post DESC'
                 ];
-                $rs = $core->getUsers($params);
+                $rs = dcCore::app()->getUsers($params);
                 while ($rs->fetch()) {
                     $usersList .= ($usersList != '' ? ',' : '') . '"' . $rs->user_id . '"';
                 }
@@ -315,7 +319,7 @@ class dcDefaultMapsActions
             $ap->beginPage(
                 dcPage::breadcrumb(
                     [
-                        html::escapeHTML($core->blog->name) => '',
+                        html::escapeHTML(dcCore::app()->blog->name) => '',
                         $ap->getCallerTitle() => $ap->getRedirection(true),
                         __('Change author for this selection') => '']
                 ),
@@ -334,7 +338,7 @@ class dcDefaultMapsActions
             form::field('new_auth_id', 20, 255);
 
             echo
-                $core->formNonce() . $ap->getHiddenFields() .
+                dcCore::app()->formNonce() . $ap->getHiddenFields() .
                 form::hidden(['action'], 'author') .
                 '<input type="submit" value="' . __('Save') . '" /></p>' .
                 '</form>';
@@ -350,16 +354,16 @@ class dcDefaultMapsActions
         }
         if (isset($post['new_lang'])) {
             $new_lang = $post['new_lang'];
-            $cur = $core->con->openCursor($core->prefix . 'post');
+            $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'post');
             $cur->post_lang = $new_lang;
-            $cur->update('WHERE post_id ' . $core->con->in($posts_ids));
+            $cur->update('WHERE post_id ' . dcCore::app()->con->in($posts_ids));
 
             $ap->redirect(true, ['upd' => 8]);
         } else {
             $ap->beginPage(
                 dcPage::breadcrumb(
                     [
-                        html::escapeHTML($core->blog->name) => '',
+                        html::escapeHTML(dcCore::app()->blog->name) => '',
                         $ap->getCallerTitle() => $ap->getRedirection(true),
                         __('Change language for this selection') => ''
                     ]
@@ -367,7 +371,7 @@ class dcDefaultMapsActions
             );
             // lang list
             // Languages combo
-            $rs = $core->blog->getLangs(['order' => 'asc']);
+            $rs = dcCore::app()->blog->getLangs(['order' => 'asc']);
             $all_langs = l10n::getISOcodes(0, 1);
             $lang_combo = ['' => '', __('Most used') => [], __('Available') => l10n::getISOcodes(1, 1)];
             while ($rs->fetch()) {
@@ -388,7 +392,7 @@ class dcDefaultMapsActions
             form::combo('new_lang', $lang_combo, '');
 
             echo
-                $core->formNonce() . $ap->getHiddenFields() .
+                dcCore::app()->formNonce() . $ap->getHiddenFields() .
                 form::hidden(['action'], 'lang') .
                 '<input type="submit" value="' . __('Save') . '" /></p>' .
                 '</form>';

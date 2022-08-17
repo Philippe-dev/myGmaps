@@ -160,7 +160,7 @@ class adminMapsList extends adminGenericList
         $res = '<tr class="line' . ($this->rs->post_status != 1 ? ' offline' : '') . '"' .
         ' id="p' . $this->rs->post_id . '">';
 
-        $meta = &$GLOBALS['core']->meta;
+        $meta = dcCore::app()->meta;
         $meta_rs = $meta->getMetaStr($this->rs->post_meta, 'map');
 
         if ($s->myGmaps_enabled) {
@@ -280,7 +280,7 @@ class adminMapsMiniList extends adminGenericList
             $cat_title = __('None');
         }
 
-        $meta = &$GLOBALS['core']->meta;
+        $meta = dcCore::app()->meta;
         $meta_rs = $meta->getMetaStr($this->rs->post_meta, 'map');
 
         $res = '<tr class="line' . ($this->rs->post_status != 1 ? ' offline' : '') . '"' .

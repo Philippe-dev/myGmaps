@@ -12,35 +12,33 @@
 
 require_once dirname(__FILE__) . '/inc/class.mygmaps.public.php';
 
-$core->addBehavior('publicEntryAfterContent', ['dcMyGmapsPublic', 'publicMapContent']);
-$core->addBehavior('publicPageAfterContent', ['dcMyGmapsPublic', 'publicMapContent']);
-$core->addBehavior('publicHeadContent', ['dcMyGmapsPublic', 'publicHeadContent']);
+dcCore::app()->addBehavior('publicEntryAfterContent', ['dcMyGmapsPublic', 'publicMapContent']);
+dcCore::app()->addBehavior('publicPageAfterContent', ['dcMyGmapsPublic', 'publicMapContent']);
+dcCore::app()->addBehavior('publicHeadContent', ['dcMyGmapsPublic', 'publicHeadContent']);
 
-$core->tpl->addValue('myGmaps', ['dcMyGmapsPublic', 'publicTagMapContent']);
+dcCore::app()->tpl->addValue('myGmaps', ['dcMyGmapsPublic', 'publicTagMapContent']);
 
 class dcMyGmapsPublic
 {
     public static function hasMap($post_id)
     {
-        global $core;
-        $meta = &$core->meta;
+        $meta = dcCore::app()->meta;
         $my_params['post_id'] = $post_id;
         $my_params['no_content'] = true;
         $my_params['post_type'] = ['post', 'page'];
 
-        $rs = $core->blog->getPosts($my_params);
+        $rs = dcCore::app()->blog->getPosts($my_params);
         return $meta->getMetaStr($rs->post_meta, 'map_options');
     }
 
     public static function thisPostMap($post_id)
     {
-        global $core;
-        $meta = &$core->meta;
+        $meta = dcCore::app()->meta;
         $my_params['post_id'] = $post_id;
         $my_params['no_content'] = true;
         $my_params['post_type'] = ['post', 'page'];
 
-        $rs = $core->blog->getPosts($my_params);
+        $rs = dcCore::app()->blog->getPosts($my_params);
         return $meta->getMetaStr($rs->post_meta, 'map');
     }
 
@@ -50,8 +48,6 @@ class dcMyGmapsPublic
      */
     public static function getMapElements($aParams = [])
     {
-        global $core;
-
         $rs = [];
 
         $my_params = [];
@@ -61,7 +57,7 @@ class dcMyGmapsPublic
         // Récupérer tous les éléments de cartes selon leurs ids
         if (array_key_exists('ids', $aParams) && !empty($aParams['ids'])) {
             $my_params['post_id'] = $aParams['ids'];
-            $rs1 = $core->blog->getPosts($my_params);
+            $rs1 = dcCore::app()->blog->getPosts($my_params);
             while ($rs1->fetch()) { // Evite les doublons
                 $rs[$rs1->post_id] = $rs1->row();
             }
@@ -71,7 +67,7 @@ class dcMyGmapsPublic
         if (array_key_exists('categories', $aParams) && !empty($aParams['categories'])) {
             $my_params['post_id'] = '';
             $my_params['cat_id'] = $aParams['categories'];
-            $rs2 = $core->blog->getPosts($my_params);
+            $rs2 = dcCore::app()->blog->getPosts($my_params);
             while ($rs2->fetch()) { // Evite les doublons
                 $rs[$rs2->post_id] = $rs2->row();
             }
@@ -79,7 +75,7 @@ class dcMyGmapsPublic
 
         // Récupérer tous les éléments de cartes
         if (!isset($rs1) && !isset($rs2)) {
-            $rs3 = $core->blog->getPosts($my_params);
+            $rs3 = dcCore::app()->blog->getPosts($my_params);
             while ($rs3->fetch()) {
                 $rs[$rs3->post_id] = $rs3->row();
             }
@@ -90,22 +86,20 @@ class dcMyGmapsPublic
 
     public static function thisPostMapType($post_id)
     {
-        global $core;
-        $meta = &$core->meta;
+        $meta = dcCore::app()->meta;
         $my_params['post_id'] = $post_id;
         $my_params['no_content'] = true;
         $my_params['post_type'] = 'map';
 
-        $rs = $core->blog->getPosts($my_params);
+        $rs = dcCore::app()->blog->getPosts($my_params);
         return $meta->getMetaStr($rs->post_meta, 'map');
     }
 
     public static function publicHeadContent($core, $_ctx)
     {
         // Settings
-        global $core;
-        $s = &$core->blog->settings->myGmaps;
-        $sPublicPath = $core->blog->getQmarkURL() . 'pf=' . basename(dirname(__FILE__));
+        $s = dcCore::app()->blog->settings->myGmaps;
+        $sPublicPath = dcCore::app()->blog->getQmarkURL() . 'pf=' . basename(dirname(__FILE__));
         if ($s->myGmaps_enabled) {
             echo mygmapsPublic::publicJsContent([]);
             echo mygmapsPublic::publicCssContent(['public_path' => $sPublicPath]);
@@ -115,26 +109,25 @@ class dcMyGmapsPublic
     public static function publicMapContent($core, $_ctx, $aElements = [])
     {
         // Settings
-        global $core;
-        $s = &$core->blog->settings->myGmaps;
-        $url = $core->blog->getQmarkURL() . 'pf=' . basename(dirname(__FILE__));
+        $s = dcCore::app()->blog->settings->myGmaps;
+        $url = dcCore::app()->blog->getQmarkURL() . 'pf=' . basename(dirname(__FILE__));
         $postTypes = ['post', 'page'];
 
         if ($s->myGmaps_enabled) {
             // Appel depuis un billet, ou depuis une balise de template
             $sTemplate = '';
             $isTemplateTag = (!empty($aElements)) ? true : false ;
-            $sPostId = ($isTemplateTag) ? $aElements['id'] : $_ctx->posts->post_id ;
+            $sPostId = ($isTemplateTag) ? $aElements['id'] : dcCore::app()->ctx->posts->post_id ;
 
-            if ($isTemplateTag || (in_array($_ctx->posts->post_type, $postTypes) && self::hasMap($sPostId) != '')) {
+            if ($isTemplateTag || (in_array(dcCore::app()->ctx->posts->post_type, $postTypes) && self::hasMap($sPostId) != '')) {
             // Map styles. Get more styles from http://snazzymaps.com/
 
-                $public_path = $core->blog->public_path;
-                $public_url = $core->blog->settings->system->public_url;
-                $blog_url = $core->blog->url;
+                $public_path = dcCore::app()->blog->public_path;
+                $public_url = dcCore::app()->blog->settings->system->public_url;
+                $blog_url = dcCore::app()->blog->url;
 
                 $map_styles_dir_path = $public_path . '/myGmaps/styles/';
-                $map_styles_dir_url = http::concatURL($core->blog->url, $public_url . '/myGmaps/styles/');
+                $map_styles_dir_url = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/styles/');
 
                 if (is_dir($map_styles_dir_path)) {
                     $map_styles = glob($map_styles_dir_path . '*.js');
@@ -158,8 +151,8 @@ class dcMyGmapsPublic
                 if ($isTemplateTag) {
                     $aOptions = $aElements;
                 } else {
-                    $meta = &$GLOBALS['core']->meta;
-                    $post_map_options = explode(',', $meta->getMetaStr($_ctx->posts->post_meta, 'map_options'));
+                    $meta = dcCore::app()->meta;
+                    $post_map_options = explode(',', $meta->getMetaStr(dcCore::app()->ctx->posts->post_meta, 'map_options'));
                     $aOptions = [
                         'center' => $post_map_options[0] . ',' . $post_map_options[1],
                         'zoom' => $post_map_options[2],
@@ -179,7 +172,7 @@ class dcMyGmapsPublic
 
                     $params['post_type'] = 'map';
                     $params['post_status'] = '1';
-                    $rs = $core->blog->getPosts($params);
+                    $rs = dcCore::app()->blog->getPosts($params);
 
                     while ($rs->fetch()) {
                         if (in_array($rs->post_id, $maps_array)) {
@@ -200,7 +193,7 @@ class dcMyGmapsPublic
                     $content = str_replace(["\r\n", "\n", "\r"], '\\n', $content);
                     $content = str_replace(["'"], "\'", $content);
 
-                    $meta = &$core->meta;
+                    $meta = dcCore::app()->meta;
                     $description = $meta->getMetaStr($map_element['post_meta'], 'description');
 
                     $type = self::thisPostMapType($map_element_id);
@@ -345,7 +338,6 @@ class dcMyGmapsPublic
 
     public static function publicTagMapContent($attr, $content)
     {
-        global $core;
 
         // Récupérer tous les filtres
         // id="home" center="latlng" zoom="x" style="style_name" elements="id,id,id,id" category="id,id,id"

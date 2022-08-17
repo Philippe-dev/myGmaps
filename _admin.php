@@ -16,16 +16,16 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 
 $_menu['Blog']->addItem(
     __('Google Maps'),
-    $core->adminurl->get('admin.plugin.myGmaps').'&amp;do=list',
+    dcCore::app()->adminurl->get('admin.plugin.myGmaps').'&amp;do=list',
     [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
-    preg_match('/' . preg_quote($core->adminurl->get('admin.plugin.myGmaps')) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
-    $core->auth->check('usage,contentadmin', $core->blog->id)
+    preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.myGmaps')) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
+    dcCore::app()->auth->check('usage,contentadmin', dcCore::app()->blog->id)
 );
 
-$core->addBehavior('adminDashboardFavs', ['myGmapsBehaviors', 'dashboardFavs']);
-$core->addBehavior('adminDashboardFavsIcon', ['myGmapsBehaviors', 'dashboardFavsIcon']);
-$core->addBehavior('adminPageHelpBlock', ['myGmapsBehaviors', 'adminPageHelpBlock']);
-$core->addBehavior('adminPageHTTPHeaderCSP', ['myGmapsBehaviors', 'adminPageHTTPHeaderCSP']);
+dcCore::app()->addBehavior('adminDashboardFavs', ['myGmapsBehaviors', 'dashboardFavs']);
+dcCore::app()->addBehavior('adminDashboardFavsIcon', ['myGmapsBehaviors', 'dashboardFavsIcon']);
+dcCore::app()->addBehavior('adminPageHelpBlock', ['myGmapsBehaviors', 'adminPageHelpBlock']);
+dcCore::app()->addBehavior('adminPageHTTPHeaderCSP', ['myGmapsBehaviors', 'adminPageHTTPHeaderCSP']);
 
 $__autoload['adminMapsMiniList'] = dirname(__FILE__) . '/inc/lib.pager.php';
 $__autoload['mygmapsPublic'] = dirname(__FILE__) . '/inc/class.mygmaps.public.php';
@@ -92,7 +92,7 @@ class myGmapsBehaviors
         if ($name == 'myGmaps') {
             $params = new ArrayObject();
             $params['post_type'] = 'map';
-            $page_count = $core->blog->getPosts($params, true)->f(0);
+            $page_count = dcCore::app()->blog->getPosts($params, true)->f(0);
             if ($page_count > 0) {
                 $str_pages = ($page_count > 1) ? __('%d map elements') : __('%d map element');
                 $icon[0] = __('Google Maps') . '<br />' . sprintf($str_pages, $page_count);
@@ -109,14 +109,12 @@ $p_url = 'plugin.php?p=' . basename(dirname(__FILE__));
 
 if (isset($_GET['remove']) && $_GET['remove'] == 'map') {
     try {
-        global $core;
-
         $post_id = $_GET['id'];
-        $meta = &$GLOBALS['core']->meta;
+        $meta = dcCore::app()->meta;
         $meta->delPostMeta($post_id, 'map');
         $meta->delPostMeta($post_id, 'map_options');
 
-        $core->blog->triggerBlog();
+        dcCore::app()->blog->triggerBlog();
 
         if ($type == 'page') {
             http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1#gmap-area');
@@ -124,18 +122,16 @@ if (isset($_GET['remove']) && $_GET['remove'] == 'map') {
             http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1#gmap-area');
         }
     } catch (Exception $e) {
-        $core->error->add($e->getMessage());
+        dcCore::app()->error->add($e->getMessage());
     }
 } elseif (!empty($_GET['remove']) && is_numeric($_GET['remove'])) {
     try {
-        global $core;
-
         $post_id = $_GET['id'];
 
-        $meta = &$GLOBALS['core']->meta;
-        $meta->delPostMeta($post_id, 'map', (integer) $_GET['remove']);
+        $meta = dcCore::app()->meta;
+        $meta->delPostMeta($post_id, 'map', (int) $_GET['remove']);
 
-        $core->blog->triggerBlog();
+        dcCore::app()->blog->triggerBlog();
 
         if ($type == 'page') {
             http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1#gmap-area');
@@ -143,24 +139,22 @@ if (isset($_GET['remove']) && $_GET['remove'] == 'map') {
             http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1#gmap-area');
         }
     } catch (Exception $e) {
-        $core->error->add($e->getMessage());
+        dcCore::app()->error->add($e->getMessage());
     }
 } elseif (!empty($_GET['add']) && $_GET['add'] == 'map') {
     try {
-        global $core;
-
         $post_id = $_GET['id'];
         $myGmaps_center = $_GET['center'];
         $myGmaps_zoom = $_GET['zoom'];
         $myGmaps_type = $_GET['type'];
 
-        $meta = &$GLOBALS['core']->meta;
+        $meta = dcCore::app()->meta;
         $meta->delPostMeta($post_id, 'map_options');
 
         $map_options = $myGmaps_center . ',' . $myGmaps_zoom . ',' . $myGmaps_type;
         $meta->setPostMeta($post_id, 'map_options', $map_options);
 
-        $core->blog->triggerBlog();
+        dcCore::app()->blog->triggerBlog();
 
         if ($type == 'page') {
             http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1#gmap-area');
@@ -168,23 +162,22 @@ if (isset($_GET['remove']) && $_GET['remove'] == 'map') {
             http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1#gmap-area');
         }
     } catch (Exception $e) {
-        $core->error->add($e->getMessage());
+        dcCore::app()->error->add($e->getMessage());
     }
 }
 
-$core->addBehavior('adminPostHeaders', ['myGmapsPostBehaviors', 'postHeaders']);
-$core->addBehavior('adminPageHeaders', ['myGmapsPostBehaviors', 'postHeaders']);
-$core->addBehavior('adminPostFormItems', ['myGmapsPostBehaviors', 'adminPostFormItems']);
-$core->addBehavior('adminPageFormItems', ['myGmapsPostBehaviors', 'adminPostFormItems']);
-$core->addBehavior('adminBeforePostUpdate', ['myGmapsPostBehaviors', 'adminBeforePostUpdate']);
-$core->addBehavior('adminBeforePageUpdate', ['myGmapsPostBehaviors', 'adminBeforePostUpdate']);
+dcCore::app()->addBehavior('adminPostHeaders', ['myGmapsPostBehaviors', 'postHeaders']);
+dcCore::app()->addBehavior('adminPageHeaders', ['myGmapsPostBehaviors', 'postHeaders']);
+dcCore::app()->addBehavior('adminPostFormItems', ['myGmapsPostBehaviors', 'adminPostFormItems']);
+dcCore::app()->addBehavior('adminPageFormItems', ['myGmapsPostBehaviors', 'adminPostFormItems']);
+dcCore::app()->addBehavior('adminBeforePostUpdate', ['myGmapsPostBehaviors', 'adminBeforePostUpdate']);
+dcCore::app()->addBehavior('adminBeforePageUpdate', ['myGmapsPostBehaviors', 'adminBeforePostUpdate']);
 
 class myGmapsPostBehaviors
 {
     public static function postHeaders()
     {
-        global $core;
-        $s = &$core->blog->settings->myGmaps;
+        $s = dcCore::app()->blog->settings->myGmaps;
 
         if (!$s->myGmaps_enabled) {
             return;
@@ -217,14 +210,13 @@ class myGmapsPostBehaviors
 
     public static function adminBeforePostUpdate($cur, $post_id)
     {
-        global $core;
-        $s = $core->blog->settings->myGmaps;
+        $s = dcCore::app()->blog->settings->myGmaps;
 
         $my_params['post_id'] = $post_id;
         $my_params['no_content'] = true;
         $my_params['post_type'] = ['post', 'page'];
 
-        $rs = $core->blog->getPosts($my_params);
+        $rs = dcCore::app()->blog->getPosts($my_params);
 
         if (!$s->myGmaps_enabled) {
             return;
@@ -234,7 +226,7 @@ class myGmapsPostBehaviors
             $myGmaps_center = $_POST['myGmaps_center'];
             $myGmaps_zoom = $_POST['myGmaps_zoom'];
             $myGmaps_type = $_POST['myGmaps_type'];
-            $meta = &$GLOBALS['core']->meta;
+            $meta = dcCore::app()->meta;
 
             $meta->delPostMeta($post_id, 'map_options');
 
@@ -245,8 +237,7 @@ class myGmapsPostBehaviors
 
     public static function adminPostFormItems($main_items, $sidebar_items, $post)
     {
-        global $core;
-        $s = $core->blog->settings->myGmaps;
+        $s = dcCore::app()->blog->settings->myGmaps;
         $postTypes = ['post', 'page'];
 
         if (!$s->myGmaps_enabled) {
@@ -258,18 +249,18 @@ class myGmapsPostBehaviors
         $id = $post->post_id;
         $type = $post->post_type;
 
-        $meta = &$GLOBALS['core']->meta;
+        $meta = dcCore::app()->meta;
         $elements_list = $meta->getMetaStr($post->post_meta, 'map');
         $map_options = $meta->getMetaStr($post->post_meta, 'map_options');
 
         // Custom map styles
 
-        $public_path = $core->blog->public_path;
-        $public_url = $core->blog->settings->system->public_url;
-        $blog_url = $core->blog->url;
+        $public_path = dcCore::app()->blog->public_path;
+        $public_url = dcCore::app()->blog->settings->system->public_url;
+        $blog_url = dcCore::app()->blog->url;
 
         $map_styles_dir_path = $public_path . '/myGmaps/styles/';
-        $map_styles_dir_url = http::concatURL($core->blog->url, $public_url . '/myGmaps/styles/');
+        $map_styles_dir_url = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/styles/');
 
         if (is_dir($map_styles_dir_path)) {
             $map_styles = glob($map_styles_dir_path . '*.js');
@@ -380,11 +371,11 @@ class myGmapsPostBehaviors
             try {
                 $params['post_id'] = $meta->splitMetaValues($elements_list);
                 $params['post_type'] = 'map';
-                $posts = $core->blog->getPosts($params);
-                $counter = $core->blog->getPosts($params, true);
-                $post_list = new adminMapsMiniList($core, $posts, $counter->f(0));
+                $posts = dcCore::app()->blog->getPosts($params);
+                $counter = dcCore::app()->blog->getPosts($params, true);
+                $post_list = new adminMapsMiniList(dcCore::app(), $posts, $counter->f(0));
             } catch (Exception $e) {
-                $core->error->add($e->getMessage());
+                dcCore::app()->error->add($e->getMessage());
             }
             $page = '1';
             $nb_per_page = '30';
@@ -409,9 +400,9 @@ class myGmapsPostBehaviors
                 $params['post_id'] = $meta->splitMetaValues($elements_list);
                 $params['post_type'] = 'map';
                 $params['post_status'] = '1';
-                $elements = $core->blog->getPosts($params);
+                $elements = dcCore::app()->blog->getPosts($params);
             } catch (Exception $e) {
-                $core->error->add($e->getMessage());
+                dcCore::app()->error->add($e->getMessage());
             }
 
             while ($elements->fetch()) {
@@ -421,7 +412,7 @@ class myGmapsPostBehaviors
                 $content = str_replace(["\r\n", "\n", "\r"], '\\n', $content);
                 $content = str_replace(["'"], "\'", $content);
 
-                $meta = &$core->meta;
+                $meta = dcCore::app()->meta;
                 $description = $meta->getMetaStr($elements->post_meta, 'description');
                 $type = $meta->getMetaStr($elements->post_meta, 'map');
 

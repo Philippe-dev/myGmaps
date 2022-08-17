@@ -14,13 +14,13 @@ require_once DC_ROOT . '/inc/admin/prepend.php';
 
 dcPage::check('usage,contentadmin');
 
-dt::setTZ($core->auth->getInfo('user_tz'));
+dt::setTZ(dcCore::app()->auth->getInfo('user_tz'));
 
 $p_url = 'plugin.php?p=' . basename(dirname(__FILE__));
 
-$s = &$core->blog->settings->myGmaps;
+$s = dcCore::app()->blog->settings->myGmaps;
 
-$plugin_QmarkURL = $core->blog->getQmarkURL();
+$plugin_QmarkURL = dcCore::app()->blog->getQmarkURL();
 
 $myGmaps_center = $s->myGmaps_center;
 $myGmaps_zoom = $s->myGmaps_zoom;
@@ -31,18 +31,18 @@ $cat_id = '';
 $post_dt = '';
 $post_type = 'map';
 $element_type = 'none';
-$post_format = $core->auth->getOption('post_format');
-$post_editor = $core->auth->getOption('editor');
+$post_format = dcCore::app()->auth->getOption('post_format');
+$post_editor = dcCore::app()->auth->getOption('editor');
 $post_password = '';
 $post_url = '';
-$post_lang = $core->auth->getInfo('user_lang');
+$post_lang = dcCore::app()->auth->getInfo('user_lang');
 $post_title = '';
 $post_excerpt = '';
 $post_excerpt_xhtml = '';
 $post_content = '';
 $post_content_xhtml = '';
 $post_notes = '';
-$post_status = $core->auth->getInfo('user_post_status');
+$post_status = dcCore::app()->auth->getInfo('user_post_status');
 $post_selected = false;
 $post_open_comment = '';
 $post_open_tb = '';
@@ -52,8 +52,8 @@ $post_media = [];
 $page_title = __('New map element');
 
 $can_view_page = true;
-$can_edit_post = $core->auth->check('usage,contentadmin', $core->blog->id);
-$can_publish = $core->auth->check('publish,contentadmin', $core->blog->id);
+$can_edit_post = dcCore::app()->auth->check('usage,contentadmin', dcCore::app()->blog->id);
+$can_publish = dcCore::app()->auth->check('publish,contentadmin', dcCore::app()->blog->id);
 $can_delete = false;
 
 $post_headlink = '<link rel="%s" title="%s" href="map.php?id=%s" />';
@@ -68,7 +68,7 @@ if (!$can_publish) {
 
 // Getting categories
 $categories_combo = dcAdminCombos::getCategoriesCombo(
-    $core->blog->getCategories(['post_type' => 'map'])
+    dcCore::app()->blog->getCategories(['post_type' => 'map'])
 );
 
 // Status combo
@@ -78,7 +78,7 @@ $img_status_pattern = '<img class="img_select_option" alt="%1$s" title="%1$s" sr
 
 // Formaters combo
 if (version_compare(DC_VERSION, '2.7-dev', '>=')) {
-    $core_formaters = $core->getFormaters();
+    $core_formaters = dcCore::app()->getFormaters();
     $available_formats = ['' => ''];
     foreach ($core_formaters as $editor => $formats) {
         foreach ($formats as $format) {
@@ -86,23 +86,23 @@ if (version_compare(DC_VERSION, '2.7-dev', '>=')) {
         }
     }
 } else {
-    foreach ($core->getFormaters() as $v) {
+    foreach (dcCore::app()->getFormaters() as $v) {
         $available_formats[$v] = $v;
     }
 }
 
 // Languages combo
-$rs = $core->blog->getLangs(['order' => 'asc']);
+$rs = dcCore::app()->blog->getLangs(['order' => 'asc']);
 $lang_combo = dcAdminCombos::getLangsCombo($rs, true);
 
 // Custom marker icons
 
-$public_path = $core->blog->public_path;
-$public_url = $core->blog->settings->system->public_url;
-$blog_url = $core->blog->url;
+$public_path = dcCore::app()->blog->public_path;
+$public_url = dcCore::app()->blog->settings->system->public_url;
+$blog_url = dcCore::app()->blog->url;
 
 $icons_dir_path = $public_path . '/myGmaps/icons/';
-$icons_dir_url = http::concatURL($core->blog->url, $public_url . '/myGmaps/icons/');
+$icons_dir_url = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/icons/');
 
 if (is_dir($icons_dir_path)) {
     $images = glob($icons_dir_path . '*.png');
@@ -122,7 +122,7 @@ if (is_dir($icons_dir_path)) {
 // Custom Kml files
 
 $kmls_dir_path = $public_path . '/myGmaps/kml_files/';
-$kmls_dir_url = http::concatURL($core->blog->url, $public_url . '/myGmaps/kml_files/');
+$kmls_dir_url = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/kml_files/');
 
 if (is_dir($kmls_dir_path)) {
     $kmls = glob($kmls_dir_path . '*.kml');
@@ -140,7 +140,7 @@ if (is_dir($kmls_dir_path)) {
 
 // Custom map styles
 $map_styles_dir_path = $public_path . '/myGmaps/styles/';
-$map_styles_dir_url = http::concatURL($core->blog->url, $public_url . '/myGmaps/styles/');
+$map_styles_dir_url = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/styles/');
 
 if (is_dir($map_styles_dir_path)) {
     $map_styles = glob($map_styles_dir_path . '*.js');
@@ -164,10 +164,10 @@ if (!empty($_REQUEST['id'])) {
     $params['post_id'] = $_REQUEST['id'];
     $params['post_type'] = 'map';
 
-    $post = $core->blog->getPosts($params);
+    $post = dcCore::app()->blog->getPosts($params);
 
     if ($post->isEmpty()) {
-        $core->error->add(__('This map element does not exist.'));
+        dcCore::app()->error->add(__('This map element does not exist.'));
         $can_view_page = false;
     } else {
         $post_id = $post->post_id;
@@ -186,17 +186,17 @@ if (!empty($_REQUEST['id'])) {
         $post_content_xhtml = $post->post_content_xhtml;
         $post_notes = $post->post_notes;
         $post_status = $post->post_status;
-        $post_selected = (boolean) $post->post_selected;
-        $post_open_comment = (boolean) $post->post_open_comment;
-        $post_open_tb = (boolean) $post->post_open_tb;
+        $post_selected = (bool) $post->post_selected;
+        $post_open_comment = (bool) $post->post_open_comment;
+        $post_open_tb = (bool) $post->post_open_tb;
 
         $page_title = __('Edit map element');
 
         $can_edit_post = $post->isEditable();
         $can_delete = $post->isDeletable();
 
-        $next_rs = $core->blog->getNextPost($post, 1);
-        $prev_rs = $core->blog->getNextPost($post, -1);
+        $next_rs = dcCore::app()->blog->getNextPost($post, 1);
+        $prev_rs = dcCore::app()->blog->getNextPost($post, -1);
 
         if ($next_rs !== null) {
             $next_link = sprintf(
@@ -229,8 +229,8 @@ if (!empty($_REQUEST['id'])) {
         }
 
         try {
-            $core->media = new dcMedia($core);
-            $post_media = $core->media->getPostMedia($post_id);
+            dcCore::app()->media = new dcMedia(dcCore::app());
+            $post_media = dcCore::app()->media->getPostMedia($post_id);
         } catch (Exception $e) {
         }
     }
@@ -238,7 +238,7 @@ if (!empty($_REQUEST['id'])) {
 
 // Format excerpt and content
 if (!empty($_POST) && $can_edit_post) {
-    $meta = &$GLOBALS['core']->meta;
+    $meta = dcCore::app()->meta;
 
     $post_format = $_POST['post_format'];
     $post_excerpt = $_POST['post_excerpt'];
@@ -246,10 +246,10 @@ if (!empty($_POST) && $can_edit_post) {
 
     $post_title = $_POST['post_title'];
 
-    $cat_id = (integer) $_POST['cat_id'];
+    $cat_id = (int) $_POST['cat_id'];
 
     if (isset($_POST['post_status'])) {
-        $post_status = (integer) $_POST['post_status'];
+        $post_status = (int) $_POST['post_status'];
     }
 
     if (empty($_POST['post_dt'])) {
@@ -263,7 +263,7 @@ if (!empty($_POST) && $can_edit_post) {
             }
             $post_dt = date('Y-m-d H:i', $post_dt);
         } catch (Exception $e) {
-            $core->error->add($e->getMessage());
+            dcCore::app()->error->add($e->getMessage());
         }
     }
 
@@ -279,7 +279,7 @@ if (!empty($_POST) && $can_edit_post) {
         $post_url = $_POST['post_url'];
     }
 
-    $core->blog->setPostContent(
+    dcCore::app()->blog->setPostContent(
         $post_id,
         $post_format,
         $post_lang,
@@ -294,11 +294,11 @@ if (!empty($_POST) && $can_edit_post) {
 if (!empty($_POST['delete']) && $can_delete) {
     try {
         // --BEHAVIOR-- adminBeforePostDelete
-        $core->callBehavior('adminBeforePostDelete', $post_id);
-        $core->blog->delPost($post_id);
+        dcCore::app()->callBehavior('adminBeforePostDelete', $post_id);
+        dcCore::app()->blog->delPost($post_id);
         http::redirect('' . $p_url . '&do=list');
     } catch (Exception $e) {
-        $core->error->add($e->getMessage());
+        dcCore::app()->error->add($e->getMessage());
     }
 }
 
@@ -316,23 +316,23 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
         $description = 'description';
     }
     // Create category
-    if (!empty($_POST['new_cat_title']) && $core->auth->check('categories', $core->blog->id)) {
-        $cur_cat = $core->con->openCursor($core->prefix . 'category');
+    if (!empty($_POST['new_cat_title']) && dcCore::app()->auth->check('categories', dcCore::app()->blog->id)) {
+        $cur_cat = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'category');
         $cur_cat->cat_title = $_POST['new_cat_title'];
         $cur_cat->cat_url = '';
 
         $parent_cat = !empty($_POST['new_cat_parent']) ? $_POST['new_cat_parent'] : '';
 
         // --BEHAVIOR-- adminBeforeCategoryCreate
-        $core->callBehavior('adminBeforeCategoryCreate', $cur_cat);
+        dcCore::app()->callBehavior('adminBeforeCategoryCreate', $cur_cat);
 
-        $cat_id = $core->blog->addCategory($cur_cat, (integer) $parent_cat);
+        $cat_id = dcCore::app()->blog->addCategory($cur_cat, (int) $parent_cat);
 
         // --BEHAVIOR-- adminAfterCategoryCreate
-        $core->callBehavior('adminAfterCategoryCreate', $cur_cat, $cat_id);
+        dcCore::app()->callBehavior('adminAfterCategoryCreate', $cur_cat, $cat_id);
     }
 
-    $cur = $core->con->openCursor($core->prefix . 'post');
+    $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'post');
 
     $cur->post_title = $post_title;
     $cur->cat_id = ($cat_id ? $cat_id : null);
@@ -348,9 +348,9 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
     $cur->post_content_xhtml = $post_content_xhtml;
     $cur->post_notes = $post_notes;
     $cur->post_status = $post_status;
-    $cur->post_selected = (integer) $post_selected;
-    $cur->post_open_comment = (integer) $post_open_comment;
-    $cur->post_open_tb = (integer) $post_open_tb;
+    $cur->post_selected = (int) $post_selected;
+    $cur->post_open_comment = (int) $post_open_comment;
+    $cur->post_open_tb = (int) $post_open_tb;
 
     if (isset($_POST['post_url'])) {
         $cur->post_url = $post_url;
@@ -363,15 +363,15 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
     if ($post_id) {
         try {
             // --BEHAVIOR-- adminBeforePostUpdate
-            $core->callBehavior('adminBeforePostUpdate', $cur, $post_id);
-            $core->con->begin();
-            $core->blog->updPost($post_id, $cur);
+            dcCore::app()->callBehavior('adminBeforePostUpdate', $cur, $post_id);
+            dcCore::app()->con->begin();
+            dcCore::app()->blog->updPost($post_id, $cur);
             if (isset($_POST['element_type'])) {
                 $tags = $_POST['element_type'];
                 $myGmaps_center = $_POST['myGmaps_center'];
                 $myGmaps_zoom = $_POST['myGmaps_zoom'];
                 $myGmaps_type = $_POST['myGmaps_type'];
-                $meta = &$GLOBALS['core']->meta;
+                $meta = dcCore::app()->meta;
 
                 $meta->delPostMeta($post_id, 'map');
                 $meta->delPostMeta($post_id, 'map_options');
@@ -384,32 +384,32 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
                 $meta->setPostMeta($post_id, 'map_options', $map_options);
                 $meta->setPostMeta($post_id, 'description', $description);
             }
-            $core->con->commit();
+            dcCore::app()->con->commit();
             // --BEHAVIOR-- adminAfterPostUpdate
-            $core->callBehavior('adminAfterPostUpdate', $cur, $post_id);
+            dcCore::app()->callBehavior('adminAfterPostUpdate', $cur, $post_id);
 
             http::redirect('' . $p_url . '&do=edit&id=' . $post_id . '&upd=1');
         } catch (Exception $e) {
-            $core->error->add($e->getMessage());
+            dcCore::app()->error->add($e->getMessage());
         }
     } else {
-        $cur->user_id = $core->auth->userID();
+        $cur->user_id = dcCore::app()->auth->userID();
 
         try {
             // --BEHAVIOR-- adminBeforePostCreate
-            $core->callBehavior('adminBeforePostCreate', $cur);
+            dcCore::app()->callBehavior('adminBeforePostCreate', $cur);
 
-            $return_id = $core->blog->addPost($cur);
+            $return_id = dcCore::app()->blog->addPost($cur);
 
             // --BEHAVIOR-- adminAfterPostCreate
-            $core->callBehavior('adminAfterPostCreate', $cur, $return_id);
+            dcCore::app()->callBehavior('adminAfterPostCreate', $cur, $return_id);
 
             if (isset($_POST['element_type'])) {
                 $tags = $_POST['element_type'];
                 $myGmaps_center = $_POST['myGmaps_center'];
                 $myGmaps_zoom = $_POST['myGmaps_zoom'];
                 $myGmaps_type = $_POST['myGmaps_type'];
-                $meta = &$GLOBALS['core']->meta;
+                $meta = dcCore::app()->meta;
 
                 foreach ($meta->splitMetaValues($tags) as $tag) {
                     $meta->setPostMeta($return_id, 'map', $tag);
@@ -420,7 +420,7 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
             }
             http::redirect('' . $p_url . '&do=edit&id=' . $return_id . '&crea=1');
         } catch (Exception $e) {
-            $core->error->add($e->getMessage());
+            dcCore::app()->error->add($e->getMessage());
         }
     }
 }
@@ -428,11 +428,11 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
 if (!empty($_POST['delete']) && $can_delete) {
     try {
         // --BEHAVIOR-- adminBeforePostDelete
-        $core->callBehavior('adminBeforePostDelete', $post_id);
-        $core->blog->delPost($post_id);
+        dcCore::app()->callBehavior('adminBeforePostDelete', $post_id);
+        dcCore::app()->blog->delPost($post_id);
         http::redirect($p_url . '&do=list');
     } catch (Exception $e) {
-        $core->error->add($e->getMessage());
+        dcCore::app()->error->add($e->getMessage());
     }
 }
 
@@ -443,14 +443,14 @@ $default_tab = 'edit-entry';
 $admin_post_behavior = '';
 if ($post_editor && !empty($post_editor[$post_format])) {
     if ($post_format == 'xhtml') {
-        $admin_post_behavior = $core->callBehavior(
+        $admin_post_behavior = dcCore::app()->callBehavior(
             'adminPostEditor',
             $post_editor[$post_format],
             'map',
             ['#post_content']
         );
     } elseif ($post_format == 'wiki') {
-        $admin_post_behavior = $core->callBehavior(
+        $admin_post_behavior = dcCore::app()->callBehavior(
             'adminPostEditor',
             $post_editor[$post_format],
             'map',
@@ -495,71 +495,71 @@ if ($post_id) {
         dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/element.map.js') .
         dcPage::jsConfirmClose('entry-form') .
         // --BEHAVIOR-- adminPostHeaders
-        $core->callBehavior('adminPostHeaders') .
+        dcCore::app()->callBehavior('adminPostHeaders') .
         dcPage::jsPageTabs($default_tab) .
         $next_headlink . "\n" . $prev_headlink
-        ?>
+?>
     <?php
 
     echo
     '<script>' . "\n" .
-        '//<![CDATA[' . "\n" .
-        'var stroke_color_msg = \'' . __('Stroke color') . '\';' . "\n" .
-        'var stroke_opacity_msg = \'' . __('Stroke opacity') . '\';' . "\n" .
-        'var stroke_weight_msg = \'' . __('Stroke weight') . '\';' . "\n" .
-        'var circle_radius_msg = \'' . __('Circle radius') . '\';' . "\n" .
-        'var fill_color_msg = \'' . __('Fill color') . '\';' . "\n" .
-        'var fill_opacity_msg = \'' . __('Fill opacity') . '\';' . "\n" .
-        'var default_icons_msg = \'' . __('Default icons') . '\';' . "\n" .
-        'var custom_icons_msg = \'' . __('Custom icons') . '\';' . "\n" .
-        'var kml_url_msg = \'' . __('File URL:') . '\';' . "\n" .
-        'var geoRss_url_msg = \'' . __('Feed URL:') . '\';' . "\n" .
-        'var custom_kmls_msg = \'' . __('Custom Kml files') . '\';' . "\n" .
-        'var directions_start_msg = \'' . __('Start:') . '\';' . "\n" .
-        'var directions_end_msg = \'' . __('End:') . '\';' . "\n" .
-        'var directions_show_msg = \'' . __('Display directions panel in public map') . '\';' . "\n" .
-        '//]]>' . "\n" .
+'//<![CDATA[' . "\n" .
+'var stroke_color_msg = \'' . __('Stroke color') . '\';' . "\n" .
+'var stroke_opacity_msg = \'' . __('Stroke opacity') . '\';' . "\n" .
+'var stroke_weight_msg = \'' . __('Stroke weight') . '\';' . "\n" .
+'var circle_radius_msg = \'' . __('Circle radius') . '\';' . "\n" .
+'var fill_color_msg = \'' . __('Fill color') . '\';' . "\n" .
+'var fill_opacity_msg = \'' . __('Fill opacity') . '\';' . "\n" .
+'var default_icons_msg = \'' . __('Default icons') . '\';' . "\n" .
+'var custom_icons_msg = \'' . __('Custom icons') . '\';' . "\n" .
+'var kml_url_msg = \'' . __('File URL:') . '\';' . "\n" .
+'var geoRss_url_msg = \'' . __('Feed URL:') . '\';' . "\n" .
+'var custom_kmls_msg = \'' . __('Custom Kml files') . '\';' . "\n" .
+'var directions_start_msg = \'' . __('Start:') . '\';' . "\n" .
+'var directions_end_msg = \'' . __('End:') . '\';' . "\n" .
+'var directions_show_msg = \'' . __('Display directions panel in public map') . '\';' . "\n" .
+'//]]>' . "\n" .
     '</script>';
 
-    // Add default and user map styles
+// Add default and user map styles
 
-    echo
-    '<script>' . "\n" .
-        '//<![CDATA[' . "\n";
+echo
+'<script>' . "\n" .
+    '//<![CDATA[' . "\n";
 
-    echo
-        'var neutral_blue_styles = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#193341"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#2c5a71"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#29768a"},{"lightness":-37}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#3e606f"},{"weight":2},{"gamma":0.84}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"weight":0.6},{"color":"#1a3541"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#2c5a71"}]}];' . "\n" .
-        'var neutral_blue = new google.maps.StyledMapType(neutral_blue_styles,{name: "Neutral Blue"});' . "\n";
+echo
+    'var neutral_blue_styles = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#193341"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#2c5a71"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#29768a"},{"lightness":-37}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#3e606f"},{"weight":2},{"gamma":0.84}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"weight":0.6},{"color":"#1a3541"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#2c5a71"}]}];' . "\n" .
+    'var neutral_blue = new google.maps.StyledMapType(neutral_blue_styles,{name: "Neutral Blue"});' . "\n";
 
-    if (is_dir($map_styles_dir_path)) {
-        $list = explode(',', $map_styles_list);
-        foreach ($list as $map_style) {
-            $map_style_content = file_get_contents($map_styles_dir_path . '/' . $map_style);
-            $var_styles_name = pathinfo($map_style, PATHINFO_FILENAME);
-            $var_name = preg_replace('/_styles/s', '', $var_styles_name);
-            $nice_name = ucwords(preg_replace('/_/s', ' ', $var_name));
-            echo
-            'var ' . $var_styles_name . ' = ' . $map_style_content . ';' . "\n" .
-            'var ' . $var_name . ' = new google.maps.StyledMapType(' . $var_styles_name . ',{name: "' . $nice_name . '"});' . "\n";
-        }
+if (is_dir($map_styles_dir_path)) {
+    $list = explode(',', $map_styles_list);
+    foreach ($list as $map_style) {
+        $map_style_content = file_get_contents($map_styles_dir_path . '/' . $map_style);
+        $var_styles_name = pathinfo($map_style, PATHINFO_FILENAME);
+        $var_name = preg_replace('/_styles/s', '', $var_styles_name);
+        $nice_name = ucwords(preg_replace('/_/s', ' ', $var_name));
+        echo
+        'var ' . $var_styles_name . ' = ' . $map_style_content . ';' . "\n" .
+        'var ' . $var_name . ' = new google.maps.StyledMapType(' . $var_styles_name . ',{name: "' . $nice_name . '"});' . "\n";
     }
+}
 
-    echo
-        '//]]>' . "\n" .
-    '</script>';
+echo
+    '//]]>' . "\n" .
+'</script>';
 
-    ?>
+?>
 
 	</head>
 	<body>
 <?php
 echo dcPage::breadcrumb(
-        [
-            html::escapeHTML($core->blog->name) => '',
-            __('Google Maps') => $p_url . '&amp;do=list',
-            ($post_id ? $page_title_edit : $page_title) => ''
-        ]
-    );
+    [
+        html::escapeHTML(dcCore::app()->blog->name) => '',
+        __('Google Maps') => $p_url . '&amp;do=list',
+        ($post_id ? $page_title_edit : $page_title) => ''
+    ]
+);
 
 if ($post_id) {
     echo '<p class="nav_prevnext">';
@@ -574,7 +574,7 @@ if ($post_id) {
     }
 
     // --BEHAVIOR-- adminPostNavLinks
-    $core->callBehavior('adminPostNavLinks', isset($post) ? $post : null);
+    dcCore::app()->callBehavior('adminPostNavLinks', isset($post) ? $post : null);
 
     echo '</p>';
 }
@@ -625,7 +625,7 @@ if ($can_edit_post) {
                     '<p>' . form::combo('post_format', $available_formats, $post_format, 'maximal') . '</p>' .
                     '<p class="format_control control_no_xhtml">' .
                     '<a id="convert-xhtml" class="button' . ($post_id && $post_format != 'wiki' ? ' hide' : '') . '" href="' .
-                    $core->adminurl->get('admin.post', ['id' => $post_id, 'xconv' => '1']) .
+                    dcCore::app()->adminurl->get('admin.post', ['id' => $post_id, 'xconv' => '1']) .
                     '">' .
                     __('Convert to XHTML') . '</a></p></div>']],
         'metas-box' => [
@@ -639,7 +639,7 @@ if ($can_edit_post) {
                     '<p><label for="cat_id">' . __('Category:') . '</label>' .
                     form::combo('cat_id', $categories_combo, $cat_id, 'maximal') .
                     '</p>' .
-                    ($core->auth->check('categories', $core->blog->id) ?
+                    (dcCore::app()->auth->check('categories', dcCore::app()->blog->id) ?
                         '<div>' .
                         '<h5 id="create_cat">' . __('Add a new category') . '</h5>' .
                         '<p><label for="new_cat_title">' . __('Title:') . ' ' .
@@ -692,7 +692,7 @@ if ($can_edit_post) {
 
             'post_content' => '<p class="area" id="content-area"><label class="bold" ' .
                 'for="post_content">' . __('Description:') . '</label> ' .
-                form::textarea('post_content', 50, $core->auth->getOption('edit_size'), html::escapeHTML($post_content)) .
+                form::textarea('post_content', 50, dcCore::app()->auth->getOption('edit_size'), html::escapeHTML($post_content)) .
                 '</p>',
 
             'post_notes' => '<p class="area" id="notes-area"><label for="post_notes" class="bold">' . __('Personal notes:') . ' <span class="form-note">' .
@@ -711,7 +711,7 @@ if ($can_edit_post) {
     );
 
     // --BEHAVIOR-- adminPostFormItems
-    $core->callBehavior('adminPostFormItems', $main_items, $sidebar_items, isset($post) ? $post : null);
+    dcCore::app()->callBehavior('adminPostFormItems', $main_items, $sidebar_items, isset($post) ? $post : null);
 
     echo '<div class="multi-part" title="' . ($post_id ? __('Edit map element') : __('New map element')) . '" id="edit-entry">';
     echo '<form action="' . $p_url . '&amp;do=edit" method="post" id="entry-form">';
@@ -724,7 +724,7 @@ if ($can_edit_post) {
         echo $item;
     }
 
-    $meta = &$GLOBALS['core']->meta;
+    $meta = dcCore::app()->meta;
 
     if (isset($post)) {
         echo '<p>' . form::hidden('element_type', $meta->getMetaStr($post->post_meta, 'map')) . '</p>';
@@ -757,7 +757,7 @@ if ($can_edit_post) {
     }
 
     echo($can_delete ? '<input type="submit" class="delete" value="' . __('Delete') . '" name="delete" />' : '') .
-    $core->formNonce() .
+    dcCore::app()->formNonce() .
     '</p>';
 
     echo '</div></div>';		// End #entry-content

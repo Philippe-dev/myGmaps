@@ -18,20 +18,20 @@ $p_url = 'plugin.php?p=' . basename(dirname(__FILE__));
 
 $default_tab = isset($_GET['tab']) ? $_GET['tab'] : 'entries-list';
 
-$s = &$core->blog->settings->myGmaps;
+$s = dcCore::app()->blog->settings->myGmaps;
 
-$meta = &$GLOBALS['core']->meta;
+$meta = dcCore::app()->meta;
 
 $page_title = __('Add elements');
 
-$meta = &$GLOBALS['core']->meta;
+$meta = dcCore::app()->meta;
 
 $post_id = !empty($_GET['post_id']) ? $_GET['post_id'] : '';
 $my_params['post_id'] = $post_id;
 $my_params['no_content'] = true;
 $my_params['post_type'] = ['post', 'page'];
 
-$rs = $core->blog->getPosts($my_params);
+$rs = dcCore::app()->blog->getPosts($my_params);
 
 $elements_list = $meta->getMetaStr($rs->post_meta, 'map');
 $post_type = $rs->post_type;
@@ -46,34 +46,34 @@ $__autoload['adminMapsList'] = dirname(__FILE__) . '/inc/lib.pager.php';
 
 // Getting categories
 try {
-    $categories = $core->blog->getCategories(['post_type' => 'map']);
+    $categories = dcCore::app()->blog->getCategories(['post_type' => 'map']);
 } catch (Exception $e) {
-    $core->error->add($e->getMessage());
+    dcCore::app()->error->add($e->getMessage());
 }
 
 // Getting authors
 try {
-    $users = $core->blog->getPostsUsers();
+    $users = dcCore::app()->blog->getPostsUsers();
 } catch (Exception $e) {
-    $core->error->add($e->getMessage());
+    dcCore::app()->error->add($e->getMessage());
 }
 
 // Getting dates
 try {
-    $dates = $core->blog->getDates(['type' => 'month', 'post_type' => 'map']);
+    $dates = dcCore::app()->blog->getDates(['type' => 'month', 'post_type' => 'map']);
 } catch (Exception $e) {
-    $core->error->add($e->getMessage());
+    dcCore::app()->error->add($e->getMessage());
 }
 
 // Getting langs
 try {
-    $langs = $core->blog->getLangs();
+    $langs = dcCore::app()->blog->getLangs();
 } catch (Exception $e) {
-    $core->error->add($e->getMessage());
+    dcCore::app()->error->add($e->getMessage());
 }
 
 // Creating filter combo boxes
-if (!$core->error->flag()) {
+if (!dcCore::app()->error->flag()) {
     // Filter form we'll put in html_block
     $users_combo = array_merge(
         ['-' => ''],
@@ -268,24 +268,23 @@ $params['post_type'] = 'map';
 $params['post_status'] = '1';
 
 try {
-    $posts = $core->blog->getPosts($params);
-    $counter = $core->blog->getPosts($params, true);
-    $post_list = new adminMapsList($core, $posts, $counter->f(0));
+    $posts = dcCore::app()->blog->getPosts($params);
+    $counter = dcCore::app()->blog->getPosts($params, true);
+    $post_list = new adminMapsList(dcCore::app(), $posts, $counter->f(0));
 } catch (Exception $e) {
-    $core->error->add($e->getMessage());
+    dcCore::app()->error->add($e->getMessage());
 }
 
 // Save elements list
 
 if (isset($_POST['updlist'])) {
     try {
-        global $core;
 
         $entries = $_POST['entries'];
         $post_id = $_POST['post_id'];
         $post_type = $_POST['post_type'];
 
-        $meta = &$GLOBALS['core']->meta;
+        $meta = dcCore::app()->meta;
 
         $meta->delPostMeta($post_id, 'map');
 
@@ -294,7 +293,7 @@ if (isset($_POST['updlist'])) {
             $meta->setPostMeta($post_id, 'map', $tag);
         }
 
-        $core->blog->triggerBlog();
+        dcCore::app()->blog->triggerBlog();
 
         if ($post_type == 'page') {
             http::redirect('plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1');
@@ -302,7 +301,7 @@ if (isset($_POST['updlist'])) {
             http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1');
         }
     } catch (Exception $e) {
-        $core->error->add($e->getMessage());
+        dcCore::app()->error->add($e->getMessage());
     }
 }
 
@@ -334,27 +333,27 @@ if (isset($_POST['updlist'])) {
 	<body>
 <?php
 
-if (!$core->error->flag()) {
+if (!dcCore::app()->error->flag()) {
     $id = $post_id;
     $my_params['post_id'] = $id;
     $my_params['no_content'] = true;
     $my_params['post_type'] = ['post', 'page'];
 
-    $rs = $core->blog->getPosts($my_params);
+    $rs = dcCore::app()->blog->getPosts($my_params);
     $post_title = $rs->post_title;
     $post_status = $rs->post_status;
     $img_status_pattern = '<img class="img_select_option" alt="%1$s" title="%1$s" src="images/%2$s" />';
 
     echo dcPage::breadcrumb(
         [
-            html::escapeHTML($core->blog->name) => '',
+            html::escapeHTML(dcCore::app()->blog->name) => '',
             __('Google Maps') => $p_url . '&amp;do=list',
             $page_title => ''
         ]
     );
 
     echo
-    '<p class="clear">' . __('Select map elements for map attached to post:') . ' <a href="' . $core->getPostAdminURL($rs->post_type, $rs->post_id) . '">' . $post_title . '</a>';
+    '<p class="clear">' . __('Select map elements for map attached to post:') . ' <a href="' . dcCore::app()->getPostAdminURL($rs->post_type, $rs->post_id) . '">' . $post_title . '</a>';
 
     if ($id) {
         switch ($post_status) {
@@ -419,7 +418,7 @@ if (!$core->error->flag()) {
     form::hidden(['add_map_filters'], 'myGmaps') .
     form::hidden(['post_id'], $post_id) .
     form::hidden(['p'], 'myGmaps') .
-    $core->formNonce() .
+    dcCore::app()->formNonce() .
     '</p>' .
     '</form>';
 
@@ -456,7 +455,7 @@ if (!$core->error->flag()) {
     form::hidden(['order'], $order) .
     form::hidden(['page'], $page) .
     form::hidden(['nb'], $nb_per_page) .
-    $core->formNonce() . '</p>' .
+    dcCore::app()->formNonce() . '</p>' .
     '</div>' .
     '</form>',
         $show_filters

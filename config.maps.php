@@ -18,7 +18,7 @@ $p_url = 'plugin.php?p=' . basename(dirname(__FILE__));
 
 $default_tab = isset($_GET['tab']) ? $_GET['tab'] : 'entries-list';
 
-$s = &$core->blog->settings->myGmaps;
+$s = dcCore::app()->blog->settings->myGmaps;
 
 $page_title = __('Google Maps');
 
@@ -27,12 +27,12 @@ $__autoload['dcMapsActionsPage'] = dirname(__FILE__) . '/inc/class.dcactionmaps.
 
 // Custom map styles
 
-$public_path = $core->blog->public_path;
-$public_url = $core->blog->settings->system->public_url;
-$blog_url = $core->blog->url;
+$public_path = dcCore::app()->blog->public_path;
+$public_url = dcCore::app()->blog->settings->system->public_url;
+$blog_url = dcCore::app()->blog->url;
 
 $map_styles_dir_path = $public_path . '/myGmaps/styles/';
-$map_styles_dir_url = http::concatURL($core->blog->url, $public_url . '/myGmaps/styles/');
+$map_styles_dir_url = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/styles/');
 
 if (is_dir($map_styles_dir_path)) {
     $map_styles = glob($map_styles_dir_path . '*.js');
@@ -50,34 +50,34 @@ if (is_dir($map_styles_dir_path)) {
 
 // Getting categories
 try {
-    $categories = $core->blog->getCategories(['post_type' => 'map']);
+    $categories = dcCore::app()->blog->getCategories(['post_type' => 'map']);
 } catch (Exception $e) {
-    $core->error->add($e->getMessage());
+    dcCore::app()->error->add($e->getMessage());
 }
 
 // Getting authors
 try {
-    $users = $core->blog->getPostsUsers();
+    $users = dcCore::app()->blog->getPostsUsers();
 } catch (Exception $e) {
-    $core->error->add($e->getMessage());
+    dcCore::app()->error->add($e->getMessage());
 }
 
 // Getting dates
 try {
-    $dates = $core->blog->getDates(['type' => 'month', 'post_type' => 'map']);
+    $dates = dcCore::app()->blog->getDates(['type' => 'month', 'post_type' => 'map']);
 } catch (Exception $e) {
-    $core->error->add($e->getMessage());
+    dcCore::app()->error->add($e->getMessage());
 }
 
 // Getting langs
 try {
-    $langs = $core->blog->getLangs();
+    $langs = dcCore::app()->blog->getLangs();
 } catch (Exception $e) {
-    $core->error->add($e->getMessage());
+    dcCore::app()->error->add($e->getMessage());
 }
 
 // Creating filter combo boxes
-if (!$core->error->flag()) {
+if (!dcCore::app()->error->flag()) {
     // Filter form we'll put in html_block
     $users_combo = array_merge(
         ['-' => ''],
@@ -276,11 +276,11 @@ if ($element_type != '' && in_array($element_type, $element_type_combo)) {
 
 // Get posts
 try {
-    $posts = $core->blog->getPosts($params);
-    $counter = $core->blog->getPosts($params, true);
+    $posts = dcCore::app()->blog->getPosts($params);
+    $counter = dcCore::app()->blog->getPosts($params, true);
     $post_list = new adminMapsList($core, $posts, $counter->f(0));
 } catch (Exception $e) {
-    $core->error->add($e->getMessage());
+    dcCore::app()->error->add($e->getMessage());
 }
 
 // Save activation
@@ -300,7 +300,7 @@ if (!empty($_POST['saveconfig'])) {
 
         http::redirect($p_url . '&do=list&tab=settings&upd=1');
     } catch (Exception $e) {
-        $core->error->add($e->getMessage());
+        dcCore::app()->error->add($e->getMessage());
     }
 }
 
@@ -362,10 +362,10 @@ if (!empty($_POST['saveconfig'])) {
 	<body>
 <?php
 
-if (!$core->error->flag()) {
+if (!dcCore::app()->error->flag()) {
     echo dcPage::breadcrumb(
         [
-            html::escapeHTML($core->blog->name) => '',
+            html::escapeHTML(dcCore::app()->blog->name) => '',
             __('Google Maps') => $p_url,
             $page_title => ''
         ]
@@ -439,7 +439,7 @@ if (!$core->error->flag()) {
         '<br class="clear" />' . //Opera sucks
     form::hidden(['p'], 'myGmaps') .
     form::hidden(['tab'], 'entries-list') .
-    $core->formNonce() .
+    dcCore::app()->formNonce() .
     '</p>' .
     '</form>';
 
@@ -471,7 +471,7 @@ if (!$core->error->flag()) {
     form::hidden(['tab'], 'entries-list') .
     form::hidden(['post_type'], 'map') .
     form::hidden(['p'], 'myGmaps') .
-    $core->formNonce() .
+    dcCore::app()->formNonce() .
     '</div>' .
     '</form>',
         $show_filters
@@ -507,7 +507,7 @@ if (!$core->error->flag()) {
         '<input type="hidden" name="myGmaps_type" id="myGmaps_type" value="' . $myGmaps_type . '" />' .
         '<input type="text" class="hidden" id="map_styles_list" value="' . $map_styles_list . '" />' .
         '<input type="text" class="hidden" id="map_styles_base_url" value="' . $map_styles_base_url . '" />' .
-        $core->formNonce() .
+        dcCore::app()->formNonce() .
         '</p></div>' .
         '<p><input type="submit" name="saveconfig" value="' . __('Save configuration') . '" /></p>' .
 
