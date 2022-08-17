@@ -50,8 +50,7 @@ EOT;
 
     public static function publicJsContent(array $aOptions)
     {
-        global $core;
-        $s = &$core->blog->settings->myGmaps;
+        $s = dcCore::app()->blog->settings->myGmaps;
         return '<script src="https://maps.googleapis.com/maps/api/js?key=' . $s->myGmaps_API_key . '"></script>' . "\n";
     }
 

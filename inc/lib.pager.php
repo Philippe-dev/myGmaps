@@ -31,7 +31,7 @@ class adminMapsList extends adminGenericList
             $entries = [];
             if (isset($_REQUEST['entries'])) {
                 foreach ($_REQUEST['entries'] as $v) {
-                    $entries[(integer)$v] = true;
+                    $entries[(int)$v] = true;
                 }
             }
             $html_block =
@@ -105,8 +105,7 @@ class adminMapsList extends adminGenericList
 
     private function postLine($checked)
     {
-        global $core;
-        $s = &$core->blog->settings->myGmaps;
+        $s = dcCore::app()->blog->settings->myGmaps;
 
         if ($this->core->auth->check('categories', $this->core->blog->id)) {
             $cat_link = '<a href="category.php?id=%s">%s</a>';
@@ -264,8 +263,7 @@ class adminMapsMiniList extends adminGenericList
             $attach = sprintf($img, sprintf($attach_str, $nb_media), 'attach.png');
         }
 
-        global $core;
-        if ($core->auth->check('categories', $core->blog->id)) {
+        if (dcCore::app()->auth->check('categories', dcCore::app()->blog->id)) {
             $cat_link = '<a href="category.php?id=%s">%s</a>';
         } else {
             $cat_link = '%2$s';
