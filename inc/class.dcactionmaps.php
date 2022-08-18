@@ -16,9 +16,9 @@ if (!defined('DC_RC_PATH')) {
 
 class dcMapsActionsPage extends dcActionsPage
 {
-    public function __construct($core, $uri, $redirect_args = [])
+    public function __construct(dcCore $core, $uri, $redirect_args = [])
     {
-        parent::__construct($core, $uri, $redirect_args);
+        parent::__construct($dcCore::app(), $uri, $redirect_args);
         $this->redirect_fields = ['user_id', 'cat_id', 'status',
             'selected', 'attachment', 'month', 'lang', 'sortby', 'order', 'page', 'nb'];
         $this->caller_title = __('Google Maps');
