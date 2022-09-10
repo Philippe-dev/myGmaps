@@ -41,10 +41,10 @@ class adminMapsList extends adminGenericList
             if ($filter) {
                 $html_block .= '<caption>' . sprintf(__('List of %s elements match the filter.'), $this->rs_count) . '</caption>';
             } else {
-                $nb_published = $this->core->blog->getPosts(['post_type' => 'map', 'post_status' => 1], true)->f(0);
-                $nb_pending = $this->core->blog->getPosts(['post_type' => 'map', 'post_status' => -2], true)->f(0);
-                $nb_programmed = $this->core->blog->getPosts(['post_type' => 'map', 'post_status' => -1], true)->f(0);
-                $nb_unpublished = $this->core->blog->getPosts(['post_type' => 'map', 'post_status' => 0], true)->f(0);
+                $nb_published = dcCore::app()->blog->getPosts(['post_type' => 'map', 'post_status' => 1], true)->f(0);
+                $nb_pending = dcCore::app()->blog->getPosts(['post_type' => 'map', 'post_status' => -2], true)->f(0);
+                $nb_programmed = dcCore::app()->blog->getPosts(['post_type' => 'map', 'post_status' => -1], true)->f(0);
+                $nb_unpublished = dcCore::app()->blog->getPosts(['post_type' => 'map', 'post_status' => 0], true)->f(0);
                 $html_block .= '<caption>' .
                 sprintf(__('Elements list (%s)'), $this->rs_count) .
                     ($nb_published ?
@@ -107,7 +107,7 @@ class adminMapsList extends adminGenericList
     {
         $s = dcCore::app()->blog->settings->myGmaps;
 
-        if ($this->core->auth->check('categories', $this->core->blog->id)) {
+        if (dcCore::app()->auth->check('categories', dcCore::app()->blog->id)) {
             $cat_link = '<a href="category.php?id=%s">%s</a>';
         } else {
             $cat_link = '%2$s';

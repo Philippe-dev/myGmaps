@@ -30,7 +30,7 @@ class dcMapsActionsPage extends dcActionsPage
     {
         // We could have added a behavior here, but we want default action
         // to be setup first
-        dcDefaultMapsActions::adminMapsActionsPage($this->core, $this);
+        dcDefaultMapsActions::adminMapsActionsPage(dcCore::app(), $this);
         //$this->core->callBehavior('adminPostsActionsPage',$this->core,$this);
     }
 
@@ -64,11 +64,11 @@ class dcMapsActionsPage extends dcActionsPage
 
     public function error(Exception $e)
     {
-        $this->core->error->add($e->getMessage());
+        dcCore::app()->error->add($e->getMessage());
         $this->beginPage(
             dcPage::breadcrumb(
                 [
-                    html::escapeHTML($this->core->blog->name) => '',
+                    html::escapeHTML(dcCore::app()->blog->name) => '',
                     $this->getCallerTitle() => $this->getRedirection(true),
                     __('Map elements actions') => ''
                 ]
@@ -101,7 +101,7 @@ class dcMapsActionsPage extends dcActionsPage
             $params['post_type'] = $from['post_type'];
         }
 
-        $posts = $this->core->blog->getPosts($params);
+        $posts = dcCore::app()->blog->getPosts($params);
         while ($posts->fetch()) {
             $this->entries[$posts->post_id] = $posts->post_title;
         }
@@ -159,7 +159,7 @@ class dcDefaultMapsActions
         }
     }
 
-    public static function doChangeMapStatus($core, dcMapsActionsPage $ap, $post)
+    public static function doChangeMapStatus(dcMapsActionsPage $ap, $post)
     {
         switch ($ap->getAction()) {
             case 'unpublish': $status = 0;
@@ -180,7 +180,7 @@ class dcDefaultMapsActions
         $ap->redirect(true, ['upd' => 2]);
     }
 
-    public static function doUpdateSelectedMap($core, dcMapsActionsPage $ap, $post)
+    public static function doUpdateSelectedMap(dcMapsActionsPage $ap, $post)
     {
         $posts_ids = $ap->getIDs();
         if (empty($posts_ids)) {
@@ -195,7 +195,7 @@ class dcDefaultMapsActions
         }
     }
 
-    public static function doDeleteMap($core, dcMapsActionsPage $ap, $post)
+    public static function doDeleteMap(dcMapsActionsPage $ap, $post)
     {
         $posts_ids = $ap->getIDs();
         if (empty($posts_ids)) {
@@ -215,7 +215,7 @@ class dcDefaultMapsActions
         $ap->redirect(true, ['upd' => 5]);
     }
 
-    public static function doChangeMapCategory($core, dcMapsActionsPage $ap, $post)
+    public static function doChangeMapCategory(dcMapsActionsPage $ap, $post)
     {
         if (isset($post['new_cat_id'])) {
             $posts_ids = $_POST['entries'];
@@ -287,7 +287,7 @@ class dcDefaultMapsActions
         }
     }
 
-    public static function doChangeMapAuthor($core, dcMapsActionsPage $ap, $post)
+    public static function doChangeMapAuthor(dcMapsActionsPage $ap, $post)
     {
         if (isset($post['new_auth_id']) && dcCore::app()->auth->check('admin', dcCore::app()->blog->id)) {
             $new_user_id = $post['new_auth_id'];
@@ -346,7 +346,7 @@ class dcDefaultMapsActions
         }
     }
 
-    public static function doChangeMapLang($core, dcMapsActionsPage $ap, $post)
+    public static function doChangeMapLang(dcMapsActionsPage $ap, $post)
     {
         $posts_ids = $_POST['entries'];
         if (empty($posts_ids)) {
