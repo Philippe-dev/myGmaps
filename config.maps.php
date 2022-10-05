@@ -22,8 +22,12 @@ $s = dcCore::app()->blog->settings->myGmaps;
 
 $page_title = __('Google Maps');
 
-$__autoload['adminMapsList'] = dirname(__FILE__) . '/inc/lib.pager.php';
-$__autoload['dcMapsActionsPage'] = dirname(__FILE__) . '/inc/class.dcactionmaps.php';
+Clearbricks::lib()->autoload([
+    'adminMapsList' => __DIR__ . '/inc/lib.pager.php',
+]);
+Clearbricks::lib()->autoload([
+    'dcMapsActionsPage' => __DIR__ . '/inc/class.dcactionmaps.php',
+]);
 
 // Custom map styles
 
@@ -157,7 +161,7 @@ if (!dcCore::app()->error->flag()) {
 
 // Actions combo box
 
-$posts_actions_page = new dcMapsActionsPage($core, 'plugin.php', ['p' => 'myGmaps', 'do' => 'list']);
+$posts_actions_page = new dcMapsActionsPage(dcCore::app(), 'plugin.php', ['p' => 'myGmaps', 'do' => 'list']);
 
 if ($posts_actions_page->process()) {
     return;
@@ -178,14 +182,14 @@ $element_type = !empty($_GET['element_type']) ? $_GET['element_type'] : '';
 
 $show_filters = false;
 
-$page = !empty($_GET['page']) ? (integer) $_GET['page'] : 1;
+$page = !empty($_GET['page']) ? (int) $_GET['page'] : 1;
 $nb_per_page = 30;
 
-if (!empty($_GET['nb']) && (integer) $_GET['nb'] > 0) {
+if (!empty($_GET['nb']) && (int) $_GET['nb'] > 0) {
     if ($nb_per_page != $_GET['nb']) {
         $show_filters = true;
     }
-    $nb_per_page = (integer) $_GET['nb'];
+    $nb_per_page = (int) $_GET['nb'];
 }
 
 $params['limit'] = [(($page - 1) * $nb_per_page), $nb_per_page];
@@ -278,7 +282,7 @@ if ($element_type != '' && in_array($element_type, $element_type_combo)) {
 try {
     $posts = dcCore::app()->blog->getPosts($params);
     $counter = dcCore::app()->blog->getPosts($params, true);
-    $post_list = new adminMapsList($core, $posts, $counter->f(0));
+    $post_list = new adminMapsList(dcCore::app(), $posts, $counter->f(0));
 } catch (Exception $e) {
     dcCore::app()->error->add($e->getMessage());
 }
@@ -314,49 +318,49 @@ if (!empty($_POST['saveconfig'])) {
 
 		<?php
         $form_filter_title = __('Show filters and display options');
-        $starting_script = dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/maps.list.js');
-        $starting_script .= dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/filter-controls.js');
-        $starting_script .= dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/config.map.js');
-        $starting_script .= dcPage::jsPageTabs($default_tab);
-        $starting_script .=
-        '<script>' . "\n" .
-        '//<![CDATA[' . "\n" .
-        dcPage::jsVar('dotclear.msg.show_filters', $show_filters ? 'true' : 'false') . "\n" .
-        dcPage::jsVar('dotclear.msg.filter_posts_list', $form_filter_title) . "\n" .
-        dcPage::jsVar('dotclear.msg.cancel_the_filter', __('Cancel filters and display options')) . "\n" .
-        dcPage::jsVar('id', $id) . "\n" .
-        '//]]>' .
-        '</script>';
+$starting_script = dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/maps.list.js');
+$starting_script .= dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/filter-controls.js');
+$starting_script .= dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/config.map.js');
+$starting_script .= dcPage::jsPageTabs($default_tab);
+$starting_script .=
+'<script>' . "\n" .
+'//<![CDATA[' . "\n" .
+dcPage::jsVar('dotclear.msg.show_filters', $show_filters ? 'true' : 'false') . "\n" .
+dcPage::jsVar('dotclear.msg.filter_posts_list', $form_filter_title) . "\n" .
+dcPage::jsVar('dotclear.msg.cancel_the_filter', __('Cancel filters and display options')) . "\n" .
+dcPage::jsVar('id', $id) . "\n" .
+'//]]>' .
+'</script>';
 
-        echo $starting_script;
+echo $starting_script;
 
-        // Add default and user map styles
+// Add default and user map styles
 
-        echo
+echo
     '<script>' . "\n" .
-        '//<![CDATA[' . "\n";
+'//<![CDATA[' . "\n";
 
-    echo
-        'var neutral_blue_styles = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#193341"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#2c5a71"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#29768a"},{"lightness":-37}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#3e606f"},{"weight":2},{"gamma":0.84}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"weight":0.6},{"color":"#1a3541"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#2c5a71"}]}];' . "\n" .
-        'var neutral_blue = new google.maps.StyledMapType(neutral_blue_styles,{name: "Neutral Blue"});' . "\n";
+echo
+    'var neutral_blue_styles = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#193341"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#2c5a71"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#29768a"},{"lightness":-37}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#3e606f"},{"weight":2},{"gamma":0.84}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"weight":0.6},{"color":"#1a3541"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#2c5a71"}]}];' . "\n" .
+    'var neutral_blue = new google.maps.StyledMapType(neutral_blue_styles,{name: "Neutral Blue"});' . "\n";
 
-    if (is_dir($map_styles_dir_path)) {
-        $list = explode(',', $map_styles_list);
-        foreach ($list as $map_style) {
-            $map_style_content = file_get_contents($map_styles_dir_path . '/' . $map_style);
-            $var_styles_name = pathinfo($map_style, PATHINFO_FILENAME);
-            $var_name = preg_replace('/_styles/s', '', $var_styles_name);
-            $nice_name = ucwords(preg_replace('/_/s', ' ', $var_name));
-            echo
-            'var ' . $var_styles_name . ' = ' . $map_style_content . ';' . "\n" .
-            'var ' . $var_name . ' = new google.maps.StyledMapType(' . $var_styles_name . ',{name: "' . $nice_name . '"});' . "\n";
-        }
+if (is_dir($map_styles_dir_path)) {
+    $list = explode(',', $map_styles_list);
+    foreach ($list as $map_style) {
+        $map_style_content = file_get_contents($map_styles_dir_path . '/' . $map_style);
+        $var_styles_name = pathinfo($map_style, PATHINFO_FILENAME);
+        $var_name = preg_replace('/_styles/s', '', $var_styles_name);
+        $nice_name = ucwords(preg_replace('/_/s', ' ', $var_name));
+        echo
+        'var ' . $var_styles_name . ' = ' . $map_style_content . ';' . "\n" .
+        'var ' . $var_name . ' = new google.maps.StyledMapType(' . $var_styles_name . ',{name: "' . $nice_name . '"});' . "\n";
     }
+}
 
-    echo
-        '//]]>' . "\n" .
-    '</script>';
-        ?>
+echo
+    '//]]>' . "\n" .
+'</script>';
+?>
 		<link rel="stylesheet" type="text/css" href="<?php echo 'index.php?pf=myGmaps/css/admin.css' ?>" />
 	</head>
 	<body>
@@ -387,7 +391,7 @@ if (!dcCore::app()->error->flag()) {
             __('Elements language has been successfully changed')
         ];
 
-        $k = (integer) $_GET['upd'] - 1;
+        $k = (int) $_GET['upd'] - 1;
 
         if (array_key_exists($k, $a_msg)) {
             dcPage::success($a_msg[$k]);

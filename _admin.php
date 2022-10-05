@@ -13,8 +13,7 @@
 if (!defined('DC_CONTEXT_ADMIN')) {
     return;
 }
-
-$_menu['Blog']->addItem(
+dcCore::app()->menu[dcAdmin::MENU_BLOG]->addItem(
     __('Google Maps'),
     dcCore::app()->adminurl->get('admin.plugin.myGmaps').'&amp;do=list',
     [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
@@ -27,8 +26,12 @@ dcCore::app()->addBehavior('adminDashboardFavsIcon', ['myGmapsBehaviors', 'dashb
 dcCore::app()->addBehavior('adminPageHelpBlock', ['myGmapsBehaviors', 'adminPageHelpBlock']);
 dcCore::app()->addBehavior('adminPageHTTPHeaderCSP', ['myGmapsBehaviors', 'adminPageHTTPHeaderCSP']);
 
-$__autoload['adminMapsMiniList'] = dirname(__FILE__) . '/inc/lib.pager.php';
-$__autoload['mygmapsPublic'] = dirname(__FILE__) . '/inc/class.mygmaps.public.php';
+Clearbricks::lib()->autoload([
+    'adminMapsMiniList' => __DIR__ . '/inc/lib.pager.php',
+]);
+Clearbricks::lib()->autoload([
+    'mygmapsPublic' => __DIR__ . '/inc/class.mygmaps.public.php',
+]);
 
 class myGmapsBehaviors
 {

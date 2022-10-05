@@ -42,7 +42,9 @@ if ($elements_list != '') {
     $maps_array = [];
 }
 
-$__autoload['adminMapsList'] = dirname(__FILE__) . '/inc/lib.pager.php';
+Clearbricks::lib()->autoload([
+    'adminMapsList' => __DIR__ . '/inc/lib.pager.php',
+]);
 
 // Getting categories
 try {
@@ -168,14 +170,14 @@ $order = !empty($_GET['order']) ? $_GET['order'] : 'desc';
 
 $show_filters = false;
 
-$page = !empty($_GET['page']) ? (integer) $_GET['page'] : 1;
+$page = !empty($_GET['page']) ? (int) $_GET['page'] : 1;
 $nb_per_page = 30;
 
-if (!empty($_GET['nb']) && (integer) $_GET['nb'] > 0) {
+if (!empty($_GET['nb']) && (int) $_GET['nb'] > 0) {
     if ($nb_per_page != $_GET['nb']) {
         $show_filters = true;
     }
-    $nb_per_page = (integer) $_GET['nb'];
+    $nb_per_page = (int) $_GET['nb'];
 }
 
 // - User filter
@@ -279,7 +281,6 @@ try {
 
 if (isset($_POST['updlist'])) {
     try {
-
         $entries = $_POST['entries'];
         $post_id = $_POST['post_id'];
         $post_type = $_POST['post_type'];
@@ -314,20 +315,20 @@ if (isset($_POST['updlist'])) {
 
 		<?php
         $form_filter_title = __('Show filters and display options');
-        $starting_script = dcPage::jsLoad(DC_ADMIN_URL . 'js/_posts_list.js');
-        $starting_script .= dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/filter-controls.js');
-        $starting_script .=
-        '<script>' . "\n" .
-        '//<![CDATA[' . "\n" .
-        dcPage::jsVar('dotclear.msg.show_filters', $show_filters ? 'true' : 'false') . "\n" .
-        dcPage::jsVar('dotclear.msg.filter_posts_list', $form_filter_title) . "\n" .
-        dcPage::jsVar('dotclear.msg.cancel_the_filter', __('Cancel filters and display options')) . "\n" .
-        dcPage::jsVar('id', $id) . "\n" .
-        '//]]>' .
-        '</script>';
+$starting_script = dcPage::jsLoad(DC_ADMIN_URL . 'js/_posts_list.js');
+$starting_script .= dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/filter-controls.js');
+$starting_script .=
+'<script>' . "\n" .
+'//<![CDATA[' . "\n" .
+dcPage::jsVar('dotclear.msg.show_filters', $show_filters ? 'true' : 'false') . "\n" .
+dcPage::jsVar('dotclear.msg.filter_posts_list', $form_filter_title) . "\n" .
+dcPage::jsVar('dotclear.msg.cancel_the_filter', __('Cancel filters and display options')) . "\n" .
+dcPage::jsVar('id', $id) . "\n" .
+'//]]>' .
+'</script>';
 
-        echo $starting_script;
-        ?>
+echo $starting_script;
+?>
 		<link rel="stylesheet" type="text/css" href="<?php echo 'index.php?pf=myGmaps/css/admin.css' ?>" />
 	</head>
 	<body>
@@ -357,21 +358,21 @@ if (!dcCore::app()->error->flag()) {
 
     if ($id) {
         switch ($post_status) {
-        case 1:
-            $img_status = sprintf($img_status_pattern, __('published'), 'check-on.png');
-            break;
-        case 0:
-            $img_status = sprintf($img_status_pattern, __('unpublished'), 'check-off.png');
-            break;
-        case -1:
-            $img_status = sprintf($img_status_pattern, __('scheduled'), 'scheduled.png');
-            break;
-        case -2:
-            $img_status = sprintf($img_status_pattern, __('pending'), 'check-wrn.png');
-            break;
-        default:
-            $img_status = '';
-    }
+            case 1:
+                $img_status = sprintf($img_status_pattern, __('published'), 'check-on.png');
+                break;
+            case 0:
+                $img_status = sprintf($img_status_pattern, __('unpublished'), 'check-off.png');
+                break;
+            case -1:
+                $img_status = sprintf($img_status_pattern, __('scheduled'), 'scheduled.png');
+                break;
+            case -2:
+                $img_status = sprintf($img_status_pattern, __('pending'), 'check-wrn.png');
+                break;
+            default:
+                $img_status = '';
+        }
         echo '&nbsp;&nbsp;&nbsp;' . $img_status;
     }
 
