@@ -120,7 +120,7 @@ class dcMyGmapsPublic
             $sPostId = ($isTemplateTag) ? $aElements['id'] : dcCore::app()->ctx->posts->post_id ;
 
             if ($isTemplateTag || (in_array(dcCore::app()->ctx->posts->post_type, $postTypes) && self::hasMap($sPostId) != '')) {
-            // Map styles. Get more styles from http://snazzymaps.com/
+                // Map styles. Get more styles from http://snazzymaps.com/
 
                 $public_path = dcCore::app()->blog->public_path;
                 $public_url = dcCore::app()->blog->settings->system->public_url;
@@ -186,7 +186,7 @@ class dcMyGmapsPublic
                 $sElementsTemplate = '';
 
                 foreach ($map_elements as $map_element_id => $map_element) {
-                // Common element vars
+                    // Common element vars
                     $list = explode("\n", html::clean($map_element['post_excerpt_xhtml']));
 
                     $content = str_replace('\\', '\\\\', $map_element['post_content_xhtml']);
@@ -338,12 +338,11 @@ class dcMyGmapsPublic
 
     public static function publicTagMapContent($attr, $content)
     {
-
         // Récupérer tous les filtres
         // id="home" center="latlng" zoom="x" style="style_name" elements="id,id,id,id" category="id,id,id"
         $sId = isset($attr['id']) ? $attr['id'] : substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 6);
         $sCenter = isset($attr['center']) ? addslashes($attr['center']) : '';
-        $iZoom = isset($attr['zoom']) ? (integer) $attr['zoom'] : '12';
+        $iZoom = isset($attr['zoom']) ? (int) $attr['zoom'] : '12';
         $sStyle = isset($attr['style']) ? $attr['style'] : '';
         $sWidth = isset($attr['width']) ? $attr['width'] : '';
         $sHeight = isset($attr['height']) ? $attr['height'] : '';
