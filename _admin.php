@@ -13,6 +13,7 @@
 if (!defined('DC_CONTEXT_ADMIN')) {
     return;
 }
+
 dcCore::app()->menu[dcAdmin::MENU_BLOG]->addItem(
     __('Google Maps'),
     dcCore::app()->adminurl->get('admin.plugin.myGmaps').'&amp;do=list',
