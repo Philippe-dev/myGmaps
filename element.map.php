@@ -16,7 +16,7 @@ dcPage::check('usage,contentadmin');
 
 dt::setTZ(dcCore::app()->auth->getInfo('user_tz'));
 
-$p_url = 'plugin.php?p=' . basename(dirname(__FILE__));
+
 
 $s = dcCore::app()->blog->settings->myGmaps;
 
@@ -57,7 +57,7 @@ $can_publish = dcCore::app()->auth->check('publish,contentadmin', dcCore::app()-
 $can_delete = false;
 
 $post_headlink = '<link rel="%s" title="%s" href="map.php?id=%s" />';
-$post_link = '<a href="' . $p_url . '&amp;do=edit&amp;id=%s" title="%s">%s</a>';
+$post_link = '<a href="' . dcCore::app()->admin->getPageURL() . '&amp;do=edit&amp;id=%s" title="%s">%s</a>';
 
 $next_link = $prev_link = $next_headlink = $prev_headlink = null;
 
@@ -296,7 +296,7 @@ if (!empty($_POST['delete']) && $can_delete) {
         // --BEHAVIOR-- adminBeforePostDelete
         dcCore::app()->callBehavior('adminBeforePostDelete', $post_id);
         dcCore::app()->blog->delPost($post_id);
-        http::redirect('' . $p_url . '&do=list');
+        http::redirect('' . dcCore::app()->admin->getPageURL() . '&do=list');
     } catch (Exception $e) {
         dcCore::app()->error->add($e->getMessage());
     }
@@ -388,7 +388,7 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
             // --BEHAVIOR-- adminAfterPostUpdate
             dcCore::app()->callBehavior('adminAfterPostUpdate', $cur, $post_id);
 
-            http::redirect('' . $p_url . '&do=edit&id=' . $post_id . '&upd=1');
+            http::redirect('' . dcCore::app()->admin->getPageURL() . '&do=edit&id=' . $post_id . '&upd=1');
         } catch (Exception $e) {
             dcCore::app()->error->add($e->getMessage());
         }
@@ -418,7 +418,7 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
                 $meta->setPostMeta($return_id, 'map_options', $map_options);
                 $meta->setPostMeta($return_id, 'description', $description);
             }
-            http::redirect('' . $p_url . '&do=edit&id=' . $return_id . '&crea=1');
+            http::redirect('' . dcCore::app()->admin->getPageURL() . '&do=edit&id=' . $return_id . '&crea=1');
         } catch (Exception $e) {
             dcCore::app()->error->add($e->getMessage());
         }
@@ -430,7 +430,7 @@ if (!empty($_POST['delete']) && $can_delete) {
         // --BEHAVIOR-- adminBeforePostDelete
         dcCore::app()->callBehavior('adminBeforePostDelete', $post_id);
         dcCore::app()->blog->delPost($post_id);
-        http::redirect($p_url . '&do=list');
+        http::redirect(dcCore::app()->admin->getPageURL() . '&do=list');
     } catch (Exception $e) {
         dcCore::app()->error->add($e->getMessage());
     }
@@ -556,7 +556,7 @@ echo
 echo dcPage::breadcrumb(
     [
         html::escapeHTML(dcCore::app()->blog->name) => '',
-        __('Google Maps') => $p_url . '&amp;do=list',
+        __('Google Maps') => dcCore::app()->admin->getPageURL() . '&amp;do=list',
         ($post_id ? $page_title_edit : $page_title) => ''
     ]
 );
@@ -714,7 +714,7 @@ if ($can_edit_post) {
     dcCore::app()->callBehavior('adminPostFormItems', $main_items, $sidebar_items, isset($post) ? $post : null);
 
     echo '<div class="multi-part" title="' . ($post_id ? __('Edit map element') : __('New map element')) . '" id="edit-entry">';
-    echo '<form action="' . $p_url . '&amp;do=edit" method="post" id="entry-form">';
+    echo '<form action="' . dcCore::app()->admin->getPageURL() . '&amp;do=edit" method="post" id="entry-form">';
     echo '<div id="entry-wrapper">';
     echo '<div id="entry-content"><div class="constrained">';
 

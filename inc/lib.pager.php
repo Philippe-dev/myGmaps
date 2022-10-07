@@ -18,7 +18,6 @@ class adminMapsList extends adminGenericList
 {
     public function display($page, $nb_per_page, $enclose_block = '', $filter = false)
     {
-        $p_url = 'plugin.php?p=myGmaps';
 
         if ($this->rs->isEmpty()) {
             if ($filter) {
@@ -50,25 +49,25 @@ class adminMapsList extends adminGenericList
                     ($nb_published ?
                     sprintf(
                         __(', <a href="%s">published</a> (1)', ', <a href="%s">published</a> (%s)', $nb_published),
-                        $p_url . '&amp;do=list&status=1',
+                        dcCore::app()->admin->getPageURL() . '&amp;do=list&status=1',
                         $nb_published
                     ) : '') .
                     ($nb_pending ?
                     sprintf(
                         __(', <a href="%s">pending</a> (1)', ', <a href="%s">pending</a> (%s)', $nb_pending),
-                        $p_url . '&amp;do=list&status=-2',
+                        dcCore::app()->admin->getPageURL() . '&amp;do=list&status=-2',
                         $nb_pending
                     ) : '') .
                     ($nb_programmed ?
                     sprintf(
                         __(', <a href="%s">programmed</a> (1)', ', <a href="%s">programmed</a> (%s)', $nb_programmed),
-                        $p_url . '&amp;do=list&status=-1',
+                        dcCore::app()->admin->getPageURL() . '&amp;do=list&status=-1',
                         $nb_programmed
                     ) : '') .
                     ($nb_unpublished ?
                     sprintf(
                         __(', <a href="%s">unpublished</a> (1)', ', <a href="%s">unpublished</a> (%s)', $nb_unpublished),
-                        $p_url . '&amp;do=list&status=0',
+                        dcCore::app()->admin->getPageURL() . '&amp;do=list&status=0',
                         $nb_unpublished
                     ) : '') .
                     '</caption>';
@@ -123,7 +122,7 @@ class adminMapsList extends adminGenericList
         } else {
             $cat_link = '%2$s';
         }
-        $p_url = 'plugin.php?p=myGmaps';
+        
         if ($this->rs->cat_title) {
             $cat_title = sprintf(
                 $cat_link,
@@ -177,7 +176,7 @@ class adminMapsList extends adminGenericList
             $res .=
         '<td class="nowrap">' .
         form::checkbox(['entries[]'], $this->rs->post_id, $checked, '', '', !$this->rs->isEditable()) . '</td>' .
-        '<td class="maximal"><a href="' . $p_url . '&amp;do=edit&amp;id=' . $this->rs->post_id . '">' .
+        '<td class="maximal"><a href="' . dcCore::app()->admin->getPageURL() . '&amp;do=edit&amp;id=' . $this->rs->post_id . '">' .
         html::escapeHTML($this->rs->post_title) . '</a></td>' .
         '<td class="nowrap count">' . dt::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt) . '</td>' .
         '<td class="nowrap">' . $cat_title . '</td>' .

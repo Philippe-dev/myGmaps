@@ -105,7 +105,7 @@ class myGmapsBehaviors
     }
 }
 
-$p_url = 'plugin.php?p=' . basename(dirname(__FILE__));
+
 
 (isset($_GET['p']) && $_GET['p'] == 'pages') ? $type = 'page' : $type = 'post';
 

@@ -14,7 +14,7 @@ require_once DC_ROOT . '/inc/admin/prepend.php';
 
 dcPage::check('usage,contentadmin');
 
-$p_url = 'plugin.php?p=' . basename(dirname(__FILE__));
+
 
 $default_tab = isset($_GET['tab']) ? $_GET['tab'] : 'entries-list';
 
@@ -302,7 +302,7 @@ if (!empty($_POST['saveconfig'])) {
         $s->put('myGmaps_zoom', $_POST['myGmaps_zoom']);
         $s->put('myGmaps_type', $_POST['myGmaps_type']);
 
-        http::redirect($p_url . '&do=list&tab=settings&upd=1');
+        http::redirect(dcCore::app()->admin->getPageURL() . '&do=list&tab=settings&upd=1');
     } catch (Exception $e) {
         dcCore::app()->error->add($e->getMessage());
     }
@@ -370,7 +370,7 @@ if (!dcCore::app()->error->flag()) {
     echo dcPage::breadcrumb(
         [
             html::escapeHTML(dcCore::app()->blog->name) => '',
-            __('Google Maps') => $p_url,
+            __('Google Maps') => dcCore::app()->admin->getPageURL(),
             $page_title => ''
         ]
     );
@@ -400,10 +400,10 @@ if (!dcCore::app()->error->flag()) {
     echo '<div class="multi-part" id="entries-list" title="' . __('Map elements') . '">';
 
     if ($s->myGmaps_enabled) {
-        echo '<p class="top-add"><strong><a class="button add" href="' . $p_url . '&amp;do=edit">' . __('New element') . '</a></strong></p>';
+        echo '<p class="top-add"><strong><a class="button add" href="' . dcCore::app()->admin->getPageURL() . '&amp;do=edit">' . __('New element') . '</a></strong></p>';
     }
     echo
-    '<form action="' . $p_url . '" method="get" id="filters-form">' .
+    '<form action="' . dcCore::app()->admin->getPageURL() . '" method="get" id="filters-form">' .
     '<h3 class="out-of-screen-if-js">' . $form_filter_title . '</h3>' .
     '<div class="table">' .
     '<div class="cell">' .
@@ -451,7 +451,7 @@ if (!dcCore::app()->error->flag()) {
     $post_list->display(
         $page,
         $nb_per_page,
-        '<form action="' . $p_url . '" method="post" id="form-entries">' .
+        '<form action="' . dcCore::app()->admin->getPageURL() . '" method="post" id="form-entries">' .
 
     '%s' .
 
@@ -484,7 +484,7 @@ if (!dcCore::app()->error->flag()) {
     echo '</div>';
 
     echo '<div class="multi-part" id="settings" title="' . __('Configuration') . '">' .
-    '<form method="post" action="' . $p_url . '" id="settings-form">' .
+    '<form method="post" action="' . dcCore::app()->admin->getPageURL() . '" id="settings-form">' .
     '<div class="fieldset"><h3>' . __('Activation') . '</h3>' .
         '<p><label class="classic" for="myGmaps_enabled">' .
         form::checkbox('myGmaps_enabled', '1', $s->myGmaps_enabled) .
