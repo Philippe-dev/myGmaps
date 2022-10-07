@@ -29,8 +29,6 @@ dcCore::app()->addBehavior('adminPageHTTPHeaderCSP', ['myGmapsBehaviors', 'admin
 
 Clearbricks::lib()->autoload([
     'adminMapsMiniList' => __DIR__ . '/inc/lib.pager.php',
-]);
-Clearbricks::lib()->autoload([
     'mygmapsPublic' => __DIR__ . '/inc/class.mygmaps.public.php',
 ]);
 
