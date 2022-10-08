@@ -104,9 +104,7 @@ class adminMapsList extends adminGenericList
                 $fmt(__('Unpublished'), 'check-off.png') . ' - ' .
                 $fmt(__('Scheduled'), 'scheduled.png') . ' - ' .
                 $fmt(__('Pending'), 'check-wrn.png') . ' - ' .
-                $fmt(__('Protected'), 'locker.png') . ' - ' .
-                $fmt(__('Selected'), 'selected.png') . ' - ' .
-                $fmt(__('Attachments'), 'attach.png') .
+                $fmt(__('Selected'), 'selected.png') .
                 '</p>';
 
             echo $pager->getLinks();
