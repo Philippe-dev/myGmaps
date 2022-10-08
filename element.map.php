@@ -628,7 +628,7 @@ if ($can_edit_post) {
                     dcCore::app()->adminurl->get('admin.post', ['id' => $post_id, 'xconv' => '1']) .
                     '">' .
                     __('Convert to XHTML') . '</a></p></div>']],
-        'metas-box' => [
+        'options-box' => [
             'title' => __('Filing'),
             'items' => [
                 'post_selected' => '<p><label for="post_selected" class="classic">' .
@@ -650,20 +650,7 @@ if ($can_edit_post) {
                         '</div>'
                     : '') .
                     '</div>']],
-        'options-box' => [
-            'title' => __('Options'),
-            'items' => [
-                'post_password' => '<p><label for="post_password">' . __('Password') . '</label>' .
-                    form::field('post_password', 10, 32, html::escapeHTML($post_password), 'maximal') .
-                    '</p>',
-                'post_url' => '<div class="lockable">' .
-                    '<p><label for="post_url">' . __('Edit basename') . '</label>' .
-                    form::field('post_url', 10, 255, html::escapeHTML($post_url), 'maximal') .
-                    '</p>' .
-                    '<p class="form-note warn">' .
-                    __('Warning: If you set the URL manually, it may conflict with another entry.') .
-                    '</p></div>'
-            ]]]);
+        ]);
 
     $main_items = new ArrayObject(
         [
@@ -766,13 +753,19 @@ if ($can_edit_post) {
     echo '<div id="entry-sidebar">';
 
     foreach ($sidebar_items as $id => $c) {
-        echo '<div id="' . $id . '" class="sb-box">' .
-            '<h4>' . $c['title'] . '</h4>';
-        foreach ($c['items'] as $e_name => $e_content) {
-            echo $e_content;
+        
+        if (!empty($c['title'])) {
+            echo '<div id="'.$id.'" class="sb-box">';
+            echo '<h4>'.$c['title'].'</h4>';
+            foreach ($c['items'] as $e_name => $e_content) {
+                echo $e_content;
+            }
+            echo '</div>';
         }
-        echo '</div>';
+
+        
     }
+
 
     echo '</div>';		// End #entry-sidebar
 
