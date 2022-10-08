@@ -24,8 +24,6 @@ $meta = dcCore::app()->meta;
 
 $page_title = __('Add elements');
 
-$meta = dcCore::app()->meta;
-
 $post_id = !empty($_GET['post_id']) ? $_GET['post_id'] : '';
 $my_params['post_id'] = $post_id;
 $my_params['no_content'] = true;
