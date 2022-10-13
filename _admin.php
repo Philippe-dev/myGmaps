@@ -19,7 +19,7 @@ dcCore::app()->menu[dcAdmin::MENU_BLOG]->addItem(
     dcCore::app()->adminurl->get('admin.plugin.myGmaps').'&amp;do=list',
     [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
     preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.myGmaps')) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
-    dcCore::app()->auth->check('usage,contentadmin', dcCore::app()->blog->id)
+    dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)
 );
 
 dcCore::app()->addBehavior('adminDashboardFavs', ['myGmapsBehaviors', 'dashboardFavs']);
@@ -84,7 +84,7 @@ class myGmapsBehaviors
             'plugin.php?p=myGmaps&amp;do=list',
             [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
             [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
-            'usage,contentadmin',
+            dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]),
             null,
             null]);
     }

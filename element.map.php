@@ -12,7 +12,7 @@
 
 require_once DC_ROOT . '/inc/admin/prepend.php';
 
-dcPage::check('usage,contentadmin');
+dcPage::check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]));
 
 dt::setTZ(dcCore::app()->auth->getInfo('user_tz'));
 
@@ -52,8 +52,8 @@ $post_media = [];
 $page_title = __('New map element');
 
 $can_view_page = true;
-$can_edit_post = dcCore::app()->auth->check('usage,contentadmin', dcCore::app()->blog->id);
-$can_publish = dcCore::app()->auth->check('publish,contentadmin', dcCore::app()->blog->id);
+$can_edit_post = dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id);
+$can_publish = dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id);
 $can_delete = false;
 
 $post_headlink = '<link rel="%s" title="%s" href="map.php?id=%s" />';

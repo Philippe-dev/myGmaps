@@ -15,15 +15,15 @@ if (!defined('DC_RC_PATH')) {
 }
 
 $this->registerModule(
-    'Google Maps',           					// Name
-    'Add custom maps to your blog', 			// Description
-    'Philippe aka amalgame and contributors',   // Author
-    '5.10',                   					// Version
+    'Google Maps',
+    'Add custom maps to your blog',
+    'Philippe aka amalgame and contributors',
+    '5.10',
     [
-        'requires' => [['core', '2.23']],   	// Dependencies
-        'permissions' => 'usage,contentadmin', 	// Permissions
-        'type' => 'plugin',             	    // Type
-        'priority' => 2000,                 	// Priority
+        'requires' => [['core', '2.23']],
+        'permissions' => dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]),
+        'type' => 'plugin',
+        'priority' => 2000,
         'settings' => ['self' => '&do=list#settings']
     ]
 );

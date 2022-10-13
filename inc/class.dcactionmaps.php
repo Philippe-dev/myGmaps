@@ -113,7 +113,7 @@ class dcDefaultMapsActions
 {
     public static function adminMapsActionsPage($core, $ap)
     {
-        if (dcCore::app()->auth->check('publish,contentadmin', dcCore::app()->blog->id)) {
+        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)) {
             $ap->addAction(
                 [__('Status') => [
                     __('Publish') => 'publish',
@@ -150,7 +150,7 @@ class dcDefaultMapsActions
                 ['dcDefaultMapsActions', 'doChangeMapAuthor']
             );
         }
-        if (dcCore::app()->auth->check('delete,contentadmin', dcCore::app()->blog->id)) {
+        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)) {
             $ap->addAction(
                 [__('Delete') => [
                     __('Delete') => 'delete']],
