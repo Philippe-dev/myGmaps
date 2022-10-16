@@ -9,7 +9,6 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
-
 if (!defined('DC_RC_PATH')) {
     return;
 }
@@ -20,10 +19,10 @@ $this->registerModule(
     'Philippe aka amalgame and contributors',
     '5.10',
     [
-        'requires' => [['core', '2.24']],
+        'requires'    => [['core', '2.24']],
         'permissions' => dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]),
-        'type' => 'plugin',
-        'priority' => 2000,
-        'settings' => ['self' => '&do=list#settings']
+        'type'        => 'plugin',
+        'priority'    => 2000,
+        'settings'    => ['self' => '&do=list#settings'],
     ]
 );

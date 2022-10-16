@@ -9,7 +9,6 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
-
 if (!defined('DC_RC_PATH')) {
     return;
 }
@@ -20,8 +19,8 @@ class dcMapsActionsPage extends dcActionsPage
     {
         parent::__construct(dcCore::app(), $uri, $redirect_args);
         $this->redirect_fields = ['user_id', 'cat_id', 'status',
-            'selected', 'attachment', 'month', 'lang', 'sortby', 'order', 'page', 'nb'];
-        $this->caller_title = __('Google Maps');
+            'selected', 'attachment', 'month', 'lang', 'sortby', 'order', 'page', 'nb', ];
+        $this->caller_title           = __('Google Maps');
         $this->enable_redir_selection = true;
         $this->loadDefaults();
     }
@@ -69,8 +68,8 @@ class dcMapsActionsPage extends dcActionsPage
             dcPage::breadcrumb(
                 [
                     html::escapeHTML(dcCore::app()->blog->name) => '',
-                    $this->getCallerTitle() => $this->getRedirection(true),
-                    __('Map elements actions') => ''
+                    $this->getCallerTitle()                     => $this->getRedirection(true),
+                    __('Map elements actions')                  => '',
                 ]
             )
         );
@@ -116,18 +115,18 @@ class dcDefaultMapsActions
         if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)) {
             $ap->addAction(
                 [__('Status') => [
-                    __('Publish') => 'publish',
-                    __('Unpublish') => 'unpublish',
-                    __('Schedule') => 'schedule',
-                    __('Mark as pending') => 'pending'
+                    __('Publish')         => 'publish',
+                    __('Unpublish')       => 'unpublish',
+                    __('Schedule')        => 'schedule',
+                    __('Mark as pending') => 'pending',
                 ]],
                 ['dcDefaultMapsActions', 'doChangeMapStatus']
             );
         }
         $ap->addAction(
             [__('Mark') => [
-                __('Mark as selected') => 'selected',
-                __('Mark as unselected') => 'unselected'
+                __('Mark as selected')   => 'selected',
+                __('Mark as unselected') => 'unselected',
             ]],
             ['dcDefaultMapsActions', 'doUpdateSelectedMap']
         );
@@ -146,14 +145,14 @@ class dcDefaultMapsActions
         if (dcCore::app()->auth->check('admin', dcCore::app()->blog->id)) {
             $ap->addAction(
                 [__('Change') => [
-                    __('Change author') => 'author']],
+                    __('Change author') => 'author', ]],
                 ['dcDefaultMapsActions', 'doChangeMapAuthor']
             );
         }
         if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)) {
             $ap->addAction(
                 [__('Delete') => [
-                    __('Delete') => 'delete']],
+                    __('Delete') => 'delete', ]],
                 ['dcDefaultMapsActions', 'doDeleteMap']
             );
         }
@@ -163,12 +162,16 @@ class dcDefaultMapsActions
     {
         switch ($ap->getAction()) {
             case 'unpublish': $status = 0;
+
                 break;
             case 'schedule': $status = -1;
+
                 break;
             case 'pending': $status = -2;
+
                 break;
             default: $status = 1;
+
                 break;
         }
         $posts_ids = $ap->getIDs();
@@ -224,10 +227,10 @@ class dcDefaultMapsActions
             }
             $new_cat_id = $post['new_cat_id'];
             if (!empty($post['new_cat_title']) && dcCore::app()->auth->check('categories', dcCore::app()->blog->id)) {
-                $cur_cat = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'category');
+                $cur_cat            = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'category');
                 $cur_cat->cat_title = $post['new_cat_title'];
-                $cur_cat->cat_url = '';
-                $title = $cur_cat->cat_title;
+                $cur_cat->cat_url   = '';
+                $title              = $cur_cat->cat_title;
 
                 $parent_cat = !empty($post['new_cat_parent']) ? $post['new_cat_parent'] : '';
 
@@ -249,8 +252,8 @@ class dcDefaultMapsActions
                 dcPage::breadcrumb(
                     [
                         html::escapeHTML(dcCore::app()->blog->name) => '',
-                        $ap->getCallerTitle() => $ap->getRedirection(true),
-                        __('Change category for this selection') => ''
+                        $ap->getCallerTitle()                       => $ap->getRedirection(true),
+                        __('Change category for this selection')    => '',
                     ]
                 )
             );
@@ -291,7 +294,7 @@ class dcDefaultMapsActions
     {
         if (isset($post['new_auth_id']) && dcCore::app()->auth->check('admin', dcCore::app()->blog->id)) {
             $new_user_id = $post['new_auth_id'];
-            $posts_ids = $_POST['entries'];
+            $posts_ids   = $_POST['entries'];
             if (empty($posts_ids)) {
                 throw new Exception(__('No element selected'));
             }
@@ -299,7 +302,7 @@ class dcDefaultMapsActions
                 throw new Exception(__('This user does not exist'));
             }
 
-            $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'post');
+            $cur          = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'post');
             $cur->user_id = $new_user_id;
             $cur->update('WHERE post_id ' . dcCore::app()->con->in($posts_ids));
 
@@ -309,7 +312,7 @@ class dcDefaultMapsActions
             if (dcCore::app()->auth->check('admin', dcCore::app()->blog->id)) {
                 $params = [
                     'limit' => 100,
-                    'order' => 'nb_post DESC'
+                    'order' => 'nb_post DESC',
                 ];
                 $rs = dcCore::app()->getUsers($params);
                 while ($rs->fetch()) {
@@ -320,8 +323,8 @@ class dcDefaultMapsActions
                 dcPage::breadcrumb(
                     [
                         html::escapeHTML(dcCore::app()->blog->name) => '',
-                        $ap->getCallerTitle() => $ap->getRedirection(true),
-                        __('Change author for this selection') => '']
+                        $ap->getCallerTitle()                       => $ap->getRedirection(true),
+                        __('Change author for this selection')      => '', ]
                 ),
                 dcPage::jsLoad('js/jquery/jquery.autocomplete.js') .
                     '<script>' . "\n" .
@@ -353,8 +356,8 @@ class dcDefaultMapsActions
             throw new Exception(__('No element selected'));
         }
         if (isset($post['new_lang'])) {
-            $new_lang = $post['new_lang'];
-            $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'post');
+            $new_lang       = $post['new_lang'];
+            $cur            = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'post');
             $cur->post_lang = $new_lang;
             $cur->update('WHERE post_id ' . dcCore::app()->con->in($posts_ids));
 
@@ -364,15 +367,15 @@ class dcDefaultMapsActions
                 dcPage::breadcrumb(
                     [
                         html::escapeHTML(dcCore::app()->blog->name) => '',
-                        $ap->getCallerTitle() => $ap->getRedirection(true),
-                        __('Change language for this selection') => ''
+                        $ap->getCallerTitle()                       => $ap->getRedirection(true),
+                        __('Change language for this selection')    => '',
                     ]
                 )
             );
             // lang list
             // Languages combo
-            $rs = dcCore::app()->blog->getLangs(['order' => 'asc']);
-            $all_langs = l10n::getISOcodes(0, 1);
+            $rs         = dcCore::app()->blog->getLangs(['order' => 'asc']);
+            $all_langs  = l10n::getISOcodes(0, 1);
             $lang_combo = ['' => '', __('Most used') => [], __('Available') => l10n::getISOcodes(1, 1)];
             while ($rs->fetch()) {
                 if (isset($all_langs[$rs->post_lang])) {

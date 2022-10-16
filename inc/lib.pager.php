@@ -9,7 +9,6 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
-
 if (!defined('DC_RC_PATH')) {
     return;
 }
@@ -18,7 +17,6 @@ class adminMapsList extends adminGenericList
 {
     public function display($page, $nb_per_page, $enclose_block = '', $filter = false)
     {
-
         if ($this->rs->isEmpty()) {
             if ($filter) {
                 echo '<p><strong>' . __('No element matches the filter') . '</strong></p>';
@@ -26,23 +24,22 @@ class adminMapsList extends adminGenericList
                 echo '<p><strong>' . __('No map element') . '</strong></p>';
             }
         } else {
-            $pager = new dcPager($page, $this->rs_count, $nb_per_page, 10);
+            $pager   = new dcPager($page, $this->rs_count, $nb_per_page, 10);
             $entries = [];
             if (isset($_REQUEST['entries'])) {
                 foreach ($_REQUEST['entries'] as $v) {
-                    $entries[(int)$v] = true;
+                    $entries[(int) $v] = true;
                 }
             }
-            $html_block =
-            '<div class="table-outer">' .
+            $html_block = '<div class="table-outer">' .
             '<table>';
 
             if ($filter) {
                 $html_block .= '<caption>' . sprintf(__('List of %s elements match the filter.'), $this->rs_count) . '</caption>';
             } else {
-                $nb_published = dcCore::app()->blog->getPosts(['post_type' => 'map', 'post_status' => 1], true)->f(0);
-                $nb_pending = dcCore::app()->blog->getPosts(['post_type' => 'map', 'post_status' => -2], true)->f(0);
-                $nb_programmed = dcCore::app()->blog->getPosts(['post_type' => 'map', 'post_status' => -1], true)->f(0);
+                $nb_published   = dcCore::app()->blog->getPosts(['post_type' => 'map', 'post_status' => 1], true)->f(0);
+                $nb_pending     = dcCore::app()->blog->getPosts(['post_type' => 'map', 'post_status' => -2], true)->f(0);
+                $nb_programmed  = dcCore::app()->blog->getPosts(['post_type' => 'map', 'post_status' => -1], true)->f(0);
                 $nb_unpublished = dcCore::app()->blog->getPosts(['post_type' => 'map', 'post_status' => 0], true)->f(0);
                 $html_block .= '<caption>' .
                 sprintf(__('Elements list (%s)'), $this->rs_count) .
@@ -120,7 +117,7 @@ class adminMapsList extends adminGenericList
         } else {
             $cat_link = '%2$s';
         }
-        
+
         if ($this->rs->cat_title) {
             $cat_title = sprintf(
                 $cat_link,
@@ -135,15 +132,19 @@ class adminMapsList extends adminGenericList
         switch ($this->rs->post_status) {
             case 1:
                 $img_status = sprintf($img, __('Published'), 'check-on.png');
+
                 break;
             case 0:
                 $img_status = sprintf($img, __('Unpublished'), 'check-off.png');
+
                 break;
             case -1:
                 $img_status = sprintf($img, __('Scheduled'), 'scheduled.png');
+
                 break;
             case -2:
                 $img_status = sprintf($img, __('Pending'), 'check-wrn.png');
+
                 break;
         }
 
@@ -157,22 +158,21 @@ class adminMapsList extends adminGenericList
             $selected = sprintf($img, __('Selected'), 'selected.png');
         }
 
-        $attach = '';
+        $attach   = '';
         $nb_media = $this->rs->countMedia();
         if ($nb_media > 0) {
             $attach_str = $nb_media == 1 ? __('%d attachment') : __('%d attachments');
-            $attach = sprintf($img, sprintf($attach_str, $nb_media), 'attach.png');
+            $attach     = sprintf($img, sprintf($attach_str, $nb_media), 'attach.png');
         }
 
         $res = '<tr class="line' . ($this->rs->post_status != 1 ? ' offline' : '') . '"' .
         ' id="p' . $this->rs->post_id . '">';
 
-        $meta = dcCore::app()->meta;
+        $meta    = dcCore::app()->meta;
         $meta_rs = $meta->getMetaStr($this->rs->post_meta, 'map');
 
         if ($s->myGmaps_enabled) {
-            $res .=
-        '<td class="nowrap">' .
+            $res .= '<td class="nowrap">' .
         form::checkbox(['entries[]'], $this->rs->post_id, $checked, '', '', !$this->rs->isEditable()) . '</td>' .
         '<td class="maximal"><a href="' . dcCore::app()->admin->getPageURL() . '&amp;do=edit&amp;id=' . $this->rs->post_id . '">' .
         html::escapeHTML($this->rs->post_title) . '</a></td>' .
@@ -183,8 +183,7 @@ class adminMapsList extends adminGenericList
         '<td class="nowrap status">' . $img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach . '</td>' .
         '</tr>';
         } else {
-            $res .=
-        '<td class="nowrap">' .
+            $res .= '<td class="nowrap">' .
         form::checkbox(['entries[]'], $this->rs->post_id, $checked, '', '', !$this->rs->isEditable()) . '</td>' .
         '<td class="maximal">' .
         html::escapeHTML($this->rs->post_title) . '</td>' .
@@ -195,6 +194,7 @@ class adminMapsList extends adminGenericList
         '<td class="nowrap status">' . $img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach . '</td>' .
         '</tr>';
         }
+
         return $res;
     }
 }
@@ -207,8 +207,7 @@ class adminMapsMiniList extends adminGenericList
         } else {
             $pager = new dcPager($page, $this->rs_count, $nb_per_page, 10);
 
-            $html_block =
-            '<div class="table-outer clear">' .
+            $html_block = '<div class="table-outer clear">' .
             '<table><caption class="hidden">' . __('Elements list') . '</caption><tr>' .
             '<th scope="col">' . __('Title') . '</th>' .
             '<th scope="col">' . __('Date') . '</th>' .
@@ -242,15 +241,19 @@ class adminMapsMiniList extends adminGenericList
         switch ($this->rs->post_status) {
             case 1:
                 $img_status = sprintf($img, __('Published'), 'check-on.png');
+
                 break;
             case 0:
                 $img_status = sprintf($img, __('Unpublished'), 'check-off.png');
+
                 break;
             case -1:
                 $img_status = sprintf($img, __('Scheduled'), 'scheduled.png');
+
                 break;
             case -2:
                 $img_status = sprintf($img, __('Pending'), 'check-wrn.png');
+
                 break;
         }
 
@@ -264,11 +267,11 @@ class adminMapsMiniList extends adminGenericList
             $selected = sprintf($img, __('Selected'), 'selected.png');
         }
 
-        $attach = '';
+        $attach   = '';
         $nb_media = $this->rs->countMedia();
         if ($nb_media > 0) {
             $attach_str = $nb_media == 1 ? __('%d attachment') : __('%d attachments');
-            $attach = sprintf($img, sprintf($attach_str, $nb_media), 'attach.png');
+            $attach     = sprintf($img, sprintf($attach_str, $nb_media), 'attach.png');
         }
 
         if (dcCore::app()->auth->check('categories', dcCore::app()->blog->id)) {
@@ -286,14 +289,13 @@ class adminMapsMiniList extends adminGenericList
             $cat_title = __('None');
         }
 
-        $meta = dcCore::app()->meta;
+        $meta    = dcCore::app()->meta;
         $meta_rs = $meta->getMetaStr($this->rs->post_meta, 'map');
 
         $res = '<tr class="line' . ($this->rs->post_status != 1 ? ' offline' : '') . '"' .
         ' id="p' . $this->rs->post_id . '">';
 
-        $res .=
-        '<td class="maximal"><a href="plugin.php?p=myGmaps&amp;do=edit&amp;id=' . $this->rs->post_id . '" title="' . __('Edit map element') . ' : ' . html::escapeHTML($this->rs->post_title) . '">' . html::escapeHTML($this->rs->post_title) . '</a></td>' .
+        $res .= '<td class="maximal"><a href="plugin.php?p=myGmaps&amp;do=edit&amp;id=' . $this->rs->post_id . '" title="' . __('Edit map element') . ' : ' . html::escapeHTML($this->rs->post_title) . '">' . html::escapeHTML($this->rs->post_title) . '</a></td>' .
         '<td class="nowrap count">' . dt::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt) . '</td>' .
         '<td class="nowrap">' . $cat_title . '</td>' .
         '<td class="nowrap">' . __($meta_rs) . '</td>' .

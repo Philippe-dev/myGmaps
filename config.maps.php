@@ -9,14 +9,11 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
-
 require_once DC_ROOT . '/inc/admin/prepend.php';
 
 dcPage::check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]));
 
-
-
-$default_tab = isset($_GET['tab']) ? $_GET['tab'] : 'entries-list';
+$default_tab = $_GET['tab'] ?? 'entries-list';
 
 $s = dcCore::app()->blog->settings->myGmaps;
 
@@ -32,23 +29,23 @@ Clearbricks::lib()->autoload([
 // Custom map styles
 
 $public_path = dcCore::app()->blog->public_path;
-$public_url = dcCore::app()->blog->settings->system->public_url;
-$blog_url = dcCore::app()->blog->url;
+$public_url  = dcCore::app()->blog->settings->system->public_url;
+$blog_url    = dcCore::app()->blog->url;
 
 $map_styles_dir_path = $public_path . '/myGmaps/styles/';
-$map_styles_dir_url = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/styles/');
+$map_styles_dir_url  = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/styles/');
 
 if (is_dir($map_styles_dir_path)) {
-    $map_styles = glob($map_styles_dir_path . '*.js');
+    $map_styles      = glob($map_styles_dir_path . '*.js');
     $map_styles_list = [];
     foreach ($map_styles as $map_style) {
         $map_style = basename($map_style);
         array_push($map_styles_list, $map_style);
     }
-    $map_styles_list = implode(',', $map_styles_list);
+    $map_styles_list     = implode(',', $map_styles_list);
     $map_styles_base_url = $map_styles_dir_url;
 } else {
-    $map_styles_list = '';
+    $map_styles_list     = '';
     $map_styles_base_url = '';
 }
 
@@ -91,7 +88,7 @@ if (!dcCore::app()->error->flag()) {
     $categories_combo = array_merge(
         [
             new formSelectOption('-', ''),
-            new formSelectOption(__('(No cat)'), 'NULL')],
+            new formSelectOption(__('(No cat)'), 'NULL'), ],
         dcAdminCombos::getCategoriesCombo($categories, false)
     );
     $categories_values = [];
@@ -107,28 +104,28 @@ if (!dcCore::app()->error->flag()) {
     );
 
     $selected_combo = [
-        '-' => '',
-        __('Selected') => '1',
-        __('Not selected') => '0'
+        '-'                => '',
+        __('Selected')     => '1',
+        __('Not selected') => '0',
     ];
 
     $attachment_combo = [
-        '-' => '',
-        __('With attachments') => '1',
-        __('Without attachments') => '0'
+        '-'                       => '',
+        __('With attachments')    => '1',
+        __('Without attachments') => '0',
     ];
 
     $element_type_combo = [
-        '-' => '',
-        __('none') => 'none',
+        '-'                     => '',
+        __('none')              => 'none',
         __('point of interest') => 'point of interest',
-        __('polyline') => 'polyline',
-        __('polygon') => 'polygon',
-        __('rectangle') => 'rectangle',
-        __('circle') => 'circle',
+        __('polyline')          => 'polyline',
+        __('polygon')           => 'polygon',
+        __('rectangle')         => 'rectangle',
+        __('circle')            => 'circle',
         __('included kml file') => 'included kml file',
-        __('GeoRSS feed') => 'GeoRSS feed',
-        __('directions') => 'directions'
+        __('GeoRSS feed')       => 'GeoRSS feed',
+        __('directions')        => 'directions',
     ];
 
     // Months array
@@ -143,19 +140,19 @@ if (!dcCore::app()->error->flag()) {
     );
 
     $sortby_combo = [
-        __('Date') => 'post_dt',
-        __('Title') => 'post_title',
-        __('Category') => 'cat_title',
-        __('Author') => 'user_id',
-        __('Status') => 'post_status',
-        __('Selected') => 'post_selected',
-        __('Number of comments') => 'nb_comment',
-        __('Number of trackbacks') => 'nb_trackback'
+        __('Date')                 => 'post_dt',
+        __('Title')                => 'post_title',
+        __('Category')             => 'cat_title',
+        __('Author')               => 'user_id',
+        __('Status')               => 'post_status',
+        __('Selected')             => 'post_selected',
+        __('Number of comments')   => 'nb_comment',
+        __('Number of trackbacks') => 'nb_trackback',
     ];
 
     $order_combo = [
         __('Descending') => 'desc',
-        __('Ascending') => 'asc'
+        __('Ascending')  => 'asc',
     ];
 }
 
@@ -168,21 +165,21 @@ if ($posts_actions_page->process()) {
 }
 /* Get posts
 -------------------------------------------------------- */
-$id = !empty($_GET['id']) ? $_GET['id'] : '';
-$user_id = !empty($_GET['user_id']) ? $_GET['user_id'] : '';
-$cat_id = !empty($_GET['cat_id']) ? $_GET['cat_id'] : '';
-$status = isset($_GET['status']) ? $_GET['status'] : '';
-$selected = isset($_GET['selected']) ? $_GET['selected'] : '';
-$attachment = isset($_GET['attachment']) ? $_GET['attachment'] : '';
-$lang = !empty($_GET['lang']) ? $_GET['lang'] : '';
-$month = !empty($_GET['month']) ? $_GET['month'] : '';
-$sortby = !empty($_GET['sortby']) ? $_GET['sortby'] : 'post_dt';
-$order = !empty($_GET['order']) ? $_GET['order'] : 'desc';
+$id           = !empty($_GET['id']) ? $_GET['id'] : '';
+$user_id      = !empty($_GET['user_id']) ? $_GET['user_id'] : '';
+$cat_id       = !empty($_GET['cat_id']) ? $_GET['cat_id'] : '';
+$status       = $_GET['status']     ?? '';
+$selected     = $_GET['selected']   ?? '';
+$attachment   = $_GET['attachment'] ?? '';
+$lang         = !empty($_GET['lang']) ? $_GET['lang'] : '';
+$month        = !empty($_GET['month']) ? $_GET['month'] : '';
+$sortby       = !empty($_GET['sortby']) ? $_GET['sortby'] : 'post_dt';
+$order        = !empty($_GET['order']) ? $_GET['order'] : 'desc';
 $element_type = !empty($_GET['element_type']) ? $_GET['element_type'] : '';
 
 $show_filters = false;
 
-$page = !empty($_GET['page']) ? (int) $_GET['page'] : 1;
+$page        = !empty($_GET['page']) ? (int) $_GET['page'] : 1;
 $nb_per_page = 30;
 
 if (!empty($_GET['nb']) && (int) $_GET['nb'] > 0) {
@@ -192,14 +189,14 @@ if (!empty($_GET['nb']) && (int) $_GET['nb'] > 0) {
     $nb_per_page = (int) $_GET['nb'];
 }
 
-$params['limit'] = [(($page - 1) * $nb_per_page), $nb_per_page];
+$params['limit']      = [(($page - 1) * $nb_per_page), $nb_per_page];
 $params['no_content'] = true;
-$params['post_type'] = 'map';
+$params['post_type']  = 'map';
 
 // - User filter
 if ($user_id !== '' && in_array($user_id, $users_combo)) {
     $params['user_id'] = $user_id;
-    $show_filters = true;
+    $show_filters      = true;
 } else {
     $user_id = '';
 }
@@ -207,7 +204,7 @@ if ($user_id !== '' && in_array($user_id, $users_combo)) {
 // - Categories filter
 if ($cat_id !== '' && isset($categories_values[$cat_id])) {
     $params['cat_id'] = $cat_id;
-    $show_filters = true;
+    $show_filters     = true;
 } else {
     $cat_id = '';
 }
@@ -215,7 +212,7 @@ if ($cat_id !== '' && isset($categories_values[$cat_id])) {
 // - Status filter
 if ($status !== '' && in_array($status, $status_combo)) {
     $params['post_status'] = $status;
-    $show_filters = true;
+    $show_filters          = true;
 } else {
     $status = '';
 }
@@ -223,16 +220,16 @@ if ($status !== '' && in_array($status, $status_combo)) {
 // - Selected filter
 if ($selected !== '' && in_array($selected, $selected_combo)) {
     $params['post_selected'] = $selected;
-    $show_filters = true;
+    $show_filters            = true;
 } else {
     $selected = '';
 }
 
 // - Selected filter
 if ($attachment !== '' && in_array($attachment, $attachment_combo)) {
-    $params['media'] = $attachment;
+    $params['media']     = $attachment;
     $params['link_type'] = 'attachment';
-    $show_filters = true;
+    $show_filters        = true;
 } else {
     $attachment = '';
 }
@@ -240,8 +237,8 @@ if ($attachment !== '' && in_array($attachment, $attachment_combo)) {
 // - Month filter
 if ($month !== '' && in_array($month, $dt_m_combo)) {
     $params['post_month'] = substr($month, 4, 2);
-    $params['post_year'] = substr($month, 0, 4);
-    $show_filters = true;
+    $params['post_year']  = substr($month, 0, 4);
+    $show_filters         = true;
 } else {
     $month = '';
 }
@@ -249,7 +246,7 @@ if ($month !== '' && in_array($month, $dt_m_combo)) {
 // - Lang filter
 if ($lang !== '' && in_array($lang, $lang_combo)) {
     $params['post_lang'] = $lang;
-    $show_filters = true;
+    $show_filters        = true;
 } else {
     $lang = '';
 }
@@ -267,21 +264,21 @@ if ($sortby !== '' && in_array($sortby, $sortby_combo)) {
     }
 } else {
     $sortby = 'post_dt';
-    $order = 'desc';
+    $order  = 'desc';
 }
 
 // - Map type filter
 if ($element_type != '' && in_array($element_type, $element_type_combo)) {
     $params['sql'] = "AND post_meta LIKE '%" . $element_type . "%' ";
-    $show_filters = true;
+    $show_filters  = true;
 } else {
     $element_type = '';
 }
 
 // Get posts
 try {
-    $posts = dcCore::app()->blog->getPosts($params);
-    $counter = dcCore::app()->blog->getPosts($params, true);
+    $posts     = dcCore::app()->blog->getPosts($params);
+    $counter   = dcCore::app()->blog->getPosts($params, true);
     $post_list = new adminMapsList(dcCore::app(), $posts, $counter->f(0));
 } catch (Exception $e) {
     dcCore::app()->error->add($e->getMessage());
@@ -290,9 +287,9 @@ try {
 // Save activation
 $myGmaps_enabled = $s->myGmaps_enabled;
 $myGmaps_API_key = $s->myGmaps_API_key;
-$myGmaps_center = $s->myGmaps_center;
-$myGmaps_zoom = $s->myGmaps_zoom;
-$myGmaps_type = $s->myGmaps_type;
+$myGmaps_center  = $s->myGmaps_center;
+$myGmaps_zoom    = $s->myGmaps_zoom;
+$myGmaps_type    = $s->myGmaps_type;
 
 if (!empty($_POST['saveconfig'])) {
     try {
@@ -318,12 +315,11 @@ if (!empty($_POST['saveconfig'])) {
 
 		<?php
         $form_filter_title = __('Show filters and display options');
-$starting_script = dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/maps.list.js');
+$starting_script           = dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/maps.list.js');
 $starting_script .= dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/filter-controls.js');
 $starting_script .= dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/config.map.js');
 $starting_script .= dcPage::jsPageTabs($default_tab);
-$starting_script .=
-'<script>' . "\n" .
+$starting_script .= '<script>' . "\n" .
 '//<![CDATA[' . "\n" .
 dcPage::jsVar('dotclear.msg.show_filters', $show_filters ? 'true' : 'false') . "\n" .
 dcPage::jsVar('dotclear.msg.filter_posts_list', $form_filter_title) . "\n" .
@@ -348,9 +344,9 @@ if (is_dir($map_styles_dir_path)) {
     $list = explode(',', $map_styles_list);
     foreach ($list as $map_style) {
         $map_style_content = file_get_contents($map_styles_dir_path . '/' . $map_style);
-        $var_styles_name = pathinfo($map_style, PATHINFO_FILENAME);
-        $var_name = preg_replace('/_styles/s', '', $var_styles_name);
-        $nice_name = ucwords(preg_replace('/_/s', ' ', $var_name));
+        $var_styles_name   = pathinfo($map_style, PATHINFO_FILENAME);
+        $var_name          = preg_replace('/_styles/s', '', $var_styles_name);
+        $nice_name         = ucwords(preg_replace('/_/s', ' ', $var_name));
         echo
         'var ' . $var_styles_name . ' = ' . $map_style_content . ';' . "\n" .
         'var ' . $var_name . ' = new google.maps.StyledMapType(' . $var_styles_name . ',{name: "' . $nice_name . '"});' . "\n";
@@ -370,8 +366,8 @@ if (!dcCore::app()->error->flag()) {
     echo dcPage::breadcrumb(
         [
             html::escapeHTML(dcCore::app()->blog->name) => '',
-            __('Google Maps') => dcCore::app()->admin->getPageURL(),
-            $page_title => ''
+            __('Google Maps')                           => dcCore::app()->admin->getPageURL(),
+            $page_title                                 => '',
         ]
     );
 
@@ -388,7 +384,7 @@ if (!dcCore::app()->error->flag()) {
             __('Elements have been successfully deleted'),
             __('Elements category has been successfully changed'),
             __('Elements author has been successfully changed'),
-            __('Elements language has been successfully changed')
+            __('Elements language has been successfully changed'),
         ];
 
         $k = (int) $_GET['upd'] - 1;

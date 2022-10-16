@@ -9,43 +9,40 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
-
 require_once DC_ROOT . '/inc/admin/prepend.php';
 
 dcPage::check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]));
 
 dt::setTZ(dcCore::app()->auth->getInfo('user_tz'));
 
-
-
 $s = dcCore::app()->blog->settings->myGmaps;
 
 $plugin_QmarkURL = dcCore::app()->blog->getQmarkURL();
 
 $myGmaps_center = $s->myGmaps_center;
-$myGmaps_zoom = $s->myGmaps_zoom;
-$myGmaps_type = $s->myGmaps_type;
+$myGmaps_zoom   = $s->myGmaps_zoom;
+$myGmaps_type   = $s->myGmaps_type;
 
-$post_id = '';
-$cat_id = '';
-$post_dt = '';
-$post_type = 'map';
-$element_type = 'none';
-$post_format = dcCore::app()->auth->getOption('post_format');
-$post_editor = dcCore::app()->auth->getOption('editor');
-$post_password = '';
-$post_url = '';
-$post_lang = dcCore::app()->auth->getInfo('user_lang');
-$post_title = '';
-$post_excerpt = '';
+$post_id            = '';
+$cat_id             = '';
+$post_dt            = '';
+$post_type          = 'map';
+$element_type       = 'none';
+$post_format        = dcCore::app()->auth->getOption('post_format');
+$post_editor        = dcCore::app()->auth->getOption('editor');
+$post_password      = '';
+$post_url           = '';
+$post_lang          = dcCore::app()->auth->getInfo('user_lang');
+$post_title         = '';
+$post_excerpt       = '';
 $post_excerpt_xhtml = '';
-$post_content = '';
+$post_content       = '';
 $post_content_xhtml = '';
-$post_notes = '';
-$post_status = dcCore::app()->auth->getInfo('user_post_status');
-$post_selected = false;
-$post_open_comment = '';
-$post_open_tb = '';
+$post_notes         = '';
+$post_status        = dcCore::app()->auth->getInfo('user_post_status');
+$post_selected      = false;
+$post_open_comment  = '';
+$post_open_tb       = '';
 
 $post_media = [];
 
@@ -53,11 +50,11 @@ $page_title = __('New map element');
 
 $can_view_page = true;
 $can_edit_post = dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id);
-$can_publish = dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id);
-$can_delete = false;
+$can_publish   = dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id);
+$can_delete    = false;
 
 $post_headlink = '<link rel="%s" title="%s" href="map.php?id=%s" />';
-$post_link = '<a href="' . dcCore::app()->admin->getPageURL() . '&amp;do=edit&amp;id=%s" title="%s">%s</a>';
+$post_link     = '<a href="' . dcCore::app()->admin->getPageURL() . '&amp;do=edit&amp;id=%s" title="%s">%s</a>';
 
 $next_link = $prev_link = $next_headlink = $prev_headlink = null;
 
@@ -78,7 +75,7 @@ $img_status_pattern = '<img class="img_select_option" alt="%1$s" title="%1$s" sr
 
 // Formaters combo
 if (version_compare(DC_VERSION, '2.7-dev', '>=')) {
-    $core_formaters = dcCore::app()->getFormaters();
+    $core_formaters    = dcCore::app()->getFormaters();
     $available_formats = ['' => ''];
     foreach ($core_formaters as $editor => $formats) {
         foreach ($formats as $format) {
@@ -92,67 +89,67 @@ if (version_compare(DC_VERSION, '2.7-dev', '>=')) {
 }
 
 // Languages combo
-$rs = dcCore::app()->blog->getLangs(['order' => 'asc']);
+$rs         = dcCore::app()->blog->getLangs(['order' => 'asc']);
 $lang_combo = dcAdminCombos::getLangsCombo($rs, true);
 
 // Custom marker icons
 
 $public_path = dcCore::app()->blog->public_path;
-$public_url = dcCore::app()->blog->settings->system->public_url;
-$blog_url = dcCore::app()->blog->url;
+$public_url  = dcCore::app()->blog->settings->system->public_url;
+$blog_url    = dcCore::app()->blog->url;
 
 $icons_dir_path = $public_path . '/myGmaps/icons/';
-$icons_dir_url = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/icons/');
+$icons_dir_url  = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/icons/');
 
 if (is_dir($icons_dir_path)) {
-    $images = glob($icons_dir_path . '*.png');
+    $images     = glob($icons_dir_path . '*.png');
     $icons_list = [];
     foreach ($images as $image) {
         $image = basename($image);
         array_push($icons_list, $image);
     }
-    $icons_list = implode(',', $icons_list);
+    $icons_list     = implode(',', $icons_list);
     $icons_base_url = $icons_dir_url;
 } else {
-    $icons_list = '';
+    $icons_list      = '';
     $icons_base_path = '';
-    $icons_base_url = '';
+    $icons_base_url  = '';
 }
 
 // Custom Kml files
 
 $kmls_dir_path = $public_path . '/myGmaps/kml_files/';
-$kmls_dir_url = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/kml_files/');
+$kmls_dir_url  = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/kml_files/');
 
 if (is_dir($kmls_dir_path)) {
-    $kmls = glob($kmls_dir_path . '*.kml');
+    $kmls      = glob($kmls_dir_path . '*.kml');
     $kmls_list = [];
     foreach ($kmls as $kml) {
         $kml = basename($kml);
         array_push($kmls_list, $kml);
     }
-    $kmls_list = implode(',', $kmls_list);
+    $kmls_list     = implode(',', $kmls_list);
     $kmls_base_url = $kmls_dir_url;
 } else {
-    $kmls_list = '';
+    $kmls_list     = '';
     $kmls_base_url = '';
 }
 
 // Custom map styles
 $map_styles_dir_path = $public_path . '/myGmaps/styles/';
-$map_styles_dir_url = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/styles/');
+$map_styles_dir_url  = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/styles/');
 
 if (is_dir($map_styles_dir_path)) {
-    $map_styles = glob($map_styles_dir_path . '*.js');
+    $map_styles      = glob($map_styles_dir_path . '*.js');
     $map_styles_list = [];
     foreach ($map_styles as $map_style) {
         $map_style = basename($map_style);
         array_push($map_styles_list, $map_style);
     }
-    $map_styles_list = implode(',', $map_styles_list);
+    $map_styles_list     = implode(',', $map_styles_list);
     $map_styles_base_url = $map_styles_dir_url;
 } else {
-    $map_styles_list = '';
+    $map_styles_list     = '';
     $map_styles_base_url = '';
 }
 
@@ -161,7 +158,7 @@ $bad_dt = false;
 
 // Get entry informations
 if (!empty($_REQUEST['id'])) {
-    $params['post_id'] = $_REQUEST['id'];
+    $params['post_id']   = $_REQUEST['id'];
     $params['post_type'] = 'map';
 
     $post = dcCore::app()->blog->getPosts($params);
@@ -170,30 +167,30 @@ if (!empty($_REQUEST['id'])) {
         dcCore::app()->error->add(__('This map element does not exist.'));
         $can_view_page = false;
     } else {
-        $post_id = $post->post_id;
-        $cat_id = $post->cat_id;
-        $post_dt = date('Y-m-d H:i', strtotime($post->post_dt));
+        $post_id   = $post->post_id;
+        $cat_id    = $post->cat_id;
+        $post_dt   = date('Y-m-d H:i', strtotime($post->post_dt));
         $post_type = $post->post_type;
 
-        $post_format = $post->post_format;
-        $post_password = $post->post_password;
-        $post_url = $post->post_url;
-        $post_lang = $post->post_lang;
-        $post_title = $post->post_title;
-        $post_excerpt = $post->post_excerpt;
+        $post_format        = $post->post_format;
+        $post_password      = $post->post_password;
+        $post_url           = $post->post_url;
+        $post_lang          = $post->post_lang;
+        $post_title         = $post->post_title;
+        $post_excerpt       = $post->post_excerpt;
         $post_excerpt_xhtml = $post->post_excerpt_xhtml;
-        $post_content = $post->post_content;
+        $post_content       = $post->post_content;
         $post_content_xhtml = $post->post_content_xhtml;
-        $post_notes = $post->post_notes;
-        $post_status = $post->post_status;
-        $post_selected = (bool) $post->post_selected;
-        $post_open_comment = (bool) $post->post_open_comment;
-        $post_open_tb = (bool) $post->post_open_tb;
+        $post_notes         = $post->post_notes;
+        $post_status        = $post->post_status;
+        $post_selected      = (bool) $post->post_selected;
+        $post_open_comment  = (bool) $post->post_open_comment;
+        $post_open_tb       = (bool) $post->post_open_tb;
 
         $page_title = __('Edit map element');
 
         $can_edit_post = $post->isEditable();
-        $can_delete = $post->isDeletable();
+        $can_delete    = $post->isDeletable();
 
         $next_rs = dcCore::app()->blog->getNextPost($post, 1);
         $prev_rs = dcCore::app()->blog->getNextPost($post, -1);
@@ -230,7 +227,7 @@ if (!empty($_REQUEST['id'])) {
 
         try {
             dcCore::app()->media = new dcMedia();
-            $post_media = dcCore::app()->media->getPostMedia($post_id);
+            $post_media          = dcCore::app()->media->getPostMedia($post_id);
         } catch (Exception $e) {
         }
     }
@@ -240,7 +237,7 @@ if (!empty($_REQUEST['id'])) {
 if (!empty($_POST) && $can_edit_post) {
     $meta = dcCore::app()->meta;
 
-    $post_format = $_POST['post_format'];
+    $post_format  = $_POST['post_format'];
     $post_excerpt = $_POST['post_excerpt'];
     $post_content = $_POST['post_content'];
 
@@ -259,6 +256,7 @@ if (!empty($_POST) && $can_edit_post) {
             $post_dt = strtotime($_POST['post_dt']);
             if ($post_dt == false || $post_dt == -1) {
                 $bad_dt = true;
+
                 throw new Exception(__('Invalid publication date'));
             }
             $post_dt = date('Y-m-d H:i', $post_dt);
@@ -268,10 +266,10 @@ if (!empty($_POST) && $can_edit_post) {
     }
 
     $post_open_comment = !empty($_POST['post_open_comment']);
-    $post_open_tb = !empty($_POST['post_open_tb']);
-    $post_selected = !empty($_POST['post_selected']);
-    $post_lang = $_POST['post_lang'];
-    $post_password = !empty($_POST['post_password']) ? $_POST['post_password'] : null;
+    $post_open_tb      = !empty($_POST['post_open_tb']);
+    $post_selected     = !empty($_POST['post_selected']);
+    $post_lang         = $_POST['post_lang'];
+    $post_password     = !empty($_POST['post_password']) ? $_POST['post_password'] : null;
 
     $post_notes = $_POST['post_notes'];
 
@@ -307,19 +305,19 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
     if ($post_content == '' || $post_content == __('No description.') || $post_content == '<p>' . __('No description.') . '</p>') {
         if ($post_format == 'wiki') {
             $post_content = __('No description.');
-            $description = 'none';
+            $description  = 'none';
         } elseif ($post_format == 'xhtml') {
             $post_content = '<p>' . __('No description.') . '</p>';
-            $description = 'none';
+            $description  = 'none';
         }
     } else {
         $description = 'description';
     }
     // Create category
     if (!empty($_POST['new_cat_title']) && dcCore::app()->auth->check('categories', dcCore::app()->blog->id)) {
-        $cur_cat = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'category');
+        $cur_cat            = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'category');
         $cur_cat->cat_title = $_POST['new_cat_title'];
-        $cur_cat->cat_url = '';
+        $cur_cat->cat_url   = '';
 
         $parent_cat = !empty($_POST['new_cat_parent']) ? $_POST['new_cat_parent'] : '';
 
@@ -334,23 +332,23 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
 
     $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'post');
 
-    $cur->post_title = $post_title;
-    $cur->cat_id = ($cat_id ? $cat_id : null);
-    $cur->post_dt = $post_dt ? date('Y-m-d H:i:00', strtotime($post_dt)) : '';
-    $cur->post_type = $post_type;
-    $cur->post_format = $post_format;
-    $cur->post_password = $post_password;
-    $cur->post_lang = $post_lang;
-    $cur->post_title = $post_title;
-    $cur->post_excerpt = $post_excerpt;
+    $cur->post_title         = $post_title;
+    $cur->cat_id             = ($cat_id ? $cat_id : null);
+    $cur->post_dt            = $post_dt ? date('Y-m-d H:i:00', strtotime($post_dt)) : '';
+    $cur->post_type          = $post_type;
+    $cur->post_format        = $post_format;
+    $cur->post_password      = $post_password;
+    $cur->post_lang          = $post_lang;
+    $cur->post_title         = $post_title;
+    $cur->post_excerpt       = $post_excerpt;
     $cur->post_excerpt_xhtml = $post_excerpt_xhtml;
-    $cur->post_content = $post_content;
+    $cur->post_content       = $post_content;
     $cur->post_content_xhtml = $post_content_xhtml;
-    $cur->post_notes = $post_notes;
-    $cur->post_status = $post_status;
-    $cur->post_selected = (int) $post_selected;
-    $cur->post_open_comment = (int) $post_open_comment;
-    $cur->post_open_tb = (int) $post_open_tb;
+    $cur->post_notes         = $post_notes;
+    $cur->post_status        = $post_status;
+    $cur->post_selected      = (int) $post_selected;
+    $cur->post_open_comment  = (int) $post_open_comment;
+    $cur->post_open_tb       = (int) $post_open_tb;
 
     if (isset($_POST['post_url'])) {
         $cur->post_url = $post_url;
@@ -367,11 +365,11 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
             dcCore::app()->con->begin();
             dcCore::app()->blog->updPost($post_id, $cur);
             if (isset($_POST['element_type'])) {
-                $tags = $_POST['element_type'];
+                $tags           = $_POST['element_type'];
                 $myGmaps_center = $_POST['myGmaps_center'];
-                $myGmaps_zoom = $_POST['myGmaps_zoom'];
-                $myGmaps_type = $_POST['myGmaps_type'];
-                $meta = dcCore::app()->meta;
+                $myGmaps_zoom   = $_POST['myGmaps_zoom'];
+                $myGmaps_type   = $_POST['myGmaps_type'];
+                $meta           = dcCore::app()->meta;
 
                 $meta->delPostMeta($post_id, 'map');
                 $meta->delPostMeta($post_id, 'map_options');
@@ -405,11 +403,11 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
             dcCore::app()->callBehavior('adminAfterPostCreate', $cur, $return_id);
 
             if (isset($_POST['element_type'])) {
-                $tags = $_POST['element_type'];
+                $tags           = $_POST['element_type'];
                 $myGmaps_center = $_POST['myGmaps_center'];
-                $myGmaps_zoom = $_POST['myGmaps_zoom'];
-                $myGmaps_type = $_POST['myGmaps_type'];
-                $meta = dcCore::app()->meta;
+                $myGmaps_zoom   = $_POST['myGmaps_zoom'];
+                $myGmaps_type   = $_POST['myGmaps_type'];
+                $meta           = dcCore::app()->meta;
 
                 foreach ($meta->splitMetaValues($tags) as $tag) {
                     $meta->setPostMeta($return_id, 'map', $tag);
@@ -463,20 +461,24 @@ if ($post_id) {
     switch ($post_status) {
         case 1:
             $img_status = sprintf($img_status_pattern, __('Published'), 'check-on.png');
+
             break;
         case 0:
             $img_status = sprintf($img_status_pattern, __('Unpublished'), 'check-off.png');
+
             break;
         case -1:
             $img_status = sprintf($img_status_pattern, __('Scheduled'), 'scheduled.png');
+
             break;
         case -2:
             $img_status = sprintf($img_status_pattern, __('Pending'), 'check-wrn.png');
+
             break;
         default:
             $img_status = '';
     }
-    $edit_entry_str = __('&ldquo;%s&rdquo;');
+    $edit_entry_str  = __('&ldquo;%s&rdquo;');
     $page_title_edit = sprintf($edit_entry_str, html::escapeHTML($post_title)) . ' ' . $img_status;
 } else {
     $img_status = '';
@@ -535,9 +537,9 @@ if (is_dir($map_styles_dir_path)) {
     $list = explode(',', $map_styles_list);
     foreach ($list as $map_style) {
         $map_style_content = file_get_contents($map_styles_dir_path . '/' . $map_style);
-        $var_styles_name = pathinfo($map_style, PATHINFO_FILENAME);
-        $var_name = preg_replace('/_styles/s', '', $var_styles_name);
-        $nice_name = ucwords(preg_replace('/_/s', ' ', $var_name));
+        $var_styles_name   = pathinfo($map_style, PATHINFO_FILENAME);
+        $var_name          = preg_replace('/_styles/s', '', $var_styles_name);
+        $nice_name         = ucwords(preg_replace('/_/s', ' ', $var_name));
         echo
         'var ' . $var_styles_name . ' = ' . $map_style_content . ';' . "\n" .
         'var ' . $var_name . ' = new google.maps.StyledMapType(' . $var_styles_name . ',{name: "' . $nice_name . '"});' . "\n";
@@ -556,8 +558,8 @@ echo
 echo dcPage::breadcrumb(
     [
         html::escapeHTML(dcCore::app()->blog->name) => '',
-        __('Google Maps') => dcCore::app()->admin->getPageURL() . '&amp;do=list',
-        ($post_id ? $page_title_edit : $page_title) => ''
+        __('Google Maps')                           => dcCore::app()->admin->getPageURL() . '&amp;do=list',
+        ($post_id ? $page_title_edit : $page_title) => '',
     ]
 );
 
@@ -574,7 +576,7 @@ if ($post_id) {
     }
 
     // --BEHAVIOR-- adminPostNavLinks
-    dcCore::app()->callBehavior('adminPostNavLinks', isset($post) ? $post : null);
+    dcCore::app()->callBehavior('adminPostNavLinks', $post ?? null);
 
     echo '</p>';
 }
@@ -589,7 +591,7 @@ if (!empty($_GET['upd'])) {
 if (!empty($_GET['xconv'])) {
     $post_excerpt = $post_excerpt_xhtml;
     $post_content = $post_content_xhtml;
-    $post_format = 'xhtml';
+    $post_format  = 'xhtml';
 
     echo '<p class="message">' . __('Don\'t forget to validate your XHTML conversion by saving your post.') . '</p>';
 }
@@ -614,7 +616,7 @@ if ($can_edit_post) {
                 'post_dt' => '<p><label for="post_dt">' . __('Publication date and hour') . '</label>' .
                     form::datetime('post_dt', [
                         'default' => html::escapeHTML(dt::str('%Y-%m-%dT%H:%M', strtotime($post_dt))),
-                        'class' => ($bad_dt ? 'invalid' : ''),
+                        'class'   => ($bad_dt ? 'invalid' : ''),
                     ]) .
                     '</p>',
                 'post_lang' => '<p><label for="post_lang">' . __('Element language') . '</label>' .
@@ -627,7 +629,7 @@ if ($can_edit_post) {
                     '<a id="convert-xhtml" class="button' . ($post_id && $post_format != 'wiki' ? ' hide' : '') . '" href="' .
                     dcCore::app()->adminurl->get('admin.post', ['id' => $post_id, 'xconv' => '1']) .
                     '">' .
-                    __('Convert to XHTML') . '</a></p></div>']],
+                    __('Convert to XHTML') . '</a></p></div>', ], ],
         'options-box' => [
             'title' => __('Filing'),
             'items' => [
@@ -649,8 +651,8 @@ if ($can_edit_post) {
                         '</label></p>' .
                         '</div>'
                     : '') .
-                    '</div>']],
-        ]);
+                    '</div>', ], ],
+    ]);
 
     $main_items = new ArrayObject(
         [
@@ -698,7 +700,7 @@ if ($can_edit_post) {
     );
 
     // --BEHAVIOR-- adminPostFormItems
-    dcCore::app()->callBehavior('adminPostFormItems', $main_items, $sidebar_items, isset($post) ? $post : null);
+    dcCore::app()->callBehavior('adminPostFormItems', $main_items, $sidebar_items, $post ?? null);
 
     echo '<div class="multi-part" title="' . ($post_id ? __('Edit map element') : __('New map element')) . '" id="edit-entry">';
     echo '<form action="' . dcCore::app()->admin->getPageURL() . '&amp;do=edit" method="post" id="entry-form">';
@@ -722,10 +724,10 @@ if ($can_edit_post) {
     if (isset($post)) {
         $meta_rs = $meta->getMetaStr($post->post_meta, 'map_options');
         if ($meta_rs) {
-            $map_options = explode(',', $meta_rs);
+            $map_options    = explode(',', $meta_rs);
             $myGmaps_center = $map_options[0] . ',' . $map_options[1];
-            $myGmaps_zoom = $map_options[2];
-            $myGmaps_type = $map_options[3];
+            $myGmaps_zoom   = $map_options[2];
+            $myGmaps_type   = $map_options[3];
         }
     }
 
@@ -753,19 +755,15 @@ if ($can_edit_post) {
     echo '<div id="entry-sidebar">';
 
     foreach ($sidebar_items as $id => $c) {
-        
         if (!empty($c['title'])) {
-            echo '<div id="'.$id.'" class="sb-box">';
-            echo '<h4>'.$c['title'].'</h4>';
+            echo '<div id="' . $id . '" class="sb-box">';
+            echo '<h4>' . $c['title'] . '</h4>';
             foreach ($c['items'] as $e_name => $e_content) {
                 echo $e_content;
             }
             echo '</div>';
         }
-
-        
     }
-
 
     echo '</div>';		// End #entry-sidebar
 
