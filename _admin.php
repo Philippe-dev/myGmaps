@@ -21,8 +21,8 @@ dcCore::app()->menu[dcAdmin::MENU_BLOG]->addItem(
     dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)
 );
 
-dcCore::app()->addBehavior('adminDashboardFavs', ['myGmapsBehaviors', 'dashboardFavs']);
-dcCore::app()->addBehavior('adminDashboardFavsIcon', ['myGmapsBehaviors', 'dashboardFavsIcon']);
+dcCore::app()->addBehavior('adminDashboardFavoritesV2', ['myGmapsBehaviors', 'dashboardFavorites']);
+dcCore::app()->addBehavior('adminDashboardFavsIconV2', ['myGmapsBehaviors', 'dashboardFavsIcon']);
 dcCore::app()->addBehavior('adminPageHelpBlock', ['myGmapsBehaviors', 'adminPageHelpBlock']);
 dcCore::app()->addBehavior('adminPageHTTPHeaderCSP', ['myGmapsBehaviors', 'adminPageHTTPHeaderCSP']);
 
@@ -76,20 +76,19 @@ class myGmapsBehaviors
         $blocks[] = 'myGmaps_post';
     }
 
-    public static function dashboardFavs($core, $favs)
+    public static function dashboardFavorites(dcFavorites $favorites)
     {
-        $favs['myGmaps'] = new ArrayObject([
-            'myGmaps',
-            __('Google Maps'),
-            'plugin.php?p=myGmaps&amp;do=list',
-            [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
-            [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
-            dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]),
-            null,
-            null, ]);
+        $favorites->register('myGmaps', [
+            'title'       => __('Google Maps'),
+            'url'         => dcCore::app()->adminurl->get('admin.plugin.myGmaps') . '&amp;do=list',
+            'small-icon'  => [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
+            'large-icon'  => [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
+            'permissions' => dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN,
+            ]),
+        ]);
     }
 
-    public static function dashboardFavsIcon($core, $name, $icon)
+    public static function dashboardFavsIcon($name, $icon)
     {
         if ($name == 'myGmaps') {
             $params              = new ArrayObject();
