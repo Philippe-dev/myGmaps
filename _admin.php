@@ -188,7 +188,7 @@ class myGmapsPostBehaviors
         '$(document).ready(function() {' . "\n" .
             '$(\'#gmap-area label\').toggleWithLegend($(\'#post-gmap\'), {' . "\n" .
                 'legend_click: true,' . "\n" .
-                'cookie: \'dcx_gmap_detail\'' . "\n" .
+                'user_pref: \'dcx_gmap_detail\'' . "\n" .
             '})' . "\n" .
             '$(\'a.map-remove\').on(\'click\', function() {' . "\n" .
             'msg = \'' . __('Are you sure you want to remove this map?') . '\';' . "\n" .
@@ -318,7 +318,7 @@ class myGmapsPostBehaviors
 
         if ($elements_list == '' && $map_options == '') {
             $item = '<div class="area" id="gmap-area">' .
-            '<p class="smart-title">' . __('Google Map:') . '</p>' .
+            '<label class="bold" for="post-gmap">'.__('Google Map:').'</label>'.
             '<div id="post-gmap" >' .
             '<p>' . __('No map') . '</p>' .
             '<p><a href="' . $addmapurl . '">' . __('Add a map to entry') . '</a></p>' .
@@ -326,7 +326,7 @@ class myGmapsPostBehaviors
             '</div>';
         } elseif ($elements_list == '' && $map_options != '') {
             $item = '<div class="area" id="gmap-area">' .
-            '<p class="smart-title">' . __('Google Map:') . '</p>' .
+            '<label class="bold" for="post-gmap">'.__('Google Map:').'</label>'.
             '<div id="post-gmap" >' .
             '<div class="map_toolbar">' . __('Search:') . '<span class="map_spacer">&nbsp;</span>' .
                 '<input size="50" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="' . __('OK') . '" />' .
@@ -346,7 +346,7 @@ class myGmapsPostBehaviors
             '</div>';
         } else {
             $item = '<div class="area" id="gmap-area">' .
-            '<p class="smart-title">' . __('Google Map:') . '</p>' .
+            '<label class="bold" for="post-gmap">'.__('Google Map:').'</label>'.
             '<div id="post-gmap" >' .
             '<div class="map_toolbar">' . __('Search:') . '<span class="map_spacer">&nbsp;</span>' .
                 '<input size="50" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="' . __('OK') . '" />' .
