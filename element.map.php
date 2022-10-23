@@ -508,7 +508,8 @@ echo
 '#metas-box {display:none}' . "\n" .
 '</style>';
 
-echo '<script>' . "\n" .
+echo
+'<script>' . "\n" .
 '//<![CDATA[' . "\n" .
 'var stroke_color_msg = \'' . __('Stroke color') . '\';' . "\n" .
 'var stroke_opacity_msg = \'' . __('Stroke opacity') . '\';' . "\n" .
