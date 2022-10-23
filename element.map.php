@@ -755,14 +755,14 @@ if ($can_edit_post) {
     echo '<div id="entry-sidebar">';
 
     foreach ($sidebar_items as $id => $c) {
+        echo '<div id="' . $id . '" class="sb-box">';
         if (!empty($c['title'])) {
-            echo '<div id="' . $id . '" class="sb-box">';
             echo '<h4>' . $c['title'] . '</h4>';
-            foreach ($c['items'] as $e_name => $e_content) {
-                echo $e_content;
-            }
-            echo '</div>';
         }
+        foreach ($c['items'] as $e_name => $e_content) {
+            echo $e_content;
+        }
+        echo '</div>';
     }
 
     echo '</div>';		// End #entry-sidebar
