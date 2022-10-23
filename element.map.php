@@ -503,8 +503,12 @@ if ($post_id) {
 ?>
     <?php
 
-    echo
-    '<script>' . "\n" .
+echo
+'<style type="text/css">' . "\n" .
+'#metas-box {display:none}' . "\n" .
+'</style>';
+
+echo '<script>' . "\n" .
 '//<![CDATA[' . "\n" .
 'var stroke_color_msg = \'' . __('Stroke color') . '\';' . "\n" .
 'var stroke_opacity_msg = \'' . __('Stroke opacity') . '\';' . "\n" .
@@ -521,7 +525,7 @@ if ($post_id) {
 'var directions_end_msg = \'' . __('End:') . '\';' . "\n" .
 'var directions_show_msg = \'' . __('Display directions panel in public map') . '\';' . "\n" .
 '//]]>' . "\n" .
-    '</script>';
+'</script>';
 
 // Add default and user map styles
 
