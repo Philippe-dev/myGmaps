@@ -238,7 +238,7 @@ class adminMapsMiniList extends adminGenericList
     private function postLine($id, $type)
     {
         $img = '<img alt="%1$s" title="%1$s" src="images/%2$s" />';
-        switch ($rs->post_status) {
+        switch ($this->rs->post_status) {
             case dcBlog::POST_PUBLISHED:
                 $img_status = sprintf($img, __('published'), 'check-on.png');
         
