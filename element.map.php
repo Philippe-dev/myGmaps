@@ -73,20 +73,15 @@ $status_combo = dcAdminCombos::getPostStatusesCombo();
 
 $img_status_pattern = '<img class="img_select_option" alt="%1$s" title="%1$s" src="images/%2$s" />';
 
-// Formaters combo
-if (version_compare(DC_VERSION, '2.7-dev', '>=')) {
-    $core_formaters    = dcCore::app()->getFormaters();
-    $available_formats = ['' => ''];
-    foreach ($core_formaters as $editor => $formats) {
-        foreach ($formats as $format) {
-            $available_formats[$format] = $format;
-        }
-    }
-} else {
-    foreach (dcCore::app()->getFormaters() as $v) {
-        $available_formats[$v] = $v;
+// Formats combo
+$core_formaters    = dcCore::app()->getFormaters();
+$available_formats = ['' => ''];
+foreach ($core_formaters as $formats) {
+    foreach ($formats as $format) {
+        $available_formats[dcCore::app()->getFormaterName($format)] = $format;
     }
 }
+dcCore::app()->admin->available_formats = $available_formats;
 
 // Languages combo
 $rs         = dcCore::app()->blog->getLangs(['order' => 'asc']);
@@ -634,7 +629,7 @@ if ($can_edit_post) {
                     '<a id="convert-xhtml" class="button' . ($post_id && $post_format != 'wiki' ? ' hide' : '') . '" href="' .
                     dcCore::app()->adminurl->get('admin.post', ['id' => $post_id, 'xconv' => '1']) .
                     '">' .
-                    __('Convert to XHTML') . '</a></p></div>', ], ],
+                    __('Convert to HTML') . '</a></p></div>', ], ],
         'options-box' => [
             'title' => __('Filing'),
             'items' => [
