@@ -593,7 +593,7 @@ if (!empty($_GET['xconv'])) {
     $post_content = $post_content_xhtml;
     $post_format  = 'xhtml';
 
-    echo '<p class="message">' . __('Don\'t forget to validate your XHTML conversion by saving your post.') . '</p>';
+    echo '<p class="message">' . __('Don\'t forget to validate your HTML conversion by saving your post.') . '</p>';
 }
 
 // Exit if we cannot view page
@@ -625,11 +625,7 @@ if ($can_edit_post) {
                 'post_format' => '<div>' .
                     '<h5 id="label_format"><label for="post_format" class="classic">' . __('Text formatting') . '</label></h5>' .
                     '<p>' . form::combo('post_format', $available_formats, $post_format, 'maximal') . '</p>' .
-                    '<p class="format_control control_no_xhtml">' .
-                    '<a id="convert-xhtml" class="button' . ($post_id && $post_format != 'wiki' ? ' hide' : '') . '" href="' .
-                    dcCore::app()->adminurl->get('admin.post', ['id' => $post_id, 'xconv' => '1']) .
-                    '">' .
-                    __('Convert to HTML') . '</a></p></div>', ], ],
+                    '</div>', ], ],
         'options-box' => [
             'title' => __('Filing'),
             'items' => [

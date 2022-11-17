@@ -30,7 +30,6 @@ class dcMapsActionsPage extends dcActionsPage
         // We could have added a behavior here, but we want default action
         // to be setup first
         dcDefaultMapsActions::adminMapsActionsPage(dcCore::app(), $this);
-        //$this->core->callBehavior('adminPostsActionsPage',$this->core,$this);
     }
 
     public function beginPage($breadcrumb = '', $head = '')
