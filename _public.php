@@ -96,7 +96,7 @@ class dcMyGmapsPublic
         return $meta->getMetaStr($rs->post_meta, 'map');
     }
 
-    public static function publicHeadContent($core, $_ctx)
+    public static function publicHeadContent()
     {
         // Settings
         $s           = dcCore::app()->blog->settings->myGmaps;

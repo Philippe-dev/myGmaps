@@ -454,19 +454,19 @@ if ($post_editor && !empty($post_editor[$post_format])) {
 
 if ($post_id) {
     switch ($post_status) {
-        case 1:
+        case dcBlog::POST_PUBLISHED:
             $img_status = sprintf($img_status_pattern, __('Published'), 'check-on.png');
 
             break;
-        case 0:
+        case dcBlog::POST_UNPUBLISHED:
             $img_status = sprintf($img_status_pattern, __('Unpublished'), 'check-off.png');
 
             break;
-        case -1:
+        case dcBlog::POST_SCHEDULED:
             $img_status = sprintf($img_status_pattern, __('Scheduled'), 'scheduled.png');
 
             break;
-        case -2:
+        case dcBlog::POST_PENDING:
             $img_status = sprintf($img_status_pattern, __('Pending'), 'check-wrn.png');
 
             break;

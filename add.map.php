@@ -352,21 +352,21 @@ if (!dcCore::app()->error->flag()) {
 
     if ($id) {
         switch ($post_status) {
-            case 1:
-                $img_status = sprintf($img_status_pattern, __('published'), 'check-on.png');
-
+            case dcBlog::POST_PUBLISHED:
+                $img_status = sprintf($img_status_pattern, __('Published'), 'check-on.png');
+    
                 break;
-            case 0:
-                $img_status = sprintf($img_status_pattern, __('unpublished'), 'check-off.png');
-
+            case dcBlog::POST_UNPUBLISHED:
+                $img_status = sprintf($img_status_pattern, __('Unpublished'), 'check-off.png');
+    
                 break;
-            case -1:
-                $img_status = sprintf($img_status_pattern, __('scheduled'), 'scheduled.png');
-
+            case dcBlog::POST_SCHEDULED:
+                $img_status = sprintf($img_status_pattern, __('Scheduled'), 'scheduled.png');
+    
                 break;
-            case -2:
-                $img_status = sprintf($img_status_pattern, __('pending'), 'check-wrn.png');
-
+            case dcBlog::POST_PENDING:
+                $img_status = sprintf($img_status_pattern, __('Pending'), 'check-wrn.png');
+    
                 break;
             default:
                 $img_status = '';
