@@ -13,11 +13,11 @@ if (!defined('DC_CONTEXT_ADMIN')) {
     exit;
 }
 
-$m_version = dcCore::app()->plugins->moduleInfo('myGmaps', 'version');
+$new_version = dcCore::app()->plugins->moduleInfo('myGmaps', 'version');
 
-$i_version = dcCore::app()->getVersion('myGmaps');
+$old_version = dcCore::app()->getVersion('myGmaps');
 
-if (version_compare($i_version, $m_version, '>=')) {
+if (version_compare((string) $old_version, $new_version, '>=')) {
     return;
 }
 
@@ -32,6 +32,6 @@ $s->put('myGmaps_zoom', '12', 'integer', 'Default maps zoom level', false, true)
 $s->put('myGmaps_type', 'roadmap', 'string', 'Default maps type', false, true);
 $s->put('myGmaps_API_key', 'AIzaSyCUgB8ZVQD88-T4nSgDlgVtH5fm0XcQAi8', 'string', 'Google Maps browser API key', false, true);
 
-dcCore::app()->setVersion('myGmaps', $m_version);
+dcCore::app()->setVersion('myGmaps', $new_version);
 
 return true;
