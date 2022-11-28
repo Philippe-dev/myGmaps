@@ -13,11 +13,10 @@ if (!defined('DC_CONTEXT_ADMIN')) {
     exit;
 }
 
-$new_version = dcCore::app()->plugins->moduleInfo('myGmaps', 'version');
+$new_version = (string) dcCore::app()->plugins->moduleInfo('myGmaps', 'version');
+$old_version = (string) dcCore::app()->getVersion('myGmaps');
 
-$old_version = dcCore::app()->getVersion('myGmaps');
-
-if (version_compare((string) $old_version, $new_version, '>=')) {
+if (version_compare($old_version, $new_version, '>=')) {
     return;
 }
 
