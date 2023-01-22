@@ -183,7 +183,7 @@ class myGmapsPostBehaviors
         }
 
         return
-        '<script src="https://maps.googleapis.com/maps/api/js?key=' . $s->myGmaps_API_key . '&amp;libraries=places"></script>' . "\n" .
+        '<script src="https://maps.googleapis.com/maps/api/js?key=' . $s->myGmaps_API_key . '&amp;libraries=places&amp;callback=Function.prototype"></script>' . "\n" .
         '<script>' . "\n" .
         '$(document).ready(function() {' . "\n" .
             '$(\'#gmap-area label\').toggleWithLegend($(\'#post-gmap\'), {' . "\n" .

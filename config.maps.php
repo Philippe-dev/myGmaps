@@ -311,7 +311,7 @@ if (!empty($_POST['saveconfig'])) {
 <html>
 	<head>
 		<title><?php echo $page_title; ?></title>
-		<script src="<?php echo 'https://maps.googleapis.com/maps/api/js?key=' . $s->myGmaps_API_key . '&amp;libraries=places'; ?>"></script>
+		<script src="<?php echo 'https://maps.googleapis.com/maps/api/js?key=' . $s->myGmaps_API_key . '&amp;libraries=places&amp;callback=Function.prototype'; ?>"></script>
 
 		<?php
         $form_filter_title = __('Show filters and display options');

@@ -52,7 +52,7 @@ class mygmapsPublic
     {
         $s = dcCore::app()->blog->settings->myGmaps;
 
-        return '<script src="https://maps.googleapis.com/maps/api/js?key=' . $s->myGmaps_API_key . '"></script>' . "\n";
+        return '<script src="https://maps.googleapis.com/maps/api/js?key=' . $s->myGmaps_API_key . '&amp;callback=Function.prototype"></script>' . "\n";
     }
 
     public static function getMapOptions(array $aOptions)
