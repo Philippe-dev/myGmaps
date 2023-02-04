@@ -31,7 +31,7 @@ class adminMapsList extends adminGenericList
                     $entries[(int) $v] = true;
                 }
             }
-            $html_block = '<div class="table-outer">' .
+            $html_block = '<div class="table-outer clear">' .
             '<table>';
 
             if ($filter) {
@@ -79,6 +79,16 @@ class adminMapsList extends adminGenericList
             '<th scope="col">' . __('Status') . '</th>' .
             '</tr>%s</table></div>';
 
+            $fmt = fn ($title, $image) => sprintf('<img alt="%1$s" title="%1$s" src="images/%2$s" /> %1$s', $title, $image);
+
+            $html_block .= '<p class="info">' . __('Legend: ') .
+                $fmt(__('Published'), 'check-on.png') . ' - ' .
+                $fmt(__('Unpublished'), 'check-off.png') . ' - ' .
+                $fmt(__('Scheduled'), 'scheduled.png') . ' - ' .
+                $fmt(__('Pending'), 'check-wrn.png') . ' - ' .
+                $fmt(__('Selected'), 'selected.png') .
+                '</p>';
+
             if ($enclose_block) {
                 $html_block = sprintf($enclose_block, $html_block);
             }
@@ -94,15 +104,6 @@ class adminMapsList extends adminGenericList
             }
 
             echo $blocks[1];
-
-            $fmt = fn ($title, $image) => sprintf('<img alt="%1$s" title="%1$s" src="images/%2$s" /> %1$s', $title, $image);
-            echo '<p class="info">' . __('Legend: ') .
-                $fmt(__('Published'), 'check-on.png') . ' - ' .
-                $fmt(__('Unpublished'), 'check-off.png') . ' - ' .
-                $fmt(__('Scheduled'), 'scheduled.png') . ' - ' .
-                $fmt(__('Pending'), 'check-wrn.png') . ' - ' .
-                $fmt(__('Selected'), 'selected.png') .
-                '</p>';
 
             echo $pager->getLinks();
         }
