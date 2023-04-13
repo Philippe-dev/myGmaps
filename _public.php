@@ -25,7 +25,7 @@ class dcMyGmapsPublic
         $my_params['post_id']    = $post_id;
         $my_params['no_content'] = true;
         $my_params['post_type']  = ['post', 'page'];
-
+        dcCore::app()->blog->withoutPassword(false);
         $rs = dcCore::app()->blog->getPosts($my_params);
 
         return $meta->getMetaStr($rs->post_meta, 'map_options');
@@ -37,7 +37,7 @@ class dcMyGmapsPublic
         $my_params['post_id']    = $post_id;
         $my_params['no_content'] = true;
         $my_params['post_type']  = ['post', 'page'];
-
+        dcCore::app()->blog->withoutPassword(false);
         $rs = dcCore::app()->blog->getPosts($my_params);
 
         return $meta->getMetaStr($rs->post_meta, 'map');
