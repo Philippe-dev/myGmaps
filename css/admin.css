@@ -265,3 +265,7 @@ button.delete_map {
 #credit-control a {
   color: #000
 }
+
+.add {
+  font-size: 1.5rem;
+}

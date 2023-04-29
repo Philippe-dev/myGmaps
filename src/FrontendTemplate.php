@@ -9,7 +9,14 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
-class mygmapsPublic
+
+declare(strict_types=1);
+
+namespace Dotclear\Plugin\myGmaps;
+
+use dcCore;
+
+class FrontendTemplate
 {
     public static function publicHtmlContent(array $aOptions)
     {

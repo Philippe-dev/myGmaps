@@ -9,30 +9,148 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
-if (!defined('DC_CONTEXT_ADMIN')) {
-    return;
-}
+declare(strict_types=1);
 
-dcCore::app()->menu[dcAdmin::MENU_BLOG]->addItem(
-    __('Google Maps'),
-    dcCore::app()->adminurl->get('admin.plugin.myGmaps') . '&amp;do=list',
-    [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
-    preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.myGmaps')) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
-    dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)
-);
+namespace Dotclear\Plugin\myGmaps;
 
-dcCore::app()->addBehavior('adminDashboardFavoritesV2', ['myGmapsBehaviors', 'dashboardFavorites']);
-dcCore::app()->addBehavior('adminDashboardFavsIconV2', ['myGmapsBehaviors', 'dashboardFavsIcon']);
-dcCore::app()->addBehavior('adminPageHelpBlock', ['myGmapsBehaviors', 'adminPageHelpBlock']);
-dcCore::app()->addBehavior('adminPageHTTPHeaderCSP', ['myGmapsBehaviors', 'adminPageHTTPHeaderCSP']);
+use adminUserPref;
+use dcAdmin;
+use dcAuth;
+use dcCore;
+use dcFavorites;
+use dcPage;
+use dcNsProcess;
+use ArrayObject;
+use dcAdminFilter;
+use Dotclear\Helper\Html\Html;
+use Dotclear\Helper\Network\Http;
 
-Clearbricks::lib()->autoload([
-    'adminMapsMiniList' => __DIR__ . '/inc/lib.pager.php',
-    'mygmapsPublic'     => __DIR__ . '/inc/class.mygmaps.public.php',
-]);
-
-class myGmapsBehaviors
+class Backend extends dcNsProcess
 {
+    public static function init(): bool
+    {
+        self::$init = defined('DC_CONTEXT_ADMIN');
+
+        return self::$init;
+    }
+
+    public static function process(): bool
+    {
+        if (!self::$init) {
+            return false;
+        }
+
+        dcCore::app()->menu[dcAdmin::MENU_BLOG]->addItem(
+            __('Google Maps'),
+            dcCore::app()->adminurl->get('admin.plugin.myGmaps') . '&amp;do=list',
+            [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
+            preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.myGmaps')) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
+            dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)
+        );
+
+        /* Register favorite */
+        dcCore::app()->addBehavior('adminDashboardFavoritesV2', function (dcFavorites $favs) {
+            $favs->register('myGmaps', [
+                'title'       => __('Google Maps'),
+                'url'         => dcCore::app()->adminurl->get('admin.plugin.myGmaps'),
+                'small-icon'  => [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
+                'large-icon'  => [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
+                'permissions' => dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]),
+            ]);
+        });
+
+        dcCore::app()->addBehavior('adminPageHelpBlock', [self::class, 'adminPageHelpBlock']);
+        dcCore::app()->addBehavior('adminPageHTTPHeaderCSP', [self::class, 'adminPageHTTPHeaderCSP']);
+
+        dcCore::app()->addBehavior('adminPostForm', [self::class,  'adminPostForm']);
+        dcCore::app()->addBehavior('adminPageForm', [self::class, 'adminPostForm']);
+        dcCore::app()->addBehavior('adminBeforePostUpdate', [self::class, 'adminBeforePostUpdate']);
+        dcCore::app()->addBehavior('adminBeforePageUpdate', [self::class, 'adminBeforePostUpdate']);
+
+        dcCore::app()->addBehavior('adminPostFilterV2', [self::class,  'adminPostFilter']);
+        dcCore::app()->addBehavior('adminPostHeaders', [self::class,  'postHeaders']);
+        dcCore::app()->addBehavior('adminPageHeaders', [self::class,  'postHeaders']);
+
+        (isset($_GET['p']) && $_GET['p'] == 'pages') ? $type = 'page' : $type = 'post';
+
+        if (isset($_GET['remove']) && $_GET['remove'] == 'map') {
+            try {
+                $post_id = $_GET['id'];
+                $meta    = dcCore::app()->meta;
+                $meta->delPostMeta($post_id, 'map');
+                $meta->delPostMeta($post_id, 'map_options');
+
+                dcCore::app()->blog->triggerBlog();
+
+                if ($type == 'page') {
+                    Http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1#gmap-area');
+                } elseif ($type == 'post') {
+                    Http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1#gmap-area');
+                }
+            } catch (Exception $e) {
+                dcCore::app()->error->add($e->getMessage());
+            }
+        } elseif (!empty($_GET['remove']) && is_numeric($_GET['remove'])) {
+            try {
+                $post_id = $_GET['id'];
+
+                $meta = dcCore::app()->meta;
+                $meta->delPostMeta($post_id, 'map', $_GET['remove']);
+
+                dcCore::app()->blog->triggerBlog();
+
+                if ($type == 'page') {
+                    Http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1#gmap-area');
+                } elseif ($type == 'post') {
+                    Http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1#gmap-area');
+                }
+            } catch (Exception $e) {
+                dcCore::app()->error->add($e->getMessage());
+            }
+        } elseif (!empty($_GET['add']) && $_GET['add'] == 'map') {
+            try {
+                $post_id        = $_GET['id'];
+                $myGmaps_center = $_GET['center'];
+                $myGmaps_zoom   = $_GET['zoom'];
+                $myGmaps_type   = $_GET['type'];
+
+                $meta = dcCore::app()->meta;
+                $meta->delPostMeta($post_id, 'map_options');
+
+                $map_options = $myGmaps_center . ',' . $myGmaps_zoom . ',' . $myGmaps_type;
+                $meta->setPostMeta($post_id, 'map_options', $map_options);
+
+                dcCore::app()->blog->triggerBlog();
+
+                if ($type == 'page') {
+                    Http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1#gmap-area');
+                } elseif ($type == 'post') {
+                    Http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1#gmap-area');
+                }
+            } catch (Exception $e) {
+                dcCore::app()->error->add($e->getMessage());
+            }
+        }
+
+        return true;
+    }
+
+    public static function adminPageHelpBlock($blocks)
+    {
+        $found = false;
+        foreach ($blocks as $block) {
+            if ($block == 'core_post') {
+                $found = true;
+
+                break;
+            }
+        }
+        if (!$found) {
+            return null;
+        }
+        $blocks[] = 'myGmaps_post';
+    }
+
     public static function adminPageHTTPHeaderCSP($csp)
     {
         if (isset($csp['default-src'])) {
@@ -60,186 +178,12 @@ class myGmapsBehaviors
         }
     }
 
-    public static function adminPageHelpBlock($blocks)
+    public static function adminPostForm($post)
     {
-        $found = false;
-        foreach ($blocks as $block) {
-            if ($block == 'core_post') {
-                $found = true;
-
-                break;
-            }
-        }
-        if (!$found) {
-            return null;
-        }
-        $blocks[] = 'myGmaps_post';
-    }
-
-    public static function dashboardFavorites(dcFavorites $favorites)
-    {
-        $favorites->register('myGmaps', [
-            'title'       => __('Google Maps'),
-            'url'         => dcCore::app()->adminurl->get('admin.plugin.myGmaps') . '&amp;do=list',
-            'small-icon'  => [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
-            'large-icon'  => [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
-            'permissions' => dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN,
-            ]),
-        ]);
-    }
-
-    public static function dashboardFavsIcon($name, $icon)
-    {
-        if ($name == 'myGmaps') {
-            $params              = new ArrayObject();
-            $params['post_type'] = 'map';
-            $page_count          = dcCore::app()->blog->getPosts($params, true)->f(0);
-            if ($page_count > 0) {
-                $str_pages = ($page_count > 1) ? __('%d map elements') : __('%d map element');
-                $icon[0]   = __('Google Maps') . '<br />' . sprintf($str_pages, $page_count);
-            } else {
-                $icon[0] = __('Google Maps');
-            }
-        }
-    }
-}
-
-(isset($_GET['p']) && $_GET['p'] == 'pages') ? $type = 'page' : $type = 'post';
-
-if (isset($_GET['remove']) && $_GET['remove'] == 'map') {
-    try {
-        $post_id = $_GET['id'];
-        $meta    = dcCore::app()->meta;
-        $meta->delPostMeta($post_id, 'map');
-        $meta->delPostMeta($post_id, 'map_options');
-
-        dcCore::app()->blog->triggerBlog();
-
-        if ($type == 'page') {
-            http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1#gmap-area');
-        } elseif ($type == 'post') {
-            http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1#gmap-area');
-        }
-    } catch (Exception $e) {
-        dcCore::app()->error->add($e->getMessage());
-    }
-} elseif (!empty($_GET['remove']) && is_numeric($_GET['remove'])) {
-    try {
-        $post_id = $_GET['id'];
-
-        $meta = dcCore::app()->meta;
-        $meta->delPostMeta($post_id, 'map', (int) $_GET['remove']);
-
-        dcCore::app()->blog->triggerBlog();
-
-        if ($type == 'page') {
-            http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1#gmap-area');
-        } elseif ($type == 'post') {
-            http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1#gmap-area');
-        }
-    } catch (Exception $e) {
-        dcCore::app()->error->add($e->getMessage());
-    }
-} elseif (!empty($_GET['add']) && $_GET['add'] == 'map') {
-    try {
-        $post_id        = $_GET['id'];
-        $myGmaps_center = $_GET['center'];
-        $myGmaps_zoom   = $_GET['zoom'];
-        $myGmaps_type   = $_GET['type'];
-
-        $meta = dcCore::app()->meta;
-        $meta->delPostMeta($post_id, 'map_options');
-
-        $map_options = $myGmaps_center . ',' . $myGmaps_zoom . ',' . $myGmaps_type;
-        $meta->setPostMeta($post_id, 'map_options', $map_options);
-
-        dcCore::app()->blog->triggerBlog();
-
-        if ($type == 'page') {
-            http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1#gmap-area');
-        } elseif ($type == 'post') {
-            http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1#gmap-area');
-        }
-    } catch (Exception $e) {
-        dcCore::app()->error->add($e->getMessage());
-    }
-}
-
-dcCore::app()->addBehavior('adminPostHeaders', ['myGmapsPostBehaviors', 'postHeaders']);
-dcCore::app()->addBehavior('adminPageHeaders', ['myGmapsPostBehaviors', 'postHeaders']);
-dcCore::app()->addBehavior('adminPostFormItems', ['myGmapsPostBehaviors', 'adminPostFormItems']);
-dcCore::app()->addBehavior('adminPageFormItems', ['myGmapsPostBehaviors', 'adminPostFormItems']);
-dcCore::app()->addBehavior('adminBeforePostUpdate', ['myGmapsPostBehaviors', 'adminBeforePostUpdate']);
-dcCore::app()->addBehavior('adminBeforePageUpdate', ['myGmapsPostBehaviors', 'adminBeforePostUpdate']);
-
-class myGmapsPostBehaviors
-{
-    public static function postHeaders()
-    {
-        $s = dcCore::app()->blog->settings->myGmaps;
-
-        if (!$s->myGmaps_enabled) {
-            return;
-        }
-
-        return
-        '<script src="https://maps.googleapis.com/maps/api/js?key=' . $s->myGmaps_API_key . '&amp;libraries=places&amp;callback=Function.prototype"></script>' . "\n" .
-        '<script>' . "\n" .
-        '$(document).ready(function() {' . "\n" .
-            '$(\'#gmap-area label\').toggleWithLegend($(\'#post-gmap\'), {' . "\n" .
-                'legend_click: true,' . "\n" .
-                'user_pref: \'dcx_gmap_detail\'' . "\n" .
-            '})' . "\n" .
-            '$(\'a.map-remove\').on(\'click\', function() {' . "\n" .
-            'msg = \'' . __('Are you sure you want to remove this map?') . '\';' . "\n" .
-            'if (!window.confirm(msg)) {' . "\n" .
-                'return false;' . "\n" .
-            '}' . "\n" .
-            '});' . "\n" .
-            '$(\'a.element-remove\').on(\'click\', function() {' . "\n" .
-            'msg = \'' . __('Are you sure you want to remove this element?') . '\';' . "\n" .
-            'if (!window.confirm(msg)) {' . "\n" .
-                'return false;' . "\n" .
-            '}' . "\n" .
-            '});' . "\n" .
-        '});' . "\n" .
-        '</script>' . "\n" .
-        '<link rel="stylesheet" type="text/css" href="index.php?pf=myGmaps/css/admin.css" />' . "\n";
-    }
-
-    public static function adminBeforePostUpdate($cur, $post_id)
-    {
-        $s = dcCore::app()->blog->settings->myGmaps;
-
-        $my_params['post_id']    = $post_id;
-        $my_params['no_content'] = true;
-        $my_params['post_type']  = ['post', 'page'];
-
-        $rs = dcCore::app()->blog->getPosts($my_params);
-
-        if (!$s->myGmaps_enabled) {
-            return;
-        }
-
-        if (isset($_POST['myGmaps_center']) && $_POST['myGmaps_center'] != '') {
-            $myGmaps_center = $_POST['myGmaps_center'];
-            $myGmaps_zoom   = $_POST['myGmaps_zoom'];
-            $myGmaps_type   = $_POST['myGmaps_type'];
-            $meta           = dcCore::app()->meta;
-
-            $meta->delPostMeta($post_id, 'map_options');
-
-            $map_options = $myGmaps_center . ',' . $myGmaps_zoom . ',' . $myGmaps_type;
-            $meta->setPostMeta($post_id, 'map_options', $map_options);
-        }
-    }
-
-    public static function adminPostFormItems($main_items, $sidebar_items, $post)
-    {
-        $s         = dcCore::app()->blog->settings->myGmaps;
+        $settings  = dcCore::app()->blog->settings->myGmaps;
         $postTypes = ['post', 'page'];
 
-        if (!$s->myGmaps_enabled) {
+        if (!$settings->myGmaps_enabled) {
             return;
         }
         if (is_null($post) || !in_array($post->post_type, $postTypes)) {
@@ -281,9 +225,9 @@ class myGmapsPostBehaviors
             $myGmaps_zoom   = $map_options[2];
             $myGmaps_type   = $map_options[3];
         } else {
-            $myGmaps_center = $s->myGmaps_center;
-            $myGmaps_zoom   = $s->myGmaps_zoom;
-            $myGmaps_type   = $s->myGmaps_type;
+            $myGmaps_center = $settings->myGmaps_center;
+            $myGmaps_zoom   = $settings->myGmaps_zoom;
+            $myGmaps_type   = $settings->myGmaps_type;
         }
 
         $map_js = '<script src="' . DC_ADMIN_URL . '?pf=myGmaps/js/add.map.js"></script>' .
@@ -317,16 +261,18 @@ class myGmapsPostBehaviors
         }
 
         if ($elements_list == '' && $map_options == '') {
-            $item = '<div class="area" id="gmap-area">' .
+            echo '<div class="area" id="gmap-area">' .
             '<label class="bold" for="post-gmap">' . __('Google Map:') . '</label>' .
+            '<span class="form-note">' . __('Map attached to this entry.') . '</span>' .
             '<div id="post-gmap" >' .
             '<p>' . __('No map') . '</p>' .
             '<p><a href="' . $addmapurl . '">' . __('Add a map to entry') . '</a></p>' .
             '</div>' .
             '</div>';
         } elseif ($elements_list == '' && $map_options != '') {
-            $item = '<div class="area" id="gmap-area">' .
+            echo '<div class="area" id="gmap-area">' .
             '<label class="bold" for="post-gmap">' . __('Google Map:') . '</label>' .
+            '<span class="form-note">' . __('Map attached to this entry.') . '</span>' .
             '<div id="post-gmap" >' .
             '<div class="map_toolbar">' . __('Search:') . '<span class="map_spacer">&nbsp;</span>' .
                 '<input size="50" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="' . __('OK') . '" />' .
@@ -340,13 +286,14 @@ class myGmapsPostBehaviors
             '<input type="hidden" name="map_styles_list" id="map_styles_list" value="' . $map_styles_list . '" />' .
             '<input type="hidden" name="map_styles_base_url" id="map_styles_base_url" value="' . $map_styles_base_url . '" /></p>' .
             '<p>' . __('Empty map') . '</p>' .
-            '<p class="two-boxes"><a href="plugin.php?p=myGmaps&amp;post_id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></p>' .
+            '<p class="two-boxes add"><a href="plugin.php?p=myGmaps&amp;post_id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></p>' .
             '<p class="two-boxes right"><a class="map-remove delete" href="' . $removemapurl . '"><strong>' . __('Remove map') . '</strong></a></p>' .
             '</div>' .
             '</div>';
         } else {
-            $item = '<div class="area" id="gmap-area">' .
+            echo '<div class="area" id="gmap-area">' .
             '<label class="bold" for="post-gmap">' . __('Google Map:') . '</label>' .
+            '<span class="form-note">' . __('Map attached to this entry.') . '</span>' .
             '<div id="post-gmap" >' .
             '<div class="map_toolbar">' . __('Search:') . '<span class="map_spacer">&nbsp;</span>' .
                 '<input size="50" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="' . __('OK') . '" />' .
@@ -366,24 +313,27 @@ class myGmapsPostBehaviors
                 $params['post_type'] = 'map';
                 $posts               = dcCore::app()->blog->getPosts($params);
                 $counter             = dcCore::app()->blog->getPosts($params, true);
-                $post_list           = new adminMapsMiniList(dcCore::app(), $posts, $counter->f(0));
+                $post_list           = new BackendMiniList($posts, $counter->f(0));
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
             }
-            $page        = '1';
-            $nb_per_page = '30';
 
-            $item .= '<div id="form-entries">' .
-            '<p>' . __('Included elements list') . '</p>' .
-            $post_list->display($page, $nb_per_page, $enclose_block = '', $id, $type) .
-            '</div>' .
-            '<p class="two-boxes"><a href="' . DC_ADMIN_URL . 'plugin.php?p=myGmaps&amp;post_id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></p>' .
+            dcCore::app()->admin->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+            dcCore::app()->admin->nb_per_page = adminUserPref::getUserFilters('pages', 'nb');
+
+            echo '<div id="form-entries">' .
+            '<p>' . __('Included elements list') . '</p>' ;
+
+            $post_list->display(dcCore::app()->admin->page, dcCore::app()->admin->nb_per_page, $enclose_block = '', $post->post_id, $post->post_type);
+
+            echo '</div>' .
+            '<p class="two-boxes add"><a href="' . DC_ADMIN_URL . 'plugin.php?p=myGmaps&amp;post_id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></p>' .
             '<p class="two-boxes right"><a class="map-remove delete" href="' . DC_ADMIN_URL . 'post.php?id=' . $id . '&amp;remove=map"><strong>' . __('Remove map') . '</strong></a></p>' .
             '</div>' .
             '</div>';
 
             // Display map elements on post map
-            $item .= '<script>' . "\n" .
+            $script = '<script>' . "\n" .
             '//<![CDATA[' . "\n" .
             '$(document).ready(function() {' . "\n";
 
@@ -427,7 +377,7 @@ class myGmapsPostBehaviors
                     $aElementOptions['position'] = $marker[0] . ',' . $marker[1];
                     $aElementOptions['icon']     = $marker[2];
 
-                    $sElementsTemplate .= mygmapsPublic::getMapElementOptions($aElementOptions);
+                    $sElementsTemplate .= FrontendTemplate::getMapElementOptions($aElementOptions);
                 } elseif ($type == 'polyline') {
                     $has_poly    = true;
                     $parts       = explode('|', array_pop($list));
@@ -443,7 +393,7 @@ class myGmapsPostBehaviors
                     $aElementOptions['stroke_opacity'] = $parts[1];
                     $aElementOptions['stroke_weight']  = $parts[0];
 
-                    $sElementsTemplate .= mygmapsPublic::getMapElementOptions($aElementOptions);
+                    $sElementsTemplate .= FrontendTemplate::getMapElementOptions($aElementOptions);
                 } elseif ($type == 'polygon') {
                     $has_poly    = true;
                     $parts       = explode('|', array_pop($list));
@@ -461,7 +411,7 @@ class myGmapsPostBehaviors
                     $aElementOptions['fill_color']     = $parts[3];
                     $aElementOptions['fill_opacity']   = $parts[4];
 
-                    $sElementsTemplate .= mygmapsPublic::getMapElementOptions($aElementOptions);
+                    $sElementsTemplate .= FrontendTemplate::getMapElementOptions($aElementOptions);
                 } elseif ($type == 'rectangle') {
                     $has_poly    = true;
                     $parts       = explode('|', array_pop($list));
@@ -475,7 +425,7 @@ class myGmapsPostBehaviors
                     $aElementOptions['fill_color']     = $parts[3];
                     $aElementOptions['fill_opacity']   = $parts[4];
 
-                    $sElementsTemplate .= mygmapsPublic::getMapElementOptions($aElementOptions);
+                    $sElementsTemplate .= FrontendTemplate::getMapElementOptions($aElementOptions);
                 } elseif ($type == 'circle') {
                     $has_poly    = true;
                     $parts       = explode('|', array_pop($list));
@@ -489,13 +439,13 @@ class myGmapsPostBehaviors
                     $aElementOptions['fill_color']     = $parts[3];
                     $aElementOptions['fill_opacity']   = $parts[4];
 
-                    $sElementsTemplate .= mygmapsPublic::getMapElementOptions($aElementOptions);
+                    $sElementsTemplate .= FrontendTemplate::getMapElementOptions($aElementOptions);
                 } elseif ($type == 'included kml file' || $type == 'GeoRSS feed') {
                     $layer = html::clean($elements->post_excerpt_xhtml);
 
                     $aElementOptions['layer'] = $layer;
 
-                    $sElementsTemplate .= mygmapsPublic::getMapElementOptions($aElementOptions);
+                    $sElementsTemplate .= FrontendTemplate::getMapElementOptions($aElementOptions);
                 } elseif ($type == 'directions') {
                     $has_poly = true;
                     $parts    = explode('|', $list[0]);
@@ -507,10 +457,10 @@ class myGmapsPostBehaviors
                     $aElementOptions['stroke_weight']     = $parts[2];
                     $aElementOptions['display_direction'] = (isset($parts[5]) && $parts[5] == 'true' ? 'true' : 'false');
 
-                    $sElementsTemplate .= mygmapsPublic::getMapElementOptions($aElementOptions);
+                    $sElementsTemplate .= FrontendTemplate::getMapElementOptions($aElementOptions);
                 }
 
-                $item .= $sElementsTemplate;
+                $script .= $sElementsTemplate;
             }
 
             if ($has_poly = true || $has_marker = true) {
@@ -520,7 +470,7 @@ class myGmapsPostBehaviors
                         infowindow_add.close();
                     });\n
                     EOT;
-                $item .= $sOutput;
+                $script .= $sOutput;
             }
 
             if ($has_poly = true) {
@@ -535,7 +485,7 @@ class myGmapsPostBehaviors
                         $("#post-infowindow_add").parent("div", "div#map_canvas_add").css("overflow","hidden");
                     }\n
                     EOT;
-                $item .= $sOutput;
+                $script .= $sOutput;
             }
 
             if ($has_marker = true) {
@@ -549,14 +499,124 @@ class myGmapsPostBehaviors
                         $("#post-infowindow_add").parent("div", "div#map_canvas_add").css("overflow","hidden");
                     }\n
                     EOT;
-                $item .= $sOutput;
+                $script .= $sOutput;
             }
 
-            $item .= '});' . "\n" .
+            $script .= '});' . "\n" .
             '//]]>' . "\n" .
             '</script>';
+
+            echo $script;
+        }
+    }
+
+    public static function adminPostFilter(ArrayObject $filters)
+    {
+        if (dcCore::app()->admin->getPageURL() != 'plugin.php?p=myGmaps') {
+            return null;
         }
 
-        $main_items['gmap-area'] = $item;
+        if (isset($_GET['addlinks']) && $_GET['addlinks'] == 1) {
+            return null;
+        }
+
+        $categories = null;
+
+        try {
+            $categories = dcCore::app()->blog->getCategories(['post_type' => 'post']);
+            if ($categories->isEmpty()) {
+                return null;
+            }
+        } catch (Exception $e) {
+            dcCore::app()->error->add($e->getMessage());
+
+            return null;
+        }
+
+        $combo = [
+            '-'            => '',
+            __('(No cat)') => 'NULL',
+        ];
+        while ($categories->fetch()) {
+            try {
+                $params['no_content'] = true;
+                $params['cat_id']     = $categories->cat_id;
+                $params['sql']        = 'AND P.post_id IN (SELECT META.post_id FROM ' . dcCore::app()->prefix . 'meta META WHERE META.post_id = P.post_id ' . "AND META.meta_type = 'map' ) ";
+                dcCore::app()->blog->withoutPassword(false);
+                dcCore::app()->admin->counter = dcCore::app()->blog->getPosts($params, true);
+            } catch (Exception $e) {
+                dcCore::app()->error->add($e->getMessage());
+            }
+            $combo[
+                str_repeat('&nbsp;', ($categories->level - 1) * 4) .
+                Html::escapeHTML($categories->cat_title) . ' (' . dcCore::app()->admin->counter->f(0) . ')'
+            ] = $categories->cat_id;
+        }
+
+        $filters->append((new dcAdminFilter('cat_id'))
+            ->param()
+            ->title(__('Category:'))
+            ->options($combo)
+            ->prime(true));
+    }
+
+    public static function adminBeforePostUpdate($cur, $post_id)
+    {
+        $settings = dcCore::app()->blog->settings->myGmaps;
+
+        $my_params['post_id']    = $post_id;
+        $my_params['no_content'] = true;
+        $my_params['post_type']  = ['post', 'page'];
+
+        $rs = dcCore::app()->blog->getPosts($my_params);
+
+        if (!$settings->myGmaps_enabled) {
+            return;
+        }
+
+        if (isset($_POST['myGmaps_center']) && $_POST['myGmaps_center'] != '') {
+            $myGmaps_center = $_POST['myGmaps_center'];
+            $myGmaps_zoom   = $_POST['myGmaps_zoom'];
+            $myGmaps_type   = $_POST['myGmaps_type'];
+            $meta           = dcCore::app()->meta;
+
+            $meta->delPostMeta($post_id, 'map_options');
+
+            $map_options = $myGmaps_center . ',' . $myGmaps_zoom . ',' . $myGmaps_type;
+            $meta->setPostMeta($post_id, 'map_options', $map_options);
+        }
+    }
+
+    public static function postHeaders()
+    {
+        $settings = dcCore::app()->blog->settings->myGmaps;
+
+        if (!$settings->myGmaps_enabled) {
+            return;
+        }
+
+        return
+        '<script src="https://maps.googleapis.com/maps/api/js?key=' . $settings->myGmaps_API_key . '&amp;libraries=places&amp;callback=Function.prototype"></script>' . "\n" .
+        '<script>' . "\n" .
+        '$(document).ready(function() {' . "\n" .
+            '$(\'#gmap-area label\').toggleWithLegend($(\'#post-gmap\'), {' . "\n" .
+                'legend_click: true,' . "\n" .
+                'user_pref: \'dcx_gmap_detail\'' . "\n" .
+            '})' . "\n" .
+            '$(\'a.map-remove\').on(\'click\', function() {' . "\n" .
+            'msg = \'' . __('Are you sure you want to remove this map?') . '\';' . "\n" .
+            'if (!window.confirm(msg)) {' . "\n" .
+                'return false;' . "\n" .
+            '}' . "\n" .
+            '});' . "\n" .
+            '$(\'a.element-remove\').on(\'click\', function() {' . "\n" .
+            'msg = \'' . __('Are you sure you want to remove this element?') . '\';' . "\n" .
+            'if (!window.confirm(msg)) {' . "\n" .
+                'return false;' . "\n" .
+            '}' . "\n" .
+            '});' . "\n" .
+        '});' . "\n" .
+        '</script>' . "\n" .
+        '<link rel="stylesheet" type="text/css" href="index.php?pf=myGmaps/css/admin.css" />' . "\n";
     }
 }

@@ -9,16 +9,42 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
-require_once dirname(__FILE__) . '/inc/class.mygmaps.public.php';
+declare(strict_types=1);
 
-dcCore::app()->addBehavior('publicEntryAfterContent', ['dcMyGmapsPublic', 'publicMapContent']);
-dcCore::app()->addBehavior('publicPageAfterContent', ['dcMyGmapsPublic', 'publicMapContent']);
-dcCore::app()->addBehavior('publicHeadContent', ['dcMyGmapsPublic', 'publicHeadContent']);
+namespace Dotclear\Plugin\myGmaps;
 
-dcCore::app()->tpl->addValue('myGmaps', ['dcMyGmapsPublic', 'publicTagMapContent']);
+use dcCore;
+use dcNsProcess;
+use Dotclear\Helper\L10n;
+use Dotclear\Helper\Html\Html;
+use Dotclear\Helper\Network\Http;
 
-class dcMyGmapsPublic
+class Frontend extends dcNsProcess
 {
+    public static function init(): bool
+    {
+        self::$init = defined('DC_RC_PATH');
+
+        return self::$init;
+    }
+
+    public static function process(): bool
+    {
+        if (!self::$init) {
+            return false;
+        }
+
+        dcCore::app()->addBehavior('publicEntryAfterContent', [self::class, 'publicMapContent']);
+        dcCore::app()->addBehavior('publicPageAfterContent', [self::class, 'publicMapContent']);
+        dcCore::app()->addBehavior('publicHeadContent', [self::class, 'publicHeadContent']);
+
+        dcCore::app()->tpl->addValue('myGmaps', [self::class, 'publicTagMapContent']);
+
+        L10n::set(dirname(__FILE__) . '/locales/' . dcCore::app()->lang . '/main');
+
+        return true;
+    }
+
     public static function hasMap($post_id)
     {
         $meta                    = dcCore::app()->meta;
@@ -100,10 +126,10 @@ class dcMyGmapsPublic
     {
         // Settings
         $s           = dcCore::app()->blog->settings->myGmaps;
-        $sPublicPath = dcCore::app()->blog->getQmarkURL() . 'pf=' . basename(dirname(__FILE__));
+        $sPublicPath = DC_ADMIN_URL . '?pf=myGmaps';
         if ($s->myGmaps_enabled) {
-            echo mygmapsPublic::publicJsContent([]);
-            echo mygmapsPublic::publicCssContent(['public_path' => $sPublicPath]);
+            echo FrontendTemplate::publicJsContent([]);
+            echo FrontendTemplate::publicCssContent(['public_path' => $sPublicPath]);
         }
     }
 
@@ -111,7 +137,7 @@ class dcMyGmapsPublic
     {
         // Settings
         $s         = dcCore::app()->blog->settings->myGmaps;
-        $url       = dcCore::app()->blog->getQmarkURL() . 'pf=' . basename(dirname(__FILE__));
+        $url       = DC_ADMIN_URL . '?pf=myGmaps';
         $postTypes = ['post', 'page'];
 
         if ($s->myGmaps_enabled) {
@@ -128,7 +154,7 @@ class dcMyGmapsPublic
                 $blog_url    = dcCore::app()->blog->url;
 
                 $map_styles_dir_path = $public_path . '/myGmaps/styles/';
-                $map_styles_dir_url  = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/styles/');
+                $map_styles_dir_url  = Http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/styles/');
 
                 if (is_dir($map_styles_dir_path)) {
                     $map_styles      = glob($map_styles_dir_path . '*.js');
@@ -188,7 +214,7 @@ class dcMyGmapsPublic
 
                 foreach ($map_elements as $map_element_id => $map_element) {
                     // Common element vars
-                    $list = explode("\n", html::clean($map_element['post_excerpt_xhtml']));
+                    $list = explode("\n", Html::clean($map_element['post_excerpt_xhtml']));
 
                     $content = str_replace('\\', '\\\\', $map_element['post_content_xhtml']);
                     $content = str_replace(["\r\n", "\n", "\r"], '\\n', $content);
@@ -206,7 +232,7 @@ class dcMyGmapsPublic
                     $aElementOptions = [
                         'map_id'      => $sPostId,
                         'element_id'  => $map_element_id,
-                        'title'       => html::escapeHTML($map_element['post_title']),
+                        'title'       => Html::escapeHTML($map_element['post_title']),
                         'description' => $content,
                         'type'        => $type,
                     ];
@@ -219,7 +245,7 @@ class dcMyGmapsPublic
                         $aElementOptions['position'] = $marker[0] . ',' . $marker[1];
                         $aElementOptions['icon']     = $marker[2];
 
-                        $sElementsTemplate .= mygmapsPublic::getMapElementOptions($aElementOptions);
+                        $sElementsTemplate .= FrontendTemplate::getMapElementOptions($aElementOptions);
                     } elseif ($type == 'polyline') {
                         $has_poly    = true;
                         $parts       = explode('|', array_pop($list));
@@ -235,7 +261,7 @@ class dcMyGmapsPublic
                         $aElementOptions['stroke_opacity'] = $parts[1];
                         $aElementOptions['stroke_weight']  = $parts[0];
 
-                        $sElementsTemplate .= mygmapsPublic::getMapElementOptions($aElementOptions);
+                        $sElementsTemplate .= FrontendTemplate::getMapElementOptions($aElementOptions);
                     } elseif ($type == 'polygon') {
                         $has_poly    = true;
                         $parts       = explode('|', array_pop($list));
@@ -253,7 +279,7 @@ class dcMyGmapsPublic
                         $aElementOptions['fill_color']     = $parts[3];
                         $aElementOptions['fill_opacity']   = $parts[4];
 
-                        $sElementsTemplate .= mygmapsPublic::getMapElementOptions($aElementOptions);
+                        $sElementsTemplate .= FrontendTemplate::getMapElementOptions($aElementOptions);
                     } elseif ($type == 'rectangle') {
                         $has_poly    = true;
                         $parts       = explode('|', array_pop($list));
@@ -267,7 +293,7 @@ class dcMyGmapsPublic
                         $aElementOptions['fill_color']     = $parts[3];
                         $aElementOptions['fill_opacity']   = $parts[4];
 
-                        $sElementsTemplate .= mygmapsPublic::getMapElementOptions($aElementOptions);
+                        $sElementsTemplate .= FrontendTemplate::getMapElementOptions($aElementOptions);
                     } elseif ($type == 'circle') {
                         $has_poly    = true;
                         $parts       = explode('|', array_pop($list));
@@ -281,13 +307,13 @@ class dcMyGmapsPublic
                         $aElementOptions['fill_color']     = $parts[3];
                         $aElementOptions['fill_opacity']   = $parts[4];
 
-                        $sElementsTemplate .= mygmapsPublic::getMapElementOptions($aElementOptions);
+                        $sElementsTemplate .= FrontendTemplate::getMapElementOptions($aElementOptions);
                     } elseif ($type == 'included kml file' || $type == 'GeoRSS feed') {
-                        $layer = html::clean($map_element['post_excerpt_xhtml']);
+                        $layer = Html::clean($map_element['post_excerpt_xhtml']);
 
                         $aElementOptions['layer'] = $layer;
 
-                        $sElementsTemplate .= mygmapsPublic::getMapElementOptions($aElementOptions);
+                        $sElementsTemplate .= FrontendTemplate::getMapElementOptions($aElementOptions);
                     } elseif ($type == 'directions') {
                         $has_poly = true;
                         $parts    = explode('|', $list[0]);
@@ -299,7 +325,7 @@ class dcMyGmapsPublic
                         $aElementOptions['stroke_weight']     = $parts[2];
                         $aElementOptions['display_direction'] = (isset($parts[5]) && $parts[5] == 'true' ? 'true' : 'false');
 
-                        $sElementsTemplate .= mygmapsPublic::getMapElementOptions($aElementOptions);
+                        $sElementsTemplate .= FrontendTemplate::getMapElementOptions($aElementOptions);
                     }
                 }
 
@@ -311,7 +337,7 @@ class dcMyGmapsPublic
                     $sMapCanvasStyles    .= ($aOptions['height'] != '' ? 'min-height:' . $aOptions['height'] . ';' : '');
                 }
 
-                $sTemplate = mygmapsPublic::getMapOptions([
+                $sTemplate = FrontendTemplate::getMapOptions([
                     'elements'    => $sElementsTemplate,
                     'style'       => $aOptions['style'],
                     'styles_path' => $map_styles_dir_path,
@@ -322,7 +348,7 @@ class dcMyGmapsPublic
                     'has_poly'    => $has_poly,
                 ]);
 
-                $sTemplate .= mygmapsPublic::publicHtmlContent([
+                $sTemplate .= FrontendTemplate::publicHtmlContent([
                     'id'                 => $sPostId,
                     'mapContainerStyles' => $sMapContainerStyles,
                     'mapCanvasStyles'    => $sMapCanvasStyles,
