@@ -19,10 +19,9 @@ $this->registerModule(
     'Philippe aka amalgame and contributors',
     '5.13',
     [
-        'requires'    => [['core', '2.24']],
+        'requires'    => [['core', '2.25']],
         'permissions' => dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]),
         'type'        => 'plugin',
-        'priority'    => 2000,
         'settings'    => ['self' => '&do=list#settings'],
     ]
 );

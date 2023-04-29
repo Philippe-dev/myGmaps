@@ -329,7 +329,7 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
 
     $cur->post_title         = $post_title;
     $cur->cat_id             = ($cat_id ? $cat_id : null);
-    $cur->post_dt            = $post_dt ? date('Y-m-d H:i:00', strtotime($post_dt)) : '';
+    $cur->post_dt            = $post_dt ? date('Y-m-d H:i', strtotime($post_dt)) : '';
     $cur->post_type          = $post_type;
     $cur->post_format        = $post_format;
     $cur->post_password      = $post_password;
@@ -355,10 +355,6 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
     // Update post
     if ($post_id) {
         try {
-            // --BEHAVIOR-- adminBeforePostUpdate
-            dcCore::app()->callBehavior('adminBeforePostUpdate', $cur, $post_id);
-            dcCore::app()->con->begin();
-            dcCore::app()->blog->updPost($post_id, $cur);
             if (isset($_POST['element_type'])) {
                 $tags           = $_POST['element_type'];
                 $myGmaps_center = $_POST['myGmaps_center'];
@@ -377,7 +373,11 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
                 $meta->setPostMeta($post_id, 'map_options', $map_options);
                 $meta->setPostMeta($post_id, 'description', $description);
             }
-            dcCore::app()->con->commit();
+            // --BEHAVIOR-- adminBeforePostUpdate
+            dcCore::app()->callBehavior('adminBeforePostUpdate', $cur, $post_id);
+
+            dcCore::app()->blog->updPost($post_id, $cur);
+
             // --BEHAVIOR-- adminAfterPostUpdate
             dcCore::app()->callBehavior('adminAfterPostUpdate', $cur, $post_id);
 
@@ -389,14 +389,6 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
         $cur->user_id = dcCore::app()->auth->userID();
 
         try {
-            // --BEHAVIOR-- adminBeforePostCreate
-            dcCore::app()->callBehavior('adminBeforePostCreate', $cur);
-
-            $return_id = dcCore::app()->blog->addPost($cur);
-
-            // --BEHAVIOR-- adminAfterPostCreate
-            dcCore::app()->callBehavior('adminAfterPostCreate', $cur, $return_id);
-
             if (isset($_POST['element_type'])) {
                 $tags           = $_POST['element_type'];
                 $myGmaps_center = $_POST['myGmaps_center'];
@@ -411,6 +403,15 @@ if (!empty($_POST) && !empty($_POST['save']) && $can_edit_post) {
                 $meta->setPostMeta($return_id, 'map_options', $map_options);
                 $meta->setPostMeta($return_id, 'description', $description);
             }
+
+            // --BEHAVIOR-- adminBeforePostCreate
+            dcCore::app()->callBehavior('adminBeforePostCreate', $cur);
+
+            $return_id = dcCore::app()->blog->addPost($cur);
+
+            // --BEHAVIOR-- adminAfterPostCreate
+            dcCore::app()->callBehavior('adminAfterPostCreate', $cur, $return_id);
+
             http::redirect('' . dcCore::app()->admin->getPageURL() . '&do=edit&id=' . $return_id . '&crea=1');
         } catch (Exception $e) {
             dcCore::app()->error->add($e->getMessage());
