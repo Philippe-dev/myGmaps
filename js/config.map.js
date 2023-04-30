@@ -20,14 +20,12 @@ $(() => {
 			if ($('input[name="myGmaps_center"]').attr('value') == '') {
 				var default_location = new google.maps.LatLng(43.0395797336425, 6.126280043989323);
 				var default_zoom = '12';
-				var default_type = 'roadmap';
 			} else {
 				const parts = $('input[name="myGmaps_center"]').attr('value').split(",");
 				const lat = parseFloat(trim(parts[0]));
 				const lng = parseFloat(trim(parts[1]));
 				var default_location = new google.maps.LatLng(lat, lng);
 				var default_zoom = $('input[name="myGmaps_zoom"]').attr('value');
-				var default_type = $('input[name="myGmaps_type"]').attr('value');
 			}
 			google.maps.event.trigger(map, 'resize');
 			map.setCenter(default_location);
@@ -188,7 +186,7 @@ $(() => {
 
 		// Submit form and save
 
-		$('#settings-form').submit(() => {
+		$('#config-form').submit(() => {
 			const default_location = `${map.getCenter().lat()}, ${map.getCenter().lng()}`;
 
 			const default_zoom = map.getZoom();
