@@ -19,6 +19,7 @@ use adminUserPref;
 use dcPage;
 use Exception;
 use form;
+use dcPostsActions;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
 use adminPostFilter;
@@ -134,6 +135,13 @@ class Manage extends dcNsProcess
             $map_styles_base_url = '';
         }
 
+        // Actions
+        // -------
+        dcCore::app()->admin->posts_actions_page = new dcPostsActions(dcCore::app()->adminurl->get('admin.plugin.myGmaps'));
+        if (dcCore::app()->admin->posts_actions_page->process()) {
+            return;
+        }
+
         // Filters
         dcCore::app()->admin->post_filter = new adminPostFilter();
 
@@ -151,14 +159,15 @@ class Manage extends dcNsProcess
         */
 
         if (isset($_GET['page'])) {
-            dcCore::app()->admin->default_tab = 'postslist';
+            dcCore::app()->admin->default_tab = 'entries-list';
         }
 
-        // Get posts with related posts
+        // Get map elements
 
         try {
-            $params['no_content']            = true;
-            $params['sql']                   = 'AND P.post_id IN (SELECT META.post_id FROM ' . dcCore::app()->prefix . 'meta META WHERE META.post_id = P.post_id ' . "AND META.meta_type = 'relatedEntries' ) ";
+            $params['no_content'] = true;
+            $params['post_type']  = 'map';
+            // $params['sql']                   = 'AND P.post_id IN (SELECT META.post_id FROM ' . dcCore::app()->prefix . 'meta META WHERE META.post_id = P.post_id ' . "AND META.meta_type = 'myGmaps' ) ";
             dcCore::app()->admin->posts      = dcCore::app()->blog->getPosts($params);
             dcCore::app()->admin->counter    = dcCore::app()->blog->getPosts($params, true);
             dcCore::app()->admin->posts_list = new BackendList(dcCore::app()->admin->posts, dcCore::app()->admin->counter->f(0));
@@ -167,11 +176,9 @@ class Manage extends dcNsProcess
         }
 
         $starting_script = '<script src="https://maps.googleapis.com/maps/api/js?key=' . $settings->myGmaps_API_key . '&amp;libraries=places&amp;callback=Function.prototype"></script>';
-        
-        
-        $starting_script .=
-        '<script>' . "\n" .
-        '//<![CDATA[' . "\n".
+
+        $starting_script .= '<script>' . "\n" .
+        '//<![CDATA[' . "\n" .
             'var neutral_blue_styles = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#193341"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#2c5a71"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#29768a"},{"lightness":-37}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#3e606f"},{"weight":2},{"gamma":0.84}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"weight":0.6},{"color":"#1a3541"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#2c5a71"}]}];' . "\n" .
             'var neutral_blue = new google.maps.StyledMapType(neutral_blue_styles,{name: "Neutral Blue"});' . "\n";
 
@@ -182,24 +189,21 @@ class Manage extends dcNsProcess
                 $var_styles_name   = pathinfo($map_style, PATHINFO_FILENAME);
                 $var_name          = preg_replace('/_styles/s', '', $var_styles_name);
                 $nice_name         = ucwords(preg_replace('/_/s', ' ', $var_name));
-                
-                $starting_script .=
-                'var ' . $var_styles_name . ' = ' . $map_style_content . ';' . "\n" .
+
+                $starting_script .= 'var ' . $var_styles_name . ' = ' . $map_style_content . ';' . "\n" .
                 'var ' . $var_name . ' = new google.maps.StyledMapType(' . $var_styles_name . ',{name: "' . $nice_name . '"});' . "\n";
             }
         }
 
-        $starting_script .=
-            '//]]>' . "\n" .
+        $starting_script .= '//]]>' . "\n" .
         '</script>';
 
         dcPage::openModule(
             __('Google Maps'),
             $starting_script .
             dcPage::jsLoad('js/_posts_list.js') .
-            dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/maps.list.js') .
             dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/config.map.js') .
-            dcCore::app()->admin->post_filter->js(dcCore::app()->admin->getPageURL() . '#postslist') .
+            dcCore::app()->admin->post_filter->js(dcCore::app()->admin->getPageURL() . '#entries-list') .
             dcPage::jsPageTabs(dcCore::app()->admin->default_tab) .
             dcPage::jsConfirmClose('config-form') .
             '<link rel="stylesheet" type="text/css" href="index.php?pf=myGmaps/css/admin.css" />'
@@ -273,11 +277,15 @@ class Manage extends dcNsProcess
         '</form>' .
         '</div>' .
 
-        // Related posts list tab
+        // Map elements list tab
 
-        '<div class="multi-part" id="postslist" title="' . __('Related posts list') . '">';
+        '<div class="multi-part" id="entries-list" title="' . __('Map elements') . '">';
 
-        dcCore::app()->admin->post_filter->display('admin.plugin.relatedEntries', '<input type="hidden" name="p" value="relatedEntries" /><input type="hidden" name="tab" value="postslist" />');
+        if ($settings->myGmaps_enabled) {
+            echo '<p class="top-add"><strong><a class="button add" href="' . dcCore::app()->admin->getPageURL() . '&amp;do=edit">' . __('New element') . '</a></strong></p>';
+        }
+
+        dcCore::app()->admin->post_filter->display('admin.plugin.myGmaps', '<input type="hidden" name="p" value="myGmaps" /><input type="hidden" name="tab" value="entries-list" />');
 
         // Show posts
         dcCore::app()->admin->posts_list->display(
@@ -290,10 +298,11 @@ class Manage extends dcNsProcess
             '<div class="two-cols">' .
             '<p class="col checkboxes-helpers"></p>' .
 
-            '<p class="col right">' .
-            '<input type="submit" class="delete" value="' . __('Remove all links from selected posts') . '" /></p>' .
-            '<p>' .
-            dcCore::app()->adminurl->getHiddenFormFields('admin.plugin.relatedEntries', dcCore::app()->admin->post_filter->values()) .
+            // Actions
+            '<p class="col right"><label for="action" class="classic">' . __('Selected entries action:') . '</label> ' .
+            form::combo('action', dcCore::app()->admin->posts_actions_page->getCombo()) .
+            '<input id="do-action" type="submit" value="' . __('ok') . '" disabled /></p>' .
+            dcCore::app()->adminurl->getHiddenFormFields('admin.plugin.myGmaps', dcCore::app()->admin->post_filter->values()) .
             dcCore::app()->formNonce() . '</p>' .
             '</div>' .
             '</form>',
@@ -303,7 +312,7 @@ class Manage extends dcNsProcess
         echo
         '</div>';
 
-        dcPage::helpBlock('config');
+        dcPage::helpBlock('myGmaps');
         dcPage::closeModule();
     }
 }

@@ -223,7 +223,7 @@ msgstr "Aucun élément correspondant au filtre"
 msgid "No map element"
 msgstr "Aucun élément"
 
-msgid "List of %s elements match the filter."
+msgid "List of %s elements matching the filter"
 msgstr "Liste des %s éléments correspondant au filtre"
 
 msgid "Elements list (%s)"

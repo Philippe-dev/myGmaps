@@ -516,10 +516,6 @@ class Backend extends dcNsProcess
             return null;
         }
 
-        if (isset($_GET['addlinks']) && $_GET['addlinks'] == 1) {
-            return null;
-        }
-
         $categories = null;
 
         try {
@@ -541,7 +537,7 @@ class Backend extends dcNsProcess
             try {
                 $params['no_content'] = true;
                 $params['cat_id']     = $categories->cat_id;
-                $params['sql']        = 'AND P.post_id IN (SELECT META.post_id FROM ' . dcCore::app()->prefix . 'meta META WHERE META.post_id = P.post_id ' . "AND META.meta_type = 'map' ) ";
+                $params['post_type']  = 'map';
                 dcCore::app()->blog->withoutPassword(false);
                 dcCore::app()->admin->counter = dcCore::app()->blog->getPosts($params, true);
             } catch (Exception $e) {
@@ -558,6 +554,29 @@ class Backend extends dcNsProcess
             ->title(__('Category:'))
             ->options($combo)
             ->prime(true));
+
+        // - Map type filter
+
+        /*
+        $combo = [
+            '-'                     => '',
+            __('none')              => 'none',
+            __('point of interest') => 'point of interest',
+            __('polyline')          => 'polyline',
+            __('polygon')           => 'polygon',
+            __('rectangle')         => 'rectangle',
+            __('circle')            => 'circle',
+            __('included kml file') => 'included kml file',
+            __('GeoRSS feed')       => 'GeoRSS feed',
+            __('directions')        => 'directions',
+        ];
+
+        $filters->append((new dcAdminFilter('type'))
+            ->param()
+            ->title(__('Type:'))
+            ->options($combo)
+            ->prime(true));
+        */
     }
 
     public static function adminBeforePostUpdate($cur, $post_id)

@@ -37,10 +37,9 @@ class BackendList extends adminGenericListV2
     {
         if ($this->rs->isEmpty()) {
             if ($filter) {
-                echo '<p><strong>' . __('No entry matches the filter') . '</strong></p>';
+                echo '<p><strong>' . __('No element matches the filter') . '</strong></p>';
             } else {
-                echo '<p><strong>' . __('No entry') . '</strong></p>' . 
-                '<p class="form-note info clear">' . __('To get started, edit one of your posts and add links to other related posts below the <em>Personal notes</em> field.') . '</p>';
+                echo '<p><strong>' . __('No map element') . '</strong></p>';
             }
         } else {
             $pager   = new dcPager($page, (int) $this->rs_count, $nb_per_page, 10);
@@ -54,10 +53,10 @@ class BackendList extends adminGenericListV2
                 '<table>';
 
             if ($filter) {
-                $html_block .= '<caption>' . sprintf(__('List of %s entries matching the filter.'), $this->rs_count) . '</caption>';
+                $html_block .= '<caption>' . sprintf(__('List of %s elements matching the filter'), $this->rs_count) . '</caption>';
             } else {
                 $html_block .= '<caption>' .
-                sprintf(__('List of entries (%s)'), $this->rs_count) . '</caption>';
+                sprintf(__('Elements list (%s)'), $this->rs_count) . '</caption>';
             }
 
             $cols = [
@@ -65,11 +64,8 @@ class BackendList extends adminGenericListV2
                 'date'     => '<th scope="col">' . __('Date') . '</th>',
                 'category' => '<th scope="col">' . __('Category') . '</th>',
                 'author'   => '<th scope="col">' . __('Author') . '</th>',
-                'comments' => '<th scope="col"><img src="images/comments.png" alt="" title="' . __('Comments') .
-                '" /><span class="hidden">' . __('Comments') . '</span></th>',
-                'trackbacks' => '<th scope="col"><img src="images/trackbacks.png" alt="" title="' . __('Trackbacks') .
-                '" /><span class="hidden">' . __('Trackbacks') . '</span></th>',
-                'status' => '<th scope="col">' . __('Status') . '</th>',
+                'type'     => '<th scope="col">' . __('Type') . '</th>',
+                'status'   => '<th scope="col">' . __('Status') . '</th>',
             ];
             $cols = new ArrayObject($cols);
             dcCore::app()->callBehavior('adminPostListHeaderV2', $this->rs, $cols);
@@ -184,6 +180,9 @@ class BackendList extends adminGenericListV2
         $res = '<tr class="line ' . ($this->rs->post_status != dcBlog::POST_PUBLISHED ? 'offline ' : '') . $sts_class . '"' .
         ' id="p' . $this->rs->post_id . '">';
 
+        $meta    = dcCore::app()->meta;
+        $meta_rs = $meta->getMetaStr($this->rs->post_meta, 'map');
+
         $cols = [
             'check' => '<td class="nowrap">' .
             form::checkbox(
@@ -195,9 +194,9 @@ class BackendList extends adminGenericListV2
                 ]
             ) .
             '</td>',
-            'title' => '<td class="maximal" scope="row"><a href="' .
-            dcCore::app()->getPostAdminURL($this->rs->post_type, $this->rs->post_id) . '">' .
-            Html::escapeHTML(trim(Html::clean($this->rs->post_title))) . '</a></td>',
+            'title' => '<td class="maximal" scope="row"><a href="' . dcCore::app()->admin->getPageURL() . 
+            '&amp;do=edit&amp;id=' . $this->rs->post_id . '">' .
+            html::escapeHTML($this->rs->post_title) . '</a></td>',
             'date' => '<td class="nowrap count">' .
                 '<time datetime="' . Date::iso8601(strtotime($this->rs->post_dt), dcCore::app()->auth->getInfo('user_tz')) . '">' .
                 Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt) .
@@ -205,8 +204,7 @@ class BackendList extends adminGenericListV2
                 '</td>',
             'category'   => '<td class="nowrap">' . $cat_title . '</td>',
             'author'     => '<td class="nowrap">' . Html::escapeHTML($this->rs->user_id) . '</td>',
-            'comments'   => '<td class="nowrap count">' . $this->rs->nb_comment . '</td>',
-            'trackbacks' => '<td class="nowrap count">' . $this->rs->nb_trackback . '</td>',
+            'type'     => '<td class="nowrap">' . __($meta_rs) . '</td>',
             'status'     => '<td class="nowrap status">' . $img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach . '</td>',
         ];
         $cols = new ArrayObject($cols);
