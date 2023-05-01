@@ -83,7 +83,7 @@ class Backend extends dcNsProcess
                 dcCore::app()->blog->triggerBlog();
 
                 if ($type == 'page') {
-                    Http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1#gmap-area');
+                    Http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=map&id=' . $post_id . '&upd=1#gmap-area');
                 } elseif ($type == 'post') {
                     Http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1#gmap-area');
                 }
@@ -100,7 +100,7 @@ class Backend extends dcNsProcess
                 dcCore::app()->blog->triggerBlog();
 
                 if ($type == 'page') {
-                    Http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1#gmap-area');
+                    Http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=map&id=' . $post_id . '&upd=1#gmap-area');
                 } elseif ($type == 'post') {
                     Http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1#gmap-area');
                 }
@@ -123,7 +123,7 @@ class Backend extends dcNsProcess
                 dcCore::app()->blog->triggerBlog();
 
                 if ($type == 'page') {
-                    Http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1#gmap-area');
+                    Http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=map&id=' . $post_id . '&upd=1#gmap-area');
                 } elseif ($type == 'post') {
                     Http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1#gmap-area');
                 }
@@ -253,8 +253,8 @@ class Backend extends dcNsProcess
 
         // redirection URLs
         if ($type == 'page') {
-            $addmapurl    = DC_ADMIN_URL . 'plugin.php?p=pages&amp;act=page&amp;id=' . $id . '&amp;add=map&amp;center=' . $myGmaps_center . '&amp;zoom=' . $myGmaps_zoom . '&amp;type=' . $myGmaps_type . '&amp;upd=1';
-            $removemapurl = DC_ADMIN_URL . 'plugin.php?p=pages&amp;act=page&amp;id=' . $id . '&amp;remove=map&amp;upd=1';
+            $addmapurl    = DC_ADMIN_URL . 'plugin.php?p=pages&amp;act=map&amp;id=' . $id . '&amp;add=map&amp;center=' . $myGmaps_center . '&amp;zoom=' . $myGmaps_zoom . '&amp;type=' . $myGmaps_type . '&amp;upd=1';
+            $removemapurl = DC_ADMIN_URL . 'plugin.php?p=pages&amp;act=map&amp;id=' . $id . '&amp;remove=map&amp;upd=1';
         } elseif ($type == 'post') {
             $addmapurl    = DC_ADMIN_URL . 'post.php?id=' . $id . '&amp;add=map&amp;center=' . $myGmaps_center . '&amp;zoom=' . $myGmaps_zoom . '&amp;type=' . $myGmaps_type . '&amp;upd=1';
             $removemapurl = DC_ADMIN_URL . 'post.php?id=' . $id . '&amp;remove=map&amp;upd=1';

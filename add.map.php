@@ -292,7 +292,7 @@ if (isset($_POST['updlist'])) {
         dcCore::app()->blog->triggerBlog();
 
         if ($post_type == 'page') {
-            http::redirect('plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1');
+            http::redirect('plugin.php?p=pages&act=map&id=' . $post_id . '&upd=1');
         } else {
             http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1');
         }

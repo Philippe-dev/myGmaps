@@ -195,7 +195,7 @@ class BackendList extends adminGenericListV2
             ) .
             '</td>',
             'title' => '<td class="maximal" scope="row"><a href="' . dcCore::app()->admin->getPageURL() . 
-            '&amp;do=edit&amp;id=' . $this->rs->post_id . '">' .
+            '&amp;act=map&amp;id=' . $this->rs->post_id . '">' .
             html::escapeHTML($this->rs->post_title) . '</a></td>',
             'date' => '<td class="nowrap count">' .
                 '<time datetime="' . Date::iso8601(strtotime($this->rs->post_dt), dcCore::app()->auth->getInfo('user_tz')) . '">' .

@@ -135,7 +135,7 @@ class BackendMiniList extends adminGenericListV2
         $res = '<tr class="line' . ($this->rs->post_status != 1 ? ' offline' : '') . '"' .
         ' id="p' . $this->rs->post_id . '">';
 
-        $res .= '<td class="maximal"><a href="plugin.php?p=myGmaps&amp;do=edit&amp;id=' . $this->rs->post_id . '" title="' . __('Edit map element') . ' : ' . html::escapeHTML($this->rs->post_title) . '">' . html::escapeHTML($this->rs->post_title) . '</a></td>' .
+        $res .= '<td class="maximal"><a href="plugin.php?p=myGmaps&amp;act=map&amp;id=' . $this->rs->post_id . '" title="' . __('Edit map element') . ' : ' . html::escapeHTML($this->rs->post_title) . '">' . html::escapeHTML($this->rs->post_title) . '</a></td>' .
         '<td class="nowrap count">' . Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt) . '</td>' .
         '<td class="nowrap">' . $cat_title . '</td>' .
         '<td class="nowrap">' . __($meta_rs) . '</td>' .
@@ -143,7 +143,7 @@ class BackendMiniList extends adminGenericListV2
         if ($type == 'post') {
             $res .= '<td class="nowrap count"><a class="element-remove" href="' . DC_ADMIN_URL . 'post.php?id=' . $id . '&amp;remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.png" alt="supprimer" /></a></td>';
         } elseif ($type == 'page') {
-            $res .= '<td class="nowrap count"><a class="element-remove" href="' . DC_ADMIN_URL . 'plugin.php?p=pages&amp;act=page&amp;id=' . $id . '&amp;upd=1&amp;remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.png" alt="supprimer" /></a></td>';
+            $res .= '<td class="nowrap count"><a class="element-remove" href="' . DC_ADMIN_URL . 'plugin.php?p=pages&amp;act=map&amp;id=' . $id . '&amp;upd=1&amp;remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.png" alt="supprimer" /></a></td>';
         }
         $res .= '</tr>';
 
