@@ -394,7 +394,7 @@ class ManageMap extends dcNsProcess
                 }
             }
 
-            if (!empty($_POST['delete']) && $can_delete) {
+            if (!empty($_POST['delete']) && dcCore::app()->admin->can_delete) {
                 try {
                     // --BEHAVIOR-- adminBeforePostDelete
                     dcCore::app()->callBehavior('adminBeforePostDelete', dcCore::app()->admin->post_id);
@@ -828,36 +828,20 @@ class ManageMap extends dcNsProcess
                 echo '<p>' . form::hidden('element_type', '') . '</p>';
             }
 
-            if (dcCore::app()->admin->post_id) {
-                $preview_url = dcCore::app()->blog->url .
-                    dcCore::app()->url->getURLFor(
-                        'pagespreview',
-                        dcCore::app()->auth->userID() . '/' .
-                        Http::browserUID(DC_MASTER_KEY . dcCore::app()->auth->userID() . dcCore::app()->auth->cryptLegacy(dcCore::app()->auth->userID())) .
-                        '/' . dcCore::app()->admin->post->post_url
-                    );
+            echo
+            '<p class="border-top">' .
+            (dcCore::app()->admin->post->post_id ? form::hidden('id', dcCore::app()->admin->post->post_id) : '') .
+            '<input type="submit" value="' . __('Save') . ' (s)" ' .
+            'accesskey="s" name="save" /> ' ;
 
-                // Prevent browser caching on preview
-                $preview_url .= (parse_url($preview_url, PHP_URL_QUERY) ? '&' : '?') . 'rand=' . md5((string) random_int(0, mt_getrandmax()));
-
-                $blank_preview = dcCore::app()->auth->user_prefs->interface->blank_preview;
-
-                $preview_class  = $blank_preview ? '' : ' modal';
-                $preview_target = $blank_preview ? '' : ' target="_blank"';
-
+            if (!dcCore::app()->admin->post->post_id) {
                 echo
-                '<a id="post-preview" href="' . $preview_url . '" class="button' . $preview_class . '" accesskey="p"' . $preview_target . '>' . __('Preview') . ' (p)' . '</a>' .
-                ' <input type="button" value="' . __('Cancel') . '" class="go-back reset hidden-if-no-js" />';
-            } else {
-                echo
-                '<a id="post-cancel" href="' . dcCore::app()->adminurl->get('admin.home') . '" class="button" accesskey="c">' . __('Cancel') . ' (c)</a>';
+                '<a id="post-cancel" href="index.php" class="button" accesskey="c">' . __('Cancel') . ' (c)</a>';
             }
 
-            echo(dcCore::app()->admin->can_delete ?
-                ' <input type="submit" class="delete" value="' . __('Delete') . '" name="delete" />' :
-                '') .
-            dcCore::app()->formNonce() .
-            '</p>';
+            echo(dcCore::app()->admin->can_delete ? '<input type="submit" class="delete" value="' . __('Delete') . '" name="delete" />' : '') .
+                    dcCore::app()->formNonce() .
+                    '</p>';
 
             echo
             '</div></div>' . // End #entry-content
