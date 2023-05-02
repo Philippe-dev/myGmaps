@@ -96,6 +96,11 @@ class ManageMap extends dcNsProcess
             dcCore::app()->admin->post_status = dcBlog::POST_PENDING;
         }
 
+        // Getting categories
+        dcCore::app()->admin->categories_combo = dcAdminCombos::getCategoriesCombo(
+            dcCore::app()->blog->getCategories(['post_type' => 'map'])
+        );
+
         // Status combo
         dcCore::app()->admin->status_combo = dcAdminCombos::getPostStatusesCombo();
 
@@ -131,6 +136,7 @@ class ManageMap extends dcNsProcess
                 dcCore::app()->error->add(__('This map element does not exist.'));
                 dcCore::app()->admin->can_view_page = false;
             } else {
+                dcCore::app()->admin->cat_id            = (int) dcCore::app()->admin->post->cat_id;
                 dcCore::app()->admin->post_id            = (int) dcCore::app()->admin->post->post_id;
                 dcCore::app()->admin->post_dt            = date('Y-m-d H:i', strtotime(dcCore::app()->admin->post->post_dt));
                 dcCore::app()->admin->post_format        = dcCore::app()->admin->post->post_format;
@@ -486,7 +492,7 @@ class ManageMap extends dcNsProcess
         echo dcPage::breadcrumb(
             [
                 Html::escapeHTML(dcCore::app()->blog->name) => '',
-                __('Google Maps')                                 => dcCore::app()->admin->getPageURL(),
+                __('Google Maps')                           => dcCore::app()->admin->getPageURL(),
                 $edit_entry_title                           => '',
             ]
         );
