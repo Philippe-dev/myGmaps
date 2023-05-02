@@ -204,6 +204,7 @@ class ManageMap extends dcNsProcess
         if (!empty($_POST) && dcCore::app()->admin->can_edit_page) {
             // Format content
 
+            dcCore::app()->admin->cat_id       = $_POST['cat_id'];
             dcCore::app()->admin->post_format  = $_POST['post_format'];
             dcCore::app()->admin->post_excerpt = $_POST['post_excerpt'];
             dcCore::app()->admin->post_content = $_POST['post_content'];
@@ -306,6 +307,7 @@ class ManageMap extends dcNsProcess
 
             $cur->post_type          = 'map';
             $cur->post_dt            = dcCore::app()->admin->post_dt ? date('Y-m-d H:i:00', strtotime(dcCore::app()->admin->post_dt)) : '';
+            $cur->cat_id             = dcCore::app()->admin->cat_id;
             $cur->post_format        = dcCore::app()->admin->post_format;
             $cur->post_password      = dcCore::app()->admin->post_password;
             $cur->post_lang          = dcCore::app()->admin->post_lang;
@@ -363,6 +365,8 @@ class ManageMap extends dcNsProcess
                 $cur->user_id = dcCore::app()->auth->userID();
 
                 try {
+                    $return_id = dcCore::app()->blog->addPost($cur);
+
                     if (isset($_POST['element_type'])) {
                         $tags           = $_POST['element_type'];
                         $myGmaps_center = $_POST['myGmaps_center'];
@@ -380,8 +384,6 @@ class ManageMap extends dcNsProcess
 
                     // --BEHAVIOR-- adminBeforePostCreate
                     dcCore::app()->callBehavior('adminBeforePostCreate', $cur);
-
-                    $return_id = dcCore::app()->blog->addPost($cur);
 
                     // --BEHAVIOR-- adminAfterPostCreate
                     dcCore::app()->callBehavior('adminAfterPostCreate', $cur, $return_id);
@@ -663,14 +665,7 @@ class ManageMap extends dcNsProcess
         /* Post form if we can edit page
         -------------------------------------------------------- */
         if (dcCore::app()->admin->can_edit_page) {
-
-            $meta = dcCore::app()->meta;
-
-            if (isset(dcCore::app()->admin->post)) {
-                echo '<p>' . form::hidden('element_type', $meta->getMetaStr(dcCore::app()->admin->post->post_meta, 'map')) . '</p>';
-            } else {
-                echo '<p>' . form::hidden('element_type', '') . '</p>';
-            }
+            $meta = dcCore::app()->meta ?? '';
 
             if (isset(dcCore::app()->admin->post)) {
                 $meta_rs = $meta->getMetaStr(dcCore::app()->admin->post->post_meta, 'map_options');
@@ -713,7 +708,7 @@ class ManageMap extends dcNsProcess
                     'items' => [
                         'post_selected' => '<p><label for="post_selected" class="classic">' .
                         form::checkbox('post_selected', 1, dcCore::app()->admin->post_selected) . ' ' .
-                        __('Selected entry') . '</label></p>',
+                        __('Selected element') . '</label></p>',
                         'cat_id' => '<div>' .
                         '<h5 id="label_cat_id">' . __('Category') . '</h5>' .
                         '<p><label for="cat_id">' . __('Category:') . '</label>' .
@@ -806,8 +801,6 @@ class ManageMap extends dcNsProcess
                 echo $item;
             }
 
-            
-
             # --BEHAVIOR-- adminPostForm -- MetaRecord|null
             dcCore::app()->callBehavior('adminPostForm', dcCore::app()->admin->post ?? null);
 
@@ -817,19 +810,23 @@ class ManageMap extends dcNsProcess
             '<p class="border-top">' .
             (dcCore::app()->admin->post_id ? form::hidden('id', dcCore::app()->admin->post_id) : '') .
             '<input type="submit" value="' . __('Save') . ' (s)" accesskey="s" name="save" /> ' .
-            '<input type="hidden" name="myGmaps_center" id="myGmaps_center" value="' . $myGmaps_center . '" />' .
-            '<input type="hidden" name="myGmaps_zoom" id="myGmaps_zoom" value="' . $myGmaps_zoom . '" />' .
-            '<input type="hidden" name="myGmaps_type" id="myGmaps_type" value="' . $myGmaps_type . '" />' .
-            '<input type="text" class="hidden" id="blog_url" value="' . $blog_url . '" />' .
-            '<input type="text" class="hidden" id="plugin_QmarkURL" value="' . $plugin_QmarkURL . '" />' .
-            '<input type="text" class="hidden" id="icons_list" value="' . $icons_list . '" />' .
-            '<input type="text" class="hidden" id="icons_base_url" value="' . $icons_base_url . '" />' .
-            '<input type="text" class="hidden" id="kmls_list" value="' . $kmls_list . '" />' .
-            '<input type="text" class="hidden" id="kmls_base_url" value="' . $kmls_base_url . '" />' .
-            '<input type="text" class="hidden" id="map_styles_list" value="' . $map_styles_list . '" />' .
-            '<input type="text" class="hidden" id="map_styles_base_url" value="' . $map_styles_base_url . '" />';
+            form::hidden('myGmaps_center', $myGmaps_center) .
+            form::hidden('myGmaps_zoom', $myGmaps_zoom) .
+            form::hidden('myGmaps_type', $myGmaps_type) .
+            form::hidden('blog_url', $blog_url) .
+            form::hidden('plugin_QmarkURL', $plugin_QmarkURL) .
+            form::hidden('icons_list', $icons_list) .
+            form::hidden('icons_base_url', $icons_base_url) .
+            form::hidden('kmls_list', $kmls_list) .
+            form::hidden('kmls_base_url', $kmls_base_url) .
+            form::hidden('map_styles_list', $map_styles_list) .
+            form::hidden('map_styles_base_url', $map_styles_base_url) ;
 
-            
+            if (isset(dcCore::app()->admin->post)) {
+                echo '<p>' . form::hidden('element_type', $meta->getMetaStr(dcCore::app()->admin->post->post_meta, 'map')) . '</p>';
+            } else {
+                echo '<p>' . form::hidden('element_type', '') . '</p>';
+            }
 
             if (dcCore::app()->admin->post_id) {
                 $preview_url = dcCore::app()->blog->url .

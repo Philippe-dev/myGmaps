@@ -269,3 +269,7 @@ button.delete_map {
 .add {
   font-size: 1.5rem;
 }
+
+.s-tags, .s-featuredmedia, .s-attachments {
+  display: none;
+}
