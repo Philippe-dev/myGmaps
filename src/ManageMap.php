@@ -136,7 +136,7 @@ class ManageMap extends dcNsProcess
                 dcCore::app()->error->add(__('This map element does not exist.'));
                 dcCore::app()->admin->can_view_page = false;
             } else {
-                dcCore::app()->admin->cat_id            = (int) dcCore::app()->admin->post->cat_id;
+                dcCore::app()->admin->cat_id             = (int) dcCore::app()->admin->post->cat_id;
                 dcCore::app()->admin->post_id            = (int) dcCore::app()->admin->post->post_id;
                 dcCore::app()->admin->post_dt            = date('Y-m-d H:i', strtotime(dcCore::app()->admin->post->post_dt));
                 dcCore::app()->admin->post_format        = dcCore::app()->admin->post->post_format;
@@ -275,8 +275,8 @@ class ManageMap extends dcNsProcess
             // Delete page
 
             try {
-                # --BEHAVIOR-- adminBeforePageDelete -- int
-                dcCore::app()->callBehavior('adminBeforePageDelete', dcCore::app()->admin->post_id);
+                # --BEHAVIOR-- adminBeforePostDelete -- int
+                dcCore::app()->callBehavior('adminBeforePostDelete', dcCore::app()->admin->post_id);
                 dcCore::app()->blog->delPost(dcCore::app()->admin->post_id);
                 Http::redirect(dcCore::app()->admin->getPageURL());
             } catch (Exception $e) {
@@ -288,6 +288,18 @@ class ManageMap extends dcNsProcess
             // Create or update page
 
             $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcBlog::POST_TABLE_NAME);
+
+            if ($_POST['post_content'] == '' || $_POST['post_content'] == __('No description.') || $_POST['post_content'] == '<p>' . __('No description.') . '</p>') {
+                if (dcCore::app()->admin->post_format == 'wiki') {
+                    dcCore::app()->admin->post_content = __('No description.');
+                    $description                       = 'none';
+                } elseif (dcCore::app()->admin->post_format == 'xhtml') {
+                    dcCore::app()->admin->post_content = '<p>' . __('No description.') . '</p>';
+                    $description                       = 'none';
+                }
+            } else {
+                $description = 'description';
+            }
 
             // Magic tweak :)
             dcCore::app()->blog->settings->system->post_url_format = '{t}';
@@ -324,26 +336,26 @@ class ManageMap extends dcNsProcess
                         $myGmaps_type   = $_POST['myGmaps_type'];
                         $meta           = dcCore::app()->meta;
 
-                        $meta->delPostMeta($post_id, 'map');
-                        $meta->delPostMeta($post_id, 'map_options');
-                        $meta->delPostMeta($post_id, 'description');
+                        $meta->delPostMeta(dcCore::app()->admin->post_id, 'map');
+                        $meta->delPostMeta(dcCore::app()->admin->post_id, 'map_options');
+                        $meta->delPostMeta(dcCore::app()->admin->post_id, 'description');
 
                         foreach ($meta->splitMetaValues($tags) as $tag) {
-                            $meta->setPostMeta($post_id, 'map', $tag);
+                            $meta->setPostMeta(dcCore::app()->admin->post_id, 'map', $tag);
                         }
                         $map_options = $myGmaps_center . ',' . $myGmaps_zoom . ',' . $myGmaps_type;
-                        $meta->setPostMeta($post_id, 'map_options', $map_options);
-                        $meta->setPostMeta($post_id, 'description', $description);
+                        $meta->setPostMeta(dcCore::app()->admin->post_id, 'map_options', $map_options);
+                        $meta->setPostMeta(dcCore::app()->admin->post_id, 'description', $description);
                     }
                     // --BEHAVIOR-- adminBeforePostUpdate
-                    dcCore::app()->callBehavior('adminBeforePostUpdate', $cur, $post_id);
+                    dcCore::app()->callBehavior('adminBeforePostUpdate', $cur, dcCore::app()->admin->post_id);
 
-                    dcCore::app()->blog->updPost($post_id, $cur);
+                    dcCore::app()->blog->updPost(dcCore::app()->admin->post_id, $cur);
 
                     // --BEHAVIOR-- adminAfterPostUpdate
-                    dcCore::app()->callBehavior('adminAfterPostUpdate', $cur, $post_id);
+                    dcCore::app()->callBehavior('adminAfterPostUpdate', $cur, dcCore::app()->admin->post_id);
 
-                    http::redirect('' . dcCore::app()->admin->getPageURL() . '&do=edit&id=' . $post_id . '&upd=1');
+                    http::redirect('' . dcCore::app()->admin->getPageURL() . '&act=map&id=' . dcCore::app()->admin->post_id . '&upd=1');
                 } catch (Exception $e) {
                     dcCore::app()->error->add($e->getMessage());
                 }
@@ -374,7 +386,7 @@ class ManageMap extends dcNsProcess
                     // --BEHAVIOR-- adminAfterPostCreate
                     dcCore::app()->callBehavior('adminAfterPostCreate', $cur, $return_id);
 
-                    http::redirect('' . dcCore::app()->admin->getPageURL() . '&do=edit&id=' . $return_id . '&crea=1');
+                    http::redirect('' . dcCore::app()->admin->getPageURL() . '&act=map&id=' . $return_id . '&crea=1');
                 } catch (Exception $e) {
                     dcCore::app()->error->add($e->getMessage());
                 }
@@ -383,8 +395,8 @@ class ManageMap extends dcNsProcess
             if (!empty($_POST['delete']) && $can_delete) {
                 try {
                     // --BEHAVIOR-- adminBeforePostDelete
-                    dcCore::app()->callBehavior('adminBeforePostDelete', $post_id);
-                    dcCore::app()->blog->delPost($post_id);
+                    dcCore::app()->callBehavior('adminBeforePostDelete', dcCore::app()->admin->post_id);
+                    dcCore::app()->blog->delPost(dcCore::app()->admin->post_id);
                     http::redirect(dcCore::app()->admin->getPageURL() . '&do=list');
                 } catch (Exception $e) {
                     dcCore::app()->error->add($e->getMessage());
@@ -403,6 +415,13 @@ class ManageMap extends dcNsProcess
         if (!static::$init) {
             return;
         }
+
+        $settings = dcCore::app()->blog->settings->myGmaps;
+
+        $myGmaps_center = $settings->myGmaps_center;
+        $myGmaps_zoom   = $settings->myGmaps_zoom;
+        $myGmaps_type   = $settings->myGmaps_type;
+        $myGmaps_type   = $settings->myGmaps_type;
 
         dcCore::app()->admin->default_tab = 'edit-entry';
         if (!dcCore::app()->admin->can_edit_page) {
@@ -427,7 +446,7 @@ class ManageMap extends dcNsProcess
                     'adminPostEditor',
                     $p_edit,
                     'map',
-                    ['#post_excerpt', '#post_content', '#comment_content'],
+                    ['#post_content'],
                     dcCore::app()->admin->post_format
                 );
             } else {
@@ -436,30 +455,128 @@ class ManageMap extends dcNsProcess
                     'adminPostEditor',
                     $p_edit,
                     'map',
-                    ['#post_excerpt', '#post_content'],
+                    ['#post_content'],
                     dcCore::app()->admin->post_format
-                );
-                # --BEHAVIOR-- adminPostEditor -- string, string, string, array<int,string>, string
-                $admin_post_behavior .= dcCore::app()->callBehavior(
-                    'adminPostEditor',
-                    $c_edit,
-                    'comment',
-                    ['#comment_content'],
-                    'xhtml'
                 );
             }
         }
 
+        // Custom marker icons
+
+        $public_path = dcCore::app()->blog->public_path;
+        $public_url  = dcCore::app()->blog->settings->system->public_url;
+        $blog_url    = dcCore::app()->blog->url;
+
+        $icons_dir_path = $public_path . '/myGmaps/icons/';
+        $icons_dir_url  = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/icons/');
+
+        if (is_dir($icons_dir_path)) {
+            $images     = glob($icons_dir_path . '*.png');
+            $icons_list = [];
+            foreach ($images as $image) {
+                $image = basename($image);
+                array_push($icons_list, $image);
+            }
+            $icons_list     = implode(',', $icons_list);
+            $icons_base_url = $icons_dir_url;
+        } else {
+            $icons_list      = '';
+            $icons_base_path = '';
+            $icons_base_url  = '';
+        }
+
+        // Custom Kml files
+
+        $kmls_dir_path = $public_path . '/myGmaps/kml_files/';
+        $kmls_dir_url  = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/kml_files/');
+
+        if (is_dir($kmls_dir_path)) {
+            $kmls      = glob($kmls_dir_path . '*.kml');
+            $kmls_list = [];
+            foreach ($kmls as $kml) {
+                $kml = basename($kml);
+                array_push($kmls_list, $kml);
+            }
+            $kmls_list     = implode(',', $kmls_list);
+            $kmls_base_url = $kmls_dir_url;
+        } else {
+            $kmls_list     = '';
+            $kmls_base_url = '';
+        }
+
+        // Custom map styles
+        $map_styles_dir_path = $public_path . '/myGmaps/styles/';
+        $map_styles_dir_url  = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/styles/');
+
+        if (is_dir($map_styles_dir_path)) {
+            $map_styles      = glob($map_styles_dir_path . '*.js');
+            $map_styles_list = [];
+            foreach ($map_styles as $map_style) {
+                $map_style = basename($map_style);
+                array_push($map_styles_list, $map_style);
+            }
+            $map_styles_list     = implode(',', $map_styles_list);
+            $map_styles_base_url = $map_styles_dir_url;
+        } else {
+            $map_styles_list     = '';
+            $map_styles_base_url = '';
+        }
+
+        $starting_script = '<script src="https://maps.googleapis.com/maps/api/js?key=' . $settings->myGmaps_API_key . '&amp;libraries=places&amp;callback=Function.prototype"></script>';
+
+        $starting_script .= '<script>' . "\n" .
+        '//<![CDATA[' . "\n" .
+            'var neutral_blue_styles = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#193341"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#2c5a71"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#29768a"},{"lightness":-37}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#3e606f"},{"weight":2},{"gamma":0.84}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"weight":0.6},{"color":"#1a3541"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#2c5a71"}]}];' . "\n" .
+            'var neutral_blue = new google.maps.StyledMapType(neutral_blue_styles,{name: "Neutral Blue"});' . "\n";
+
+        if (is_dir($map_styles_dir_path)) {
+            $list = explode(',', $map_styles_list);
+            foreach ($list as $map_style) {
+                $map_style_content = file_get_contents($map_styles_dir_path . '/' . $map_style);
+                $var_styles_name   = pathinfo($map_style, PATHINFO_FILENAME);
+                $var_name          = preg_replace('/_styles/s', '', $var_styles_name);
+                $nice_name         = ucwords(preg_replace('/_/s', ' ', $var_name));
+
+                $starting_script .= 'var ' . $var_styles_name . ' = ' . $map_style_content . ';' . "\n" .
+                'var ' . $var_name . ' = new google.maps.StyledMapType(' . $var_styles_name . ',{name: "' . $nice_name . '"});' . "\n";
+            }
+        }
+
+        $starting_script .= '//]]>' . "\n" .
+        '</script>';
+
+        $starting_script .= '<script>' . "\n" .
+        '//<![CDATA[' . "\n" .
+        'var stroke_color_msg = \'' . __('Stroke color') . '\';' . "\n" .
+        'var stroke_opacity_msg = \'' . __('Stroke opacity') . '\';' . "\n" .
+        'var stroke_weight_msg = \'' . __('Stroke weight') . '\';' . "\n" .
+        'var circle_radius_msg = \'' . __('Circle radius') . '\';' . "\n" .
+        'var fill_color_msg = \'' . __('Fill color') . '\';' . "\n" .
+        'var fill_opacity_msg = \'' . __('Fill opacity') . '\';' . "\n" .
+        'var default_icons_msg = \'' . __('Default icons') . '\';' . "\n" .
+        'var custom_icons_msg = \'' . __('Custom icons') . '\';' . "\n" .
+        'var kml_url_msg = \'' . __('File URL:') . '\';' . "\n" .
+        'var geoRss_url_msg = \'' . __('Feed URL:') . '\';' . "\n" .
+        'var custom_kmls_msg = \'' . __('Custom Kml files') . '\';' . "\n" .
+        'var directions_start_msg = \'' . __('Start:') . '\';' . "\n" .
+        'var directions_end_msg = \'' . __('End:') . '\';' . "\n" .
+        'var directions_show_msg = \'' . __('Display directions panel in public map') . '\';' . "\n" .
+        '//]]>' . "\n" .
+        '</script>';
+
         dcPage::openModule(
             dcCore::app()->admin->page_title . ' - ' . __('Google Maps'),
             dcPage::jsModal() .
-            dcPage::jsJson('pages_page', ['confirm_delete_post' => __('Are you sure you want to delete this page?')]) .
+            dcPage::jsMetaEditor() .
+            $starting_script .
             dcPage::jsLoad('js/_post.js') .
+            dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/element.map.js') .
             $admin_post_behavior .
             dcPage::jsConfirmClose('entry-form') .
-            # --BEHAVIOR-- adminPageHeaders --
-            dcCore::app()->callBehavior('adminPageHeaders') .
+            # --BEHAVIOR-- adminPostHeaders --
+            dcCore::app()->callBehavior('adminPostHeaders') .
             dcPage::jsPageTabs(dcCore::app()->admin->default_tab) .
+            '<link rel="stylesheet" type="text/css" href="index.php?pf=myGmaps/css/admin.css" />' .
             dcCore::app()->admin->next_headlink . "\n" . dcCore::app()->admin->prev_headlink
         );
 
@@ -530,8 +647,8 @@ class ManageMap extends dcNsProcess
                 dcCore::app()->admin->next_link;
             }
 
-            # --BEHAVIOR-- adminPageNavLinks -- MetaRecord|null
-            dcCore::app()->callBehavior('adminPageNavLinks', dcCore::app()->admin->post ?? null);
+            # --BEHAVIOR-- adminPostNavLinks -- MetaRecord|null
+            dcCore::app()->callBehavior('adminPostNavLinks', dcCore::app()->admin->post ?? null);
 
             echo
             '</p>';
@@ -539,7 +656,7 @@ class ManageMap extends dcNsProcess
 
         # Exit if we cannot view page
         if (!dcCore::app()->admin->can_view_page) {
-            dcPage::closeModule();
+            dcPost::closeModule();
 
             return;
         }
@@ -612,19 +729,23 @@ class ManageMap extends dcNsProcess
                     ]) .
                     '</p>',
 
-                    'post_excerpt' => '<p class="area" id="excerpt-area"><label for="post_excerpt" class="bold">' . __('Excerpt:') . ' <span class="form-note">' .
-                    __('Introduction to the page.') . '</span></label> ' .
-                    form::textarea(
-                        'post_excerpt',
-                        50,
-                        5,
-                        [
-                            'default'    => Html::escapeHTML(dcCore::app()->admin->post_excerpt),
-                            'extra_html' => 'lang="' . dcCore::app()->admin->post_lang . '" spellcheck="true"',
-                        ]
-                    ) .
-                    '</p>',
-
+                    'post_excerpt' => '<label class="bold">' . __('Position:') . '</label>' .
+                    '<div class="map_toolbar">' . __('Search:') . '<span class="map_spacer">&nbsp;</span>' .
+                    '<input size="40" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="' . __('OK') . '" /><span class="map_spacer">&nbsp;</span>' .
+                    '<button id="add_marker" class="add_marker" type="button" title="' . __('Point of interest') . '"><span>' . __('Point of interest') . '</span></button>' .
+                    '<button id="add_polyline" class="add_polyline" type="button" title="' . __('Polyline') . '"><span>' . __('Polyline') . '</span></button>' .
+                    '<button id="add_polygon" class="add_polygon" type="button" title="' . __('Polygon') . '"><span>' . __('Polygon') . '</span></button>' .
+                    '<button id="add_rectangle" class="add_rectangle" type="button" title="' . __('Rectangle') . '"><span>' . __('Rectangle') . '</span></button>' .
+                    '<button id="add_circle" class="add_circle" type="button" title="' . __('Circle') . '"><span>' . __('Circle') . '</span></button>' .
+                    '<button id="add_kml" class="add_kml" type="button" title="' . __('Included Kml file') . '"><span>' . __('Included Kml file') . '</span></button>' .
+                    '<button id="add_georss" class="add_georss" type="button" title="' . __('GeoRSS Feed') . '"><span>' . __('GeoRSS Feed') . '</span></button>' .
+                    '<button id="add_directions" class="add_directions" type="button" title="' . __('Directions') . '"><span>' . __('Directions') . '</span></button>' .
+                    '<button id="delete_map" type="button" class="delete_map" title="' . __('Initialize map') . '"><span>' . __('Initialize map') . '</span></button>' .
+                    '</div>' .
+                    '<div id="map_box"><div class="area" id="map_canvas"></div><div id="panel"></div></div>' .
+                    '<div class="form-note info maximal mapinfo" style="width: 100%"><p>' . __('This map will not be displayed on the blog and is meant only to create, edit and position only one element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties.') . '</p>' .
+                    '</div>' .
+                '<p class="area" id="excerpt"><span style="display:none;">' . form::textarea('post_excerpt', 50, 5, html::escapeHTML(dcCore::app()->admin->post_excerpt)) . '</span></p>',
                     'post_content' => '<p class="area" id="content-area"><label class="required bold" ' .
                     'for="post_content"><abbr title="' . __('Required field') . '">*</abbr> ' . __('Content:') . '</label> ' .
                     form::textarea(
@@ -654,7 +775,7 @@ class ManageMap extends dcNsProcess
             );
 
             # --BEHAVIOR-- adminPostFormItems -- ArrayObject, ArrayObject, MetaRecord|null
-            dcCore::app()->callBehavior('adminPageFormItems', $main_items, $sidebar_items, dcCore::app()->admin->post ?? null);
+            dcCore::app()->callBehavior('adminPostFormItems', $main_items, $sidebar_items, dcCore::app()->admin->post ?? null);
 
             echo
             '<div class="multi-part" title="' . (dcCore::app()->admin->post_id ? __('Edit page') : __('New page')) .
@@ -668,13 +789,26 @@ class ManageMap extends dcNsProcess
                 echo $item;
             }
 
-            # --BEHAVIOR-- adminPageForm -- MetaRecord|null
-            dcCore::app()->callBehavior('adminPageForm', dcCore::app()->admin->post ?? null);
+            # --BEHAVIOR-- adminPostForm -- MetaRecord|null
+            dcCore::app()->callBehavior('adminPostForm', dcCore::app()->admin->post ?? null);
+
+            $plugin_QmarkURL = dcCore::app()->blog->getQmarkURL();
 
             echo
             '<p class="border-top">' .
             (dcCore::app()->admin->post_id ? form::hidden('id', dcCore::app()->admin->post_id) : '') .
-            '<input type="submit" value="' . __('Save') . ' (s)" accesskey="s" name="save" /> ';
+            '<input type="submit" value="' . __('Save') . ' (s)" accesskey="s" name="save" /> ' .
+            '<input type="hidden" name="myGmaps_center" id="myGmaps_center" value="' . $myGmaps_center . '" />' .
+            '<input type="hidden" name="myGmaps_zoom" id="myGmaps_zoom" value="' . $myGmaps_zoom . '" />' .
+            '<input type="hidden" name="myGmaps_type" id="myGmaps_type" value="' . $myGmaps_type . '" />' .
+            '<input type="text" class="hidden" id="blog_url" value="' . $blog_url . '" />' .
+            '<input type="text" class="hidden" id="plugin_QmarkURL" value="' . $plugin_QmarkURL . '" />' .
+            '<input type="text" class="hidden" id="icons_list" value="' . $icons_list . '" />' .
+            '<input type="text" class="hidden" id="icons_base_url" value="' . $icons_base_url . '" />' .
+            '<input type="text" class="hidden" id="kmls_list" value="' . $kmls_list . '" />' .
+            '<input type="text" class="hidden" id="kmls_base_url" value="' . $kmls_base_url . '" />' .
+            '<input type="text" class="hidden" id="map_styles_list" value="' . $map_styles_list . '" />' .
+            '<input type="text" class="hidden" id="map_styles_base_url" value="' . $map_styles_base_url . '" />';
 
             if (dcCore::app()->admin->post_id) {
                 $preview_url = dcCore::app()->blog->url .
@@ -724,30 +858,18 @@ class ManageMap extends dcNsProcess
                 '</div>';
             }
 
-            # --BEHAVIOR-- adminPageFormSidebar -- MetaRecord|null
-            dcCore::app()->callBehavior('adminPageFormSidebar', dcCore::app()->admin->post ?? null);
+            # --BEHAVIOR-- adminPostFormSidebar -- MetaRecord|null
+            dcCore::app()->callBehavior('adminPostFormSidebar', dcCore::app()->admin->post ?? null);
 
             echo
             '</div>' . // End #entry-sidebar
             '</form>';
 
             # --BEHAVIOR-- adminPostForm -- MetaRecord|null
-            dcCore::app()->callBehavior('adminPageAfterForm', dcCore::app()->admin->post ?? null);
+            dcCore::app()->callBehavior('adminPostAfterForm', dcCore::app()->admin->post ?? null);
 
             echo
             '</div>'; // End
-
-            if (dcCore::app()->admin->post_id && !empty(dcCore::app()->admin->post_media)) {
-                echo
-                '<form action="' . dcCore::app()->adminurl->get('admin.post.media') . '" id="attachment-remove-hide" method="post">' .
-                '<div>' .
-                form::hidden(['post_id'], dcCore::app()->admin->post_id) .
-                form::hidden(['media_id'], '') .
-                form::hidden(['remove'], 1) .
-                dcCore::app()->formNonce() .
-                '</div>' .
-                '</form>';
-            }
         }
 
         dcPage::helpBlock('myGmap', 'core_wiki');
