@@ -421,7 +421,6 @@ class ManageMap extends dcNsProcess
         $myGmaps_center = $settings->myGmaps_center;
         $myGmaps_zoom   = $settings->myGmaps_zoom;
         $myGmaps_type   = $settings->myGmaps_type;
-        $myGmaps_type   = $settings->myGmaps_type;
 
         dcCore::app()->admin->default_tab = 'edit-entry';
         if (!dcCore::app()->admin->can_edit_page) {
@@ -664,6 +663,24 @@ class ManageMap extends dcNsProcess
         /* Post form if we can edit page
         -------------------------------------------------------- */
         if (dcCore::app()->admin->can_edit_page) {
+
+            $meta = dcCore::app()->meta;
+
+            if (isset(dcCore::app()->admin->post)) {
+                echo '<p>' . form::hidden('element_type', $meta->getMetaStr(dcCore::app()->admin->post->post_meta, 'map')) . '</p>';
+            } else {
+                echo '<p>' . form::hidden('element_type', '') . '</p>';
+            }
+
+            if (isset(dcCore::app()->admin->post)) {
+                $meta_rs = $meta->getMetaStr(dcCore::app()->admin->post->post_meta, 'map_options');
+                if ($meta_rs) {
+                    $map_options    = explode(',', $meta_rs);
+                    $myGmaps_center = $map_options[0] . ',' . $map_options[1];
+                    $myGmaps_zoom   = $map_options[2];
+                    $myGmaps_type   = $map_options[3];
+                }
+            }
             $sidebar_items = new ArrayObject([
                 'status-box' => [
                     'title' => __('Status'),
@@ -745,12 +762,7 @@ class ManageMap extends dcNsProcess
                     '<div id="map_box"><div class="area" id="map_canvas"></div><div id="panel"></div></div>' .
                     '<div class="form-note info maximal mapinfo" style="width: 100%"><p>' . __('This map will not be displayed on the blog and is meant only to create, edit and position only one element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties.') . '</p>' .
                     '</div>' .
-<<<<<<< Updated upstream
-                '<p class="area" id="excerpt"><span style="display:none;">' . form::textarea('post_excerpt', 50, 5, html::escapeHTML(dcCore::app()->admin->post_excerpt)) . '</span></p>',
-=======
-                    //'<p class="area" id="excerpt"><span style="display:none;">' . form::textarea('post_excerpt', 50, 5, html::escapeHTML($post_excerpt)) . '</span></p>',
-                    '<p class="area" id="excerpt">' . form::textarea('post_excerpt', 50, 5, html::escapeHTML($post_excerpt)) . '</p>',
->>>>>>> Stashed changes
+                    '<p class="area" id="excerpt"><span style="display:none;">' . form::textarea('post_excerpt', 50, 5, html::escapeHTML(dcCore::app()->admin->post_excerpt)) . '</span></p>',
                     'post_content' => '<p class="area" id="content-area"><label class="required bold" ' .
                     'for="post_content"><abbr title="' . __('Required field') . '">*</abbr> ' . __('Content:') . '</label> ' .
                     form::textarea(
@@ -794,6 +806,8 @@ class ManageMap extends dcNsProcess
                 echo $item;
             }
 
+            
+
             # --BEHAVIOR-- adminPostForm -- MetaRecord|null
             dcCore::app()->callBehavior('adminPostForm', dcCore::app()->admin->post ?? null);
 
@@ -814,6 +828,8 @@ class ManageMap extends dcNsProcess
             '<input type="text" class="hidden" id="kmls_base_url" value="' . $kmls_base_url . '" />' .
             '<input type="text" class="hidden" id="map_styles_list" value="' . $map_styles_list . '" />' .
             '<input type="text" class="hidden" id="map_styles_base_url" value="' . $map_styles_base_url . '" />';
+
+            
 
             if (dcCore::app()->admin->post_id) {
                 $preview_url = dcCore::app()->blog->url .
