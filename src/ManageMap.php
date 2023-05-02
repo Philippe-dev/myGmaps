@@ -745,7 +745,12 @@ class ManageMap extends dcNsProcess
                     '<div id="map_box"><div class="area" id="map_canvas"></div><div id="panel"></div></div>' .
                     '<div class="form-note info maximal mapinfo" style="width: 100%"><p>' . __('This map will not be displayed on the blog and is meant only to create, edit and position only one element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties.') . '</p>' .
                     '</div>' .
+<<<<<<< Updated upstream
                 '<p class="area" id="excerpt"><span style="display:none;">' . form::textarea('post_excerpt', 50, 5, html::escapeHTML(dcCore::app()->admin->post_excerpt)) . '</span></p>',
+=======
+                    //'<p class="area" id="excerpt"><span style="display:none;">' . form::textarea('post_excerpt', 50, 5, html::escapeHTML($post_excerpt)) . '</span></p>',
+                    '<p class="area" id="excerpt">' . form::textarea('post_excerpt', 50, 5, html::escapeHTML($post_excerpt)) . '</p>',
+>>>>>>> Stashed changes
                     'post_content' => '<p class="area" id="content-area"><label class="required bold" ' .
                     'for="post_content"><abbr title="' . __('Required field') . '">*</abbr> ' . __('Content:') . '</label> ' .
                     form::textarea(

@@ -614,6 +614,10 @@ class Backend extends dcNsProcess
             return;
         }
 
+        if (isset($_GET['p']) && $_GET['p'] == 'myGmaps') {
+            return;
+        }
+
         return
         '<script src="https://maps.googleapis.com/maps/api/js?key=' . $settings->myGmaps_API_key . '&amp;libraries=places&amp;callback=Function.prototype"></script>' . "\n" .
         '<script>' . "\n" .

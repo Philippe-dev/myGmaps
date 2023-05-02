@@ -200,7 +200,6 @@ class Manage extends dcNsProcess
         try {
             $params['no_content'] = true;
             $params['post_type']  = 'map';
-            // $params['sql']                   = 'AND P.post_id IN (SELECT META.post_id FROM ' . dcCore::app()->prefix . 'meta META WHERE META.post_id = P.post_id ' . "AND META.meta_type = 'myGmaps' ) ";
             dcCore::app()->admin->posts      = dcCore::app()->blog->getPosts($params);
             dcCore::app()->admin->counter    = dcCore::app()->blog->getPosts($params, true);
             dcCore::app()->admin->posts_list = new BackendList(dcCore::app()->admin->posts, dcCore::app()->admin->counter->f(0));

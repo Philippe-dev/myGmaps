@@ -3,7 +3,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: myGmaps 6.0\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-04-29T14:50:46+00:00\n"
+"PO-Revision-Date: 2023-05-02T16:57:34+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -202,39 +202,6 @@ msgstr "Initialiser la carte"
 msgid "This map will not be displayed on the blog and is meant only to create, edit and position only one element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties."
 msgstr "Cette carte ne sera pas affichée sur le blog, et n'est destinée qu'à créer, positionner ou éditer un seul élément à la fois. Choisissez un outil, cliquez sur la carte pour créer votre élément, puis cliquer sur l'élément pour modifier ses propriétés."
 
-msgid "Back to map elements list"
-msgstr "Retour à la liste des éléments"
-
-msgid "Map elements actions"
-msgstr "Actions sur les éléments"
-
-msgid "No element selected"
-msgstr "Pas d'élement sélectionné"
-
-msgid "Create a new category for the element(s)"
-msgstr "Créer une nouvelle catégorie pour le(s) éléments(s)"
-
-msgid "Element language:"
-msgstr "Langue de l'élément :"
-
-msgid "No element matches the filter"
-msgstr "Aucun élément correspondant au filtre"
-
-msgid "No map element"
-msgstr "Aucun élément"
-
-msgid "List of %s elements matching the filter"
-msgstr "Liste des %s éléments correspondant au filtre"
-
-msgid "Elements list (%s)"
-msgstr "Liste des éléments (%s)"
-
-msgid "Elements list"
-msgstr "Liste des éléments"
-
-msgid "Remove map element"
-msgstr "Supprimer l'élément de carte"
-
 msgid "Google Map:"
 msgstr "Carte Google :"
 
@@ -262,8 +229,44 @@ msgstr "Voulez-vous vraiment supprimer cette carte ?"
 msgid "Are you sure you want to remove this element?"
 msgstr "Voulez-vous vraiment supprimer cet élément ?"
 
+msgid "No element matches the filter"
+msgstr "Aucun élément correspondant au filtre"
+
+msgid "No map element"
+msgstr "Aucun élément"
+
+msgid "List of %s elements matching the filter"
+msgstr "Liste des %s éléments correspondant au filtre"
+
+msgid "Elements list (%s)"
+msgstr "Liste des éléments (%s)"
+
+msgid "Elements list"
+msgstr "Liste des éléments"
+
+msgid "Remove map element"
+msgstr "Supprimer l'élément de carte"
+
 msgid "Sorry, javascript must be activated in your browser to see this map."
 msgstr "Désolé, javascript doit être activé dans votre navigateur pour voir cette carte."
+
+msgid "Element status"
+msgstr "Statut de l'élément"
+
+msgid "Back to map elements list"
+msgstr "Retour à la liste des éléments"
+
+msgid "Map elements actions"
+msgstr "Actions sur les éléments"
+
+msgid "No element selected"
+msgstr "Pas d'élement sélectionné"
+
+msgid "Create a new category for the element(s)"
+msgstr "Créer une nouvelle catégorie pour le(s) éléments(s)"
+
+msgid "Element language:"
+msgstr "Langue de l'élément :"
 
 msgid "%d map elements"
 msgstr "%d éléments"

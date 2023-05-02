@@ -685,14 +685,18 @@ if ($can_edit_post) {
                 __('Unpublished notes.') . '</span></label>' .
                 form::textarea('post_notes', 50, 5, html::escapeHTML($post_notes)) .
                 '</p>' .
-                '<p><input type="text" class="hidden" id="blog_url" value="' . $blog_url . '" />' .
+                '<input type="text" class="hidden" id="blog_url" value="' . $blog_url . '" />' .
                 '<input type="text" class="hidden" id="plugin_QmarkURL" value="' . $plugin_QmarkURL . '" />' .
                 '<input type="text" class="hidden" id="icons_list" value="' . $icons_list . '" />' .
                 '<input type="text" class="hidden" id="icons_base_url" value="' . $icons_base_url . '" />' .
                 '<input type="text" class="hidden" id="kmls_list" value="' . $kmls_list . '" />' .
                 '<input type="text" class="hidden" id="kmls_base_url" value="' . $kmls_base_url . '" />' .
                 '<input type="text" class="hidden" id="map_styles_list" value="' . $map_styles_list . '" />' .
-                '<input type="text" class="hidden" id="map_styles_base_url" value="' . $map_styles_base_url . '" /></p>',
+                '<input type="text" class="hidden" id="map_styles_base_url" value="' . $map_styles_base_url .
+                '<input type="hidden" name="myGmaps_center" id="myGmaps_center" value="' . $myGmaps_center . '" />' .
+                '<input type="hidden" name="myGmaps_zoom" id="myGmaps_zoom" value="' . $myGmaps_zoom . '" />' .
+                '<input type="hidden" name="myGmaps_type" id="myGmaps_type" value="' . $myGmaps_type . '" />' '" />' .
+
         ]
     );
 
@@ -732,10 +736,7 @@ if ($can_edit_post) {
     '<p class="border-top">' .
     ($post_id ? form::hidden('id', $post_id) : '') .
     '<input type="submit" value="' . __('Save') . ' (s)" ' .
-    'accesskey="s" name="save" /> ' .
-    '<input type="hidden" name="myGmaps_center" id="myGmaps_center" value="' . $myGmaps_center . '" />' .
-    '<input type="hidden" name="myGmaps_zoom" id="myGmaps_zoom" value="' . $myGmaps_zoom . '" />' .
-    '<input type="hidden" name="myGmaps_type" id="myGmaps_type" value="' . $myGmaps_type . '" />';
+    'accesskey="s" name="save" /> ' ;
 
     if (!$post_id) {
         echo
