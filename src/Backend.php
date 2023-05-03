@@ -586,6 +586,7 @@ class Backend extends dcNsProcess
         // Remove unused filters
 
         /*$filters->remove('element_type');*/
+        
     }
 
     public static function adminBeforePostUpdate($cur, $post_id)
