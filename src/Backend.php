@@ -24,6 +24,7 @@ use ArrayObject;
 use dcAdminFilter;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
+use form;
 
 class Backend extends dcNsProcess
 {
@@ -280,11 +281,13 @@ class Backend extends dcNsProcess
             '<p class="area" id="map_canvas"></p>' .
             $map_js .
             '<p class="form-note info maximal mapinfo" style="width: 100%">' . __('Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls.') . '</p>' .
-            '<p><input type="hidden" name="myGmaps_center" value="' . $myGmaps_center . '" />' .
-            '<input type="hidden" name="myGmaps_zoom" value="' . $myGmaps_zoom . '" />' .
-            '<input type="hidden" name="myGmaps_type" value="' . $myGmaps_type . '" />' .
-            '<input type="hidden" name="map_styles_list" id="map_styles_list" value="' . $map_styles_list . '" />' .
-            '<input type="hidden" name="map_styles_base_url" id="map_styles_base_url" value="' . $map_styles_base_url . '" /></p>' .
+            '<p>' .
+            form::hidden('myGmaps_center', $myGmaps_center) .
+            form::hidden('myGmaps_zoom', $myGmaps_zoom) .
+            form::hidden('myGmaps_type', $myGmaps_type) .
+            form::hidden('map_styles_list', $map_styles_list) .
+            form::hidden('map_styles_base_url', $map_styles_base_url) .
+            '</p>' .
             '<p>' . __('Empty map') . '</p>' .
             '<p class="two-boxes add"><a href="plugin.php?p=myGmaps&amp;post_id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></p>' .
             '<p class="two-boxes right"><a class="map-remove delete" href="' . $removemapurl . '"><strong>' . __('Remove map') . '</strong></a></p>' .
@@ -301,11 +304,13 @@ class Backend extends dcNsProcess
             '<p class="area" id="map_canvas"></p>' .
             $map_js .
             '<p class="form-note info maximal mapinfo" style="width: 100%">' . __('Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls.') . '</p>' .
-            '<p><input type="hidden" name="myGmaps_center" value="' . $myGmaps_center . '" />' .
-            '<input type="hidden" name="myGmaps_zoom" value="' . $myGmaps_zoom . '" />' .
-            '<input type="hidden" name="myGmaps_type" value="' . $myGmaps_type . '" />' .
-            '<input type="hidden" name="map_styles_list" id="map_styles_list" value="' . $map_styles_list . '" />' .
-            '<input type="hidden" name="map_styles_base_url" id="map_styles_base_url" value="' . $map_styles_base_url . '" /></p>';
+            '<p>' .
+            form::hidden('myGmaps_center', $myGmaps_center) .
+            form::hidden('myGmaps_zoom', $myGmaps_zoom) .
+            form::hidden('myGmaps_type', $myGmaps_type) .
+            form::hidden('map_styles_list', $map_styles_list) .
+            form::hidden('map_styles_base_url', $map_styles_base_url) .
+            '</p>';
 
             // Get map elements
             try {
@@ -557,8 +562,9 @@ class Backend extends dcNsProcess
 
         // - Map type filter
 
-        /*
-        $combo = [
+        $element_type = !empty($_GET['type']) ? $_GET['type'] : '';
+
+        $element_type_combo = [
             '-'                     => '',
             __('none')              => 'none',
             __('point of interest') => 'point of interest',
@@ -571,12 +577,17 @@ class Backend extends dcNsProcess
             __('directions')        => 'directions',
         ];
 
+        // - Map type filter
         $filters->append((new dcAdminFilter('type'))
-            ->param()
-            ->title(__('Type:'))
-            ->options($combo)
-            ->prime(true));
-        */
+        ->param('sql', "AND post_meta LIKE '%" . $element_type . "%' ")
+        ->title(__('Type:'))
+        ->options($element_type_combo)
+        ->prime(true));
+
+        // Remove unused filters
+
+        $filters->remove('type');
+        
     }
 
     public static function adminBeforePostUpdate($cur, $post_id)

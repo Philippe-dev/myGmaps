@@ -3,7 +3,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: myGmaps 6.0\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-05-03T14:59:05+00:00\n"
+"PO-Revision-Date: 2023-05-03T16:24:35+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -63,6 +63,9 @@ msgstr "flux GeoRSS"
 
 msgid "directions"
 msgstr "itinéraire"
+
+msgid "Type:"
+msgstr "Type :"
 
 msgid "Are you sure you want to remove this map?"
 msgstr "Voulez-vous vraiment supprimer cette carte ?"
