@@ -250,19 +250,8 @@ class Manage extends dcNsProcess
         dcPage::notices();
 
         // Display messages
-
-        if (isset($_GET['upd'])) {
-            $p_msg = '<p class="message">%s</p>';
-
-            $a_msg = [
-                __('Configuration has been saved.'),
-            ];
-
-            $k = (int) $_GET['upd'] - 1;
-
-            if (array_key_exists($k, $a_msg)) {
-                dcPage::success($a_msg[$k]);
-            }
+        if (isset($_GET['upd']) && isset($_GET['act'])) {
+            dcPage::success(__('Configuration has been saved.'));
         }
 
         // Config tab
