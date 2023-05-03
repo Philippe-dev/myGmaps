@@ -555,8 +555,6 @@ class ManageMap extends dcNsProcess
 
         dcPage::openModule(
             dcCore::app()->admin->page_title . ' - ' . __('Google Maps'),
-            dcPage::jsModal() .
-            dcPage::jsMetaEditor() .
             $starting_script .
             dcPage::jsLoad('js/_post.js') .
             dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/element.map.js') .

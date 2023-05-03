@@ -57,7 +57,7 @@ class Manage extends dcNsProcess
 
         $settings = dcCore::app()->blog->settings->myGmaps;
 
-        dcCore::app()->admin->default_tab = empty($_REQUEST['tab']) ? 'entries-list' : $_REQUEST['tab'];
+        dcCore::app()->admin->default_tab = empty($_REQUEST['tab']) ? 'settings' : $_REQUEST['tab'];
 
         /*
          * Admin page params.
@@ -246,7 +246,8 @@ class Manage extends dcNsProcess
                 html::escapeHTML(dcCore::app()->blog->name) => '',
                 __('Google Maps')                           => dcCore::app()->admin->getPageURL(),
             ]
-        );
+        ) .
+        dcPage::notices();
 
         // Display messages
 
@@ -255,13 +256,6 @@ class Manage extends dcNsProcess
 
             $a_msg = [
                 __('Configuration has been saved.'),
-                __('Elements status has been successfully updated'),
-                __('Elements have been successfully marked as selected'),
-                __('Elements have been successfully marked as deselected'),
-                __('Elements have been successfully deleted'),
-                __('Elements category has been successfully changed'),
-                __('Elements author has been successfully changed'),
-                __('Elements language has been successfully changed'),
             ];
 
             $k = (int) $_GET['upd'] - 1;

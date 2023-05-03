@@ -49,8 +49,8 @@ class BackendActions extends dcPostsActions
             dcPage::breadcrumb(
                 [
                     Html::escapeHTML(dcCore::app()->blog->name) => '',
-                    __('Google Maps')                                 => $this->getRedirection(true),
-                    __('Maps actions')                         => '',
+                    __('Google Maps')                           => $this->getRedirection(true),
+                    __('Maps actions')                          => '',
                 ]
             )
         );
@@ -71,7 +71,7 @@ class BackendActions extends dcPostsActions
         $head .
         '</script></head><body>' .
         $breadcrumb .
-        '<p><a class="back" href="' . $this->getRedirection(true) . '">' . __('Back to pages list') . '</a></p>';
+        '<p><a class="back" href="' . $this->getRedirection(true) . '">' . __('Back to elements list') . '</a></p>';
     }
 
     /**
@@ -89,7 +89,7 @@ class BackendActions extends dcPostsActions
     public function loadDefaults(): void
     {
         // We could have added a behavior here, but we want default action to be setup first
-        BackendDefaultActions::adminPagesActionsPage($this);
+        BackendDefaultActions::adminPostsActionsPage($this);
         # --BEHAVIOR-- adminPagesActions -- dcActions
         dcCore::app()->callBehavior('adminPagesActions', $this);
     }
