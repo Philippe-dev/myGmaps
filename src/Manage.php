@@ -198,8 +198,8 @@ class Manage extends dcNsProcess
         // Get map elements
 
         try {
-            $params['no_content'] = true;
-            $params['post_type']  = 'map';
+            $params['no_content']            = true;
+            $params['post_type']             = 'map';
             dcCore::app()->admin->posts      = dcCore::app()->blog->getPosts($params);
             dcCore::app()->admin->counter    = dcCore::app()->blog->getPosts($params, true);
             dcCore::app()->admin->posts_list = new BackendList(dcCore::app()->admin->posts, dcCore::app()->admin->counter->f(0));
@@ -297,11 +297,11 @@ class Manage extends dcNsProcess
         '<p class="area" id="map_canvas"></p>' .
         '<p class="form-note info maximal mapinfo" style="width: 100%">' . __('Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls.') . '</p>' .
             '<p>' .
-            '<input type="hidden" name="myGmaps_center" id="myGmaps_center" value="' . $settings->myGmaps_center . '" />' .
-            '<input type="hidden" name="myGmaps_zoom" id="myGmaps_zoom" value="' . $settings->myGmaps_zoom . '" />' .
-            '<input type="hidden" name="myGmaps_type" id="myGmaps_type" value="' . $settings->myGmaps_type . '" />' .
-            '<input type="text" class="hidden" id="map_styles_list" value="' . $settings->map_styles_list . '" />' .
-            '<input type="text" class="hidden" id="map_styles_base_url" value="' . $settings->map_styles_base_url . '" />' .
+            form::hidden('myGmaps_center', $settings->myGmaps_center) .
+            form::hidden('myGmaps_zoom', $settings->myGmaps_zoom) .
+            form::hidden('myGmaps_type', $settings->myGmaps_type) .
+            form::hidden('map_styles_list', $map_styles_list) .
+            form::hidden('map_styles_base_url', $map_styles_base_url) .
             dcCore::app()->formNonce() .
             '</p></div>' .
             '<p><input type="submit" name="saveconfig" value="' . __('Save configuration') . '" /></p>' .

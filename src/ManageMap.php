@@ -57,7 +57,6 @@ class ManageMap extends dcNsProcess
         dcCore::app()->admin->post_dt            = '';
         dcCore::app()->admin->post_format        = dcCore::app()->auth->getOption('post_format');
         dcCore::app()->admin->post_editor        = dcCore::app()->auth->getOption('editor');
-        dcCore::app()->admin->post_password      = '';
         dcCore::app()->admin->post_url           = '';
         dcCore::app()->admin->post_lang          = dcCore::app()->auth->getInfo('user_lang');
         dcCore::app()->admin->post_title         = '';
@@ -67,8 +66,6 @@ class ManageMap extends dcNsProcess
         dcCore::app()->admin->post_content_xhtml = '';
         dcCore::app()->admin->post_notes         = '';
         dcCore::app()->admin->post_status        = dcCore::app()->auth->getInfo('user_post_status');
-        dcCore::app()->admin->post_open_comment  = false;
-        dcCore::app()->admin->post_open_tb       = false;
         dcCore::app()->admin->post_selected      = false;
 
         dcCore::app()->admin->post_media = [];
@@ -140,7 +137,6 @@ class ManageMap extends dcNsProcess
                 dcCore::app()->admin->post_id            = (int) dcCore::app()->admin->post->post_id;
                 dcCore::app()->admin->post_dt            = date('Y-m-d H:i', strtotime(dcCore::app()->admin->post->post_dt));
                 dcCore::app()->admin->post_format        = dcCore::app()->admin->post->post_format;
-                dcCore::app()->admin->post_password      = dcCore::app()->admin->post->post_password;
                 dcCore::app()->admin->post_url           = dcCore::app()->admin->post->post_url;
                 dcCore::app()->admin->post_lang          = dcCore::app()->admin->post->post_lang;
                 dcCore::app()->admin->post_title         = dcCore::app()->admin->post->post_title;
@@ -150,8 +146,6 @@ class ManageMap extends dcNsProcess
                 dcCore::app()->admin->post_content_xhtml = dcCore::app()->admin->post->post_content_xhtml;
                 dcCore::app()->admin->post_notes         = dcCore::app()->admin->post->post_notes;
                 dcCore::app()->admin->post_status        = dcCore::app()->admin->post->post_status;
-                dcCore::app()->admin->post_open_comment  = (bool) dcCore::app()->admin->post->post_open_comment;
-                dcCore::app()->admin->post_open_tb       = (bool) dcCore::app()->admin->post->post_open_tb;
                 dcCore::app()->admin->post_selected      = (bool) dcCore::app()->admin->post->post_selected;
 
                 dcCore::app()->admin->page_title = __('Edit map element');
@@ -231,11 +225,8 @@ class ManageMap extends dcNsProcess
                 }
             }
 
-            dcCore::app()->admin->post_open_comment = !empty($_POST['post_open_comment']);
-            dcCore::app()->admin->post_open_tb      = !empty($_POST['post_open_tb']);
             dcCore::app()->admin->post_selected     = !empty($_POST['post_selected']);
             dcCore::app()->admin->post_lang         = $_POST['post_lang'];
-            dcCore::app()->admin->post_password     = !empty($_POST['post_password']) ? $_POST['post_password'] : null;
 
             dcCore::app()->admin->post_notes = $_POST['post_notes'];
 
@@ -309,7 +300,6 @@ class ManageMap extends dcNsProcess
             $cur->post_dt            = dcCore::app()->admin->post_dt ? date('Y-m-d H:i:00', strtotime(dcCore::app()->admin->post_dt)) : '';
             $cur->cat_id             = dcCore::app()->admin->cat_id;
             $cur->post_format        = dcCore::app()->admin->post_format;
-            $cur->post_password      = dcCore::app()->admin->post_password;
             $cur->post_lang          = dcCore::app()->admin->post_lang;
             $cur->post_title         = dcCore::app()->admin->post_title;
             $cur->post_excerpt       = dcCore::app()->admin->post_excerpt;
@@ -318,8 +308,6 @@ class ManageMap extends dcNsProcess
             $cur->post_content_xhtml = dcCore::app()->admin->post_content_xhtml;
             $cur->post_notes         = dcCore::app()->admin->post_notes;
             $cur->post_status        = dcCore::app()->admin->post_status;
-            $cur->post_open_comment  = (int) dcCore::app()->admin->post_open_comment;
-            $cur->post_open_tb       = (int) dcCore::app()->admin->post_open_tb;
             $cur->post_selected      = (int) dcCore::app()->admin->post_selected;
 
             if (isset($_POST['post_url'])) {
@@ -790,12 +778,12 @@ class ManageMap extends dcNsProcess
             dcCore::app()->callBehavior('adminPostFormItems', $main_items, $sidebar_items, dcCore::app()->admin->post ?? null);
 
             echo
-            '<div class="multi-part" title="' . (dcCore::app()->admin->post_id ? __('Edit page') : __('New page')) .
+            '<div class="multi-part" title="' . (dcCore::app()->admin->post_id ? __('Edit map element') : __('New element')) .
             sprintf(' &rsaquo; %s', dcCore::app()->getFormaterName(dcCore::app()->admin->post_format)) . '" id="edit-entry">' .
             '<form action="' . Html::escapeURL(dcCore::app()->admin->redir_url) . '" method="post" id="entry-form">' .
             '<div id="entry-wrapper">' .
             '<div id="entry-content"><div class="constrained">' .
-            '<h3 class="out-of-screen-if-js">' . __('Edit element') . '</h3>';
+            '<h3 class="out-of-screen-if-js">' . __('Edit map element') . '</h3>';
 
             foreach ($main_items as $item) {
                 echo $item;
@@ -807,9 +795,7 @@ class ManageMap extends dcNsProcess
             $plugin_QmarkURL = dcCore::app()->blog->getQmarkURL();
 
             echo
-            '<p class="border-top">' .
             (dcCore::app()->admin->post_id ? form::hidden('id', dcCore::app()->admin->post_id) : '') .
-            '<input type="submit" value="' . __('Save') . ' (s)" accesskey="s" name="save" /> ' .
             form::hidden('myGmaps_center', $myGmaps_center) .
             form::hidden('myGmaps_zoom', $myGmaps_zoom) .
             form::hidden('myGmaps_type', $myGmaps_type) .
