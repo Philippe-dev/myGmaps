@@ -562,7 +562,7 @@ class Backend extends dcNsProcess
 
         // - Map type filter
 
-        $element_type = !empty($_GET['type']) ? $_GET['type'] : '';
+        $element_type = !empty($_GET['element_type']) ? $_GET['element_type'] : '';
 
         $element_type_combo = [
             '-'                     => '',
@@ -578,7 +578,7 @@ class Backend extends dcNsProcess
         ];
 
         // - Map type filter
-        $filters->append((new dcAdminFilter('type'))
+        $filters->append((new dcAdminFilter('element_type'))
         ->param('sql', "AND post_meta LIKE '%" . $element_type . "%' ")
         ->title(__('Type:'))
         ->options($element_type_combo)
@@ -586,7 +586,7 @@ class Backend extends dcNsProcess
 
         // Remove unused filters
 
-        $filters->remove('type');
+        /*$filters->remove('comment');*/
         
     }
 
