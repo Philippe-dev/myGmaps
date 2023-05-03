@@ -577,7 +577,6 @@ class Backend extends dcNsProcess
             __('directions')        => 'directions',
         ];
 
-        // - Map type filter
         $filters->append((new dcAdminFilter('element_type'))
         ->param('sql', "AND post_meta LIKE '%" . $element_type . "%' ")
         ->title(__('Type:'))
@@ -586,8 +585,7 @@ class Backend extends dcNsProcess
 
         // Remove unused filters
 
-        /*$filters->remove('comment');*/
-        
+        /*$filters->remove('element_type');*/
     }
 
     public static function adminBeforePostUpdate($cur, $post_id)
