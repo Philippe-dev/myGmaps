@@ -32,6 +32,10 @@ class ManageMap extends dcNsProcess
     public static function init(): bool
     {
         if (defined('DC_CONTEXT_ADMIN')) {
+            dcPage::check(dcCore::app()->auth->makePermissions([
+                dcCore::app()->auth::PERMISSION_CONTENT_ADMIN,
+            ]));
+
             static::$init = ($_REQUEST['act'] ?? 'list') === 'map';
         }
 
@@ -225,8 +229,8 @@ class ManageMap extends dcNsProcess
                 }
             }
 
-            dcCore::app()->admin->post_selected     = !empty($_POST['post_selected']);
-            dcCore::app()->admin->post_lang         = $_POST['post_lang'];
+            dcCore::app()->admin->post_selected = !empty($_POST['post_selected']);
+            dcCore::app()->admin->post_lang     = $_POST['post_lang'];
 
             dcCore::app()->admin->post_notes = $_POST['post_notes'];
 
@@ -557,6 +561,7 @@ class ManageMap extends dcNsProcess
             dcCore::app()->admin->page_title . ' - ' . __('Google Maps'),
             $starting_script .
             dcPage::jsLoad('js/_post.js') .
+            dcPage::jsMetaEditor() .
             dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/element.map.js') .
             $admin_post_behavior .
             dcPage::jsConfirmClose('entry-form') .
@@ -792,8 +797,7 @@ class ManageMap extends dcNsProcess
 
             $plugin_QmarkURL = dcCore::app()->blog->getQmarkURL();
 
-            echo
-            (dcCore::app()->admin->post_id ? form::hidden('id', dcCore::app()->admin->post_id) : '') .
+            echo(dcCore::app()->admin->post_id ? form::hidden('id', dcCore::app()->admin->post_id) : '') .
             form::hidden('myGmaps_center', $myGmaps_center) .
             form::hidden('myGmaps_zoom', $myGmaps_zoom) .
             form::hidden('myGmaps_type', $myGmaps_type) .
