@@ -585,7 +585,7 @@ class Backend extends dcNsProcess
 
         // Remove unused filters
 
-        /*$filters->remove('element_type');*/
+        //$filters->remove('element_type');
         
     }
 

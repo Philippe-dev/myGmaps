@@ -1,5 +1,21 @@
 # Google Maps
 
-A plugin to add custom Google Maps in Dotclear blogs
+Un plugin pour ajouter des cartes personnalisées dans vos billets ou pages
 
-This extension allows you to insert Google Maps in your blog. It creates a new entry type named map elements. These elements may be points, polylines, polygons, rectangles, circles, GeoRSS feeds or kml layers. You may then attach a map to any post or include it anywhere in your blog with a template tag, and display in the map any number of these elements.
+Destiné à faciliter l'insertion de cartes élaborées dans votre blog, le plugin crée un nouveau type d'entrée : les éléments de carte.
+
+Ces éléments, tous éditables, peuvent être
+
+- des points d'intérêts aux icônes personnalisables
+- des lignes, des polygones, des rectangles ou des cercles de couleur, opacité et épaisseur variées
+- des fichier kml distants ou provenant de votre médiathèque
+- des flux GeoRSS comme par exemple ceux de Flickr
+- des itinéraires routiers d'un point à un autre
+
+Il est ensuite possible d'associer une carte à un billet ou à une page, et d'y inclure un nombre quelconque d'éléments. Il est également possible d'insérer une carte n'importe où dans le blog grâce à une balise de template.
+
+Le plugin permet d'utiliser OpenStreetMaps comme fournisseur de cartes, ou de personnaliser le style des cartes en important des fichiers de configuration au format JSON.
+
+Les recherches d'adresses bénéficient de l'auto-complétion et du géo-codage.
+
+Le plugin nécessite une clé d'API pour le domaine où il est utilisé. Il est toutefois fourni avec une clé partagée pour les tests.
