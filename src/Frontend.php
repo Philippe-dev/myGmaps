@@ -375,7 +375,7 @@ class Frontend extends dcNsProcess
         $aElements   = (isset($attr['elements']) && !empty($attr['elements'])) ? explode(',', $attr['elements']) : [];
         $aCategories = (isset($attr['category']) && !empty($attr['category'])) ? explode(',', $attr['category']) : [];
 
-        return self::publicMapContent($core, null, [
+        return self::publicMapContent(dcCore::app(), null, [
             'id'                   => $sId,
             'center'               => $sCenter,
             'zoom'                 => $iZoom,
