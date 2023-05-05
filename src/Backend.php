@@ -521,6 +521,8 @@ class Backend extends dcNsProcess
             return null;
         }
 
+        // replace default category filter
+
         $categories = null;
 
         try {
@@ -560,7 +562,7 @@ class Backend extends dcNsProcess
             ->options($combo)
             ->prime(true));
 
-        // - Map type filter
+        // - Add map type filter
 
         $element_type = !empty($_GET['element_type']) ? $_GET['element_type'] : '';
 
