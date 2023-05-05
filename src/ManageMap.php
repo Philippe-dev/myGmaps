@@ -818,11 +818,11 @@ class ManageMap extends dcNsProcess
 
             echo
             '<p class="border-top">' .
-            (dcCore::app()->admin->post->post_id ? form::hidden('id', dcCore::app()->admin->post->post_id) : '') .
+            (isset(dcCore::app()->admin->post->post_id) ? form::hidden('id', dcCore::app()->admin->post->post_id) : '') .
             '<input type="submit" value="' . __('Save') . ' (s)" ' .
             'accesskey="s" name="save" /> ' ;
 
-            if (!dcCore::app()->admin->post->post_id) {
+            if (!isset(dcCore::app()->admin->post->post_id)) {
                 echo
                 '<a id="post-cancel" href="index.php" class="button" accesskey="c">' . __('Cancel') . ' (c)</a>';
             }

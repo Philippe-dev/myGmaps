@@ -585,8 +585,22 @@ class Backend extends dcNsProcess
 
         // Remove unused filters
 
-        //$filters->remove('element_type');
-        
+        $filters->append((new dcAdminFilter('comment'))
+            ->param());
+
+        $filters->append((new dcAdminFilter('trackback'))
+            ->param());
+
+        $filters->append((new dcAdminFilter('featuredmedia'))
+        ->param());
+
+        $filters->append((new dcAdminFilter('password'))
+        ->param());
+
+        $filters->append((new dcAdminFilter('format'))
+        ->param());
+
+
     }
 
     public static function adminBeforePostUpdate($cur, $post_id)
