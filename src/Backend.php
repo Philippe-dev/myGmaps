@@ -84,7 +84,7 @@ class Backend extends dcNsProcess
                 dcCore::app()->blog->triggerBlog();
 
                 if ($type == 'page') {
-                    Http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=map&id=' . $post_id . '&upd=1#gmap-area');
+                    Http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1#gmap-area');
                 } elseif ($type == 'post') {
                     Http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1#gmap-area');
                 }
@@ -101,9 +101,9 @@ class Backend extends dcNsProcess
                 dcCore::app()->blog->triggerBlog();
 
                 if ($type == 'page') {
-                    Http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=map&id=' . $post_id . '&upd=1#gmap-area');
+                    Http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1');
                 } elseif ($type == 'post') {
-                    Http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1#gmap-area');
+                    Http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1');
                 }
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
@@ -124,9 +124,9 @@ class Backend extends dcNsProcess
                 dcCore::app()->blog->triggerBlog();
 
                 if ($type == 'page') {
-                    Http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=map&id=' . $post_id . '&upd=1#gmap-area');
+                    Http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1');
                 } elseif ($type == 'post') {
-                    Http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1#gmap-area');
+                    Http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1');
                 }
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
@@ -254,10 +254,10 @@ class Backend extends dcNsProcess
 
         // redirection URLs
         if ($type == 'page') {
-            $addmapurl    = DC_ADMIN_URL . 'plugin.php?p=pages&amp;act=map&amp;id=' . $id . '&amp;add=map&amp;center=' . $myGmaps_center . '&amp;zoom=' . $myGmaps_zoom . '&amp;type=' . $myGmaps_type . '&amp;upd=1';
-            $removemapurl = DC_ADMIN_URL . 'plugin.php?p=pages&amp;act=map&amp;id=' . $id . '&amp;remove=map&amp;upd=1';
+            $addmapurl    = DC_ADMIN_URL . 'plugin.php?p=pages&amp;act=map&amp;id=' . $id . '&amp;center=' . $myGmaps_center . '&amp;zoom=' . $myGmaps_zoom . '&amp;type=' . $myGmaps_type . '&amp;upd=1';
+            $removemapurl = DC_ADMIN_URL . 'plugin.php?p=pages&amp;remove=map&amp;id=' . $id . '&amp;remove=map&amp;upd=1';
         } elseif ($type == 'post') {
-            $addmapurl    = DC_ADMIN_URL . 'post.php?id=' . $id . '&amp;add=map&amp;center=' . $myGmaps_center . '&amp;zoom=' . $myGmaps_zoom . '&amp;type=' . $myGmaps_type . '&amp;upd=1';
+            $addmapurl    = DC_ADMIN_URL . 'post.php?id=' . $id . '&amp;act=map&amp;center=' . $myGmaps_center . '&amp;zoom=' . $myGmaps_zoom . '&amp;type=' . $myGmaps_type . '&amp;upd=1';
             $removemapurl = DC_ADMIN_URL . 'post.php?id=' . $id . '&amp;remove=map&amp;upd=1';
         }
 
@@ -289,7 +289,7 @@ class Backend extends dcNsProcess
             form::hidden('map_styles_base_url', $map_styles_base_url) .
             '</p>' .
             '<p>' . __('Empty map') . '</p>' .
-            '<p class="two-boxes add"><a href="plugin.php?p=myGmaps&amp;post_id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></p>' .
+            '<p class="two-boxes add"><a href="plugin.php?p=myGmaps&amp;act=maps&amp;id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></p>' .
             '<p class="two-boxes right"><a class="map-remove delete" href="' . $removemapurl . '"><strong>' . __('Remove map') . '</strong></a></p>' .
             '</div>' .
             '</div>';
@@ -332,7 +332,7 @@ class Backend extends dcNsProcess
             $post_list->display(dcCore::app()->admin->page, dcCore::app()->admin->nb_per_page, $enclose_block = '', $post->post_id, $post->post_type);
 
             echo '</div>' .
-            '<p class="two-boxes add"><a href="' . DC_ADMIN_URL . 'plugin.php?p=myGmaps&amp;post_id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></p>' .
+            '<p class="two-boxes add"><a href="' . DC_ADMIN_URL . 'plugin.php?p=myGmaps&amp;act=maps&amp;id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></p>' .
             '<p class="two-boxes right"><a class="map-remove delete" href="' . DC_ADMIN_URL . 'post.php?id=' . $id . '&amp;remove=map"><strong>' . __('Remove map') . '</strong></a></p>' .
             '</div>' .
             '</div>';

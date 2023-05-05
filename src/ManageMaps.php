@@ -31,7 +31,6 @@ class ManageMaps extends dcNsProcess
      */
     public static function init(): bool
     {
-
         if (defined('DC_CONTEXT_ADMIN')) {
             dcPage::check(dcCore::app()->auth->makePermissions([
                 dcCore::app()->auth::PERMISSION_CONTENT_ADMIN,
@@ -58,27 +57,6 @@ class ManageMaps extends dcNsProcess
          * Admin page params.
          */
 
-        // Save activation
-        $myGmaps_enabled = $settings->myGmaps_enabled;
-        $myGmaps_API_key = $settings->myGmaps_API_key;
-        $myGmaps_center  = $settings->myGmaps_center;
-        $myGmaps_zoom    = $settings->myGmaps_zoom;
-        $myGmaps_type    = $settings->myGmaps_type;
-
-        if (!empty($_POST['saveconfig'])) {
-            try {
-                $settings->put('myGmaps_enabled', !empty($_POST['myGmaps_enabled']));
-                $settings->put('myGmaps_API_key', $_POST['myGmaps_API_key']);
-                $settings->put('myGmaps_center', $_POST['myGmaps_center']);
-                $settings->put('myGmaps_zoom', $_POST['myGmaps_zoom']);
-                $settings->put('myGmaps_type', $_POST['myGmaps_type']);
-
-                http::redirect(dcCore::app()->admin->getPageURL() . '&act=list&tab=settings&upd=1');
-            } catch (Exception $e) {
-                dcCore::app()->error->add($e->getMessage());
-            }
-        }
-
         dcCore::app()->admin->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
         dcCore::app()->admin->nb_per_page = adminUserPref::getUserFilters('pages', 'nb');
 
@@ -86,27 +64,31 @@ class ManageMaps extends dcNsProcess
             dcCore::app()->admin->nb_per_page = (int) $_GET['nb'];
         }
 
-        $params['limit']      = [((dcCore::app()->admin->page - 1) * dcCore::app()->admin->nb_per_page), dcCore::app()->admin->nb_per_page];
-        $params['post_type']  = 'map';
-        $params['no_content'] = true;
-        $params['order']      = 'post_title ASC';
+        // Save added map elements
 
-        dcCore::app()->admin->post_list = null;
+        if (isset($_POST['entries'])) {
+            try {
+                $entries   = $_POST['entries'];
+                $post_type = $_POST['post_type'];
+                $post_id = $_POST['id'];
 
-        try {
-            $pages   = dcCore::app()->blog->getPosts($params);
-            $counter = dcCore::app()->blog->getPosts($params, true);
+                $meta = dcCore::app()->meta;
 
-            dcCore::app()->admin->post_list = new BackendList($pages, $counter->f(0));
-        } catch (Exception $e) {
-            dcCore::app()->error->add($e->getMessage());
-        }
+                $entries = implode(',', $entries);
+                foreach ($meta->splitMetaValues($entries) as $tag) {
+                    $meta->setPostMeta($post_id, 'map', $tag);
+                }
 
-        // Actions combo box
-        dcCore::app()->admin->pages_actions_page          = new BackendActions('plugin.php', ['p' => 'myGmaps','tab' => 'entries-list']);
-        dcCore::app()->admin->pages_actions_page_rendered = null;
-        if (dcCore::app()->admin->pages_actions_page->process()) {
-            dcCore::app()->admin->pages_actions_page_rendered = true;
+                dcCore::app()->blog->triggerBlog();
+
+                if ($post_type == 'page') {
+                    http::redirect('plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1');
+                } else {
+                    http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1');
+                }
+            } catch (Exception $e) {
+                dcCore::app()->error->add($e->getMessage());
+            }
         }
 
         return true;
@@ -151,13 +133,6 @@ class ManageMaps extends dcNsProcess
             $map_styles_base_url = '';
         }
 
-        // Actions
-        // -------
-        dcCore::app()->admin->posts_actions_page = new dcPostsActions(dcCore::app()->adminurl->get('admin.plugin.myGmaps'));
-        if (dcCore::app()->admin->posts_actions_page->process()) {
-            return;
-        }
-
         // Filters
         dcCore::app()->admin->post_filter = new adminPostFilter();
 
@@ -174,8 +149,21 @@ class ManageMaps extends dcNsProcess
         * List of map elements
         */
 
-        
+        // Get current post
 
+        try {
+            $post_id                 = (int) $_GET['id'];
+            $my_params['post_id']    = $post_id;
+            $my_params['no_content'] = true;
+            $my_params['post_type']  = ['post', 'page'];
+            $rs                      = dcCore::app()->blog->getPosts($my_params);
+            $post_title              = $rs->post_title;
+            $post_type               = $rs->post_type;
+        } catch (Exception $e) {
+            dcCore::app()->error->add($e->getMessage());
+        }
+
+        
         // Get map elements
 
         try {
@@ -215,27 +203,26 @@ class ManageMaps extends dcNsProcess
             __('Google Maps'),
             $starting_script .
             dcPage::jsLoad('js/_posts_list.js') .
-            dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/config.map.js') .
-            dcCore::app()->admin->post_filter->js(dcCore::app()->admin->getPageURL() . '#entries-list') .
+            dcCore::app()->admin->post_filter->js(dcCore::app()->admin->getPageURL() . '&amp;id=' . $post_id . '&amp;act=maps') .
             dcPage::jsPageTabs(dcCore::app()->admin->default_tab) .
             dcPage::jsConfirmClose('config-form') .
             '<link rel="stylesheet" type="text/css" href="index.php?pf=myGmaps/css/admin.css" />'
         );
 
+        dcCore::app()->admin->page_title = __('Add elements');
+
         echo dcPage::breadcrumb(
             [
                 html::escapeHTML(dcCore::app()->blog->name) => '',
                 __('Google Maps')                           => dcCore::app()->admin->getPageURL(),
+                dcCore::app()->admin->page_title            => '',
             ]
         ) .
         dcPage::notices();
 
-        // Display messages
-        if (isset($_GET['upd']) && isset($_GET['act'])) {
-            dcPage::success(__('Configuration has been saved.'));
-        }
-        
-        dcCore::app()->admin->post_filter->display('admin.plugin.myGmaps', '<input type="hidden" name="p" value="myGmaps" /><input type="hidden" name="tab" value="entries-list" />');
+        echo '<h3>' . __('Select map elements for map attached to post:') . ' <a href="' . dcCore::app()->getPostAdminURL($post_type, $post_id) . '">' . $post_title . '</a></h3>';
+
+        dcCore::app()->admin->post_filter->display('admin.plugin.myGmaps', '<input type="hidden" name="p" value="myGmaps" /><input type="hidden" name="id" value="' . $post_id . '" /><input type="hidden" name="act" value="maps" />');
 
         // Show posts
         dcCore::app()->admin->posts_list->display(
@@ -248,10 +235,12 @@ class ManageMaps extends dcNsProcess
             '<div class="two-cols">' .
             '<p class="col checkboxes-helpers"></p>' .
 
-            // Actions
-            '<p class="col right"><label for="action" class="classic">' . __('Selected entries action:') . '</label> ' .
-            form::combo('action', dcCore::app()->admin->posts_actions_page->getCombo()) .
-            '<input id="do-action" type="submit" value="' . __('ok') . '" disabled /></p>' .
+            '<p class="col right">' .
+            '<input type="submit" value="' . __('Add selected map elements') . '" /> <a class="button reset" href="post.php?id=' . $post_id . '">' . __('Cancel') . '</a></p>' .
+            '<p>' .
+            form::hidden(['post_type'], $post_type) .
+            form::hidden(['id'], $post_id) .
+            form::hidden(['act'], 'maps') .
             dcCore::app()->adminurl->getHiddenFormFields('admin.plugin.myGmaps', dcCore::app()->admin->post_filter->values()) .
             dcCore::app()->formNonce() . '</p>' .
             '</div>' .
@@ -259,10 +248,7 @@ class ManageMaps extends dcNsProcess
             dcCore::app()->admin->post_filter->show()
         );
 
-        echo
-        '</div>';
-
-        dcPage::helpBlock('myGmaps');
+        dcPage::helpBlock('myGmapsadd');
         dcPage::closeModule();
     }
 }

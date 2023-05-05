@@ -36,9 +36,13 @@ class Manage extends dcNsProcess
                 dcCore::app()->auth::PERMISSION_CONTENT_ADMIN,
             ]));
 
-            static::$init = ($_REQUEST['act'] ?? 'list') === 'map' ? ManageMap::init() : true;
+            if (isset($_REQUEST['act']) && $_REQUEST['act'] === 'map') {
+                static::$init = ($_REQUEST['act'] ?? 'list') === 'map' ? ManageMap::init() : true;
+            } elseif (isset($_REQUEST['act']) && $_REQUEST['act'] === 'maps') {
+                static::$init = ($_REQUEST['act'] ?? 'list') === 'maps' ? ManageMaps::init() : true;
+            }
         }
- 
+
         return static::$init;
     }
 
@@ -52,7 +56,9 @@ class Manage extends dcNsProcess
         }
 
         if (($_REQUEST['act'] ?? 'list') === 'map') {
-            return ManageMap::process();
+            ManageMap::process();
+        } elseif (($_REQUEST['act'] ?? 'list') === 'maps') {
+            ManageMaps::process();
         }
 
         $settings = dcCore::app()->blog->settings->myGmaps;
@@ -128,7 +134,9 @@ class Manage extends dcNsProcess
 
         if (($_REQUEST['act'] ?? 'list') === 'map') {
             ManageMap::render();
-
+            return;
+        } elseif (($_REQUEST['act'] ?? 'list') === 'maps') {
+            ManageMaps::render();
             return;
         }
 
