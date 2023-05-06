@@ -121,7 +121,7 @@ class ManageMaps extends dcNsProcess
         // Get current post
 
         try {
-            $post_id                 = $_GET['id'];
+            $post_id                 = (int) $_GET['id'];
             $my_params['post_id']    = $post_id;
             $my_params['no_content'] = true;
             $my_params['post_type']  = ['post', 'page'];
@@ -137,7 +137,7 @@ class ManageMaps extends dcNsProcess
 
         $meta          = dcCore::app()->meta;
         $elements_list = $meta->getMetaStr($map_ids, 'map');
-        $excluded      = $meta->splitMetaValues($elements_list);
+        $excluded      = !empty($elements_list) ? $meta->splitMetaValues($elements_list) : '';
 
         // Get map elements
 

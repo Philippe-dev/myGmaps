@@ -102,13 +102,13 @@ class Manage extends dcNsProcess
         $params['no_content'] = true;
         $params['order']      = 'post_title ASC';
 
-        dcCore::app()->admin->post_list = null;
+        dcCore::app()->admin->posts_list = null;
 
         try {
             $pages   = dcCore::app()->blog->getPosts($params);
             $counter = dcCore::app()->blog->getPosts($params, true);
 
-            dcCore::app()->admin->post_list = new BackendList($pages, $counter->f(0));
+            dcCore::app()->admin->posts_list = new BackendList($pages, $counter->f(0));
         } catch (Exception $e) {
             dcCore::app()->error->add($e->getMessage());
         }
