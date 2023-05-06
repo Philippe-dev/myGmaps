@@ -254,10 +254,10 @@ class Backend extends dcNsProcess
 
         // redirection URLs
         if ($type == 'page') {
-            $addmapurl    = DC_ADMIN_URL . 'plugin.php?p=pages&amp;act=map&amp;id=' . $id . '&amp;center=' . $myGmaps_center . '&amp;zoom=' . $myGmaps_zoom . '&amp;type=' . $myGmaps_type . '&amp;upd=1';
+            $addmapurl    = DC_ADMIN_URL . 'plugin.php?p=pages&amp;add=map&amp;id=' . $id . '&amp;center=' . $myGmaps_center . '&amp;zoom=' . $myGmaps_zoom . '&amp;type=' . $myGmaps_type . '&amp;upd=1';
             $removemapurl = DC_ADMIN_URL . 'plugin.php?p=pages&amp;remove=map&amp;id=' . $id . '&amp;remove=map&amp;upd=1';
         } elseif ($type == 'post') {
-            $addmapurl    = DC_ADMIN_URL . 'post.php?id=' . $id . '&amp;act=map&amp;center=' . $myGmaps_center . '&amp;zoom=' . $myGmaps_zoom . '&amp;type=' . $myGmaps_type . '&amp;upd=1';
+            $addmapurl    = DC_ADMIN_URL . 'post.php?id=' . $id . '&amp;add=map&amp;center=' . $myGmaps_center . '&amp;zoom=' . $myGmaps_zoom . '&amp;type=' . $myGmaps_type . '&amp;upd=1';
             $removemapurl = DC_ADMIN_URL . 'post.php?id=' . $id . '&amp;remove=map&amp;upd=1';
         }
 
@@ -523,10 +523,10 @@ class Backend extends dcNsProcess
 
         // replace default category filter
 
-        $categories = null;
+        $categories = null;        
 
         try {
-            $categories = dcCore::app()->blog->getCategories(['post_type' => 'post']);
+            $categories = dcCore::app()->blog->getCategories(['post_type' => 'map']);
             if ($categories->isEmpty()) {
                 return null;
             }
@@ -552,7 +552,7 @@ class Backend extends dcNsProcess
             }
             $combo[
                 str_repeat('&nbsp;', ($categories->level - 1) * 4) .
-                Html::escapeHTML($categories->cat_title) . ' (' . dcCore::app()->admin->counter->f(0) . ')'
+                Html::escapeHTML($categories->cat_title)
             ] = $categories->cat_id;
         }
 
