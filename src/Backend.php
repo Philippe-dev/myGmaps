@@ -526,7 +526,7 @@ class Backend extends dcNsProcess
         $categories = null;        
 
         try {
-            $categories = dcCore::app()->blog->getCategories(['post_type' => 'map']);
+            $categories = dcCore::app()->blog->getCategories(['post_type' => 'map', 'without_empty' => true]);
             if ($categories->isEmpty()) {
                 return null;
             }
