@@ -77,7 +77,7 @@ class ManageMap extends dcNsProcess
         dcCore::app()->admin->page_title = __('New map element');
 
         dcCore::app()->admin->can_view_page = true;
-        dcCore::app()->admin->can_edit_page = dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
+        dcCore::app()->admin->can_edit_post = dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
             dcCore::app()->auth::PERMISSION_USAGE,
         ]), dcCore::app()->blog->id);
         dcCore::app()->admin->can_publish = dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
@@ -154,7 +154,7 @@ class ManageMap extends dcNsProcess
 
                 dcCore::app()->admin->page_title = __('Edit map element');
 
-                dcCore::app()->admin->can_edit_page = dcCore::app()->admin->post->isEditable();
+                dcCore::app()->admin->can_edit_post = dcCore::app()->admin->post->isEditable();
                 dcCore::app()->admin->can_delete    = dcCore::app()->admin->post->isDeletable();
 
                 $next_rs = dcCore::app()->blog->getNextPost(dcCore::app()->admin->post, 1);
@@ -199,7 +199,7 @@ class ManageMap extends dcNsProcess
             }
         }
 
-        if (!empty($_POST) && dcCore::app()->admin->can_edit_page) {
+        if (!empty($_POST) && dcCore::app()->admin->can_edit_post) {
             // Format content
 
             dcCore::app()->admin->cat_id       = $_POST['cat_id'];
@@ -280,8 +280,8 @@ class ManageMap extends dcNsProcess
             }
         }
 
-        if (!empty($_POST) && !empty($_POST['save']) && dcCore::app()->admin->can_edit_page && !dcCore::app()->admin->bad_dt) {
-            // Create or update page
+        if (!empty($_POST) && !empty($_POST['save']) && dcCore::app()->admin->can_edit_post && !dcCore::app()->admin->bad_dt) {
+            // Create or update post
 
             $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcBlog::POST_TABLE_NAME);
 
@@ -417,7 +417,7 @@ class ManageMap extends dcNsProcess
         $myGmaps_type   = $settings->myGmaps_type;
 
         dcCore::app()->admin->default_tab = 'edit-entry';
-        if (!dcCore::app()->admin->can_edit_page) {
+        if (!dcCore::app()->admin->can_edit_post) {
             dcCore::app()->admin->default_tab = '';
         }
         if (!empty($_GET['co'])) {
@@ -559,11 +559,12 @@ class ManageMap extends dcNsProcess
 
         dcPage::openModule(
             dcCore::app()->admin->page_title . ' - ' . __('Google Maps'),
-            $starting_script .
+            dcPage::jsModal() .
             dcPage::jsLoad('js/_post.js') .
             dcPage::jsMetaEditor() .
             dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/element.map.js') .
             $admin_post_behavior .
+            $starting_script .
             dcPage::jsConfirmClose('entry-form') .
             # --BEHAVIOR-- adminPostHeaders --
             dcCore::app()->callBehavior('adminPostHeaders') .
@@ -655,7 +656,7 @@ class ManageMap extends dcNsProcess
 
         /* Post form if we can edit page
         -------------------------------------------------------- */
-        if (dcCore::app()->admin->can_edit_page) {
+        if (dcCore::app()->admin->can_edit_post) {
             $meta = dcCore::app()->meta ?? '';
 
             if (isset(dcCore::app()->admin->post)) {
@@ -732,7 +733,7 @@ class ManageMap extends dcNsProcess
                     ]) .
                     '</p>',
 
-                    'post_excerpt' => '<label class="bold">' . __('Position:') . '</label>' .
+                    'post_excerpt' => '<label for="post_excerpt" class="bold">' . __('Position:') . '</label>' .
                     '<div class="map_toolbar">' . __('Search:') . '<span class="map_spacer">&nbsp;</span>' .
                     '<input size="40" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="' . __('OK') . '" /><span class="map_spacer">&nbsp;</span>' .
                     '<button id="add_marker" class="add_marker" type="button" title="' . __('Point of interest') . '"><span>' . __('Point of interest') . '</span></button>' .
@@ -749,6 +750,7 @@ class ManageMap extends dcNsProcess
                     '<div class="form-note info maximal mapinfo" style="width: 100%"><p>' . __('This map will not be displayed on the blog and is meant only to create, edit and position only one element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties.') . '</p>' .
                     '</div>' .
                     '<p class="area" id="excerpt"><span style="display:none;">' . form::textarea('post_excerpt', 50, 5, html::escapeHTML(dcCore::app()->admin->post_excerpt)) . '</span></p>',
+                    
                     'post_content' => '<p class="area" id="content-area"><label class="required bold" ' .
                     'for="post_content"><abbr title="' . __('Required field') . '">*</abbr> ' . __('Content:') . '</label> ' .
                     form::textarea(
@@ -793,7 +795,7 @@ class ManageMap extends dcNsProcess
             }
 
             # --BEHAVIOR-- adminPostForm -- MetaRecord|null
-            dcCore::app()->callBehavior('adminPostForm', dcCore::app()->admin->post ?? null);
+            dcCore::app()->callBehavior('adminPostForm', dcCore::app()->admin->post ?? null, 'map');
 
             $plugin_QmarkURL = dcCore::app()->blog->getQmarkURL();
 
@@ -849,14 +851,14 @@ class ManageMap extends dcNsProcess
             }
 
             # --BEHAVIOR-- adminPostFormSidebar -- MetaRecord|null
-            dcCore::app()->callBehavior('adminPostFormSidebar', dcCore::app()->admin->post ?? null);
+            dcCore::app()->callBehavior('adminPostFormSidebar', dcCore::app()->admin->post ?? null, 'map');
 
             echo
             '</div>' . // End #entry-sidebar
             '</form>';
 
             # --BEHAVIOR-- adminPostForm -- MetaRecord|null
-            dcCore::app()->callBehavior('adminPostAfterForm', dcCore::app()->admin->post ?? null);
+            dcCore::app()->callBehavior('adminPostAfterForm', dcCore::app()->admin->post ?? null, 'map');
 
             echo
             '</div>'; // End
