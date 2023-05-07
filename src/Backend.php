@@ -49,16 +49,8 @@ class Backend extends dcNsProcess
             dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)
         );
 
-        /* Register favorite */
-        dcCore::app()->addBehavior('adminDashboardFavoritesV2', function (dcFavorites $favs) {
-            $favs->register('myGmaps', [
-                'title'       => __('Google Maps'),
-                'url'         => dcCore::app()->adminurl->get('admin.plugin.myGmaps'),
-                'small-icon'  => [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
-                'large-icon'  => [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
-                'permissions' => dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]),
-            ]);
-        });
+        dcCore::app()->addBehavior('adminDashboardFavsIconV2', [self::class, 'dashboardFavsIcon']);
+        dcCore::app()->addBehavior('adminDashboardFavoritesV2', [self::class, 'dashboardFavorites']);
 
         dcCore::app()->addBehavior('adminPageHelpBlock', [self::class, 'adminPageHelpBlock']);
         dcCore::app()->addBehavior('adminPageHTTPHeaderCSP', [self::class, 'adminPageHTTPHeaderCSP']);
@@ -134,6 +126,33 @@ class Backend extends dcNsProcess
         }
 
         return true;
+    }
+
+    public static function dashboardFavsIcon($name, $icon)
+    {
+        if ($name == 'myGmaps') {
+            $params              = new ArrayObject();
+            $params['post_type'] = 'map';
+            $page_count          = dcCore::app()->blog->getPosts($params, true)->f(0);
+            if ($page_count > 0) {
+                $str_pages = ($page_count > 1) ? __('%d map elements') : __('%d map element');
+                $icon[0]   = __('Google Maps') . '<br />' . sprintf($str_pages, $page_count);
+            } else {
+                $icon[0] = __('Google Maps');
+            }
+        }
+    }
+
+    public static function dashboardFavorites(dcFavorites $favorites)
+    {
+        $favorites->register('myGmaps', [
+            'title'       => __('Google Maps'),
+            'url'         => dcCore::app()->adminurl->get('admin.plugin.myGmaps') . '&amp;do=list',
+            'small-icon'  => [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
+            'large-icon'  => [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
+            'permissions' => dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN,
+            ]),
+        ]);
     }
 
     public static function adminPageHelpBlock($blocks)
