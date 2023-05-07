@@ -582,8 +582,7 @@ class Backend extends dcNsProcess
         $filters->append((new dcAdminFilter('element_type'))
         ->param('sql', "AND post_meta LIKE '%" . $element_type . "%' ")
         ->title(__('Type:'))
-        ->options($element_type_combo)
-        ->prime(true));
+        ->options($element_type_combo));
 
         // Remove unused filters
 
@@ -600,9 +599,6 @@ class Backend extends dcNsProcess
         ->param());
 
         $filters->append((new dcAdminFilter('password'))
-        ->param());
-
-        $filters->append((new dcAdminFilter('format'))
         ->param());
     }
 
