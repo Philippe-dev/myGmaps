@@ -733,7 +733,7 @@ class ManageMap extends dcNsProcess
                     ]) .
                     '</p>',
 
-                    'post_excerpt' => '<label for="post_excerpt" class="bold">' . __('Position:') . '</label>' .
+                    'post_excerpt' => '<label for="post_excerpt" class="bold">' . __('Type and position:') . '</label>' .
                     '<div class="map_toolbar">' . __('Search:') . '<span class="map_spacer">&nbsp;</span>' .
                     '<input size="40" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="' . __('OK') . '" /><span class="map_spacer">&nbsp;</span>' .
                     '<button id="add_marker" class="add_marker" type="button" title="' . __('Point of interest') . '"><span>' . __('Point of interest') . '</span></button>' .
@@ -747,19 +747,19 @@ class ManageMap extends dcNsProcess
                     '<button id="delete_map" type="button" class="delete_map" title="' . __('Initialize map') . '"><span>' . __('Initialize map') . '</span></button>' .
                     '</div>' .
                     '<div id="map_box"><div class="area" id="map_canvas"></div><div id="panel"></div></div>' .
-                    '<div class="form-note info maximal mapinfo" style="width: 100%"><p>' . __('This map will not be displayed on the blog and is meant only to create, edit and position only one element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties.') . '</p>' .
+                    '<div class="form-note info maximal mapinfo"><p>' . __('This map will not be displayed on the blog and is meant only to create, edit and position only one element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties.') . '</p>' .
                     '</div>' .
                     '<p class="area" id="excerpt"><span style="display:none;">' . form::textarea('post_excerpt', 50, 5, html::escapeHTML(dcCore::app()->admin->post_excerpt)) . '</span></p>',
 
-                    'post_content' => '<p class="area" id="content-area"><label class="required bold" ' .
-                    'for="post_content"><abbr title="' . __('Required field') . '">*</abbr> ' . __('Content:') . '</label> ' .
+                    'post_content' => '<p class="area" id="content-area"><label class="bold" ' .
+                    'for="post_content">' . __('Description:') . '</label> ' .
                     form::textarea(
                         'post_content',
                         50,
                         dcCore::app()->auth->getOption('edit_size'),
                         [
                             'default'    => Html::escapeHTML(dcCore::app()->admin->post_content),
-                            'extra_html' => 'required placeholder="' . __('Content') . '" lang="' . dcCore::app()->admin->post_lang . '" spellcheck="true"',
+                            'extra_html' => 'placeholder="' . __('Description') . '" lang="' . dcCore::app()->admin->post_lang . '" spellcheck="true"',
                         ]
                     ) .
                     '</p>',

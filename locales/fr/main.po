@@ -3,7 +3,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: myGmaps 6.0\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-05-03T16:24:35+00:00\n"
+"PO-Revision-Date: 2023-05-07T09:17:31+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -63,9 +63,6 @@ msgstr "flux GeoRSS"
 
 msgid "directions"
 msgstr "itinéraire"
-
-msgid "Type:"
-msgstr "Type :"
 
 msgid "Are you sure you want to remove this map?"
 msgstr "Voulez-vous vraiment supprimer cette carte ?"
@@ -237,8 +234,8 @@ msgstr "Langue de l'élément"
 msgid "Selected element"
 msgstr "Élément sélectionné"
 
-msgid "Position:"
-msgstr "Position :"
+msgid "Type and position:"
+msgstr "Type et position :"
 
 msgid "Point of interest"
 msgstr "Point d'intérêt"
@@ -270,17 +267,20 @@ msgstr "Initialiser la carte"
 msgid "This map will not be displayed on the blog and is meant only to create, edit and position only one element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties."
 msgstr "Cette carte ne sera pas affichée sur le blog, et n'est destinée qu'à créer, positionner ou éditer un seul élément à la fois. Choisissez un outil, cliquez sur la carte pour créer votre élément, puis cliquer sur l'élément pour modifier ses propriétés."
 
-msgid "You are not allowed to change this element status"
-msgstr "Vous n'êtes pas autorisé à changer le statut de cet élément"
-
 msgid "Select map elements for map attached to post:"
 msgstr "Choisir les éléments de la carte attachée au billet :"
 
-msgid "Map elements per page"
-msgstr "Éléments de carte par page"
-
 msgid "Add selected map elements"
 msgstr "Ajouter les éléments de carte sélectionnés"
+
+msgid "Position:"
+msgstr "Position :"
+
+msgid "You are not allowed to change this element status"
+msgstr "Vous n'êtes pas autorisé à changer le statut de cet élément"
+
+msgid "Map elements per page"
+msgstr "Éléments de carte par page"
 
 msgid "Selected elements action:"
 msgstr "Action sur les éléments sélectionnés :"
