@@ -43,7 +43,7 @@ class Backend extends dcNsProcess
 
         dcCore::app()->menu[dcAdmin::MENU_BLOG]->addItem(
             __('Google Maps'),
-            dcCore::app()->adminurl->get('admin.plugin.myGmaps') . '&amp;do=list',
+            dcCore::app()->adminurl->get('admin.plugin.myGmaps') . '&amp;act=list',
             [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
             preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.myGmaps')) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
             dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]), dcCore::app()->blog->id)

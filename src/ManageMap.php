@@ -391,7 +391,7 @@ class ManageMap extends dcNsProcess
                     // --BEHAVIOR-- adminBeforePostDelete
                     dcCore::app()->callBehavior('adminBeforePostDelete', dcCore::app()->admin->post_id);
                     dcCore::app()->blog->delPost(dcCore::app()->admin->post_id);
-                    http::redirect(dcCore::app()->admin->getPageURL() . '&do=list');
+                    http::redirect(dcCore::app()->admin->getPageURL() . '&act=list');
                 } catch (Exception $e) {
                     dcCore::app()->error->add($e->getMessage());
                 }
@@ -826,7 +826,7 @@ class ManageMap extends dcNsProcess
 
             if (!isset(dcCore::app()->admin->post->post_id)) {
                 echo
-                '<a id="post-cancel" href="' . dcCore::app()->admin->getPageURL() . '&amp;do=list#entries-list' . '" class="button" accesskey="c">' . __('Cancel') . ' (c)</a>';
+                '<a id="post-cancel" href="' . dcCore::app()->admin->getPageURL() . '&amp;act=list#entries-list' . '" class="button" accesskey="c">' . __('Cancel') . ' (c)</a>';
             }
 
             echo(dcCore::app()->admin->can_delete ? '<input type="submit" class="delete" value="' . __('Delete') . '" name="delete" />' : '') .
