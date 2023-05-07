@@ -194,7 +194,7 @@ class BackendList extends adminGenericListV2
                 ]
             ) .
             '</td>',
-            'title' => '<td class="maximal" scope="row"><a href="' . dcCore::app()->admin->getPageURL() . 
+            'title' => '<td class="maximal" scope="row"><a href="' . dcCore::app()->admin->getPageURL() .
             '&amp;act=map&amp;id=' . $this->rs->post_id . '">' .
             html::escapeHTML($this->rs->post_title) . '</a></td>',
             'date' => '<td class="nowrap count">' .
@@ -202,10 +202,10 @@ class BackendList extends adminGenericListV2
                 Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt) .
                 '</time>' .
                 '</td>',
-            'category'   => '<td class="nowrap">' . $cat_title . '</td>',
-            'author'     => '<td class="nowrap">' . Html::escapeHTML($this->rs->user_id) . '</td>',
+            'category' => '<td class="nowrap">' . $cat_title . '</td>',
+            'author'   => '<td class="nowrap">' . Html::escapeHTML($this->rs->user_id) . '</td>',
             'type'     => '<td class="nowrap">' . __($meta_rs) . '</td>',
-            'status'     => '<td class="nowrap status">' . $img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach . '</td>',
+            'status'   => '<td class="nowrap status">' . $img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach . '</td>',
         ];
         $cols = new ArrayObject($cols);
         dcCore::app()->callBehavior('adminPostListValueV2', $this->rs, $cols);
