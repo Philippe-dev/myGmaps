@@ -3,7 +3,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: myGmaps 6.0\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-05-07T09:17:31+00:00\n"
+"PO-Revision-Date: 2023-05-07T17:27:40+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -12,6 +12,12 @@ msgstr ""
 
 msgid "Google Maps"
 msgstr "Cartes Google"
+
+msgid "%d map elements"
+msgstr "%d éléments"
+
+msgid "%d map element"
+msgstr "%d élément"
 
 msgid "Google Map:"
 msgstr "Carte Google :"
@@ -226,7 +232,7 @@ msgid "Map element has been created."
 msgstr "L'élément de carte a été créé."
 
 msgid "Element status"
-msgstr "Statut de l'élément"
+msgstr "État de l'élément"
 
 msgid "Element language"
 msgstr "Langue de l'élément"
@@ -296,12 +302,6 @@ msgstr "Actions sur les éléments"
 
 msgid "Element language:"
 msgstr "Langue de l'élément :"
-
-msgid "%d map elements"
-msgstr "%d éléments"
-
-msgid "%d map element"
-msgstr "%d élément"
 
 msgid "weather"
 msgstr "météo"
