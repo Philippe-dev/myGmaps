@@ -71,8 +71,6 @@ class ManageMaps extends dcNsProcess
 
                 $meta = dcCore::app()->meta;
 
-                //$meta->delPostMeta($post_id, 'map');
-
                 $entries = implode(',', $entries);
                 foreach ($meta->splitMetaValues($entries) as $tag) {
                     $meta->setPostMeta($post_id, 'map', $tag);
