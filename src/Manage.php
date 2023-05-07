@@ -285,7 +285,7 @@ class Manage extends dcNsProcess
 
         echo '</div>' .
         '<div class="fieldset"><h3>' . __('Default map options') . '</h3>' .
-        '<div class="map_toolbar">' . __('Search:') . '<span class="map_spacer">&nbsp;</span>' .
+        '<div class="map_toolbar"><span class="search">' . __('Search:') . '</span><span class="map_spacer">&nbsp;</span>' .
             '<input size="50" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="' . __('OK') . '" />' .
         '</div>' .
         '<p class="area" id="map_canvas"></p>' .

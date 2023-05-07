@@ -94,12 +94,12 @@ a.map-remove {
 
 .map_toolbar button.inactive:hover,
 .map_toolbar button.inactive:focus {
-  border: 1px solid #3a539b;
+  border: 1px solid #8f8f8f;
 }
 
 .map_toolbar button.active,
 .map_toolbar button.active {
-  border: 1px solid #3a539b;
+  border: 2px solid #8f8f8f;
 }
 
 .map_toolbar button span {
@@ -229,8 +229,9 @@ button.delete_map {
 .map_toolbar .qx {
   border-bottom-left-radius: .3em;
   border-top-left-radius: .3em;
-  background: #fff url(index.php?pf=myGmaps/css/img/search.png) no-repeat 4px center !important;
-  text-indent: 18px;
+  background: #fff url(index.php?pf=myGmaps/css/img/search.svg) no-repeat 1px center !important;
+
+  text-indent: 2em;
   padding: 0;
   border: 1px solid #ccc;
 }
