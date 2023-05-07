@@ -84,9 +84,9 @@ class Backend extends dcNsProcess
                 dcCore::app()->blog->triggerBlog();
 
                 if ($type == 'page') {
-                    Http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1#gmap-area');
+                    Http::redirect(DC_ADMIN_URL . 'plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1');
                 } elseif ($type == 'post') {
-                    Http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1#gmap-area');
+                    Http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1');
                 }
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
