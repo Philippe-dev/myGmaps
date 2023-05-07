@@ -53,10 +53,18 @@ a.map-remove {
   padding: .2em .5em;
   border: 1px solid #b6b6b6;
   overflow: hidden;
-  background: #f5f5f5;
   border-radius: 4px 4px 0 0;
   position: relative;
   line-height: 30px;
+}
+
+.map_toolbar button {
+  border: none;
+  background: #fff
+}
+
+.map_toolbar span.search {
+  margin-top: .3em
 }
 
 .map_toolbar select,
@@ -73,26 +81,25 @@ a.map-remove {
 .map_toolbar button {
   width: 40px;
   height: 40px;
-  border-style: solid;
-  border-width: 1px;
   margin-left: 2px;
   margin-bottom: 2px;
-  border-color: #ccc;
-  background-color: #fff;
   background-position: 50% 50%;
   background-repeat: no-repeat;
 }
 
 .map_toolbar button:hover,
 .map_toolbar button:focus {
-  border-color: #ddd;
-  background-color: #fff;
+	border: 1px solid #3a539b;
 }
 
 .map_toolbar button.inactive:hover,
 .map_toolbar button.inactive:focus {
-  border-color: #aaa;
-  background-color: #ccc;
+  border: 1px solid #3a539b;
+}
+
+.map_toolbar button.active,
+.map_toolbar button.active {
+  border: 1px solid #3a539b;
 }
 
 .map_toolbar button span {
@@ -203,7 +210,6 @@ button.add_directions.active {
 }
 
 button.delete_map {
-  background-color: #e5e5e5;
   background-image: url(index.php?pf=myGmaps/css/img/clean.png);
   position: absolute;
   right: .5em;
@@ -222,28 +228,6 @@ button.delete_map {
 
 .map_toolbar .qx:focus {
   border: 1px solid #bee74b;
-}
-
-.map_toolbar input[type="submit"] {
-  padding: 0 0.4em;
-  margin: 0.05em 0 0 -0.2em;
-  background: #dfdfdf;
-  border-color: #ccc;
-  color: #333;
-  border-bottom-right-radius: .3em;
-  border-top-right-radius: .3em;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  text-shadow: none;
-  border-left: 1px solid #ccc;
-  font-size: .91em;
-  height: 2.55em
-}
-
-.map_toolbar input[type="submit"]:hover,
-.map_toolbar input[type="submit"]:focus {
-  background: #676e78;
-  color: #fff;
 }
 
 #directions_start,
