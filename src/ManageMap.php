@@ -750,7 +750,7 @@ class ManageMap extends dcNsProcess
                     '<div class="form-note info maximal mapinfo" style="width: 100%"><p>' . __('This map will not be displayed on the blog and is meant only to create, edit and position only one element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties.') . '</p>' .
                     '</div>' .
                     '<p class="area" id="excerpt"><span style="display:none;">' . form::textarea('post_excerpt', 50, 5, html::escapeHTML(dcCore::app()->admin->post_excerpt)) . '</span></p>',
-                    
+
                     'post_content' => '<p class="area" id="content-area"><label class="required bold" ' .
                     'for="post_content"><abbr title="' . __('Required field') . '">*</abbr> ' . __('Content:') . '</label> ' .
                     form::textarea(
@@ -826,7 +826,7 @@ class ManageMap extends dcNsProcess
 
             if (!isset(dcCore::app()->admin->post->post_id)) {
                 echo
-                '<a id="post-cancel" href="index.php" class="button" accesskey="c">' . __('Cancel') . ' (c)</a>';
+                '<a id="post-cancel" href="' . dcCore::app()->admin->getPageURL() . '&amp;do=list#entries-list' . '" class="button" accesskey="c">' . __('Cancel') . ' (c)</a>';
             }
 
             echo(dcCore::app()->admin->can_delete ? '<input type="submit" class="delete" value="' . __('Delete') . '" name="delete" />' : '') .
