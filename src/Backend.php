@@ -540,7 +540,7 @@ class Backend extends dcNsProcess
             return null;
         }
 
-        // replace default category filter
+        // Replace default category filter
 
         $categories = null;
 

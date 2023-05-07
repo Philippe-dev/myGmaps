@@ -70,6 +70,7 @@ class Manage extends dcNsProcess
          */
 
         // Save activation
+
         $myGmaps_enabled = $settings->myGmaps_enabled;
         $myGmaps_API_key = $settings->myGmaps_API_key;
         $myGmaps_center  = $settings->myGmaps_center;
@@ -180,15 +181,18 @@ class Manage extends dcNsProcess
 
         // Actions
         // -------
+
         dcCore::app()->admin->posts_actions_page = new dcPostsActions(dcCore::app()->adminurl->get('admin.plugin.myGmaps'));
         if (dcCore::app()->admin->posts_actions_page->process()) {
             return;
         }
 
         // Filters
+
         dcCore::app()->admin->post_filter = new adminPostFilter();
 
-        // get list params
+        // Get list params
+
         $params = dcCore::app()->admin->post_filter->params();
 
         dcCore::app()->admin->posts      = null;
@@ -261,6 +265,7 @@ class Manage extends dcNsProcess
         dcPage::notices();
 
         // Display messages
+        
         if (isset($_GET['upd']) && isset($_GET['act'])) {
             dcPage::success(__('Configuration has been saved.'));
         }

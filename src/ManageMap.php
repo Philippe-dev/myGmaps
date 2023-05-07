@@ -93,19 +93,23 @@ class ManageMap extends dcNsProcess
         dcCore::app()->admin->next_link = dcCore::app()->admin->prev_link = dcCore::app()->admin->next_headlink = dcCore::app()->admin->prev_headlink = null;
 
         // If user can't publish
+
         if (!dcCore::app()->admin->can_publish) {
             dcCore::app()->admin->post_status = dcBlog::POST_PENDING;
         }
 
         // Getting categories
+
         dcCore::app()->admin->categories_combo = dcAdminCombos::getCategoriesCombo(
             dcCore::app()->blog->getCategories(['post_type' => 'map'])
         );
 
         // Status combo
+
         dcCore::app()->admin->status_combo = dcAdminCombos::getPostStatusesCombo();
 
         // Formaters combo
+
         $core_formaters    = dcCore::app()->getFormaters();
         $available_formats = ['' => ''];
         foreach ($core_formaters as $formats) {
@@ -116,12 +120,14 @@ class ManageMap extends dcNsProcess
         dcCore::app()->admin->available_formats = $available_formats;
 
         // Languages combo
+
         dcCore::app()->admin->lang_combo = dcAdminCombos::getLangsCombo(
             dcCore::app()->blog->getLangs(['order' => 'asc']),
             true
         );
 
         // Validation flag
+
         dcCore::app()->admin->bad_dt = false;
 
         // Get page informations
@@ -298,6 +304,7 @@ class ManageMap extends dcNsProcess
             }
 
             // Magic tweak :)
+
             dcCore::app()->blog->settings->system->post_url_format = '{t}';
 
             $cur->post_type          = 'map';
@@ -319,6 +326,7 @@ class ManageMap extends dcNsProcess
             }
 
             // Back to UTC in order to keep UTC datetime for creadt/upddt
+
             Date::setTZ('UTC');
 
             if (dcCore::app()->admin->post_id) {
@@ -498,6 +506,7 @@ class ManageMap extends dcNsProcess
         }
 
         // Custom map styles
+
         $map_styles_dir_path = $public_path . '/myGmaps/styles/';
         $map_styles_dir_url  = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/styles/');
 
@@ -648,6 +657,7 @@ class ManageMap extends dcNsProcess
         }
 
         # Exit if we cannot view page
+        
         if (!dcCore::app()->admin->can_view_page) {
             dcPost::closeModule();
 

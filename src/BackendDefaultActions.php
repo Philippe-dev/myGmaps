@@ -122,6 +122,7 @@ class BackendDefaultActions
         }
 
         // Do not switch to scheduled already published elements
+
         if ($status === dcBlog::POST_SCHEDULED) {
             $rs           = $ap->getRS();
             $excluded_ids = [];
@@ -141,6 +142,7 @@ class BackendDefaultActions
         }
 
         // Set status of remaining elements
+        
         dcCore::app()->blog->updPostsStatus($ids, $status);
 
         dcPage::addSuccessNotice(

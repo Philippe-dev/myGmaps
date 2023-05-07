@@ -71,6 +71,7 @@ class BackendList extends adminGenericListV2
             dcCore::app()->callBehavior('adminPostListHeaderV2', $this->rs, $cols);
 
             // Cope with optional columns
+
             $this->userColumns('posts', $cols);
 
             $html_block .= '<tr>' . implode(iterator_to_array($cols)) . '</tr>%s</table>%s</div>';

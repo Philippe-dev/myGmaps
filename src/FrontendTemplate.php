@@ -85,6 +85,7 @@ class FrontendTemplate
             EOT;
 
         // Set map styles
+
         $sOutput .= self::getMapStyles([
             'style'       => $sStyle,
             'styles_path' => $sStylesPath,
@@ -94,6 +95,7 @@ class FrontendTemplate
         ]);
 
         // Set map events
+
         $sOutput .= self::getMapEvents([
             'map_id'     => $sMapId,
             'has_marker' => $bHasMarker,
@@ -101,6 +103,7 @@ class FrontendTemplate
         ]);
 
         // Map elements
+
         $sOutput .= $sElements;
 
         $sOutput .= <<<EOT
@@ -147,6 +150,7 @@ class FrontendTemplate
         }
 
         // Create map and listener
+
         if ($sStyle == 'neutral_blue') {
             $sOutput .= $sNeutralBlueStyle;
         } elseif ($sStyle != 'neutral_blue' && $custom_style) {
@@ -607,7 +611,6 @@ class FrontendTemplate
             }
         }
         if (!empty($aErrors)) {
-            //throw new Exception('Option ' . implode(', ', $aErrors) . ' missing from method ' . $sMethod);
             var_dump('Options ' . implode(', ', $aErrors) . ' missing when method ' . $sMethod . ' call.');
 
             return false;

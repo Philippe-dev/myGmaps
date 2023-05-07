@@ -81,6 +81,7 @@ class Frontend extends dcNsProcess
         $my_params['post_status'] = '1';
 
         // Récupérer tous les éléments de cartes selon leurs ids
+
         if (array_key_exists('ids', $aParams) && !empty($aParams['ids'])) {
             $my_params['post_id'] = $aParams['ids'];
             $rs1                  = dcCore::app()->blog->getPosts($my_params);
@@ -90,6 +91,7 @@ class Frontend extends dcNsProcess
         }
 
         // Récupérer tous les éléments de cartes selon des catégories
+
         if (array_key_exists('categories', $aParams) && !empty($aParams['categories'])) {
             $my_params['post_id'] = '';
             $my_params['cat_id']  = $aParams['categories'];
@@ -100,6 +102,7 @@ class Frontend extends dcNsProcess
         }
 
         // Récupérer tous les éléments de cartes
+
         if (!isset($rs1) && !isset($rs2)) {
             $rs3 = dcCore::app()->blog->getPosts($my_params);
             while ($rs3->fetch()) {
@@ -142,11 +145,13 @@ class Frontend extends dcNsProcess
 
         if ($s->myGmaps_enabled) {
             // Appel depuis un billet, ou depuis une balise de template
+
             $sTemplate     = '';
             $isTemplateTag = (!empty($aElements)) ? true : false ;
             $sPostId       = ($isTemplateTag) ? $aElements['id'] : dcCore::app()->ctx->posts->post_id ;
 
             if ($isTemplateTag || (in_array(dcCore::app()->ctx->posts->post_type, $postTypes) && self::hasMap($sPostId) != '')) {
+                
                 // Map styles. Get more styles from http://snazzymaps.com/
 
                 $public_path = dcCore::app()->blog->public_path;
@@ -171,9 +176,11 @@ class Frontend extends dcNsProcess
                 }
 
                 // Map type
+
                 $custom_style = false;
 
                 // Appel depuis un billet, ou depuis une balise de template
+
                 $aOptions = [];
                 if ($isTemplateTag) {
                     $aOptions = $aElements;
@@ -188,6 +195,7 @@ class Frontend extends dcNsProcess
                 }
 
                 // Get map elements
+
                 $map_elements = [];
                 if ($isTemplateTag) {
                     $map_elements = self::getMapElements([
@@ -238,6 +246,7 @@ class Frontend extends dcNsProcess
                     ];
 
                     // Place element
+
                     if ($type == 'point of interest') {
                         $has_marker = true;
                         $marker     = explode('|', $list[0]);
@@ -366,6 +375,7 @@ class Frontend extends dcNsProcess
     {
         // Récupérer tous les filtres
         // id="home" center="latlng" zoom="x" style="style_name" elements="id,id,id,id" category="id,id,id"
+        
         $sId         = $attr['id'] ?? substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 6);
         $sCenter     = isset($attr['center']) ? addslashes($attr['center']) : '';
         $iZoom       = isset($attr['zoom']) ? (int) $attr['zoom'] : '12';
