@@ -230,7 +230,6 @@ button.delete_map {
   border-bottom-left-radius: .3em;
   border-top-left-radius: .3em;
   background: #fff url(index.php?pf=myGmaps/css/img/search.svg) no-repeat 1px center !important;
-
   text-indent: 2em;
   padding: 0;
   border: 1px solid #ccc;

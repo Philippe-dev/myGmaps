@@ -70,6 +70,7 @@ $(() => {
 			center: default_location,
 			scrollwheel: false,
 			mapTypeControl: true,
+			streetViewControl: false,
 			mapTypeControlOptions: {
 				mapTypeIds
 			}

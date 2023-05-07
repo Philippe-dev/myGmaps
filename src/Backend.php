@@ -294,7 +294,7 @@ class Backend extends dcNsProcess
             '<label class="bold" for="post-gmap">' . __('Google Map:') . '</label>' .
             '<span class="form-note">' . __('Map attached to this entry.') . '</span>' .
             '<div id="post-gmap" >' .
-            '<div class="map_toolbar">' . __('Search:') . '<span class="map_spacer">&nbsp;</span>' .
+            '<div class="map_toolbar"><span class="search">' . __('Search:') . '</span><span class="map_spacer">&nbsp;</span>' .
                 '<input size="50" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="' . __('OK') . '" />' .
             '</div>' .
             '<p class="area" id="map_canvas"></p>' .
@@ -317,7 +317,7 @@ class Backend extends dcNsProcess
             '<label class="bold" for="post-gmap">' . __('Google Map:') . '</label>' .
             '<span class="form-note">' . __('Map attached to this entry.') . '</span>' .
             '<div id="post-gmap" >' .
-            '<div class="map_toolbar">' . __('Search:') . '<span class="map_spacer">&nbsp;</span>' .
+            '<div class="map_toolbar"><span class="search">' . __('Search:') . '</span><span class="map_spacer">&nbsp;</span>' .
                 '<input size="50" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="' . __('OK') . '" />' .
             '</div>' .
             '<p class="area" id="map_canvas"></p>' .

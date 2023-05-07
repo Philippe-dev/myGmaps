@@ -125,6 +125,7 @@ $(() => {
       scrollwheel: false,
       mapTypeControl: true,
       overviewMapControl: true,
+      streetViewControl: false,
       mapTypeControlOptions: {
         mapTypeIds
       }
