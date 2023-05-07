@@ -434,7 +434,7 @@ class ManageMap extends dcNsProcess
                 $c_edit = dcCore::app()->admin->post_editor['xhtml'];
             }
             if ($p_edit == $c_edit) {
-                # --BEHAVIOR-- adminPostEditor -- string, string, string, array<int,string>, string
+                # --BEHAVIOR-- adminPostEditor -- string, string, array<int,string>, string
                 $admin_post_behavior .= dcCore::app()->callBehavior(
                     'adminPostEditor',
                     $p_edit,
@@ -443,12 +443,12 @@ class ManageMap extends dcNsProcess
                     dcCore::app()->admin->post_format
                 );
             } else {
-                # --BEHAVIOR-- adminPostEditor -- string, string, string, array<int,string>, string
+                # --BEHAVIOR-- adminPostEditor -- string, string, array<int,string>, string
                 $admin_post_behavior .= dcCore::app()->callBehavior(
                     'adminPostEditor',
                     $p_edit,
                     'map',
-                    ['#post_content'],
+                    ['#post_excerpt', '#post_content'],
                     dcCore::app()->admin->post_format
                 );
             }
