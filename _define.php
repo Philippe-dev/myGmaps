@@ -23,5 +23,6 @@ $this->registerModule(
         'permissions' => dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]),
         'type'        => 'plugin',
         'settings'    => ['self' => '&act=list#settings'],
+        'support'    => 'https://github.com/Philippe-dev/myGmaps',
     ]
 );
