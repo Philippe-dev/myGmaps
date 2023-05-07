@@ -593,6 +593,9 @@ class Backend extends dcNsProcess
         $filters->append((new dcAdminFilter('trackback'))
             ->param());
 
+        $filters->append((new dcAdminFilter('attachment'))
+            ->param());
+
         $filters->append((new dcAdminFilter('featuredmedia'))
         ->param());
 
