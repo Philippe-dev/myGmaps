@@ -299,9 +299,6 @@ class ManageMap extends dcNsProcess
                 } elseif (dcCore::app()->admin->post_format == 'xhtml') {
                     dcCore::app()->admin->post_content = '<p>' . __('No description.') . '</p>';
                     $description                       = 'none';
-                } elseif (dcCore::app()->admin->post_format == 'markdown') {
-                    dcCore::app()->admin->post_content = __('No description.');
-                    $description                       = 'none';
                 }
             } else {
                 $description = 'description';
