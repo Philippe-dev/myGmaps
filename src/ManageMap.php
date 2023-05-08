@@ -612,7 +612,7 @@ class ManageMap extends dcNsProcess
         echo dcPage::breadcrumb(
             [
                 Html::escapeHTML(dcCore::app()->blog->name) => '',
-                __('Google Maps')                           => dcCore::app()->admin->getPageURL(),
+                __('Google Maps')                           => dcCore::app()->admin->getPageURL() . '&tab=entries-list',
                 $edit_entry_title                           => '',
             ]
         );
