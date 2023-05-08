@@ -249,7 +249,7 @@ class Manage extends dcNsProcess
             $starting_script .
             dcPage::jsLoad('js/_posts_list.js') .
             dcPage::jsMetaEditor() .
-            dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/config.map.js') .
+            dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/config.map.min.js') .
             dcCore::app()->admin->post_filter->js(dcCore::app()->admin->getPageURL() . '#entries-list') .
             dcPage::jsPageTabs(dcCore::app()->admin->default_tab) .
             dcPage::jsConfirmClose('config-form') .
