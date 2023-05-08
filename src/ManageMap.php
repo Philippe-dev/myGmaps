@@ -58,6 +58,7 @@ class ManageMap extends dcNsProcess
         dcCore::app()->admin->redir_url = dcCore::app()->admin->getPageURL() . '&act=map';
 
         dcCore::app()->admin->post_id            = '';
+        dcCore::app()->admin->cat_id             = '';
         dcCore::app()->admin->post_dt            = '';
         dcCore::app()->admin->post_format        = dcCore::app()->auth->getOption('post_format');
         dcCore::app()->admin->post_editor        = dcCore::app()->auth->getOption('editor');
@@ -208,7 +209,7 @@ class ManageMap extends dcNsProcess
         if (!empty($_POST) && dcCore::app()->admin->can_edit_post) {
             // Format content
 
-            dcCore::app()->admin->cat_id       = $_POST['cat_id'];
+            dcCore::app()->admin->cat_id       = (int) $_POST['cat_id'];
             dcCore::app()->admin->post_format  = $_POST['post_format'];
             dcCore::app()->admin->post_excerpt = $_POST['post_excerpt'];
             dcCore::app()->admin->post_content = $_POST['post_content'];
@@ -309,7 +310,7 @@ class ManageMap extends dcNsProcess
 
             $cur->post_type          = 'map';
             $cur->post_dt            = dcCore::app()->admin->post_dt ? date('Y-m-d H:i:00', strtotime(dcCore::app()->admin->post_dt)) : '';
-            $cur->cat_id             = dcCore::app()->admin->cat_id;
+            $cur->cat_id             = (dcCore::app()->admin->cat_id ?: null);
             $cur->post_format        = dcCore::app()->admin->post_format;
             $cur->post_lang          = dcCore::app()->admin->post_lang;
             $cur->post_title         = dcCore::app()->admin->post_title;
@@ -657,7 +658,7 @@ class ManageMap extends dcNsProcess
         }
 
         # Exit if we cannot view page
-        
+
         if (!dcCore::app()->admin->can_view_page) {
             dcPost::closeModule();
 
