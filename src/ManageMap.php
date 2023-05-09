@@ -32,10 +32,6 @@ class ManageMap extends dcNsProcess
     public static function init(): bool
     {
         if (defined('DC_CONTEXT_ADMIN')) {
-            dcPage::check(dcCore::app()->auth->makePermissions([
-                dcCore::app()->auth::PERMISSION_CONTENT_ADMIN,
-            ]));
-
             static::$init = ($_REQUEST['act'] ?? 'list') === 'map';
         }
 

@@ -31,16 +31,12 @@ class Manage extends dcNsProcess
      */
     public static function init(): bool
     {
-        if (defined('DC_CONTEXT_ADMIN')) {
-            dcPage::check(dcCore::app()->auth->makePermissions([
-                dcCore::app()->auth::PERMISSION_CONTENT_ADMIN,
-            ]));
+        static::$init = My::checkContext(My::BACKEND);
 
-            if (isset($_REQUEST['act']) && $_REQUEST['act'] === 'map') {
-                static::$init = ($_REQUEST['act'] ?? 'list') === 'map' ? ManageMap::init() : true;
-            } elseif (isset($_REQUEST['act']) && $_REQUEST['act'] === 'maps') {
-                static::$init = ($_REQUEST['act'] ?? 'list') === 'maps' ? ManageMaps::init() : true;
-            }
+        if (isset($_REQUEST['act']) && $_REQUEST['act'] === 'map') {
+            static::$init = ($_REQUEST['act'] ?? 'list') === 'map' ? ManageMap::init() : true;
+        } elseif (isset($_REQUEST['act']) && $_REQUEST['act'] === 'maps') {
+            static::$init = ($_REQUEST['act'] ?? 'list') === 'maps' ? ManageMaps::init() : true;
         }
 
         return static::$init;

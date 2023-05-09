@@ -23,7 +23,7 @@ class Frontend extends dcNsProcess
 {
     public static function init(): bool
     {
-        self::$init = defined('DC_RC_PATH');
+        self::$init = My::checkContext(My::FRONTEND);
 
         return self::$init;
     }
