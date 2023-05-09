@@ -128,9 +128,9 @@ class Frontend extends dcNsProcess
     public static function publicHeadContent()
     {
         // Settings
-        $s           = dcCore::app()->blog->settings->myGmaps;
+        $settings    = dcCore::app()->blog->settings->myGmaps;
         $sPublicPath = DC_ADMIN_URL . '?pf=myGmaps';
-        if ($s->myGmaps_enabled) {
+        if ($settings->myGmaps_enabled) {
             echo FrontendTemplate::publicJsContent([]);
             echo FrontendTemplate::publicCssContent(['public_path' => $sPublicPath]);
         }
@@ -139,11 +139,11 @@ class Frontend extends dcNsProcess
     public static function publicMapContent($core, $_ctx, $aElements = [])
     {
         // Settings
-        $s         = dcCore::app()->blog->settings->myGmaps;
+        $settings  = dcCore::app()->blog->settings->myGmaps;
         $url       = DC_ADMIN_URL . '?pf=myGmaps';
         $postTypes = ['post', 'page'];
 
-        if ($s->myGmaps_enabled) {
+        if ($settings->myGmaps_enabled) {
             // Appel depuis un billet, ou depuis une balise de template
 
             $sTemplate     = '';
@@ -151,7 +151,6 @@ class Frontend extends dcNsProcess
             $sPostId       = ($isTemplateTag) ? $aElements['id'] : dcCore::app()->ctx->posts->post_id ;
 
             if ($isTemplateTag || (in_array(dcCore::app()->ctx->posts->post_type, $postTypes) && self::hasMap($sPostId) != '')) {
-                
                 // Map styles. Get more styles from http://snazzymaps.com/
 
                 $public_path = dcCore::app()->blog->public_path;
@@ -375,7 +374,7 @@ class Frontend extends dcNsProcess
     {
         // Récupérer tous les filtres
         // id="home" center="latlng" zoom="x" style="style_name" elements="id,id,id,id" category="id,id,id"
-        
+
         $sId         = $attr['id'] ?? substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 6);
         $sCenter     = isset($attr['center']) ? addslashes($attr['center']) : '';
         $iZoom       = isset($attr['zoom']) ? (int) $attr['zoom'] : '12';
