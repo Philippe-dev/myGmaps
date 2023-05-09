@@ -55,8 +55,13 @@ class BackendList extends adminGenericListV2
             if ($filter) {
                 $html_block .= '<caption>' . sprintf(__('List of %s elements matching the filter'), $this->rs_count) . '</caption>';
             } else {
-                $html_block .= '<caption>' .
-                sprintf(__('Elements list (%s)'), $this->rs_count) . '</caption>';
+                if (isset($_GET['act']) && $_GET['act'] === 'maps') {
+                    $html_block .= '<caption>' .
+                    sprintf(__('Available elements list (%s)'), $this->rs_count) . '</caption>';
+                } else {
+                    $html_block .= '<caption>' .
+                    sprintf(__('Elements list (%s)'), $this->rs_count) . '</caption>';
+                }
             }
 
             $cols = [

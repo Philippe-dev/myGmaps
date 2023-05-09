@@ -3,7 +3,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: myGmaps 6.0\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-05-07T17:27:40+00:00\n"
+"PO-Revision-Date: 2023-05-09T06:52:15+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -134,6 +134,9 @@ msgstr "Aucun élément"
 
 msgid "List of %s elements matching the filter"
 msgstr "Liste des %s éléments correspondant au filtre"
+
+msgid "Available elements list (%s)"
+msgstr "Liste des éléments disponibles (%s)"
 
 msgid "Elements list (%s)"
 msgstr "Liste des éléments (%s)"
