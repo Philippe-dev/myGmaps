@@ -34,7 +34,7 @@ class Install extends dcNsProcess
             return false;
         }
 
-        $settings = dcCore::app()->blog->settings->myGmaps;
+        $settings = dcCore::app()->blog->settings->get(My::id());
 
         $settings->put('myGmaps_enabled', false, 'boolean', 'Enable myGmaps plugin', false, true);
         $settings->put('myGmaps_center', '43.0395797336425, 6.126280043989323', 'string', 'Default maps center', false, true);

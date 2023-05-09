@@ -42,7 +42,7 @@ class Backend extends dcNsProcess
         }
 
         dcCore::app()->menu[dcAdmin::MENU_BLOG]->addItem(
-            __('Google Maps'),
+            My::name(),
             dcCore::app()->adminurl->get('admin.plugin.myGmaps') . '&amp;act=list',
             [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
             preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.myGmaps')) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
@@ -136,9 +136,9 @@ class Backend extends dcNsProcess
             $page_count          = dcCore::app()->blog->getPosts($params, true)->f(0);
             if ($page_count > 0) {
                 $str_pages = ($page_count > 1) ? __('%d map elements') : __('%d map element');
-                $icon[0]   = __('Google Maps') . '<br />' . sprintf($str_pages, $page_count);
+                $icon[0]   = My::name() . '<br />' . sprintf($str_pages, $page_count);
             } else {
-                $icon[0] = __('Google Maps');
+                $icon[0] = My::name();
             }
         }
     }
@@ -146,7 +146,7 @@ class Backend extends dcNsProcess
     public static function dashboardFavorites(dcFavorites $favorites)
     {
         $favorites->register('myGmaps', [
-            'title'       => __('Google Maps'),
+            'title'       => My::name(),
             'url'         => dcCore::app()->adminurl->get('admin.plugin.myGmaps') . '&amp;do=list',
             'small-icon'  => [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
             'large-icon'  => [dcPage::getPF('myGmaps/icon.svg'), dcPage::getPF('myGmaps/icon-dark.svg')],
@@ -536,7 +536,7 @@ class Backend extends dcNsProcess
 
     public static function adminPostFilter(ArrayObject $filters)
     {
-        if (dcCore::app()->admin->getPageURL() != 'plugin.php?p=myGmaps') {
+        if (My::url() != 'plugin.php?p=myGmaps') {
             return null;
         }
 
@@ -623,7 +623,7 @@ class Backend extends dcNsProcess
 
     public static function adminBeforePostUpdate($cur, $post_id)
     {
-        $settings = dcCore::app()->blog->settings->myGmaps;
+        $settings = dcCore::app()->blog->settings->get(My::id());
 
         $my_params['post_id']    = $post_id;
         $my_params['no_content'] = true;
@@ -650,7 +650,7 @@ class Backend extends dcNsProcess
 
     public static function postHeaders()
     {
-        $settings = dcCore::app()->blog->settings->myGmaps;
+        $settings = dcCore::app()->blog->settings->get(My::id());
 
         if (!$settings->myGmaps_enabled) {
             return;

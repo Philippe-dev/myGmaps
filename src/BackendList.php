@@ -200,7 +200,7 @@ class BackendList extends adminGenericListV2
                 ]
             ) .
             '</td>',
-            'title' => '<td class="maximal" scope="row"><a href="' . dcCore::app()->admin->getPageURL() .
+            'title' => '<td class="maximal" scope="row"><a href="' . My::url() .
             '&amp;act=map&amp;id=' . $this->rs->post_id . '">' .
             html::escapeHTML($this->rs->post_title) . '</a></td>',
             'date' => '<td class="nowrap count">' .

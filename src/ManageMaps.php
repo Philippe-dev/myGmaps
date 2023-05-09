@@ -151,9 +151,9 @@ class ManageMaps extends dcNsProcess
         }
 
         dcPage::openModule(
-            __('Google Maps'),
+            My::name(),
             dcPage::jsLoad('js/_posts_list.js') .
-            dcCore::app()->admin->post_filter->js(dcCore::app()->admin->getPageURL() . '&amp;id=' . $post_id . '&amp;act=maps') .
+            dcCore::app()->admin->post_filter->js(My::url() . '&amp;id=' . $post_id . '&amp;act=maps') .
             dcPage::jsPageTabs(dcCore::app()->admin->default_tab) .
             dcPage::jsConfirmClose('config-form') .
             '<link rel="stylesheet" type="text/css" href="index.php?pf=myGmaps/css/admin.css" />'
@@ -164,7 +164,7 @@ class ManageMaps extends dcNsProcess
         echo dcPage::breadcrumb(
             [
                 html::escapeHTML(dcCore::app()->blog->name) => '',
-                __('Google Maps')                           => dcCore::app()->admin->getPageURL(),
+                My::name()                                  => My::url(),
                 dcCore::app()->admin->page_title            => '',
             ]
         ) .
@@ -178,7 +178,7 @@ class ManageMaps extends dcNsProcess
         dcCore::app()->admin->posts_list->display(
             dcCore::app()->admin->post_filter->page,
             dcCore::app()->admin->post_filter->nb,
-            '<form action="' . dcCore::app()->admin->getPageURL() . '" method="post" id="form-entries">' .
+            '<form action="' . My::url() . '" method="post" id="form-entries">' .
 
             '%s' .
 

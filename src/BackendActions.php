@@ -34,7 +34,7 @@ class BackendActions extends dcPostsActions
         parent::__construct($uri, $redirect_args);
 
         $this->redirect_fields = [];
-        $this->caller_title    = __('Google Maps');
+        $this->caller_title    = My::name();
     }
 
     /**
@@ -49,7 +49,7 @@ class BackendActions extends dcPostsActions
             dcPage::breadcrumb(
                 [
                     Html::escapeHTML(dcCore::app()->blog->name) => '',
-                    __('Google Maps')                           => $this->getRedirection(true),
+                    My::name()                                  => $this->getRedirection(true),
                     __('Maps actions')                          => '',
                 ]
             )
@@ -66,7 +66,7 @@ class BackendActions extends dcPostsActions
     public function beginPage(string $breadcrumb = '', string $head = ''): void
     {
         echo
-        '<html><head><title>' . __('Google Maps') . '</title>' .
+        '<html><head><title>' . My::name() . '</title>' .
         dcPage::jsLoad('js/_posts_actions.js') .
         $head .
         '</script></head><body>' .

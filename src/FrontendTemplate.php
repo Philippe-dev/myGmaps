@@ -57,7 +57,7 @@ class FrontendTemplate
 
     public static function publicJsContent(array $aOptions)
     {
-        $settings = dcCore::app()->blog->settings->myGmaps;
+        $settings = dcCore::app()->blog->settings->get(My::id());
 
         return '<script src="https://maps.googleapis.com/maps/api/js?key=' . $settings->myGmaps_API_key . '&amp;callback=Function.prototype"></script>' . "\n";
     }

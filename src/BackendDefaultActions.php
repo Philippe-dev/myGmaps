@@ -20,7 +20,6 @@ use dcAuth;
 use dcAdminCombos;
 use Dotclear\Helper\Html\Html;
 use dcPage;
-use dcDefaultPostActions;
 use Exception;
 use form;
 
@@ -31,7 +30,6 @@ class BackendDefaultActions
      *
      * @param      BackendActions  $ap     Admin actions instance
      */
-
     public static function adminPostsActionsPage(BackendActions $ap)
     {
         if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
@@ -142,12 +140,13 @@ class BackendDefaultActions
         }
 
         // Set status of remaining elements
-        
+
         dcCore::app()->blog->updPostsStatus($ids, $status);
 
         dcPage::addSuccessNotice(
             sprintf(
-                __('%d element has been successfully updated to status : "%s"',
+                __(
+                    '%d element has been successfully updated to status : "%s"',
                     '%d elements have been successfully updated to status : "%s"',
                     count($ids)
                 ),
@@ -177,7 +176,8 @@ class BackendDefaultActions
         if ($action == 'selected') {
             dcPage::addSuccessNotice(
                 sprintf(
-                    __('%d element has been successfully marked as selected',
+                    __(
+                        '%d element has been successfully marked as selected',
                         '%d elements have been successfully marked as selected',
                         count($ids)
                     ),
@@ -187,7 +187,8 @@ class BackendDefaultActions
         } else {
             dcPage::addSuccessNotice(
                 sprintf(
-                    __('%d element has been successfully marked as unselected',
+                    __(
+                        '%d element has been successfully marked as unselected',
                         '%d elements have been successfully marked as unselected',
                         count($ids)
                     ),
@@ -223,7 +224,8 @@ class BackendDefaultActions
         dcCore::app()->blog->delPosts($ids);
         dcPage::addSuccessNotice(
             sprintf(
-                __('%d element has been successfully deleted',
+                __(
+                    '%d element has been successfully deleted',
                     '%d elements have been successfully deleted',
                     count($ids)
                 ),
@@ -276,7 +278,8 @@ class BackendDefaultActions
             }
             dcPage::addSuccessNotice(
                 sprintf(
-                    __('%d element has been successfully moved to category "%s"',
+                    __(
+                        '%d element has been successfully moved to category "%s"',
                         '%d elements have been successfully moved to category "%s"',
                         count($ids)
                     ),
@@ -358,7 +361,8 @@ class BackendDefaultActions
             $cur->update('WHERE post_id ' . dcCore::app()->con->in($ids));
             dcPage::addSuccessNotice(
                 sprintf(
-                    __('%d element has been successfully set to user "%s"',
+                    __(
+                        '%d element has been successfully set to user "%s"',
                         '%d elements have been successfully set to user "%s"',
                         count($ids)
                     ),
@@ -433,7 +437,8 @@ class BackendDefaultActions
             $cur->update('WHERE post_id ' . dcCore::app()->con->in($post_ids));
             dcPage::addSuccessNotice(
                 sprintf(
-                    __('%d element has been successfully set to language "%s"',
+                    __(
+                        '%d element has been successfully set to language "%s"',
                         '%d elements have been successfully set to language "%s"',
                         count($post_ids)
                     ),
@@ -482,6 +487,4 @@ class BackendDefaultActions
             $ap->endPage();
         }
     }
-
-    
 }

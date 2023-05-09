@@ -61,7 +61,7 @@ class Manage extends dcNsProcess
             ManageMaps::process();
         }
 
-        $settings = dcCore::app()->blog->settings->myGmaps;
+        $settings = dcCore::app()->blog->settings->get(My::id());
 
         dcCore::app()->admin->default_tab = empty($_REQUEST['tab']) ? 'settings' : $_REQUEST['tab'];
 
@@ -85,7 +85,7 @@ class Manage extends dcNsProcess
                 $settings->put('myGmaps_zoom', $_POST['myGmaps_zoom']);
                 $settings->put('myGmaps_type', $_POST['myGmaps_type']);
 
-                http::redirect(dcCore::app()->admin->getPageURL() . '&act=list&tab=settings&upd=1');
+                http::redirect(My::url() . '&act=list&tab=settings&upd=1');
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
             }
@@ -149,7 +149,7 @@ class Manage extends dcNsProcess
             return;
         }
 
-        $settings = dcCore::app()->blog->settings->myGmaps;
+        $settings = dcCore::app()->blog->settings->get(My::id());
 
         $myGmaps_center = $settings->myGmaps_center;
         $myGmaps_zoom   = $settings->myGmaps_zoom;
@@ -245,12 +245,12 @@ class Manage extends dcNsProcess
         '</script>';
 
         dcPage::openModule(
-            __('Google Maps'),
+            My::name(),
             $starting_script .
             dcPage::jsLoad('js/_posts_list.js') .
             dcPage::jsMetaEditor() .
             dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/config.map.min.js') .
-            dcCore::app()->admin->post_filter->js(dcCore::app()->admin->getPageURL() . '#entries-list') .
+            dcCore::app()->admin->post_filter->js(My::url() . '#entries-list') .
             dcPage::jsPageTabs(dcCore::app()->admin->default_tab) .
             dcPage::jsConfirmClose('config-form') .
             '<link rel="stylesheet" type="text/css" href="index.php?pf=myGmaps/css/admin.css" />'
@@ -259,13 +259,13 @@ class Manage extends dcNsProcess
         echo dcPage::breadcrumb(
             [
                 html::escapeHTML(dcCore::app()->blog->name) => '',
-                __('Google Maps')                           => dcCore::app()->admin->getPageURL(),
+                My::name()                                  => My::url(),
             ]
         ) .
         dcPage::notices();
 
         // Display messages
-        
+
         if (isset($_GET['upd']) && isset($_GET['act'])) {
             dcPage::success(__('Configuration has been saved.'));
         }
@@ -274,7 +274,7 @@ class Manage extends dcNsProcess
 
         echo
         '<div class="multi-part" id="parameters" title="' . __('Parameters') . '">' .
-        '<form method="post" action="' . dcCore::app()->admin->getPageURL() . '" id="config-form">' .
+        '<form method="post" action="' . My::url() . '" id="config-form">' .
         '<div class="fieldset"><h3>' . __('Activation') . '</h3>' .
             '<p><label class="classic" for="myGmaps_enabled">' .
             form::checkbox('myGmaps_enabled', '1', $settings->myGmaps_enabled) .
@@ -313,7 +313,7 @@ class Manage extends dcNsProcess
         '<div class="multi-part" id="entries-list" title="' . __('Map elements') . '">';
 
         if ($settings->myGmaps_enabled) {
-            echo '<p class="top-add"><strong><a class="button add" href="' . dcCore::app()->admin->getPageURL() . '&amp;act=map">' . __('New element') . '</a></strong></p>';
+            echo '<p class="top-add"><strong><a class="button add" href="' . My::url() . '&amp;act=map">' . __('New element') . '</a></strong></p>';
         }
 
         dcCore::app()->admin->post_filter->display('admin.plugin.myGmaps', '<input type="hidden" name="p" value="myGmaps" /><input type="hidden" name="tab" value="entries-list" />');
@@ -322,7 +322,7 @@ class Manage extends dcNsProcess
         dcCore::app()->admin->posts_list->display(
             dcCore::app()->admin->post_filter->page,
             dcCore::app()->admin->post_filter->nb,
-            '<form action="' . dcCore::app()->admin->getPageURL() . '" method="post" id="form-entries">' .
+            '<form action="' . My::url() . '" method="post" id="form-entries">' .
 
             '%s' .
 

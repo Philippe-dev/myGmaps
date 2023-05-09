@@ -55,7 +55,7 @@ class ManageMap extends dcNsProcess
 
         Date::setTZ(dcCore::app()->auth->getInfo('user_tz') ?? 'UTC');
 
-        dcCore::app()->admin->redir_url = dcCore::app()->admin->getPageURL() . '&act=map';
+        dcCore::app()->admin->redir_url = My::url() . '&act=map';
 
         dcCore::app()->admin->post_id            = '';
         dcCore::app()->admin->cat_id             = '';
@@ -281,7 +281,7 @@ class ManageMap extends dcNsProcess
                 # --BEHAVIOR-- adminBeforePostDelete -- int
                 dcCore::app()->callBehavior('adminBeforePostDelete', dcCore::app()->admin->post_id);
                 dcCore::app()->blog->delPost(dcCore::app()->admin->post_id);
-                Http::redirect(dcCore::app()->admin->getPageURL());
+                Http::redirect(My::url());
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
             }
@@ -358,7 +358,7 @@ class ManageMap extends dcNsProcess
                     // --BEHAVIOR-- adminAfterPostUpdate
                     dcCore::app()->callBehavior('adminAfterPostUpdate', $cur, dcCore::app()->admin->post_id);
 
-                    http::redirect('' . dcCore::app()->admin->getPageURL() . '&act=map&id=' . dcCore::app()->admin->post_id . '&upd=1');
+                    http::redirect('' . My::url() . '&act=map&id=' . dcCore::app()->admin->post_id . '&upd=1');
                 } catch (Exception $e) {
                     dcCore::app()->error->add($e->getMessage());
                 }
@@ -389,7 +389,7 @@ class ManageMap extends dcNsProcess
                     // --BEHAVIOR-- adminAfterPostCreate
                     dcCore::app()->callBehavior('adminAfterPostCreate', $cur, $return_id);
 
-                    http::redirect('' . dcCore::app()->admin->getPageURL() . '&act=map&id=' . $return_id . '&crea=1');
+                    http::redirect('' . My::url() . '&act=map&id=' . $return_id . '&crea=1');
                 } catch (Exception $e) {
                     dcCore::app()->error->add($e->getMessage());
                 }
@@ -400,7 +400,7 @@ class ManageMap extends dcNsProcess
                     // --BEHAVIOR-- adminBeforePostDelete
                     dcCore::app()->callBehavior('adminBeforePostDelete', dcCore::app()->admin->post_id);
                     dcCore::app()->blog->delPost(dcCore::app()->admin->post_id);
-                    http::redirect(dcCore::app()->admin->getPageURL() . '&act=list');
+                    http::redirect(My::url() . '&act=list');
                 } catch (Exception $e) {
                     dcCore::app()->error->add($e->getMessage());
                 }
@@ -419,7 +419,7 @@ class ManageMap extends dcNsProcess
             return;
         }
 
-        $settings = dcCore::app()->blog->settings->myGmaps;
+        $settings = dcCore::app()->blog->settings->get(My::id());
 
         $myGmaps_center = $settings->myGmaps_center;
         $myGmaps_zoom   = $settings->myGmaps_zoom;
@@ -568,7 +568,7 @@ class ManageMap extends dcNsProcess
         '</script>';
 
         dcPage::openModule(
-            dcCore::app()->admin->page_title . ' - ' . __('Google Maps'),
+            dcCore::app()->admin->page_title . ' - ' . My::name(),
             dcPage::jsModal() .
             dcPage::jsLoad('js/_post.js') .
             dcPage::jsMetaEditor() .
@@ -612,7 +612,7 @@ class ManageMap extends dcNsProcess
         echo dcPage::breadcrumb(
             [
                 Html::escapeHTML(dcCore::app()->blog->name) => '',
-                __('Google Maps')                           => dcCore::app()->admin->getPageURL() . '&tab=entries-list',
+                My::name()                                  => My::url() . '&tab=entries-list',
                 $edit_entry_title                           => '',
             ]
         );
@@ -837,7 +837,7 @@ class ManageMap extends dcNsProcess
 
             if (!isset(dcCore::app()->admin->post->post_id)) {
                 echo
-                '<a id="post-cancel" href="' . dcCore::app()->admin->getPageURL() . '&amp;act=list#entries-list' . '" class="button" accesskey="c">' . __('Cancel') . ' (c)</a>';
+                '<a id="post-cancel" href="' . My::url() . '&amp;act=list#entries-list' . '" class="button" accesskey="c">' . __('Cancel') . ' (c)</a>';
             }
 
             echo(dcCore::app()->admin->can_delete ? '<input type="submit" class="delete" value="' . __('Delete') . '" name="delete" />' : '') .
