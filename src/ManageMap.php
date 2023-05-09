@@ -293,13 +293,10 @@ class ManageMap extends dcNsProcess
             $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcBlog::POST_TABLE_NAME);
 
             if ($_POST['post_content'] == '' || $_POST['post_content'] == __('No description.') || $_POST['post_content'] == '<p>' . __('No description.') . '</p>') {
-                if (dcCore::app()->admin->post_format == 'wiki') {
-                    dcCore::app()->admin->post_content = __('No description.');
-                    $description                       = 'none';
-                } elseif (dcCore::app()->admin->post_format == 'xhtml') {
+                if (dcCore::app()->admin->post_format == 'xhtml') {
                     dcCore::app()->admin->post_content = '<p>' . __('No description.') . '</p>';
                     $description                       = 'none';
-                } elseif (dcCore::app()->admin->post_format == 'markdown') {
+                } else {
                     dcCore::app()->admin->post_content = __('No description.');
                     $description                       = 'none';
                 }
