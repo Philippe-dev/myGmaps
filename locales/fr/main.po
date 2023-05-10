@@ -13,6 +13,9 @@ msgstr ""
 msgid "Google Maps"
 msgstr "Cartes Google"
 
+msgid "Maps"
+msgstr "Cartes"
+
 msgid "%d map elements"
 msgstr "%d éléments"
 
@@ -21,6 +24,9 @@ msgstr "%d élément"
 
 msgid "Google Map:"
 msgstr "Carte Google :"
+
+msgid "Map:"
+msgstr "Carte :"
 
 msgid "Map attached to this entry."
 msgstr "Carte attachée à ce billet."

@@ -31,7 +31,7 @@ class ManageMap extends dcNsProcess
 {
     public static function init(): bool
     {
-        if (defined('DC_CONTEXT_ADMIN')) {
+        if (My::checkContext(My::BACKEND)) {
             static::$init = ($_REQUEST['act'] ?? 'list') === 'map';
         }
 
