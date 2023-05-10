@@ -38,7 +38,7 @@ class Frontend extends dcNsProcess
         dcCore::app()->addBehavior('publicPageAfterContent', [self::class, 'publicMapContent']);
         dcCore::app()->addBehavior('publicHeadContent', [self::class, 'publicHeadContent']);
 
-        dcCore::app()->tpl->addValue('myGmaps', [self::class, 'publicTagMapContent']);
+        dcCore::app()->tpl->addValue(My::id(), [self::class, 'publicTagMapContent']);
 
         L10n::set(dirname(__FILE__) . '/locales/' . dcCore::app()->lang . '/main');
 

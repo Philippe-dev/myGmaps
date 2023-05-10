@@ -138,7 +138,7 @@ class Backend extends dcNsProcess
 
     public static function dashboardFavsIcon($name, $icon)
     {
-        if ($name == 'myGmaps') {
+        if ($name == My::id()) {
             $params              = new ArrayObject();
             $params['post_type'] = 'map';
             $page_count          = dcCore::app()->blog->getPosts($params, true)->f(0);
@@ -197,7 +197,7 @@ class Backend extends dcNsProcess
     public static function adminPostForm($post)
     {
         $settings = dcCore::app()->blog->settings->get(My::id());
-        
+
         $postTypes = ['post', 'page'];
 
         if (!$settings->myGmaps_enabled) {
@@ -653,7 +653,7 @@ class Backend extends dcNsProcess
             return;
         }
 
-        if (isset($_GET['p']) && $_GET['p'] == 'myGmaps') {
+        if (isset($_GET['p']) && $_GET['p'] == My::id()) {
             return;
         }
 
@@ -679,6 +679,6 @@ class Backend extends dcNsProcess
             '});' . "\n" .
         '});' . "\n" .
         '</script>' . "\n" .
-        '<link rel="stylesheet" type="text/css" href="index.php?pf=myGmaps/css/admin.css" />' . "\n";
+        '<link rel="stylesheet" type="text/css" href="index.php?pf=' .  My::id() . '/css/admin.css" />' . "\n";
     }
 }
