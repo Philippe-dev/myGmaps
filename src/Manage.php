@@ -178,7 +178,7 @@ class Manage extends dcNsProcess
         // Actions
         // -------
 
-        dcCore::app()->admin->posts_actions_page = new dcPostsActions(dcCore::app()->adminurl->get('admin.plugin.myGmaps'));
+        dcCore::app()->admin->posts_actions_page = new dcPostsActions(dcCore::app()->adminurl->get('admin.plugin.' . My::id()));
         if (dcCore::app()->admin->posts_actions_page->process()) {
             return;
         }
@@ -312,7 +312,7 @@ class Manage extends dcNsProcess
             echo '<p class="top-add"><strong><a class="button add" href="' . My::url() . '&amp;act=map">' . __('New element') . '</a></strong></p>';
         }
 
-        dcCore::app()->admin->post_filter->display('admin.plugin.myGmaps', '<input type="hidden" name="p" value="myGmaps" /><input type="hidden" name="tab" value="entries-list" />');
+        dcCore::app()->admin->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="myGmaps" /><input type="hidden" name="tab" value="entries-list" />');
 
         // Show posts
         dcCore::app()->admin->posts_list->display(
@@ -329,7 +329,7 @@ class Manage extends dcNsProcess
             '<p class="col right"><label for="action" class="classic">' . __('Selected entries action:') . '</label> ' .
             form::combo('action', dcCore::app()->admin->posts_actions_page->getCombo()) .
             '<input id="do-action" type="submit" value="' . __('ok') . '" disabled /></p>' .
-            dcCore::app()->adminurl->getHiddenFormFields('admin.plugin.myGmaps', dcCore::app()->admin->post_filter->values()) .
+            dcCore::app()->adminurl->getHiddenFormFields('admin.plugin.' . My::id(), dcCore::app()->admin->post_filter->values()) .
             dcCore::app()->formNonce() . '</p>' .
             '</div>' .
             '</form>',

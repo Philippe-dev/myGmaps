@@ -139,7 +139,7 @@ class Frontend extends dcNsProcess
     public static function publicMapContent($core, $_ctx, $aElements = [])
     {
         // Settings
-        $settings  = dcCore::app()->blog->settings->myGmaps;
+        $settings = dcCore::app()->blog->settings->get(My::id());
         $url       = DC_ADMIN_URL . '?pf=myGmaps';
         $postTypes = ['post', 'page'];
 

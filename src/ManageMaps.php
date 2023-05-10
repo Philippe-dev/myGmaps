@@ -168,7 +168,7 @@ class ManageMaps extends dcNsProcess
 
         echo '<h3>' . __('Select map elements for map attached to post:') . ' <a href="' . dcCore::app()->getPostAdminURL((string) $post_type, $post_id) . '">' . $post_title . '</a></h3>';
 
-        dcCore::app()->admin->post_filter->display('admin.plugin.myGmaps', '<input type="hidden" name="p" value="myGmaps" /><input type="hidden" name="id" value="' . $post_id . '" /><input type="hidden" name="act" value="maps" />');
+        dcCore::app()->admin->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="myGmaps" /><input type="hidden" name="id" value="' . $post_id . '" /><input type="hidden" name="act" value="maps" />');
 
         // Show posts
         dcCore::app()->admin->posts_list->display(
@@ -187,7 +187,7 @@ class ManageMaps extends dcNsProcess
             form::hidden(['post_type'], $post_type) .
             form::hidden(['id'], $post_id) .
             form::hidden(['act'], 'maps') .
-            dcCore::app()->adminurl->getHiddenFormFields('admin.plugin.myGmaps', dcCore::app()->admin->post_filter->values()) .
+            dcCore::app()->adminurl->getHiddenFormFields('admin.plugin.' . My::id(), dcCore::app()->admin->post_filter->values()) .
             dcCore::app()->formNonce() . '</p>' .
             '</div>' .
             '</form>',
