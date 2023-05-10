@@ -128,8 +128,9 @@ class Frontend extends dcNsProcess
     public static function publicHeadContent()
     {
         // Settings
-        $settings    = dcCore::app()->blog->settings->myGmaps;
-        $sPublicPath = DC_ADMIN_URL . '?pf=myGmaps';
+        $settings  = dcCore::app()->blog->settings->get(My::id());
+
+        $sPublicPath = DC_ADMIN_URL . '?pf=' . My::id();
         if ($settings->myGmaps_enabled) {
             echo FrontendTemplate::publicJsContent([]);
             echo FrontendTemplate::publicCssContent(['public_path' => $sPublicPath]);
@@ -139,8 +140,9 @@ class Frontend extends dcNsProcess
     public static function publicMapContent($core, $_ctx, $aElements = [])
     {
         // Settings
-        $settings = dcCore::app()->blog->settings->get(My::id());
-        $url       = DC_ADMIN_URL . '?pf=myGmaps';
+        $settings  = dcCore::app()->blog->settings->get(My::id());
+        
+        $url       = DC_ADMIN_URL . '?pf=' . My::id();
         $postTypes = ['post', 'page'];
 
         if ($settings->myGmaps_enabled) {
