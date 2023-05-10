@@ -29,14 +29,14 @@ class Backend extends dcNsProcess
 {
     public static function init(): bool
     {
-        self::$init = My::checkContext(My::BACKEND);
+        static::$init = My::checkContext(My::BACKEND);
 
-        return self::$init;
+        return static::$init;
     }
 
     public static function process(): bool
     {
-        if (!self::$init) {
+        if (!static::$init) {
             return false;
         }
 
