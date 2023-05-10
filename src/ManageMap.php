@@ -568,7 +568,7 @@ class ManageMap extends dcNsProcess
             dcPage::jsModal() .
             dcPage::jsLoad('js/_post.js') .
             dcPage::jsMetaEditor() .
-            dcPage::jsLoad(DC_ADMIN_URL . '?pf=myGmaps/js/element.map.min.js') .
+            dcPage::jsModuleLoad(My::id() . '/js/element.map.min.js') .
             $admin_post_behavior .
             $starting_script .
             dcPage::jsConfirmClose('entry-form') .
