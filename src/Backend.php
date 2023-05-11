@@ -58,6 +58,13 @@ class Backend extends dcNsProcess
             ]);
         });
 
+        $settings = dcCore::app()->blog->settings->get(My::id());
+
+        if ($settings->myGmaps_enabled) {
+            dcCore::app()->addBehavior('adminPostListValueV2', [BackendBehaviors::class, 'adminPostListValue']);
+            dcCore::app()->addBehavior('adminPagesListValueV2', [BackendBehaviors::class, 'adminPagesListValue']);
+        }
+
         dcCore::app()->addBehavior('adminDashboardFavsIconV2', [self::class, 'dashboardFavsIcon']);
 
         dcCore::app()->addBehavior('adminPageHelpBlock', [self::class, 'adminPageHelpBlock']);
