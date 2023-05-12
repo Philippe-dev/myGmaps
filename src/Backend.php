@@ -541,6 +541,7 @@ class Backend extends dcNsProcess
     public static function adminPostFilter(ArrayObject $filters)
     {
         if (My::url()) {
+            
             // Replace default category filter
 
             $categories = null;
@@ -621,6 +622,9 @@ class Backend extends dcNsProcess
             $filters->append((new dcAdminFilter('password'))
             ->param());
         } else {
+            
+            // Add map filter on posts list
+            
             $map = !empty($_GET['map']) ? $_GET['map'] : '';
 
             $combo = [
