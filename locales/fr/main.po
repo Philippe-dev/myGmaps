@@ -3,7 +3,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: myGmaps 6.0\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-05-11T21:06:46+00:00\n"
+"PO-Revision-Date: 2023-05-12T04:47:56+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -67,11 +67,11 @@ msgstr "flux GeoRSS"
 msgid "directions"
 msgstr "itinéraire"
 
-msgid "Attached map"
-msgstr "Carte attachée"
+msgid "With attached map"
+msgstr "Avec une carte attachée"
 
-msgid "No attached map"
-msgstr "Pas de carte attachée"
+msgid "Without attached map"
+msgstr "Sans carte attachée"
 
 msgid "Are you sure you want to remove this map?"
 msgstr "Voulez-vous vraiment supprimer cette carte ?"
@@ -252,6 +252,12 @@ msgstr "Choisir les éléments de la carte attachée au billet :"
 
 msgid "Add selected map elements"
 msgstr "Ajouter les éléments de carte sélectionnés"
+
+msgid "Attached map"
+msgstr "Carte attachée"
+
+msgid "No attached map"
+msgstr "Pas de carte attachée"
 
 msgid "Google Maps"
 msgstr "Cartes Google"

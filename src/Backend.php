@@ -624,9 +624,9 @@ class Backend extends dcNsProcess
             $map = !empty($_GET['map']) ? $_GET['map'] : '';
 
             $combo = [
-                '-'                   => '',
-                __('Attached map')    => 'map_options',
-                __('No attached map') => 'none',
+                '-'                        => '',
+                __('With attached map')    => 'map_options',
+                __('Without attached map') => 'none',
             ];
 
             $filters->append((new dcAdminFilter('map'))
@@ -703,8 +703,6 @@ class Backend extends dcNsProcess
 
     public static function adminEntryListValue($rs, $cols)
     {
-        $settings = dcCore::app()->blog->settings->get(My::id());
-
         $postTypes = ['post', 'page'];
         $meta      = dcCore::app()->meta;
 
