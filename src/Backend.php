@@ -711,7 +711,7 @@ class Backend extends dcNsProcess
         $meta      = dcCore::app()->meta;
 
         if (!empty($meta->getMetaStr($rs->post_meta, 'map_options')) && in_array($rs->post_type, $postTypes)) {
-            $cols['status'] = str_replace('</td>', '<img style="width: 1.25em; height: 1.25em;" src="' . dcPage::getPF(My::id()) . '/css/img/marker.svg" title="' . __('Google Map') . '" /></td>', $cols['status']);
+            $cols['status'] = str_replace('</td>', '<img style="width: 1.25em; height: 1.25em;" src="' . dcPage::getPF(My::id()) . '/css/img/marker.svg" title="' . __('Attached Map') . '" /></td>', $cols['status']);
         }
     }
 }

@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: myGmaps 6.0\n"
+"Project-Id-Version: myGmaps 6.1\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-05-12T04:47:56+00:00\n"
+"PO-Revision-Date: 2023-05-12T15:31:38+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -79,8 +79,8 @@ msgstr "Voulez-vous vraiment supprimer cette carte ?"
 msgid "Are you sure you want to remove this element?"
 msgstr "Voulez-vous vraiment supprimer cet élément ?"
 
-msgid "Google Map"
-msgstr "Carte Google"
+msgid "Attached Map"
+msgstr "Carte attachée"
 
 msgid "Maps actions"
 msgstr "Actions sur les cartes"
@@ -252,6 +252,9 @@ msgstr "Choisir les éléments de la carte attachée au billet :"
 
 msgid "Add selected map elements"
 msgstr "Ajouter les éléments de carte sélectionnés"
+
+msgid "Google Map"
+msgstr "Carte Google"
 
 msgid "Attached map"
 msgstr "Carte attachée"
