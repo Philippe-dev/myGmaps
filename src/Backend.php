@@ -61,8 +61,8 @@ class Backend extends dcNsProcess
         $settings = dcCore::app()->blog->settings->get(My::id());
 
         if ($settings->myGmaps_enabled) {
-            dcCore::app()->addBehavior('adminPostListValueV2', [BackendBehaviors::class, 'adminPostListValue']);
-            dcCore::app()->addBehavior('adminPagesListValueV2', [BackendBehaviors::class, 'adminPagesListValue']);
+            dcCore::app()->addBehavior('adminPostListValueV2', [self::class, 'adminEntryListValue']);
+            dcCore::app()->addBehavior('adminPagesListValueV2', [self::class, 'adminEntryListValue']);
         }
 
         dcCore::app()->addBehavior('adminDashboardFavsIconV2', [self::class, 'dashboardFavsIcon']);
@@ -540,89 +540,101 @@ class Backend extends dcNsProcess
 
     public static function adminPostFilter(ArrayObject $filters)
     {
-        if (My::url() != 'plugin.php?p=myGmaps') {
-            return null;
-        }
+        if (My::url()) {
+            // Replace default category filter
 
-        // Replace default category filter
+            $categories = null;
 
-        $categories = null;
-
-        try {
-            $categories = dcCore::app()->blog->getCategories(['post_type' => 'map', 'without_empty' => true]);
-            if ($categories->isEmpty()) {
-                return null;
-            }
-        } catch (Exception $e) {
-            dcCore::app()->error->add($e->getMessage());
-
-            return null;
-        }
-
-        $combo = [
-            '-'            => '',
-            __('(No cat)') => 'NULL',
-        ];
-        while ($categories->fetch()) {
             try {
-                $params['no_content'] = true;
-                $params['cat_id']     = $categories->cat_id;
-                $params['post_type']  = 'map';
-                dcCore::app()->blog->withoutPassword(false);
-                dcCore::app()->admin->counter = dcCore::app()->blog->getPosts($params, true);
+                $categories = dcCore::app()->blog->getCategories(['post_type' => 'map', 'without_empty' => true]);
+                if ($categories->isEmpty()) {
+                    return null;
+                }
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
-            }
-            $combo[
-                str_repeat('&nbsp;', ($categories->level - 1) * 4) .
-                Html::escapeHTML($categories->cat_title)
-            ] = $categories->cat_id;
-        }
 
-        $filters->append((new dcAdminFilter('cat_id'))
-            ->param()
-            ->title(__('Category:'))
+                return null;
+            }
+
+            $combo = [
+                '-'            => '',
+                __('(No cat)') => 'NULL',
+            ];
+            while ($categories->fetch()) {
+                try {
+                    $params['no_content'] = true;
+                    $params['cat_id']     = $categories->cat_id;
+                    $params['post_type']  = 'map';
+                    dcCore::app()->blog->withoutPassword(false);
+                    dcCore::app()->admin->counter = dcCore::app()->blog->getPosts($params, true);
+                } catch (Exception $e) {
+                    dcCore::app()->error->add($e->getMessage());
+                }
+                $combo[
+                    str_repeat('&nbsp;', ($categories->level - 1) * 4) .
+                    Html::escapeHTML($categories->cat_title)
+                ] = $categories->cat_id;
+            }
+
+            $filters->append((new dcAdminFilter('cat_id'))
+                ->param()
+                ->title(__('Category:'))
+                ->options($combo)
+                ->prime(true));
+
+            // - Add map type filter
+
+            $element_type = !empty($_GET['element_type']) ? $_GET['element_type'] : '';
+
+            $element_type_combo = [
+                '-'                     => '',
+                __('none')              => 'none',
+                __('point of interest') => 'point of interest',
+                __('polyline')          => 'polyline',
+                __('polygon')           => 'polygon',
+                __('rectangle')         => 'rectangle',
+                __('circle')            => 'circle',
+                __('included kml file') => 'included kml file',
+                __('GeoRSS feed')       => 'GeoRSS feed',
+                __('directions')        => 'directions',
+            ];
+
+            $filters->append((new dcAdminFilter('element_type'))
+            ->param('sql', "AND post_meta LIKE '%" . $element_type . "%' ")
+            ->title(__('Type:'))
+            ->options($element_type_combo));
+
+            // Remove unused filters
+
+            $filters->append((new dcAdminFilter('comment'))
+                ->param());
+
+            $filters->append((new dcAdminFilter('trackback'))
+                ->param());
+
+            $filters->append((new dcAdminFilter('attachment'))
+                ->param());
+
+            $filters->append((new dcAdminFilter('featuredmedia'))
+            ->param());
+
+            $filters->append((new dcAdminFilter('password'))
+            ->param());
+        } else {
+            $map = !empty($_GET['map']) ? $_GET['map'] : '';
+
+            $combo = [
+                '-'                   => '',
+                __('Attached map')    => 'map_options',
+                __('No attached map') => 'none',
+            ];
+
+            $filters->append((new dcAdminFilter('map'))
+            ->param('sql', ($map === 'map_options') ? "AND post_meta LIKE '%" . 'map_options' . "%' " : "AND post_meta NOT LIKE '%" . 'map_options' . "%' ")
+            ->title(__('Google Map:'))
             ->options($combo)
             ->prime(true));
-
-        // - Add map type filter
-
-        $element_type = !empty($_GET['element_type']) ? $_GET['element_type'] : '';
-
-        $element_type_combo = [
-            '-'                     => '',
-            __('none')              => 'none',
-            __('point of interest') => 'point of interest',
-            __('polyline')          => 'polyline',
-            __('polygon')           => 'polygon',
-            __('rectangle')         => 'rectangle',
-            __('circle')            => 'circle',
-            __('included kml file') => 'included kml file',
-            __('GeoRSS feed')       => 'GeoRSS feed',
-            __('directions')        => 'directions',
-        ];
-
-        $filters->append((new dcAdminFilter('element_type'))
-        ->param('sql', "AND post_meta LIKE '%" . $element_type . "%' ")
-        ->title(__('Type:'))
-        ->options($element_type_combo));
-
-        // Remove unused filters
-
-        $filters->append((new dcAdminFilter('comment'))
-            ->param());
-
-        $filters->append((new dcAdminFilter('trackback'))
-            ->param());
-
-        $filters->append((new dcAdminFilter('attachment'))
-            ->param());
-
-        $filters->append((new dcAdminFilter('featuredmedia'))
-        ->param());
-
-        $filters->append((new dcAdminFilter('password'))
-        ->param());
+        }
     }
 
     public static function adminBeforePostUpdate($cur, $post_id)
@@ -687,5 +699,17 @@ class Backend extends dcNsProcess
         '});' . "\n" .
         '</script>' . "\n" .
         '<link rel="stylesheet" type="text/css" href="index.php?pf=' . My::id() . '/css/admin.css" />' . "\n";
+    }
+
+    public static function adminEntryListValue($rs, $cols)
+    {
+        $settings = dcCore::app()->blog->settings->get(My::id());
+
+        $postTypes = ['post', 'page'];
+        $meta      = dcCore::app()->meta;
+
+        if (!empty($meta->getMetaStr($rs->post_meta, 'map_options')) && in_array($rs->post_type, $postTypes)) {
+            $cols['status'] = str_replace('</td>', '<img style="width: 1.25em; height: 1.25em;" src="' . dcPage::getPF(My::id()) . '/css/img/marker.svg" title="' . __('Google Map') . '" /></td>', $cols['status']);
+        }
     }
 }

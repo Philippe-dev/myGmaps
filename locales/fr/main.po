@@ -3,18 +3,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: myGmaps 6.0\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-05-09T06:52:15+00:00\n"
+"PO-Revision-Date: 2023-05-11T21:06:46+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-msgid "Google Maps"
-msgstr "Cartes Google"
-
-msgid "Maps"
-msgstr "Cartes"
 
 msgid "%d map elements"
 msgstr "%d éléments"
@@ -24,9 +18,6 @@ msgstr "%d élément"
 
 msgid "Google Map:"
 msgstr "Carte Google :"
-
-msgid "Map:"
-msgstr "Carte :"
 
 msgid "Map attached to this entry."
 msgstr "Carte attachée à ce billet."
@@ -76,11 +67,20 @@ msgstr "flux GeoRSS"
 msgid "directions"
 msgstr "itinéraire"
 
+msgid "Attached map"
+msgstr "Carte attachée"
+
+msgid "No attached map"
+msgstr "Pas de carte attachée"
+
 msgid "Are you sure you want to remove this map?"
 msgstr "Voulez-vous vraiment supprimer cette carte ?"
 
 msgid "Are you sure you want to remove this element?"
 msgstr "Voulez-vous vraiment supprimer cet élément ?"
+
+msgid "Google Map"
+msgstr "Carte Google"
 
 msgid "Maps actions"
 msgstr "Actions sur les cartes"
@@ -94,43 +94,8 @@ msgstr "Pas d'élement sélectionné"
 msgid "Published elements cannot be set to scheduled"
 msgstr "Les éléments publiés ne peuvent être programmés"
 
-msgid "%d element has been successfully updated to status : \"%s\""
-msgid_plural "%d elements have been successfully updated to status : \"%s\""
-msgstr[0] "%d élément a été positionné au statut : \"%s\""
-msgstr[1] "%d éléments ont été positionnés au statut : \"%s\""
-
-msgid "%d element has been successfully marked as selected"
-msgid_plural "%d elements have been successfully marked as selected"
-msgstr[0] "%d élément a été marqué comme sélectionné"
-msgstr[1] "%d éléments ont été marqués comme sélectionnés"
-
-msgid "%d element has been successfully marked as unselected"
-msgid_plural "%d elements have been successfully marked as unselected"
-msgstr[0] "%d élément a été marqué comme désélectionné"
-msgstr[1] "%d éléments ont été marqués comme désélectionnés"
-
-msgid "%d element has been successfully deleted"
-msgid_plural "%d elements have been successfully deleted"
-msgstr[0] "%d élément a été supprimé avec succès"
-msgstr[1] "%d éléments ont été supprimés avec succès"
-
-msgid "%d element has been successfully moved to category \"%s\""
-msgid_plural "%d elements have been successfully moved to category \"%s\""
-msgstr[0] "%d élément a été déplacé vers la catégorie \"%s\""
-msgstr[1] "%d éléments ont été déplacés vers la catégorie \"%s\""
-
 msgid "Create a new category for the element(s)"
 msgstr "Créer une nouvelle catégorie pour le(s) éléments(s)"
-
-msgid "%d element has been successfully set to user \"%s\""
-msgid_plural "%d elements have been successfully set to user \"%s\""
-msgstr[0] "%d élément a été attribué à l'utilisateur \"%s\""
-msgstr[1] "%d éléments ont été attribués à l'utilisateur \"%s\""
-
-msgid "%d element has been successfully set to language \"%s\""
-msgid_plural "%d elements have been successfully set to language \"%s\""
-msgstr[0] "La langue d'%d élément a été mofidiée pour \"%s\""
-msgstr[1] "La langue de %d éléments a été mofidiée pour \"%s\""
 
 msgid "No element matches the filter"
 msgstr "Aucun élément correspondant au filtre"
@@ -287,6 +252,50 @@ msgstr "Choisir les éléments de la carte attachée au billet :"
 
 msgid "Add selected map elements"
 msgstr "Ajouter les éléments de carte sélectionnés"
+
+msgid "Google Maps"
+msgstr "Cartes Google"
+
+msgid "Maps"
+msgstr "Cartes"
+
+msgid "Map:"
+msgstr "Carte :"
+
+msgid "%d element has been successfully updated to status : \"%s\""
+msgid_plural "%d elements have been successfully updated to status : \"%s\""
+msgstr[0] "%d élément a été positionné au statut : \"%s\""
+msgstr[1] "%d éléments ont été positionnés au statut : \"%s\""
+
+msgid "%d element has been successfully marked as selected"
+msgid_plural "%d elements have been successfully marked as selected"
+msgstr[0] "%d élément a été marqué comme sélectionné"
+msgstr[1] "%d éléments ont été marqués comme sélectionnés"
+
+msgid "%d element has been successfully marked as unselected"
+msgid_plural "%d elements have been successfully marked as unselected"
+msgstr[0] "%d élément a été marqué comme désélectionné"
+msgstr[1] "%d éléments ont été marqués comme désélectionnés"
+
+msgid "%d element has been successfully deleted"
+msgid_plural "%d elements have been successfully deleted"
+msgstr[0] "%d élément a été supprimé avec succès"
+msgstr[1] "%d éléments ont été supprimés avec succès"
+
+msgid "%d element has been successfully moved to category \"%s\""
+msgid_plural "%d elements have been successfully moved to category \"%s\""
+msgstr[0] "%d élément a été déplacé vers la catégorie \"%s\""
+msgstr[1] "%d éléments ont été déplacés vers la catégorie \"%s\""
+
+msgid "%d element has been successfully set to user \"%s\""
+msgid_plural "%d elements have been successfully set to user \"%s\""
+msgstr[0] "%d élément a été attribué à l'utilisateur \"%s\""
+msgstr[1] "%d éléments ont été attribués à l'utilisateur \"%s\""
+
+msgid "%d element has been successfully set to language \"%s\""
+msgid_plural "%d elements have been successfully set to language \"%s\""
+msgstr[0] "La langue d'%d élément a été mofidiée pour \"%s\""
+msgstr[1] "La langue de %d éléments a été mofidiée pour \"%s\""
 
 msgid "Position:"
 msgstr "Position :"
