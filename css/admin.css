@@ -262,7 +262,3 @@ button.delete_map {
 .add {
   font-size: 1.5rem;
 }
-
-#options-box, .s-tags, .s-featuredmedia, .s-attachments {
-  display: none;
-}
