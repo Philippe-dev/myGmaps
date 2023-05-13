@@ -728,6 +728,39 @@ class ManageMap extends dcNsProcess
                         '</div>',
                     ],
                 ],
+                'options-box' => [
+                    'title' => __('Options'),
+                    'items' => [
+                        'post_open_comment_tb' => '<div>' .
+                        '<h5 id="label_comment_tb">' . __('Comments and trackbacks list') . '</h5>' .
+                        '<p><label for="post_open_comment" class="classic">' .
+                        form::checkbox('post_open_comment', 1, dcCore::app()->admin->post_open_comment) . ' ' .
+                        __('Accept comments') . '</label></p>' .
+                        (dcCore::app()->blog->settings->system->allow_comments ?
+                            (self::isContributionAllowed(dcCore::app()->admin->post_id, strtotime(dcCore::app()->admin->post_dt), true) ? '' : '<p class="form-note warn">' .
+                            __('Warning: Comments are not more accepted for this entry.') . '</p>') :
+                            '<p class="form-note warn">' .
+                            __('Comments are not accepted on this blog so far.') . '</p>') .
+                        '<p><label for="post_open_tb" class="classic">' .
+                        form::checkbox('post_open_tb', 1, dcCore::app()->admin->post_open_tb) . ' ' .
+                        __('Accept trackbacks') . '</label></p>' .
+                        (dcCore::app()->blog->settings->system->allow_trackbacks ?
+                            (self::isContributionAllowed(dcCore::app()->admin->post_id, strtotime(dcCore::app()->admin->post_dt), false) ? '' : '<p class="form-note warn">' .
+                            __('Warning: Trackbacks are not more accepted for this entry.') . '</p>') :
+                            '<p class="form-note warn">' . __('Trackbacks are not accepted on this blog so far.') . '</p>') .
+                        '</div>',
+                        'post_password' => '<p><label for="post_password">' . __('Password') . '</label>' .
+                        form::field('post_password', 10, 32, Html::escapeHTML(dcCore::app()->admin->post_password), 'maximal') .
+                        '</p>',
+                        'post_url' => '<div class="lockable">' .
+                        '<p><label for="post_url">' . __('Edit basename') . '</label>' .
+                        form::field('post_url', 10, 255, Html::escapeHTML(dcCore::app()->admin->post_url), 'maximal') .
+                        '</p>' .
+                        '<p class="form-note warn">' .
+                        __('Warning: If you set the URL manually, it may conflict with another entry.') .
+                        '</p></div>',
+                    ],
+                ],
             ]);
             $main_items = new ArrayObject(
                 [

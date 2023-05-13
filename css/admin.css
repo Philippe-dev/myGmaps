@@ -263,6 +263,6 @@ button.delete_map {
   font-size: 1.5rem;
 }
 
-.s-tags, .s-featuredmedia, .s-attachments {
+#options-box, .s-tags, .s-featuredmedia, .s-attachments {
   display: none;
 }
