@@ -578,8 +578,7 @@ class Backend extends dcNsProcess
             $filters->append((new dcAdminFilter('cat_id'))
                 ->param()
                 ->title(__('Category:'))
-                ->options($combo)
-                ->prime(true));
+                ->options($combo));
 
             // - Add map type filter
 
@@ -619,6 +618,13 @@ class Backend extends dcNsProcess
 
             $filters->append((new dcAdminFilter('password'))
             ->param());
+
+            $filters->append((new dcAdminFilter('lang'))
+            ->param());
+
+            $filters->append((new dcAdminFilter('month'))
+            ->param());
+
         } else {
             // Add map filter on posts list
 
@@ -633,8 +639,7 @@ class Backend extends dcNsProcess
             $filters->append((new dcAdminFilter('map'))
             ->param('sql', ($map === 'map_options') ? "AND post_meta LIKE '%" . 'map_options' . "%' " : "AND post_meta NOT LIKE '%" . 'map_options' . "%' ")
             ->title(__('Google Map:'))
-            ->options($map_combo)
-            ->prime(true));
+            ->options($map_combo));
         }
     }
 
