@@ -908,4 +908,121 @@ class ManageMap extends dcNsProcess
 
         dcPage::closeModule();
     }
+
+    /**
+     * Controls comments or trakbacks capabilities
+     *
+     * @param      mixed   $id     The identifier
+     * @param      mixed   $dt     The date
+     * @param      bool    $com    The com
+     *
+     * @return     bool    True if contribution allowed, False otherwise.
+     */
+    protected static function isContributionAllowed($id, $dt, bool $com = true): bool
+    {
+        if (!$id) {
+            return true;
+        }
+        if ($com) {
+            if ((dcCore::app()->blog->settings->system->comments_ttl == 0) || (time() - dcCore::app()->blog->settings->system->comments_ttl * 86400 < $dt)) {
+                return true;
+            }
+        } else {
+            if ((dcCore::app()->blog->settings->system->trackbacks_ttl == 0) || (time() - dcCore::app()->blog->settings->system->trackbacks_ttl * 86400 < $dt)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Shows the comments or trackbacks.
+     *
+     * @param      MetaRecord   $rs          The recordset
+     * @param      bool         $has_action  Indicates if action is possible
+     * @param      bool         $tb          Is trackbacks?
+     * @param      bool         $show_ip     Show ip?
+     */
+    protected static function showComments(MetaRecord $rs, bool $has_action, bool $tb = false, bool $show_ip = true): void
+    {
+        echo
+            '<div class="table-outer">' .
+            '<table class="comments-list"><tr>' .
+            '<th colspan="2" class="first">' . __('Author') . '</th>' .
+            '<th>' . __('Date') . '</th>' .
+            (dcCore::app()->admin->show_ip ? '<th class="nowrap">' . __('IP address') . '</th>' : '') .
+            '<th>' . __('Status') . '</th>' .
+            '<th>' . __('Edit') . '</th>' .
+            '</tr>';
+
+        $comments = [];
+        if (isset($_REQUEST['comments'])) {
+            foreach ($_REQUEST['comments'] as $v) {
+                $comments[(int) $v] = true;
+            }
+        }
+
+        while ($rs->fetch()) {
+            $comment_url = dcCore::app()->adminurl->get('admin.comment', ['id' => $rs->comment_id]);
+
+            $img        = '<img alt="%1$s" title="%1$s" src="images/%2$s" />';
+            $img_status = '';
+            $sts_class  = '';
+            switch ($rs->comment_status) {
+                case dcBlog::COMMENT_PUBLISHED:
+                    $img_status = sprintf($img, __('Published'), 'check-on.png');
+                    $sts_class  = 'sts-online';
+
+                    break;
+                case dcBlog::COMMENT_UNPUBLISHED:
+                    $img_status = sprintf($img, __('Unpublished'), 'check-off.png');
+                    $sts_class  = 'sts-offline';
+
+                    break;
+                case dcBlog::COMMENT_PENDING:
+                    $img_status = sprintf($img, __('Pending'), 'check-wrn.png');
+                    $sts_class  = 'sts-pending';
+
+                    break;
+                case dcBlog::COMMENT_JUNK:
+                    $img_status = sprintf($img, __('Junk'), 'junk.png');
+                    $sts_class  = 'sts-junk';
+
+                    break;
+            }
+
+            echo
+            '<tr class="line ' . ($rs->comment_status != dcBlog::COMMENT_PUBLISHED ? ' offline ' : '') . $sts_class . '"' .
+            ' id="c' . $rs->comment_id . '">' .
+
+            '<td class="nowrap">' .
+            ($has_action ?
+                form::checkbox(
+                    ['comments[]'],
+                    $rs->comment_id,
+                    [
+                        'checked'    => isset($comments[$rs->comment_id]),
+                        'extra_html' => 'title="' . ($tb ? __('select this trackback') : __('select this comment') . '"'),
+                    ]
+                ) :
+                '') . '</td>' .
+            '<td class="maximal">' . Html::escapeHTML($rs->comment_author) . '</td>' .
+            '<td class="nowrap">' .
+                '<time datetime="' . Date::iso8601(strtotime($rs->comment_dt), dcCore::app()->auth->getInfo('user_tz')) . '">' .
+                Date::dt2str(__('%Y-%m-%d %H:%M'), $rs->comment_dt) .
+                '</time>' .
+            '</td>' .
+            ($show_ip ?
+                '<td class="nowrap"><a href="' . dcCore::app()->adminurl->get('admin.comments', ['ip' => $rs->comment_ip]) . '">' . $rs->comment_ip . '</a></td>' :
+                '') .
+            '<td class="nowrap status">' . $img_status . '</td>' .
+            '<td class="nowrap status"><a href="' . $comment_url . '">' .
+            '<img src="images/edit-mini.png" alt="" title="' . __('Edit this comment') . '" /> ' . __('Edit') . '</a></td>' .
+            '</tr>';
+        }
+
+        echo
+        '</table></div>';
+    }
 }
