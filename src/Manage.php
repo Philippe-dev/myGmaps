@@ -249,7 +249,7 @@ class Manage extends dcNsProcess
             dcCore::app()->admin->post_filter->js(My::url() . '#entries-list') .
             dcPage::jsPageTabs(dcCore::app()->admin->default_tab) .
             dcPage::jsConfirmClose('config-form') .
-            '<link rel="stylesheet" type="text/css" href="index.php?pf=' .  My::id() . '/css/admin.css" />'
+            dcPage::cssModuleLoad(My::id() . '/css/admin.css') 
         );
 
         echo dcPage::breadcrumb(

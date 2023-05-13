@@ -152,7 +152,7 @@ class ManageMaps extends dcNsProcess
             dcCore::app()->admin->post_filter->js(My::url() . '&amp;id=' . $post_id . '&amp;act=maps') .
             dcPage::jsPageTabs(dcCore::app()->admin->default_tab) .
             dcPage::jsConfirmClose('config-form') .
-            '<link rel="stylesheet" type="text/css" href="index.php?pf=' .  My::id() . '/css/admin.css" />'
+            dcPage::cssModuleLoad(My::id() . '/css/admin.css') 
         );
 
         dcCore::app()->admin->page_title = __('Add elements');

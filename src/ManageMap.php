@@ -575,7 +575,7 @@ class ManageMap extends dcNsProcess
             # --BEHAVIOR-- adminPostHeaders --
             dcCore::app()->callBehavior('adminPostHeaders') .
             dcPage::jsPageTabs(dcCore::app()->admin->default_tab) .
-            '<link rel="stylesheet" type="text/css" href="index.php?pf=' .  My::id() . '/css/admin.css" />' .
+            dcPage::cssModuleLoad(My::id() . '/css/admin.css')  .
             dcCore::app()->admin->next_headlink . "\n" . dcCore::app()->admin->prev_headlink
         );
 
