@@ -539,7 +539,7 @@ class Backend extends dcNsProcess
 
     public static function adminPostFilter(ArrayObject $filters)
     {
-        if (My::url()) {
+        if (My::url() === 'plugin.php?p=myGmaps') {
             // Replace default category filter
 
             $categories = null;
@@ -624,7 +624,7 @@ class Backend extends dcNsProcess
 
             $map = !empty($_GET['map']) ? $_GET['map'] : '';
 
-            $combo = [
+            $map_combo = [
                 '-'                        => '',
                 __('With attached map')    => 'map_options',
                 __('Without attached map') => 'none',
@@ -633,7 +633,7 @@ class Backend extends dcNsProcess
             $filters->append((new dcAdminFilter('map'))
             ->param('sql', ($map === 'map_options') ? "AND post_meta LIKE '%" . 'map_options' . "%' " : "AND post_meta NOT LIKE '%" . 'map_options' . "%' ")
             ->title(__('Google Map:'))
-            ->options($combo)
+            ->options($map_combo)
             ->prime(true));
         }
     }
