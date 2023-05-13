@@ -539,7 +539,7 @@ class Backend extends dcNsProcess
 
     public static function adminPostFilter(ArrayObject $filters)
     {
-        if (My::url() === 'plugin.php?p=myGmaps') {
+        if (My::url() === dcCore::app()->adminurl->get('admin.plugin.' . My::id())) {
             // Replace default category filter
 
             $categories = null;
