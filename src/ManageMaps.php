@@ -30,7 +30,7 @@ class ManageMaps extends dcNsProcess
      */
     public static function init(): bool
     {
-        if (My::checkContext(My::BACKEND)) {
+        if (My::checkContext(My::MANAGE)) {
             static::$init = ($_REQUEST['act'] ?? 'list') === 'maps';
         }
 

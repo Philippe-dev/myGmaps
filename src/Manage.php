@@ -31,7 +31,7 @@ class Manage extends dcNsProcess
      */
     public static function init(): bool
     {
-        static::$init = My::checkContext(My::BACKEND);
+        static::$init = My::checkContext(My::MANAGE);
 
         if (isset($_REQUEST['act']) && $_REQUEST['act'] === 'map') {
             static::$init = ($_REQUEST['act'] ?? 'list') === 'map' ? ManageMap::init() : true;
