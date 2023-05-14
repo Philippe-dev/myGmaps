@@ -635,7 +635,6 @@ $(() => {
       '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-grey.png" alt="marker-grey.png"  />' +
       '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-orange.png" alt="marker-orange.png"  />' +
       '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-purple.png" alt="marker-purple.png"  />' +
-      '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-white.png" alt="marker-white.png"  />' +
       '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-yellow.png" alt="marker-yellow.png"  />' +
       '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker.png" alt="marker.png"  />&nbsp;' +
       '</div>';
