@@ -21,6 +21,14 @@ a.map-remove {
   margin-bottom: 10px
 }
 
+#infowindow_icons #default_icons_list img {
+  max-height: 100px;
+  overflow: auto;
+  border: none;
+  padding: 5px;
+  margin-bottom: 10px
+}
+
 #infowindow_polyline {
   min-width: 150px
 }

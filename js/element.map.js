@@ -629,6 +629,7 @@ $(() => {
     var infowindowIcons =
       '<div id="infowindow_icons" style="cursor: pointer">' +
       has_custom_icons +
+      '<div id="default_icons_list">' +
       '<h4>' + default_icons_msg + '</h4>' +
       '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-blue.png" alt="marker-blue.png"  />' +
       '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-green.png" alt="marker-green.png"  />' +
@@ -637,6 +638,7 @@ $(() => {
       '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-purple.png" alt="marker-purple.png"  />' +
       '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-yellow.png" alt="marker-yellow.png"  />' +
       '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker.png" alt="marker.png"  />&nbsp;' +
+      '</div>' +
       '</div>';
 
     // Infowindows actions

@@ -176,7 +176,6 @@ class Manage extends dcNsProcess
         }
 
         // Actions
-        // -------
 
         dcCore::app()->admin->posts_actions_page = new dcPostsActions(dcCore::app()->adminurl->get('admin.plugin.' . My::id()));
         if (dcCore::app()->admin->posts_actions_page->process()) {
