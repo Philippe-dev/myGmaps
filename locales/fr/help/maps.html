@@ -1,154 +1,186 @@
 <html>
-	<head>
-		<title>Gestion des éléments de cartes</title>
-	</head>
-	<body>
-		<h4>Présentation</h4>
-		<dl>
-			<dt>Insérer des cartes dans votre blog</dt>
-			<dd>Ce plugin permet de créer et éditer un type particulier de billet : <em>les éléments de carte</em>. Ces éléments peuvent être utilisés dans des cartes attachées à vos billets,
-			ou incluses dans un fichier de template de votre thème.</dd>
-			<dd>Pour insérer une carte dans un billet, vous devez auparavant créer les éléments qui y seront affichés.</dd>
-		</dl>
-		<h4>Configuration</h4>
-		<dl>
-			<dt>Activation</dt>
-			<dd>Le plugin doit être activé pour fonctionner sur le blog. La désactivation ne supprime pas les éléments ni les cartes mais empêche seulement leur affichage.</dd>
-		</dl>
-		<dl>
-			<dt>Clé d'API</dt>
-			<dd>Le plugin utilise par défaut une clé d'API Google Maps partagée. Il est recommandé de remplacer cette clé par une clé propre à votre domaine. Vous devrez pour cela créer une clé sur cette page : <a href="https://console.developers.google.com/apis/api/maps_backend/">Google Developers Console > Google Maps JavaScript API</a>. Une fois votre clé générée, entrez-la dans le champ et enregistrez.</dd>
-		</dl>
-		<dl>
-			<dt>Options des cartes par défaut</dt>
-			<dd>Déplacer le pointeur sur la carte ou rechercher une adresse pour choisir le centre des cartes par défaut. Le niveau de zoom ainsi que le style de la carte seront aussi mémorisés. 
-				Ces options seront utilisées lors de la création d'une nouvelle carte.
-			</dd>
-		</dl>
-		<h4>Style des cartes</h4>
-		<p>Les cartes peuvent être stylées au moyen de <em>fichiers de style</em>. À titre d'exemple, un fichier de style est inclus dans le plugin, il se nomme <em>Neutral Blue</em> et apparaît à côté des boutons habituels 
-			<em>Plan</em> et <em>Satellite</em>.
-		</p>
-		<p>Vous pouvez ajouter des styles personnels provenant de votre médiathèque, qui apparaîtront alors sur cette ligne de boutons. Voici comment procéder :</p>
-		<dl>
-			<dt>Emplacement des fichiers de style</dt>
-			<dd>
-				<ul>
-					<li>pour ajouter des styles, créez un dossier nommé <em>myGmaps</em> dans votre médiathèque</li>
-					<li>dans ce dossier, créez un autre dossier nommé <em>styles</em></li>
-					<li>ranger dans ce dossier vos styles personnels</li>
-				</ul>
-			</dd>
-		</dl>
-		<dl>
-			<dt>Nom et contenu des fichiers de style</dt>
-			<dd>
-				<ul>
-					<li>le nom d'un fichier de style doit correspondre au masque suivant : <em>mon_style_styles.js</em> où <em>mon_style</em> est le nom que vous pouvez modifier (ce nom n'est qu'un simple identifiant et n'apparaîtra pas en partie publique).</li>
-					<li>
-						le contenu du fichier doit contenir un tableau JSON de type : 
-						<code>[{featureType: '',elementType: '',stylers: [{hue: ''},{saturation: ''},{lightness: ''},// etc...]},{featureType: '',// etc...}]</code>
-					</li>
-				</ul>
-				<p>Vous pouvez obtenir de nombreux styles pour vos cartes sur le site <a href="https://snazzymaps.com/">Snazzy Maps</a>.</p>
-			</dd>
-		</dl>
-		<h4>Icônes et fichiers kml personnels</h4>
-		<dl>
-			<dt>Icônes personnelles</dt>
-			<dd>
-				Par défaut, seules quelques icônes sont fournies, mais il est très simple d'ajouter les vôtres&nbsp;:
-				<ul>
-					<li>dans votre médiathèque, créez un dossier nommé <em>myGmaps</em></li>
-					<li>dans le dossier <em>myGmaps</em> créez un autre dossier nommé <em>icons</em></li>
-					<li>ranger dans ce dossier vos icônes personnelles.</li>
-				</ul>
-			</dd>
-		</dl>
-		<dl>
-			<dt>Fichiers Kml personnels</dt>
-			<dd>
-				Vous pouvez inclure un fichier Kml en fournissant son URL, ou utiliser un fichier de votre médiathèque. Il est très simple d'ajouter les vôtres&nbsp;:
-				<ul>
-					<li>dans votre médiathèque, créez un dossier nommé <em>myGmaps</em></li>
-					<li>dans le dossier <em>myGmaps</em> créez un autre dossier nommé <em>kml_files</em></li>
-					<li>ranger dans ce dossier vos fichiers kml personnels.</li>
-				</ul>
-			</dd>
-		</dl>
-		<h4>Types d'élements de cartes</h4>
-		<p><em>Tous les éléments sont éditables, voir l'aide dans la page d'édition d'un élément.</em></p>
-		<dl>
-			<dt>Point d'intérêt</dt>
-			<dd>Une icône est affichée sur la carte.</dd>
-			<dt>Ligne brisée</dt>
-			<dd>Plusieurs points sont présents sur la carte, reliés par une ligne polygonale.</dd>
-			<dt>Polygone</dt>
-			<dd>Plusieurs points sont présents sur la carte, reliés par une ligne fermée matérialisant un polygone.</dd>
-			<dt>Rectangle</dt>
-			<dd>Un rectangle est affiché sur la carte.</dd>
-			<dt>Cercle</dt>
-			<dd>Un cercle est affiché sur la carte.</dd>
-			<dt>Fichier kml inclus</dt>
-			<dd>La carte affiche des objets issus d'un fichier kml. Ils ne sont toutefois pas modifiables. <em>Ce type d'élément ne peut avoir de description.</em>.</dd>
-			<dt>Flux GeoRSS</dt>
-			<dd>La carte affiche des objets issus d'un flux GeoRSS. Ils ne sont toutefois pas modifiables. <em>Ce type d'élément ne peut avoir de description.</em></dd>
-			<dt>Itinéraire</dt>
-			<dd>La carte affiche un itinéraire routier entre deux points et un panneau latéral comportant des indications de conduite. <em>Vous ne pouvez utiliser qu'un seul itinéraire sur une même carte.</em></dd>
-		</dl>
-		<h4>Filtres de la liste des éléments</h4>
-		<dl>
-			<dt>Auteur</dt>
-			<dd>Permet de filtrer les éléments de cartes par auteur.</dd>
-			<dt>Catégorie</dt>
-			<dd>Filtrer les éléments de cartes par catégorie.</dd>
-			<dt>État de l'élément de carte</dt>
-			<dd>
-				<ul>
-					<li><strong>En attente</strong>&nbsp;: l'élément de carte est en attente de publication. Il ne peut pas être inséré dans un billet</li>
-					<li><strong>Programmé</strong>&nbsp;: l'élément de carte sera mis en ligne aux date et heure
-						indiquées dans le champ <em>Publié le</em>.
-					</li>
-					<li><strong>Non publié</strong>&nbsp;: élément de carte hors ligne.</li>
-					<li><strong>Publié</strong>&nbsp;: l'élément de carte est disponible pour l'ajout dans une carte.</li>
-				</ul>
-			</dd>
-			<dt>Mois</dt>
-			<dd>Filtre les éléments de cartes d'un mois d'une année donné.</dd>
-			<dt>Type d'élément de carte</dt>
-			<dd>Filtre les éléments de cartes selon le type indiqué.</dd>
-			<dt>Trier par</dt>
-			<dd>Permet de trier les résultats de filtrage selon la date, le titre,
-				la catégorie, l'auteur ou l'état de publication.
-			</dd>
-			<dt>Trier</dt>
-			<dd>Indique l'ordre dans lequel on souhaite effectuer le tri.</dd>
-			<dt>Éléments de cartes par page</dt>
-			<dd>Nombre d'éléments de  cartes à afficher par page de résultat.</dd>
-		</dl>
-		<h4>Actions par lot sur les éléments</h4>
-		<p>Il est possible d'effectuer un ensemble d'actions sur plusieurs éléments de cartes, d'un
-			seul coup. Les actions possibles, comme pour les billets, dépendent des permissions de l'utilisateur.
-		</p>
-		<h4>Afficher une carte dans un template</h4>
-		<p>Il est possible d'afficher une carte au sein de vos templates. Utilisez le code : 
+
+<head>
+	<title>Gestion des éléments de cartes</title>
+</head>
+
+<body>
+	<h4>Présentation</h4>
+	<dl>
+		<dt>Insérer des cartes dans votre blog</dt>
+		<dd>Ce plugin permet de créer et éditer un type particulier de billet : <em>les éléments de carte</em>. Ces
+			éléments peuvent ensuite être inclus dans les cartes attachées à vos billets ou à vos pages.</dd>
+
+	</dl>
+	<h5>Attacher une carte à un billet</h5>
+	<dl>
+		<dd>Pour attacher une carte à une publication, vous devez auparavant créer les éléments qui y seront affichés.
+		</dd>
+		<dd>Une fois vos éléments créés, rendez-vous sur la page d'édition de cette publication. Sous le champ
+			<em>Notes personnelles</em>, dépliez la zone <em>Carte Google :</em>, puis cliquez sur <em>Ajouter une
+				carte</em>.
+			La carte est ajoutée à la publication. Cliquez ensuite sur <em>Ajouter des éléments</em> pour composer votre
+			carte.
+		</dd>
+	</dl>
+	<h4>Configuration</h4>
+	<dl>
+		<dt>Activation</dt>
+		<dd>Le plugin doit être activé pour fonctionner sur le blog. La désactivation ne supprime pas les éléments ni
+			les cartes mais empêche seulement leur affichage.</dd>
+	</dl>
+	<dl>
+		<dt>Clé d'API</dt>
+		<dd>Le plugin utilise par défaut une clé d'API Google Maps partagée. Il est recommandé de remplacer cette clé
+			par une clé propre à votre domaine. Vous devrez pour cela créer une clé sur cette page : <a
+				href="https://console.developers.google.com/apis/api/maps_backend/">Google Developers Console > Google
+				Maps JavaScript API</a>. Une fois votre clé générée, entrez-la dans le champ et enregistrez.</dd>
+	</dl>
+	<dl>
+		<dt>Options des cartes par défaut</dt>
+		<dd>Déplacer le pointeur sur la carte ou rechercher une adresse pour choisir le centre des cartes par défaut. Le
+			niveau de zoom ainsi que le style de la carte seront aussi mémorisés.
+			Ces options seront utilisées lors de la création d'une nouvelle carte.
+		</dd>
+	</dl>
+	<h4>Style des cartes</h4>
+	<p>Les cartes peuvent être stylées au moyen de <em>fichiers de style</em>. À titre d'exemple, un fichier de style
+		est inclus dans le plugin, il se nomme <em>Neutral Blue</em> et apparaît à côté des boutons habituels
+		<em>Plan</em> et <em>Satellite</em>.
+	</p>
+	<p>Vous pouvez ajouter des styles personnels provenant de votre médiathèque, qui apparaîtront alors sur cette ligne
+		de boutons. Voici comment procéder :</p>
+	<dl>
+		<dt>Emplacement des fichiers de style</dt>
+		<dd>
+			<ul>
+				<li>pour ajouter des styles, créez un dossier nommé <em>myGmaps</em> dans votre médiathèque</li>
+				<li>dans ce dossier, créez un autre dossier nommé <em>styles</em></li>
+				<li>ranger dans ce dossier vos styles personnels</li>
+			</ul>
+		</dd>
+	</dl>
+	<dl>
+		<dt>Nom et contenu des fichiers de style</dt>
+		<dd>
+			<ul>
+				<li>le nom d'un fichier de style doit correspondre au masque suivant : <em>mon_style_styles.js</em> où
+					<em>mon_style</em> est le nom que vous pouvez modifier (ce nom n'est qu'un simple identifiant et
+					n'apparaîtra pas en partie publique).
+				</li>
+				<li>
+					le contenu du fichier doit contenir un tableau JSON de type :
+					<code>[{featureType: '',elementType: '',stylers: [{hue: ''},{saturation: ''},{lightness: ''},// etc...]},{featureType: '',// etc...}]</code>
+				</li>
+			</ul>
+			<p>Vous pouvez obtenir de nombreux styles pour vos cartes sur le site <a
+					href="https://snazzymaps.com/">Snazzy Maps</a>.</p>
+		</dd>
+	</dl>
+	<h4>Icônes et fichiers kml personnels</h4>
+	<dl>
+		<dt>Icônes personnelles</dt>
+		<dd>
+			Par défaut, seules quelques icônes sont fournies, mais il est très simple d'ajouter les vôtres&nbsp;:
+			<ul>
+				<li>dans votre médiathèque, créez un dossier nommé <em>myGmaps</em></li>
+				<li>dans le dossier <em>myGmaps</em> créez un autre dossier nommé <em>icons</em></li>
+				<li>ranger dans ce dossier vos icônes personnelles.</li>
+			</ul>
+		</dd>
+	</dl>
+	<dl>
+		<dt>Fichiers Kml personnels</dt>
+		<dd>
+			Vous pouvez inclure un fichier Kml en fournissant son URL, ou utiliser un fichier de votre médiathèque. Il
+			est très simple d'ajouter les vôtres&nbsp;:
+			<ul>
+				<li>dans votre médiathèque, créez un dossier nommé <em>myGmaps</em></li>
+				<li>dans le dossier <em>myGmaps</em> créez un autre dossier nommé <em>kml_files</em></li>
+				<li>ranger dans ce dossier vos fichiers kml personnels.</li>
+			</ul>
+		</dd>
+	</dl>
+	<h4>Types d'élements de cartes</h4>
+	<p><em>Tous les éléments sont éditables, voir l'aide dans la page d'édition d'un élément.</em></p>
+	<dl>
+		<dt>Point d'intérêt</dt>
+		<dd>Une icône est affichée sur la carte.</dd>
+		<dt>Ligne brisée</dt>
+		<dd>Plusieurs points sont présents sur la carte, reliés par une ligne polygonale.</dd>
+		<dt>Polygone</dt>
+		<dd>Plusieurs points sont présents sur la carte, reliés par une ligne fermée matérialisant un polygone.</dd>
+		<dt>Rectangle</dt>
+		<dd>Un rectangle est affiché sur la carte.</dd>
+		<dt>Cercle</dt>
+		<dd>Un cercle est affiché sur la carte.</dd>
+		<dt>Fichier kml inclus</dt>
+		<dd>La carte affiche des objets issus d'un fichier kml. Ils ne sont toutefois pas modifiables. <em>Ce type
+				d'élément ne peut avoir de description.</em>.</dd>
+		<dt>Flux GeoRSS</dt>
+		<dd>La carte affiche des objets issus d'un flux GeoRSS. Ils ne sont toutefois pas modifiables. <em>Ce type
+				d'élément ne peut avoir de description.</em></dd>
+		<dt>Itinéraire</dt>
+		<dd>La carte affiche un itinéraire routier entre deux points et un panneau latéral comportant des indications de
+			conduite. <em>Vous ne pouvez utiliser qu'un seul itinéraire sur une même carte.</em></dd>
+	</dl>
+	<h4>Filtres de la liste des éléments</h4>
+	<dl>
+		<dt>Auteur</dt>
+		<dd>Permet de filtrer les éléments de cartes par auteur.</dd>
+		<dt>Catégorie</dt>
+		<dd>Filtrer les éléments de cartes par catégorie.</dd>
+		<dt>État de l'élément de carte</dt>
+		<dd>
+			<ul>
+				<li><strong>En attente</strong>&nbsp;: l'élément de carte est en attente de publication. Il ne peut pas
+					être inséré dans un billet</li>
+				<li><strong>Programmé</strong>&nbsp;: l'élément de carte sera mis en ligne aux date et heure
+					indiquées dans le champ <em>Publié le</em>.
+				</li>
+				<li><strong>Non publié</strong>&nbsp;: élément de carte hors ligne.</li>
+				<li><strong>Publié</strong>&nbsp;: l'élément de carte est disponible pour l'ajout dans une carte.</li>
+			</ul>
+		</dd>
+		<dt>Mois</dt>
+		<dd>Filtre les éléments de cartes d'un mois d'une année donné.</dd>
+		<dt>Type d'élément de carte</dt>
+		<dd>Filtre les éléments de cartes selon le type indiqué.</dd>
+		<dt>Trier par</dt>
+		<dd>Permet de trier les résultats de filtrage selon la date, le titre,
+			la catégorie, l'auteur ou l'état de publication.
+		</dd>
+		<dt>Trier</dt>
+		<dd>Indique l'ordre dans lequel on souhaite effectuer le tri.</dd>
+		<dt>Éléments de cartes par page</dt>
+		<dd>Nombre d'éléments de cartes à afficher par page de résultat.</dd>
+	</dl>
+	<h4>Actions par lot sur les éléments</h4>
+	<p>Il est possible d'effectuer un ensemble d'actions sur plusieurs éléments de cartes, d'un
+		seul coup. Les actions possibles, comme pour les billets, dépendent des permissions de l'utilisateur.
+	</p>
+	<h4>Afficher une carte dans un template</h4>
+	<p>Il est possible d'afficher une carte au sein de vos templates. Utilisez le code :
 		<code>{{tpl:myGmaps id="home" center="47.389982,0.688877" zoom="12" style="roadmap" width="80%" height="200px" elements="2,4" category="4"}}</code>
-		</p>
-		<dl>
-			<dt>id</dt>
-			<dd>Spécifier un identifiant unique. Si aucun indiqué, un identifiant sera généré à chaque affichage.</dd>
-			<dt>center</dt>
-			<dd>Indiquer le centre géographique de votre carte (Ex: la ville de Tours - Latitude : 47.389982, Longitude : 0.688877)</dd>
-			<dt>zoom</dt>
-			<dd>Entre 0 et 19 (à 0 on voit le monde entier)</dd>
-			<dt>style</dt>
-			<dd>Choix entre roadmap, satellite, hybrid, terrain, OpenStreetMap et neutral_blue. Vous pouvez aussi appeler votre propre style (Voir plus haut)</dd>
-			<dt>width, height</dt>
-			<dd>largeur ou hauteur spécifiques, en unité CSS (px, em, %, etc.)</dd>
-			<dt>elements</dt>
-			<dd>Les identifiants des éléments de cartes particuliers, séparés par des virgules</dd>
-			<dt>category</dt>
-			<dd>Les identifiants des catégories à afficher, séparés par des virgules</dd>
-		</dl>
-	</body>
+	</p>
+	<dl>
+		<dt>id</dt>
+		<dd>Spécifier un identifiant unique. Si aucun indiqué, un identifiant sera généré à chaque affichage.</dd>
+		<dt>center</dt>
+		<dd>Indiquer le centre géographique de votre carte (Ex: la ville de Tours - Latitude : 47.389982, Longitude :
+			0.688877)</dd>
+		<dt>zoom</dt>
+		<dd>Entre 0 et 19 (à 0 on voit le monde entier)</dd>
+		<dt>style</dt>
+		<dd>Choix entre roadmap, satellite, hybrid, terrain, OpenStreetMap et neutral_blue. Vous pouvez aussi appeler
+			votre propre style (Voir plus haut)</dd>
+		<dt>width, height</dt>
+		<dd>largeur ou hauteur spécifiques, en unité CSS (px, em, %, etc.)</dd>
+		<dt>elements</dt>
+		<dd>Les identifiants des éléments de cartes particuliers, séparés par des virgules</dd>
+		<dt>category</dt>
+		<dd>Les identifiants des catégories à afficher, séparés par des virgules</dd>
+	</dl>
+</body>
+
 </html>
