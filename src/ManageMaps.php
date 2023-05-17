@@ -75,9 +75,9 @@ class ManageMaps extends dcNsProcess
                 dcCore::app()->blog->triggerBlog();
 
                 if ($post_type == 'page') {
-                    http::redirect('plugin.php?p=pages&act=page&id=' . $post_id . '&upd=1');
+                    http::redirect(dcCore::app()->getPostAdminURL($post_type, $post_id) . '&act=page&upd=1');
                 } else {
-                    http::redirect(DC_ADMIN_URL . 'post.php?id=' . $post_id . '&upd=1');
+                    http::redirect(dcCore::app()->getPostAdminURL($post_type, $post_id) . '&upd=1');
                 }
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
