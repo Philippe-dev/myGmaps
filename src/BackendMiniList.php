@@ -143,7 +143,7 @@ class BackendMiniList extends adminGenericListV2
         if ($type == 'post') {
             $res .= '<td class="nowrap count"><a class="element-remove" href="' . dcCore::app()->getPostAdminURL($type, $id) . '&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.png" alt="supprimer" /></a></td>';
         } elseif ($type == 'page') {
-            $res .= '<td class="nowrap count"><a class="element-remove" href="' . dcCore::app()->getPostAdminURL($type, $id) . '&act=page&upd=1&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.png" alt="supprimer" /></a></td>';
+            $res .= '<td class="nowrap count"><a class="element-remove" href="' . dcCore::app()->getPostAdminURL($type, $id) . '&upd=1&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.png" alt="supprimer" /></a></td>';
         }
         $res .= '</tr>';
 

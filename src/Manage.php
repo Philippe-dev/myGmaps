@@ -216,7 +216,7 @@ class Manage extends dcNsProcess
             dcCore::app()->error->add($e->getMessage());
         }
 
-        $starting_script = '<script src="https://maps.googleapis.com/maps/api/js?key=' . $settings->myGmaps_API_key . '&amp;libraries=places&amp;callback=Function.prototype"></script>';
+        $starting_script = '<script src="https://maps.googleapis.com/maps/api/js?key=' . $settings->myGmaps_API_key . '&libraries=places&callback=Function.prototype"></script>';
 
         $starting_script .= '<script>' . "\n" .
         '//<![CDATA[' . "\n" .
@@ -308,7 +308,7 @@ class Manage extends dcNsProcess
         '<div class="multi-part" id="entries-list" title="' . __('Map elements') . '">';
 
         if ($settings->myGmaps_enabled) {
-            echo '<p class="top-add"><strong><a class="button add" href="' . My::url() . '&amp;act=map">' . __('New element') . '</a></strong></p>';
+            echo '<p class="top-add"><strong><a class="button add" href="' . My::url() . '&act=map">' . __('New element') . '</a></strong></p>';
         }
 
         dcCore::app()->admin->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="myGmaps" /><input type="hidden" name="tab" value="entries-list" />');

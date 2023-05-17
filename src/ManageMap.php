@@ -83,9 +83,9 @@ class ManageMap extends dcNsProcess
         ]), dcCore::app()->blog->id);
         dcCore::app()->admin->can_delete = false;
 
-        $post_headlink = '<link rel="%s" title="%s" href="' . Html::escapeURL(dcCore::app()->admin->redir_url) . '&amp;id=%s" />';
+        $post_headlink = '<link rel="%s" title="%s" href="' . Html::escapeURL(dcCore::app()->admin->redir_url) . '&id=%s" />';
 
-        dcCore::app()->admin->post_link = '<a href="' . Html::escapeURL(dcCore::app()->admin->redir_url) . '&amp;id=%s" title="%s">%s</a>';
+        dcCore::app()->admin->post_link = '<a href="' . Html::escapeURL(dcCore::app()->admin->redir_url) . '&id=%s" title="%s">%s</a>';
 
         dcCore::app()->admin->next_link = dcCore::app()->admin->prev_link = dcCore::app()->admin->next_headlink = dcCore::app()->admin->prev_headlink = null;
 
@@ -521,7 +521,7 @@ class ManageMap extends dcNsProcess
             $map_styles_base_url = '';
         }
 
-        $starting_script = '<script src="https://maps.googleapis.com/maps/api/js?key=' . $settings->myGmaps_API_key . '&amp;libraries=places&amp;callback=Function.prototype"></script>';
+        $starting_script = '<script src="https://maps.googleapis.com/maps/api/js?key=' . $settings->myGmaps_API_key . '&libraries=places&callback=Function.prototype"></script>';
 
         $starting_script .= '<script>' . "\n" .
         '//<![CDATA[' . "\n" .
@@ -705,7 +705,7 @@ class ManageMap extends dcNsProcess
                         '<p>' . form::combo('post_format', dcCore::app()->admin->available_formats, dcCore::app()->admin->post_format, 'maximal') . '</p>' .
                         '<p class="format_control control_wiki">' .
                         '<a id="convert-xhtml" class="button' . (dcCore::app()->admin->post_id && dcCore::app()->admin->post_format != 'wiki' ? ' hide' : '') .
-                        '" href="' . Html::escapeURL(dcCore::app()->admin->redir_url) . '&amp;id=' . dcCore::app()->admin->post_id . '&amp;xconv=1">' .
+                        '" href="' . Html::escapeURL(dcCore::app()->admin->redir_url) . '&id=' . dcCore::app()->admin->post_id . '&xconv=1">' .
                         __('Convert to HTML') . '</a></p></div>', ], ],
                 'metas-box' => [
                     'title' => __('Filing'),
@@ -844,7 +844,8 @@ class ManageMap extends dcNsProcess
 
             $plugin_QmarkURL = dcCore::app()->blog->getQmarkURL();
 
-            echo(dcCore::app()->admin->post_id ? form::hidden('id', dcCore::app()->admin->post_id) : '') .
+            echo
+            (isset(dcCore::app()->admin->post->post_id) ? form::hidden('id', dcCore::app()->admin->post->post_id) : '') .
             form::hidden('myGmaps_center', $myGmaps_center) .
             form::hidden('myGmaps_zoom', $myGmaps_zoom) .
             form::hidden('myGmaps_type', $myGmaps_type) .
@@ -865,13 +866,12 @@ class ManageMap extends dcNsProcess
 
             echo
             '<p class="border-top">' .
-            (isset(dcCore::app()->admin->post->post_id) ? form::hidden('id', dcCore::app()->admin->post->post_id) : '') .
             '<input type="submit" value="' . __('Save') . ' (s)" ' .
             'accesskey="s" name="save" /> ' ;
 
             if (!isset(dcCore::app()->admin->post->post_id)) {
                 echo
-                '<a id="post-cancel" href="' . My::url() . '&amp;act=list#entries-list' . '" class="button" accesskey="c">' . __('Cancel') . ' (c)</a>';
+                '<a id="post-cancel" href="' . My::url() . '&act=list#entries-list' . '" class="button" accesskey="c">' . __('Cancel') . ' (c)</a>';
             }
 
             echo(dcCore::app()->admin->can_delete ? '<input type="submit" class="delete" value="' . __('Delete') . '" name="delete" />' : '') .

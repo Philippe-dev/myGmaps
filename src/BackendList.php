@@ -125,7 +125,7 @@ class BackendList extends adminGenericListV2
         if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
             dcAuth::PERMISSION_CATEGORIES,
         ]), dcCore::app()->blog->id)) {
-            $cat_link = '<a href="' . dcCore::app()->adminurl->get('admin.category', ['id' => '%s'], '&amp;', true) . '">%s</a>';
+            $cat_link = '<a href="' . dcCore::app()->adminurl->get('admin.category', ['id' => '%s'], '&', true) . '">%s</a>';
         } else {
             $cat_link = '%2$s';
         }
@@ -201,7 +201,7 @@ class BackendList extends adminGenericListV2
             ) .
             '</td>',
             'title' => '<td class="maximal" scope="row"><a href="' . My::url() .
-            '&amp;act=map&amp;id=' . $this->rs->post_id . '">' .
+            '&act=map&id=' . $this->rs->post_id . '">' .
             html::escapeHTML($this->rs->post_title) . '</a></td>',
             'date' => '<td class="nowrap count">' .
                 '<time datetime="' . Date::iso8601(strtotime($this->rs->post_dt), dcCore::app()->auth->getInfo('user_tz')) . '">' .

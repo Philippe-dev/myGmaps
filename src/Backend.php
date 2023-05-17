@@ -91,9 +91,9 @@ class Backend extends dcNsProcess
                 dcCore::app()->blog->triggerBlog();
 
                 if ($type == 'page') {
-                    Http::redirect(dcCore::app()->getPostAdminURL($type, $post_id) . '&act=page&upd=1');
+                    Http::redirect(dcCore::app()->getPostAdminURL($type, $post_id, false) . '&act=page&upd=1');
                 } elseif ($type == 'post') {
-                    Http::redirect(dcCore::app()->getPostAdminURL($type, $post_id) . '&upd=1');
+                    Http::redirect(dcCore::app()->getPostAdminURL($type, $post_id, false) . '&upd=1');
                 }
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
@@ -108,9 +108,9 @@ class Backend extends dcNsProcess
                 dcCore::app()->blog->triggerBlog();
 
                 if ($type == 'page') {
-                    Http::redirect(dcCore::app()->getPostAdminURL($type, $post_id) . '&act=page&upd=1');
+                    Http::redirect(dcCore::app()->getPostAdminURL($type, $post_id, false) . '&act=page&upd=1');
                 } elseif ($type == 'post') {
-                    Http::redirect(dcCore::app()->getPostAdminURL($type, $post_id) . '&upd=1');
+                    Http::redirect(dcCore::app()->getPostAdminURL($type, $post_id, false) . '&upd=1');
                 }
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
@@ -131,9 +131,9 @@ class Backend extends dcNsProcess
                 dcCore::app()->blog->triggerBlog();
 
                 if ($type == 'page') {
-                    Http::redirect(dcCore::app()->getPostAdminURL($type, $post_id) . '&act=page&upd=1');
+                    Http::redirect(dcCore::app()->getPostAdminURL($type, $post_id, false) . '&act=page&upd=1');
                 } elseif ($type == 'post') {
-                    Http::redirect(dcCore::app()->getPostAdminURL($type, $post_id) . '&upd=1');
+                    Http::redirect(dcCore::app()->getPostAdminURL($type, $post_id, false) . '&upd=1');
                 }
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
@@ -316,7 +316,7 @@ class Backend extends dcNsProcess
             form::hidden('map_styles_base_url', $map_styles_base_url) .
             '</p>' .
             '<p>' . __('Empty map') . '</p>' .
-            '<p class="two-boxes add"><a href="plugin.php?p=myGmaps&act=maps&id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></p>' .
+            '<p class="two-boxes add"><a href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id()) . '&act=maps&id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></p>' .
             '<p class="two-boxes right"><a class="map-remove delete" href="' . $removemapurl . '"><strong>' . __('Remove map') . '</strong></a></p>' .
             '</div>' .
             '</div>';
