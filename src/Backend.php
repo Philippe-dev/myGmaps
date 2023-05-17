@@ -276,13 +276,9 @@ class Backend extends dcNsProcess
         '</script>';
 
         // redirection URLs
-        if ($type == 'page') {
-            $addmapurl    = DC_ADMIN_URL . 'plugin.php?p=pages&amp;add=map&amp;id=' . $id . '&amp;center=' . $myGmaps_center . '&amp;zoom=' . $myGmaps_zoom . '&amp;type=' . $myGmaps_type . '&amp;upd=1';
-            $removemapurl = DC_ADMIN_URL . 'plugin.php?p=pages&amp;remove=map&amp;id=' . $id . '&amp;remove=map&amp;upd=1';
-        } elseif ($type == 'post') {
-            $addmapurl    = DC_ADMIN_URL . 'post.php?id=' . $id . '&amp;add=map&amp;center=' . $myGmaps_center . '&amp;zoom=' . $myGmaps_zoom . '&amp;type=' . $myGmaps_type . '&amp;upd=1';
-            $removemapurl = DC_ADMIN_URL . 'post.php?id=' . $id . '&amp;remove=map&amp;upd=1';
-        }
+
+        $addmapurl    = dcCore::app()->getPostAdminURL($post->post_type, $post->post_id) . '&amp;add=map&amp;center=' . $myGmaps_center . '&amp;zoom=' . $myGmaps_zoom . '&amp;type=' . $myGmaps_type . '&amp;upd=1';
+        $removemapurl = dcCore::app()->getPostAdminURL($post->post_type, $post->post_id) . '&amp;remove=map&amp;upd=1';
 
         if ($elements_list == '' && $map_options == '') {
             echo '<div class="area" id="gmap-area">' .
@@ -356,7 +352,7 @@ class Backend extends dcNsProcess
 
             echo '</div>' .
             '<p class="two-boxes add"><a href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id()) . '&amp;act=maps&amp;id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></p>' .
-            '<p class="two-boxes right"><a class="map-remove delete" href="' . DC_ADMIN_URL . 'post.php?id=' . $id . '&amp;remove=map"><strong>' . __('Remove map') . '</strong></a></p>' .
+            '<p class="two-boxes right"><a class="map-remove delete" href="' . $removemapurl . '"><strong>' . __('Remove map') . '</strong></a></p>' .
             '</div>' .
             '</div>';
 
@@ -625,7 +621,6 @@ class Backend extends dcNsProcess
 
             $filters->append((new dcAdminFilter('month'))
             ->param());
-
         } else {
             // Add map filter on posts list
 
