@@ -135,7 +135,7 @@ class BackendMiniList extends adminGenericListV2
         $res = '<tr class="line' . ($this->rs->post_status != 1 ? ' offline' : '') . '"' .
         ' id="p' . $this->rs->post_id . '">';
 
-        $res .= '<td class="maximal"><a href="plugin.php?p=myGmaps&amp;act=map&amp;id=' . $this->rs->post_id . '" title="' . __('Edit map element') . ' : ' . html::escapeHTML($this->rs->post_title) . '">' . html::escapeHTML($this->rs->post_title) . '</a></td>' .
+        $res .= '<td class="maximal"><a href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id()) . '&amp;act=map&amp;id=' . $this->rs->post_id . '" title="' . __('Edit map element') . ' : ' . html::escapeHTML($this->rs->post_title) . '">' . html::escapeHTML($this->rs->post_title) . '</a></td>' .
         '<td class="nowrap count">' . Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt) . '</td>' .
         '<td class="nowrap">' . $cat_title . '</td>' .
         '<td class="nowrap">' . __($meta_rs) . '</td>' .
