@@ -280,19 +280,27 @@ class Backend extends dcNsProcess
         $addmapurl    = dcCore::app()->getPostAdminURL($post->post_type, $post->post_id) . '&amp;add=map&amp;center=' . $myGmaps_center . '&amp;zoom=' . $myGmaps_zoom . '&amp;type=' . $myGmaps_type . '&amp;upd=1';
         $removemapurl = dcCore::app()->getPostAdminURL($post->post_type, $post->post_id) . '&amp;remove=map&amp;upd=1';
 
+        if ($post->post_type === 'page') {
+            $form_note      = '<span class="form-note">' . __('Map attached to this page.') . '</span>';
+            $addmap_message = '<p><a href="' . $addmapurl . '">' . __('Add a map to page') . '</a></p>';
+        } elseif ($post->post_type === 'post') {
+            $form_note      = '<span class="form-note">' . __('Map attached to this post.') . '</span>';
+            $addmap_message = '<p><a href="' . $addmapurl . '">' . __('Add a map to post') . '</a></p>';
+        }
+
         if ($elements_list == '' && $map_options == '') {
             echo '<div class="area" id="gmap-area">' .
             '<label class="bold" for="post-gmap">' . __('Google Map:') . '</label>' .
-            '<span class="form-note">' . __('Map attached to this entry.') . '</span>' .
+            $form_note .
             '<div id="post-gmap" >' .
             '<p>' . __('No map') . '</p>' .
-            '<p><a href="' . $addmapurl . '">' . __('Add a map to entry') . '</a></p>' .
+            $addmap_message .
             '</div>' .
             '</div>';
         } elseif ($elements_list == '' && $map_options != '') {
             echo '<div class="area" id="gmap-area">' .
             '<label class="bold" for="post-gmap">' . __('Google Map:') . '</label>' .
-            '<span class="form-note">' . __('Map attached to this entry.') . '</span>' .
+            $form_note .
             '<div id="post-gmap" >' .
             '<div class="map_toolbar"><span class="search">' . __('Search:') . '</span><span class="map_spacer">&nbsp;</span>' .
                 '<input size="50" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="' . __('OK') . '" />' .
@@ -315,7 +323,7 @@ class Backend extends dcNsProcess
         } else {
             echo '<div class="area" id="gmap-area">' .
             '<label class="bold" for="post-gmap">' . __('Google Map:') . '</label>' .
-            '<span class="form-note">' . __('Map attached to this entry.') . '</span>' .
+            $form_note .
             '<div id="post-gmap" >' .
             '<div class="map_toolbar"><span class="search">' . __('Search:') . '</span><span class="map_spacer">&nbsp;</span>' .
                 '<input size="50" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="' . __('OK') . '" />' .

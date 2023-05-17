@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: myGmaps 6.1\n"
+"Project-Id-Version: myGmaps 6.7\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-05-12T15:31:38+00:00\n"
+"PO-Revision-Date: 2023-05-17T17:21:20+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,17 +16,23 @@ msgstr "%d éléments"
 msgid "%d map element"
 msgstr "%d élément"
 
+msgid "Map attached to this page."
+msgstr "Carte attachée à cette page."
+
+msgid "Add a map to page"
+msgstr "Ajouter une carte à la page"
+
+msgid "Map attached to this post."
+msgstr "Carte attachée à ce billet."
+
+msgid "Add a map to post"
+msgstr "Ajouter une carte au billet"
+
 msgid "Google Map:"
 msgstr "Carte Google :"
 
-msgid "Map attached to this entry."
-msgstr "Carte attachée à ce billet."
-
 msgid "No map"
 msgstr "Pas de carte"
-
-msgid "Add a map to entry"
-msgstr "Ajouter une carte au billet"
 
 msgid "Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls."
 msgstr "Choisir le centre de la carte en la déplaçant ou en cherchant une adresse. Choisir le niveau de zoom et le type de carte en utilisant les boutons.."
@@ -39,6 +45,9 @@ msgstr "Ajouter des éléments"
 
 msgid "Remove map"
 msgstr "Supprimer la carte"
+
+msgid "Map attached to this entry."
+msgstr "Carte attachée à ce billet."
 
 msgid "Included elements list"
 msgstr "Liste des éléments inclus"
@@ -247,11 +256,17 @@ msgstr "Initialiser la carte"
 msgid "This map will not be displayed on the blog and is meant only to create, edit and position only one element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties."
 msgstr "Cette carte ne sera pas affichée sur le blog, et n'est destinée qu'à créer, positionner ou éditer un seul élément à la fois. Choisissez un outil, cliquez sur la carte pour créer votre élément, puis cliquer sur l'élément pour modifier ses propriétés."
 
+msgid "Select map elements for map attached to page:"
+msgstr "Choisir les éléments de la carte attachée à la page :"
+
 msgid "Select map elements for map attached to post:"
 msgstr "Choisir les éléments de la carte attachée au billet :"
 
 msgid "Add selected map elements"
 msgstr "Ajouter les éléments de carte sélectionnés"
+
+msgid "Add a map to entry"
+msgstr "Ajouter une carte au billet"
 
 msgid "Google Map"
 msgstr "Carte Google"

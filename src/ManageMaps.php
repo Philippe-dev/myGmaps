@@ -152,7 +152,7 @@ class ManageMaps extends dcNsProcess
             dcCore::app()->admin->post_filter->js(My::url() . '&amp;id=' . $post_id . '&amp;act=maps') .
             dcPage::jsPageTabs(dcCore::app()->admin->default_tab) .
             dcPage::jsConfirmClose('config-form') .
-            dcPage::cssModuleLoad(My::id() . '/css/admin.css') 
+            dcPage::cssModuleLoad(My::id() . '/css/admin.css')
         );
 
         dcCore::app()->admin->page_title = __('Add elements');
@@ -166,7 +166,11 @@ class ManageMaps extends dcNsProcess
         ) .
         dcPage::notices();
 
-        echo '<h3>' . __('Select map elements for map attached to post:') . ' <a href="' . dcCore::app()->getPostAdminURL((string) $post_type, $post_id) . '">' . $post_title . '</a></h3>';
+        if ($post_type === 'page') {
+            echo '<h3>' . __('Select map elements for map attached to page:') . ' <a href="' . dcCore::app()->getPostAdminURL((string) $post_type, $post_id) . '">' . $post_title . '</a></h3>';
+        } elseif ($post_type === 'post') {
+            echo '<h3>' . __('Select map elements for map attached to post:') . ' <a href="' . dcCore::app()->getPostAdminURL((string) $post_type, $post_id) . '">' . $post_title . '</a></h3>';
+        }
 
         dcCore::app()->admin->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="myGmaps" /><input type="hidden" name="id" value="' . $post_id . '" /><input type="hidden" name="act" value="maps" />');
 
