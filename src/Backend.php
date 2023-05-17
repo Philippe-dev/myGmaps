@@ -355,7 +355,7 @@ class Backend extends dcNsProcess
             $post_list->display(dcCore::app()->admin->page, dcCore::app()->admin->nb_per_page, $enclose_block = '', $post->post_id, $post->post_type);
 
             echo '</div>' .
-            '<p class="two-boxes add"><a href="' . DC_ADMIN_URL . 'plugin.php?p=myGmaps&amp;act=maps&amp;id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></p>' .
+            '<p class="two-boxes add"><a href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id()) . '&amp;act=maps&amp;id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></p>' .
             '<p class="two-boxes right"><a class="map-remove delete" href="' . DC_ADMIN_URL . 'post.php?id=' . $id . '&amp;remove=map"><strong>' . __('Remove map') . '</strong></a></p>' .
             '</div>' .
             '</div>';
