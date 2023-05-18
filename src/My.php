@@ -48,7 +48,7 @@ class My
     }
 
     /**
-     * This module admin url
+     * Current admin page url
      */
     public static function url(): string
     {
