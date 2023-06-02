@@ -105,9 +105,9 @@ $(() => {
     // Map styles. Get more styles from https://snazzymaps.com/
 
     const mapTypeIds = [google.maps.MapTypeId.ROADMAP,
-      google.maps.MapTypeId.HYBRID,
-      google.maps.MapTypeId.SATELLITE,
-      google.maps.MapTypeId.TERRAIN,
+    google.maps.MapTypeId.HYBRID,
+    google.maps.MapTypeId.SATELLITE,
+    google.maps.MapTypeId.TERRAIN,
       'OpenStreetMap',
       'neutral_blue'
     ];
@@ -437,9 +437,20 @@ $(() => {
 
     // Rectangle listeners
 
-    google.maps.event.addListener(rectangle, 'bounds_changed', (event) => {
+    // Avoid bounds_changed event firing bug (?)
+    function debounce(fn, time) {
+      let timeout;
+      return function () {
+        const args = arguments;
+        const functionCall = () => fn.apply(this, args);
+        clearTimeout(timeout);
+        timeout = setTimeout(functionCall, time);
+      }
+    }
+
+    google.maps.event.addListener(rectangle, 'bounds_changed', debounce(() => {
       updateRectangle();
-    });
+    }, 250));
 
     google.maps.event.addListener(rectangle, 'dragend', (event) => {
       updateRectangle();
@@ -751,7 +762,7 @@ $(() => {
         $('#element_type').val('included kml file');
         $('#post_excerpt').val(url);
       }
-      
+
       kmlLayer.setMap(map);
       infowindow.close();
     });
