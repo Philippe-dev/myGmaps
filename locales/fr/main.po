@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: myGmaps 6.7\n"
+"Project-Id-Version: myGmaps 6.8\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-05-17T17:21:20+00:00\n"
+"PO-Revision-Date: 2023-06-02T22:20:14+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -46,11 +46,11 @@ msgstr "Ajouter des éléments"
 msgid "Remove map"
 msgstr "Supprimer la carte"
 
-msgid "Map attached to this entry."
-msgstr "Carte attachée à ce billet."
-
 msgid "Included elements list"
 msgstr "Liste des éléments inclus"
+
+msgid "none"
+msgstr "aucun"
 
 msgid "point of interest"
 msgstr "point d'intérêt"
@@ -264,6 +264,9 @@ msgstr "Choisir les éléments de la carte attachée au billet :"
 
 msgid "Add selected map elements"
 msgstr "Ajouter les éléments de carte sélectionnés"
+
+msgid "Map attached to this entry."
+msgstr "Carte attachée à ce billet."
 
 msgid "Add a map to entry"
 msgstr "Ajouter une carte au billet"

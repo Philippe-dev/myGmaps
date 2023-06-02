@@ -1345,7 +1345,7 @@ $(() => {
     $('#entry-form').submit(() => {
       const element_type = $('#element_type').val();
       if (element_type == '') {
-        $('#element_type').val('none');
+        $('#element_type').val('notype');
       }
 
       const default_location = `${map.getCenter().lat()},${map.getCenter().lng()}`;

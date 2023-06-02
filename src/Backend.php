@@ -591,7 +591,7 @@ class Backend extends dcNsProcess
 
             $element_type_combo = [
                 '-'                     => '',
-                __('none')              => 'none',
+                __('none')              => 'notype',
                 __('point of interest') => 'point of interest',
                 __('polyline')          => 'polyline',
                 __('polygon')           => 'polygon',
