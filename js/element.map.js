@@ -360,6 +360,16 @@ $(() => {
       }
     });
 
+    // Avoid some events too often firing bug (?)
+    function debounce(fn, time) {
+      let timeout;
+      return function () {
+        const args = arguments;
+        const functionCall = () => fn.apply(this, args);
+        clearTimeout(timeout);
+        timeout = setTimeout(functionCall, time);
+      }
+    }
 
     // Polyline listeners
 
@@ -369,17 +379,17 @@ $(() => {
       }
     });
 
-    google.maps.event.addListener(polylinePath, 'insert_at', () => {
+    google.maps.event.addListener(polylinePath, 'insert_at', debounce(() => {
       updatePolyline();
-    });
+    }, 250));
 
-    google.maps.event.addListener(polylinePath, 'remove_at', () => {
+    google.maps.event.addListener(polylinePath, 'remove_at', debounce(() => {
       updatePolyline();
-    });
+    }, 250));
 
-    google.maps.event.addListener(polylinePath, 'set_at', () => {
+    google.maps.event.addListener(polylinePath, 'set_at', debounce(() => {
       updatePolyline();
-    });
+    }, 250));
 
     google.maps.event.addListener(polyline, 'click', function (event) {
       const infowindowPolyline =
@@ -403,17 +413,17 @@ $(() => {
       }
     });
 
-    google.maps.event.addListener(polygonPath, 'insert_at', () => {
+    google.maps.event.addListener(polygonPath, 'insert_at', debounce(() => {
       updatePolygon();
-    });
+    }, 250));
 
-    google.maps.event.addListener(polygonPath, 'remove_at', () => {
+    google.maps.event.addListener(polygonPath, 'remove_at', debounce(() => {
       updatePolygon();
-    });
+    }, 250));
 
-    google.maps.event.addListener(polygonPath, 'set_at', () => {
+    google.maps.event.addListener(polygonPath, 'set_at', debounce(() => {
       updatePolygon();
-    });
+    }, 250));
 
     google.maps.event.addListener(polygon, 'click', function (event) {
       const infowindowPolygon =
@@ -437,24 +447,14 @@ $(() => {
 
     // Rectangle listeners
 
-    // Avoid bounds_changed event firing bug (?)
-    function debounce(fn, time) {
-      let timeout;
-      return function () {
-        const args = arguments;
-        const functionCall = () => fn.apply(this, args);
-        clearTimeout(timeout);
-        timeout = setTimeout(functionCall, time);
-      }
-    }
 
     google.maps.event.addListener(rectangle, 'bounds_changed', debounce(() => {
       updateRectangle();
     }, 250));
 
-    google.maps.event.addListener(rectangle, 'dragend', (event) => {
+    google.maps.event.addListener(rectangle, 'dragend', debounce(() => {
       updateRectangle();
-    });
+    }, 250));
 
     google.maps.event.addListener(rectangle, 'click', function (event) {
       const infowindowRectangle =
@@ -477,13 +477,13 @@ $(() => {
 
     //Circle listeners
 
-    google.maps.event.addListener(circle, 'center_changed', (event) => {
+    google.maps.event.addListener(circle, 'center_changed', debounce(() => {
       updateCircle();
-    });
+    }, 250));
 
-    google.maps.event.addListener(circle, 'radius_changed', (event) => {
+    google.maps.event.addListener(circle, 'radius_changed', debounce(() => {
       updateCircle();
-    });
+    }, 250));
 
     google.maps.event.addListener(circle, 'click', function (event) {
       const infowindowCircle =
