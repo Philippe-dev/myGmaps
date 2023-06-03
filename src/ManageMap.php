@@ -277,7 +277,7 @@ class ManageMap extends dcNsProcess
                 # --BEHAVIOR-- adminBeforePostDelete -- int
                 dcCore::app()->callBehavior('adminBeforePostDelete', dcCore::app()->admin->post_id);
                 dcCore::app()->blog->delPost(dcCore::app()->admin->post_id);
-                Http::redirect(My::url());
+                Http::redirect(My::url() . '#entries-list');
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
             }
