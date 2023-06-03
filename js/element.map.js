@@ -1335,7 +1335,7 @@ $(() => {
       routePolyline.setMap(null);
       directionsDisplay.setMap(null);
 
-      $('#element_type').val('none');
+      $('#element_type').val('notype');
       $('#post_excerpt').val('');
 
     }
