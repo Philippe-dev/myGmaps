@@ -52,6 +52,9 @@ msgstr "Liste des éléments inclus"
 msgid "none"
 msgstr "aucun"
 
+msgid "notype"
+msgstr "aucun"
+
 msgid "point of interest"
 msgstr "point d'intérêt"
 
