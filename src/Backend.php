@@ -40,23 +40,21 @@ class Backend extends dcNsProcess
             return false;
         }
 
-        dcCore::app()->menu[dcAdmin::MENU_BLOG]->addItem(
-            My::name(),
-            dcCore::app()->adminurl->get('admin.plugin.' . My::id()),
-            [dcPage::getPF(My::id() . '/icon.svg'), dcPage::getPF(My::id() . '/icon-dark.svg')],
-            preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.' . My::id())) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
-            My::checkContext(My::BACKEND),
-        );
+        dcCore::app()->addBehaviors([
+            'adminDashboardFavoritesV2' => function (dcFavorites $favs) {
+                $favs->register(My::id(), [
+                    'title'       => My::name(),
+                    'url'         => My::manageUrl(),
+                    'small-icon'  => My::icons(),
+                    'large-icon'  => My::icons(),
+                    'permissions' => dcCore::app()->auth->makePermissions([
+                        dcCore::app()->auth::PERMISSION_ADMIN,
+                    ]),
+                ]);
+            },
+        ]);
 
-        dcCore::app()->addBehavior('adminDashboardFavoritesV2', function (dcFavorites $favs) {
-            $favs->register(My::id(), [
-                'title'       => My::name(),
-                'url'         => dcCore::app()->adminurl->get('admin.plugin.' . My::id()),
-                'small-icon'  => [dcPage::getPF(My::id() . '/icon.svg'), dcPage::getPF(My::id() . '/icon-dark.svg')],
-                'large-icon'  => [dcPage::getPF(My::id() . '/icon.svg'), dcPage::getPF(My::id() . '/icon-dark.svg')],
-                'permissions' => My::checkContext(My::BACKEND),
-            ]);
-        });
+        My::addBackendMenuItem(dcAdmin::MENU_BLOG);
 
         $settings = dcCore::app()->blog->settings->get(My::id());
 
