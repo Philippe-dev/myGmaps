@@ -844,8 +844,7 @@ class ManageMap extends dcNsProcess
 
             $plugin_QmarkURL = dcCore::app()->blog->getQmarkURL();
 
-            echo
-            (isset(dcCore::app()->admin->post->post_id) ? form::hidden('id', dcCore::app()->admin->post->post_id) : '') .
+            echo(isset(dcCore::app()->admin->post->post_id) ? form::hidden('id', dcCore::app()->admin->post->post_id) : '') .
             form::hidden('myGmaps_center', $myGmaps_center) .
             form::hidden('myGmaps_zoom', $myGmaps_zoom) .
             form::hidden('myGmaps_type', $myGmaps_type) .
