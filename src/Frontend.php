@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\myGmaps;
 
 use dcCore;
+use dcUtils;
 use dcNsProcess;
 use Dotclear\Helper\L10n;
 use Dotclear\Helper\Html\Html;
@@ -128,21 +129,22 @@ class Frontend extends dcNsProcess
     public static function publicHeadContent()
     {
         // Settings
-        $settings  = dcCore::app()->blog->settings->get(My::id());
 
-        $sPublicPath = DC_ADMIN_URL . '?pf=' . My::id();
-        if ($settings->myGmaps_enabled) {
-            echo FrontendTemplate::publicJsContent([]);
-            echo FrontendTemplate::publicCssContent(['public_path' => $sPublicPath]);
+        $settings = dcCore::app()->blog->settings->get(My::id());
+
+        if (!$settings->myGmaps_enabled) {
+            return;
         }
+
+        echo My::cssLoad('public.css') .
+        '<script src="https://maps.googleapis.com/maps/api/js?key=' . $settings->myGmaps_API_key . '&callback=Function.prototype"></script>' . "\n";
     }
 
     public static function publicMapContent($core, $_ctx, $aElements = [])
     {
         // Settings
-        $settings  = dcCore::app()->blog->settings->get(My::id());
-        
-        $url       = DC_ADMIN_URL . '?pf=' . My::id();
+        $settings = dcCore::app()->blog->settings->get(My::id());
+
         $postTypes = ['post', 'page'];
 
         if ($settings->myGmaps_enabled) {

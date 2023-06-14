@@ -43,25 +43,6 @@ class FrontendTemplate
         return $sOutput;
     }
 
-    public static function publicCssContent(array $aOptions)
-    {
-        self::checkOptions(
-            get_called_class(),
-            array_keys($aOptions),
-            ['public_path']
-        );
-        $sPublicPath = $aOptions['public_path'];
-
-        return '<link rel="stylesheet" type="text/css" href="' . $sPublicPath . '/css/public.css" />' . "\n";
-    }
-
-    public static function publicJsContent(array $aOptions)
-    {
-        $settings = dcCore::app()->blog->settings->get(My::id());
-
-        return '<script src="https://maps.googleapis.com/maps/api/js?key=' . $settings->myGmaps_API_key . '&callback=Function.prototype"></script>' . "\n";
-    }
-
     public static function getMapOptions(array $aOptions)
     {
         self::checkOptions(

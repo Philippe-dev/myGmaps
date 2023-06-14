@@ -568,14 +568,14 @@ class ManageMap extends dcNsProcess
             dcPage::jsModal() .
             dcPage::jsLoad('js/_post.js') .
             dcPage::jsMetaEditor() .
-            dcPage::jsModuleLoad(My::id() . '/js/element.map.min.js') .
+            My::jsLoad('element.map.min.js') .
             $admin_post_behavior .
             $starting_script .
             dcPage::jsConfirmClose('entry-form') .
             # --BEHAVIOR-- adminPostHeaders --
             dcCore::app()->callBehavior('adminPostHeaders') .
             dcPage::jsPageTabs(dcCore::app()->admin->default_tab) .
-            dcPage::cssModuleLoad(My::id() . '/css/admin.css') .
+            My::cssLoad('admin.css') .
             '<style type="text/css">' . "\n" .
             '#options-box, .s-tags, .s-featuredmedia, .s-attachments {' . "\n" .
             'display: none;' . "\n" .

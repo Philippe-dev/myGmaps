@@ -244,11 +244,11 @@ class Manage extends dcNsProcess
             $starting_script .
             dcPage::jsLoad('js/_posts_list.js') .
             dcPage::jsMetaEditor() .
-            dcPage::jsModuleLoad(My::id() . '/js/config.map.min.js') .
             dcCore::app()->admin->post_filter->js(My::url() . '#entries-list') .
             dcPage::jsPageTabs(dcCore::app()->admin->default_tab) .
             dcPage::jsConfirmClose('config-form') .
-            dcPage::cssModuleLoad(My::id() . '/css/admin.css') 
+            My::jsLoad('config.map.min.js') .
+            My::cssLoad('admin.css')
         );
 
         echo dcPage::breadcrumb(

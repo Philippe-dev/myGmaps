@@ -254,7 +254,8 @@ class Backend extends dcNsProcess
             $myGmaps_type   = $settings->myGmaps_type;
         }
 
-        $map_js = dcPage::jsModuleLoad(My::id() . '/js/add.map.min.js') . "\n" .
+        $map_js = 
+        My::jsLoad('add.map.min.js') .
         '<script>' . "\n" .
         '//<![CDATA[' . "\n" .
         'var neutral_blue_styles = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#193341"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#2c5a71"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#29768a"},{"lightness":-37}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#3e606f"},{"weight":2},{"gamma":0.84}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"weight":0.6},{"color":"#1a3541"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#2c5a71"}]}];' . "\n" .
@@ -708,7 +709,7 @@ class Backend extends dcNsProcess
             '});' . "\n" .
         '});' . "\n" .
         '</script>' . "\n" .
-        dcPage::cssModuleLoad(My::id() . '/css/admin.css') . "\n";
+        My::cssLoad('admin.css') . "\n";
     }
 
     public static function adminEntryListValue($rs, $cols)
