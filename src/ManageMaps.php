@@ -149,7 +149,7 @@ class ManageMaps extends dcNsProcess
         dcPage::openModule(
             My::name(),
             dcPage::jsLoad('js/_posts_list.js') .
-            dcCore::app()->admin->post_filter->js(My::url() . '&id=' . $post_id . '&act=maps') .
+            dcCore::app()->admin->post_filter->js(My::manageUrl() . '&id=' . $post_id . '&act=maps') .
             dcPage::jsPageTabs(dcCore::app()->admin->default_tab) .
             dcPage::jsConfirmClose('config-form') .
             My::cssLoad('admin.css')
@@ -160,7 +160,7 @@ class ManageMaps extends dcNsProcess
         echo dcPage::breadcrumb(
             [
                 html::escapeHTML(dcCore::app()->blog->name) => '',
-                My::name()                                  => My::url(),
+                My::name()                                  => My::manageUrl(),
                 dcCore::app()->admin->page_title            => '',
             ]
         ) .
@@ -178,7 +178,7 @@ class ManageMaps extends dcNsProcess
         dcCore::app()->admin->posts_list->display(
             dcCore::app()->admin->post_filter->page,
             dcCore::app()->admin->post_filter->nb,
-            '<form action="' . My::url() . '" method="post" id="form-entries">' .
+            '<form action="' . My::manageUrl() . '" method="post" id="form-entries">' .
 
             '%s' .
 
