@@ -354,7 +354,7 @@ class ManageMap extends dcNsProcess
                     // --BEHAVIOR-- adminAfterPostUpdate
                     dcCore::app()->callBehavior('adminAfterPostUpdate', $cur, dcCore::app()->admin->post_id);
 
-                    http::redirect('' . My::manageUrl() . '&act=map&id=' . dcCore::app()->admin->post_id . '&upd=1');
+                    Http::redirect('' . My::manageUrl() . '&act=map&id=' . dcCore::app()->admin->post_id . '&upd=1');
                 } catch (Exception $e) {
                     dcCore::app()->error->add($e->getMessage());
                 }
@@ -385,7 +385,7 @@ class ManageMap extends dcNsProcess
                     // --BEHAVIOR-- adminAfterPostCreate
                     dcCore::app()->callBehavior('adminAfterPostCreate', $cur, $return_id);
 
-                    http::redirect('' . My::manageUrl() . '&act=map&id=' . $return_id . '&crea=1');
+                    Http::redirect('' . My::manageUrl() . '&act=map&id=' . $return_id . '&crea=1');
                 } catch (Exception $e) {
                     dcCore::app()->error->add($e->getMessage());
                 }
@@ -396,7 +396,7 @@ class ManageMap extends dcNsProcess
                     // --BEHAVIOR-- adminBeforePostDelete
                     dcCore::app()->callBehavior('adminBeforePostDelete', dcCore::app()->admin->post_id);
                     dcCore::app()->blog->delPost(dcCore::app()->admin->post_id);
-                    http::redirect(My::manageUrl() . '&act=list');
+                    Http::redirect(My::manageUrl() . '&act=list');
                 } catch (Exception $e) {
                     dcCore::app()->error->add($e->getMessage());
                 }
