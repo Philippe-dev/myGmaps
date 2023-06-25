@@ -81,12 +81,13 @@ class ManageMap extends dcNsProcess
         ]), dcCore::app()->blog->id);
         dcCore::app()->admin->can_delete = false;
 
-        $post_headlink = '<link rel="%s" title="%s" href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id(), ['act' => 'map', 'id' => '%s']) . '" />';
+        $post_headlink                  = '<link rel="%s" title="%s" href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id(), ['act' => 'map','id' => '%s'], '&amp;', true) . '" />';
+        dcCore::app()->admin->post_link = '<a href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id(), ['act' => 'map','id' => '%s'], '&amp;', true) . '" title="%s">%s</a>';
 
-        dcCore::app()->admin->post_link = '<a href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id(), ['act' => 'map', 'id' => '%s']) . '" title="%s">%s</a>';
-
-        dcCore::app()->admin->next_link = dcCore::app()->admin->prev_link = dcCore::app()->admin->next_headlink = dcCore::app()->admin->prev_headlink = null;
-
+        dcCore::app()->admin->next_link     = null;
+        dcCore::app()->admin->prev_link     = null;
+        dcCore::app()->admin->next_headlink = null;
+        dcCore::app()->admin->prev_headlink = null;
         // If user can't publish
 
         if (!dcCore::app()->admin->can_publish) {
@@ -352,7 +353,7 @@ class ManageMap extends dcNsProcess
 
                     // --BEHAVIOR-- adminAfterPostUpdate
                     dcCore::app()->callBehavior('adminAfterPostUpdate', $cur, dcCore::app()->admin->post_id);
-                    
+
                     dcCore::app()->adminurl->redirect('admin.plugin.' . My::id(), ['act' => 'map', 'id' => dcCore::app()->admin->post_id, 'upd' => 1]);
                 } catch (Exception $e) {
                     dcCore::app()->error->add($e->getMessage());
@@ -385,7 +386,6 @@ class ManageMap extends dcNsProcess
                     dcCore::app()->callBehavior('adminAfterPostCreate', $cur, $return_id);
 
                     dcCore::app()->adminurl->redirect('admin.plugin.' . My::id(), ['act' => 'map', 'id' => $return_id, 'crea' => 1]);
-
                 } catch (Exception $e) {
                     dcCore::app()->error->add($e->getMessage());
                 }
@@ -397,7 +397,6 @@ class ManageMap extends dcNsProcess
                     dcCore::app()->callBehavior('adminBeforePostDelete', dcCore::app()->admin->post_id);
                     dcCore::app()->blog->delPost(dcCore::app()->admin->post_id);
                     dcCore::app()->adminurl->redirect('admin.plugin.' . My::id(), ['act' => 'list']);
-
                 } catch (Exception $e) {
                     dcCore::app()->error->add($e->getMessage());
                 }
