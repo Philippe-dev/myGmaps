@@ -51,8 +51,6 @@ class ManageMap extends dcNsProcess
 
         Date::setTZ(dcCore::app()->auth->getInfo('user_tz') ?? 'UTC');
 
-        dcCore::app()->admin->redir_url = My::manageUrl() . '&act=map';
-
         dcCore::app()->admin->post_id            = '';
         dcCore::app()->admin->cat_id             = '';
         dcCore::app()->admin->post_dt            = '';
@@ -83,9 +81,9 @@ class ManageMap extends dcNsProcess
         ]), dcCore::app()->blog->id);
         dcCore::app()->admin->can_delete = false;
 
-        $post_headlink = '<link rel="%s" title="%s" href="' . Html::escapeURL(dcCore::app()->admin->redir_url) . '&id=%s" />';
+        $post_headlink = '<link rel="%s" title="%s" href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id(), ['act' => 'map', 'id' => '%s']) . '" />';
 
-        dcCore::app()->admin->post_link = '<a href="' . Html::escapeURL(dcCore::app()->admin->redir_url) . '&id=%s" title="%s">%s</a>';
+        dcCore::app()->admin->post_link = '<a href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id(), ['act' => 'map', 'id' => '%s']) . '" title="%s">%s</a>';
 
         dcCore::app()->admin->next_link = dcCore::app()->admin->prev_link = dcCore::app()->admin->next_headlink = dcCore::app()->admin->prev_headlink = null;
 
@@ -277,7 +275,8 @@ class ManageMap extends dcNsProcess
                 # --BEHAVIOR-- adminBeforePostDelete -- int
                 dcCore::app()->callBehavior('adminBeforePostDelete', dcCore::app()->admin->post_id);
                 dcCore::app()->blog->delPost(dcCore::app()->admin->post_id);
-                Http::redirect(My::manageUrl() . '#entries-list');
+
+                dcCore::app()->adminurl->redirect('admin.plugin.' . My::id(), ['tab' => 'entries-list']);
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
             }
@@ -353,8 +352,8 @@ class ManageMap extends dcNsProcess
 
                     // --BEHAVIOR-- adminAfterPostUpdate
                     dcCore::app()->callBehavior('adminAfterPostUpdate', $cur, dcCore::app()->admin->post_id);
-
-                    Http::redirect('' . My::manageUrl() . '&act=map&id=' . dcCore::app()->admin->post_id . '&upd=1');
+                    
+                    dcCore::app()->adminurl->redirect('admin.plugin.' . My::id(), ['act' => 'map', 'id' => dcCore::app()->admin->post_id, 'upd' => 1]);
                 } catch (Exception $e) {
                     dcCore::app()->error->add($e->getMessage());
                 }
@@ -385,7 +384,8 @@ class ManageMap extends dcNsProcess
                     // --BEHAVIOR-- adminAfterPostCreate
                     dcCore::app()->callBehavior('adminAfterPostCreate', $cur, $return_id);
 
-                    Http::redirect('' . My::manageUrl() . '&act=map&id=' . $return_id . '&crea=1');
+                    dcCore::app()->adminurl->redirect('admin.plugin.' . My::id(), ['act' => 'map', 'id' => $return_id, 'crea' => 1]);
+
                 } catch (Exception $e) {
                     dcCore::app()->error->add($e->getMessage());
                 }
@@ -396,7 +396,8 @@ class ManageMap extends dcNsProcess
                     // --BEHAVIOR-- adminBeforePostDelete
                     dcCore::app()->callBehavior('adminBeforePostDelete', dcCore::app()->admin->post_id);
                     dcCore::app()->blog->delPost(dcCore::app()->admin->post_id);
-                    Http::redirect(My::manageUrl() . '&act=list');
+                    dcCore::app()->adminurl->redirect('admin.plugin.' . My::id(), ['act' => 'list']);
+
                 } catch (Exception $e) {
                     dcCore::app()->error->add($e->getMessage());
                 }
@@ -705,7 +706,7 @@ class ManageMap extends dcNsProcess
                         '<p>' . form::combo('post_format', dcCore::app()->admin->available_formats, dcCore::app()->admin->post_format, 'maximal') . '</p>' .
                         '<p class="format_control control_wiki">' .
                         '<a id="convert-xhtml" class="button' . (dcCore::app()->admin->post_id && dcCore::app()->admin->post_format != 'wiki' ? ' hide' : '') .
-                        '" href="' . Html::escapeURL(dcCore::app()->admin->redir_url) . '&id=' . dcCore::app()->admin->post_id . '&xconv=1">' .
+                        '" href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id(), ['act' => 'map', 'id' => dcCore::app()->admin->post_id, 'xconv' => '1']) . '">' .
                         __('Convert to HTML') . '</a></p></div>', ], ],
                 'metas-box' => [
                     'title' => __('Filing'),
@@ -830,7 +831,7 @@ class ManageMap extends dcNsProcess
             echo
             '<div class="multi-part" title="' . (dcCore::app()->admin->post_id ? __('Edit map element') : __('New element')) .
             sprintf(' &rsaquo; %s', dcCore::app()->getFormaterName(dcCore::app()->admin->post_format)) . '" id="edit-entry">' .
-            '<form action="' . Html::escapeURL(dcCore::app()->admin->redir_url) . '" method="post" id="entry-form">' .
+            '<form action="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id(), ['act' => 'map']) . '" method="post" id="entry-form">' .
             '<div id="entry-wrapper">' .
             '<div id="entry-content"><div class="constrained">' .
             '<h3 class="out-of-screen-if-js">' . __('Edit map element') . '</h3>';
