@@ -81,7 +81,7 @@ class Manage extends dcNsProcess
                 $settings->put('myGmaps_zoom', $_POST['myGmaps_zoom']);
                 $settings->put('myGmaps_type', $_POST['myGmaps_type']);
 
-                dcCore::app()->adminurl->redirect('admin.plugin.' . My::id(), ['act' => 'list', 'tab' => 'settings','upd' => 1]);
+                My::redirect(['act' => 'list', 'tab' => 'settings','upd' => 1]);
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
             }
