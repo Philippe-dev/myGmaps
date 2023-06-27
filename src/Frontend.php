@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\myGmaps;
 
 use dcCore;
-use dcUtils;
 use dcNsProcess;
 use Dotclear\Helper\L10n;
 use Dotclear\Helper\Html\Html;
@@ -22,6 +21,7 @@ use Dotclear\Helper\Network\Http;
 
 class Frontend extends dcNsProcess
 {
+    protected static $init = false; /** @deprecated since 2.27 */
     public static function init(): bool
     {
         static::$init = My::checkContext(My::FRONTEND);

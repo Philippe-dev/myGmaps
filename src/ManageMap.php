@@ -29,6 +29,7 @@ use form;
 
 class ManageMap extends dcNsProcess
 {
+    protected static $init = false; /** @deprecated since 2.27 */
     public static function init(): bool
     {
         if (My::checkContext(My::MANAGE)) {
