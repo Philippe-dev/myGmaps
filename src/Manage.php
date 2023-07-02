@@ -155,7 +155,7 @@ class Manage extends Process
         $blog_url    = dcCore::app()->blog->url;
 
         $map_styles_dir_path = $public_path . '/myGmaps/styles/';
-        $map_styles_dir_url  = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/styles/');
+        $map_styles_dir_url  = Http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/styles/');
 
         if (is_dir($map_styles_dir_path)) {
             $map_styles      = glob($map_styles_dir_path . '*.js');
