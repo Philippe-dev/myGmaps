@@ -54,8 +54,6 @@ class Backend extends Process
 
         My::addBackendMenuItem(Utility::MENU_BLOG);
 
-        
-
         if (My::settings()->myGmaps_enabled) {
             dcCore::app()->addBehavior('adminPostListValueV2', [self::class, 'adminEntryListValue']);
             dcCore::app()->addBehavior('adminPagesListValueV2', [self::class, 'adminEntryListValue']);
@@ -187,8 +185,6 @@ class Backend extends Process
 
     public static function adminPostForm($post)
     {
-        
-
         $postTypes = ['post', 'page'];
 
         if (!My::settings()->myGmaps_enabled) {
@@ -633,8 +629,6 @@ class Backend extends Process
 
     public static function adminBeforePostUpdate($cur, $post_id)
     {
-        
-
         $my_params['post_id']    = $post_id;
         $my_params['no_content'] = true;
         $my_params['post_type']  = ['post', 'page'];
@@ -660,8 +654,6 @@ class Backend extends Process
 
     public static function postHeaders()
     {
-        
-
         if (!My::settings()->myGmaps_enabled) {
             return;
         }

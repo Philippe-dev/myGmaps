@@ -14,8 +14,6 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\myGmaps;
 
-use dcCore;
-
 class FrontendTemplate
 {
     public static function publicHtmlContent(array $aOptions)

@@ -31,7 +31,7 @@ class BackendDefaultActions
      *
      * @param      BackendActions  $ap     Admin actions instance
      */
-    public static function adminPostsActionsPage(BackendActions $ap) : void
+    public static function adminPostsActionsPage(BackendActions $ap): void
     {
         if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
             dcAuth::PERMISSION_PUBLISH,

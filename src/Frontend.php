@@ -127,8 +127,6 @@ class Frontend extends Process
     {
         // Settings
 
-        
-
         if (!My::settings()->myGmaps_enabled) {
             return;
         }
@@ -140,7 +138,6 @@ class Frontend extends Process
     public static function publicMapContent($core, $_ctx, $aElements = [])
     {
         // Settings
-        
 
         $postTypes = ['post', 'page'];
 
