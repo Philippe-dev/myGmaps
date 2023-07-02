@@ -14,12 +14,12 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\myGmaps;
 
 use ArrayObject;
-use dcAdminCombos;
+use Dotclear\Core\Backend\Combos;
 use dcBlog;
 use dcCore;
 use dcMedia;
-use dcNsProcess;
-use dcPage;
+use Dotclear\Core\Process;
+use Dotclear\Core\Backend\Page;
 use dcAuth;
 use Dotclear\Helper\Date;
 use Dotclear\Helper\Html\Html;
@@ -27,26 +27,25 @@ use Dotclear\Helper\Network\Http;
 use Exception;
 use form;
 
-class ManageMap extends dcNsProcess
+class ManageMap extends Process
 {
-    protected static $init = false; /** @deprecated since 2.27 */
     public static function init(): bool
     {
         if (My::checkContext(My::MANAGE)) {
-            static::$init = ($_REQUEST['act'] ?? 'list') === 'map';
+            self::status(($_REQUEST['act'] ?? 'list') === 'map');
         }
 
-        return static::$init;
+        return self::status();
     }
 
     public static function process(): bool
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return false;
         }
 
         $params = [];
-        dcPage::check(dcCore::app()->auth->makePermissions([
+        Page::check(dcCore::app()->auth->makePermissions([
             dcCore::app()->auth::PERMISSION_CONTENT_ADMIN,
         ]));
 
@@ -97,13 +96,13 @@ class ManageMap extends dcNsProcess
 
         // Getting categories
 
-        dcCore::app()->admin->categories_combo = dcAdminCombos::getCategoriesCombo(
+        dcCore::app()->admin->categories_combo = Combos::getCategoriesCombo(
             dcCore::app()->blog->getCategories(['post_type' => 'map'])
         );
 
         // Status combo
 
-        dcCore::app()->admin->status_combo = dcAdminCombos::getPostStatusesCombo();
+        dcCore::app()->admin->status_combo = Combos::getPostStatusesCombo();
 
         // Formaters combo
 
@@ -118,7 +117,7 @@ class ManageMap extends dcNsProcess
 
         // Languages combo
 
-        dcCore::app()->admin->lang_combo = dcAdminCombos::getLangsCombo(
+        dcCore::app()->admin->lang_combo = Combos::getLangsCombo(
             dcCore::app()->blog->getLangs(['order' => 'asc']),
             true
         );
@@ -412,15 +411,13 @@ class ManageMap extends dcNsProcess
      */
     public static function render(): void
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return;
         }
 
-        $settings = dcCore::app()->blog->settings->get(My::id());
-
-        $myGmaps_center = $settings->myGmaps_center;
-        $myGmaps_zoom   = $settings->myGmaps_zoom;
-        $myGmaps_type   = $settings->myGmaps_type;
+        $myGmaps_center = My::settings()->myGmaps_center;
+        $myGmaps_zoom   = My::settings()->myGmaps_zoom;
+        $myGmaps_type   = My::settings()->myGmaps_type;
 
         dcCore::app()->admin->default_tab = 'edit-entry';
         if (!dcCore::app()->admin->can_edit_post) {
@@ -522,7 +519,7 @@ class ManageMap extends dcNsProcess
             $map_styles_base_url = '';
         }
 
-        $starting_script = '<script src="https://maps.googleapis.com/maps/api/js?key=' . $settings->myGmaps_API_key . '&libraries=places&callback=Function.prototype"></script>';
+        $starting_script = '<script src="https://maps.googleapis.com/maps/api/js?key=' . My::settings()->myGmaps_API_key . '&libraries=places&callback=Function.prototype"></script>';
 
         $starting_script .= '<script>' . "\n" .
         '//<![CDATA[' . "\n" .
@@ -564,18 +561,18 @@ class ManageMap extends dcNsProcess
         '//]]>' . "\n" .
         '</script>';
 
-        dcPage::openModule(
+        Page::openModule(
             dcCore::app()->admin->page_title . ' - ' . My::name(),
-            dcPage::jsModal() .
-            dcPage::jsLoad('js/_post.js') .
-            dcPage::jsMetaEditor() .
+            Page::jsModal() .
+            Page::jsLoad('js/_post.js') .
+            Page::jsMetaEditor() .
             My::jsLoad('element.map.min.js') .
             $admin_post_behavior .
             $starting_script .
-            dcPage::jsConfirmClose('entry-form') .
+            Page::jsConfirmClose('entry-form') .
             # --BEHAVIOR-- adminPostHeaders --
             dcCore::app()->callBehavior('adminPostHeaders') .
-            dcPage::jsPageTabs(dcCore::app()->admin->default_tab) .
+            Page::jsPageTabs(dcCore::app()->admin->default_tab) .
             My::cssLoad('admin.css') .
             '<style type="text/css">' . "\n" .
             '#options-box, .s-tags, .s-featuredmedia, .s-attachments {' . "\n" .
@@ -611,7 +608,7 @@ class ManageMap extends dcNsProcess
         } else {
             $edit_entry_title = dcCore::app()->admin->page_title;
         }
-        echo dcPage::breadcrumb(
+        echo Page::breadcrumb(
             [
                 Html::escapeHTML(dcCore::app()->blog->name) => '',
                 My::name()                                  => My::manageUrl() . '&tab=entries-list',
@@ -620,9 +617,9 @@ class ManageMap extends dcNsProcess
         );
 
         if (!empty($_GET['upd'])) {
-            dcPage::success(__('Map element has been updated.'));
+            Page::success(__('Map element has been updated.'));
         } elseif (!empty($_GET['crea'])) {
-            dcPage::success(__('Map element has been created.'));
+            Page::success(__('Map element has been created.'));
         }
 
         # HTML conversion
@@ -631,7 +628,7 @@ class ManageMap extends dcNsProcess
             dcCore::app()->admin->post_content = dcCore::app()->admin->post_content_xhtml;
             dcCore::app()->admin->post_format  = 'xhtml';
 
-            dcPage::message(__('Don\'t forget to validate your HTML conversion by saving your post.'));
+            Page::message(__('Don\'t forget to validate your HTML conversion by saving your post.'));
         }
 
         echo '';
@@ -909,9 +906,9 @@ class ManageMap extends dcNsProcess
             '</div>'; // End
         }
 
-        dcPage::helpBlock('myGmap', 'core_wiki');
+        Page::helpBlock('myGmap', 'core_wiki');
 
-        dcPage::closeModule();
+        Page::closeModule();
     }
 
     /**

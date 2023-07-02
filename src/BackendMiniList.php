@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\myGmaps;
 
-use adminGenericListV2;
 use dcBlog;
 use dcCore;
+use Dotclear\Core\Backend\Listing\Pager;
+use Dotclear\Core\Backend\Listing\Listing;
 use Dotclear\Helper\Date;
 use Dotclear\Helper\Html\Html;
-use dcPager;
 
-class BackendMiniList extends adminGenericListV2
+class BackendMiniList extends Listing
 {
     /**
      * Display a list of pages
@@ -34,7 +34,7 @@ class BackendMiniList extends adminGenericListV2
         if ($this->rs->isEmpty()) {
             echo '<p><strong>' . __('No entry') . '</strong></p>';
         } else {
-            $pager            = new dcPager($page, (int) $this->rs_count, $nb_per_page, 10);
+            $pager            = new Pager($page, (int) $this->rs_count, $nb_per_page, 10);
             $pager->html_prev = $this->html_prev;
             $pager->html_next = $this->html_next;
             $pager->var_page  = 'page';
@@ -123,7 +123,7 @@ class BackendMiniList extends adminGenericListV2
             $cat_title = sprintf(
                 $cat_link,
                 $this->rs->cat_id,
-                html::escapeHTML($this->rs->cat_title)
+                Html::escapeHTML($this->rs->cat_title)
             );
         } else {
             $cat_title = __('None');
@@ -135,15 +135,15 @@ class BackendMiniList extends adminGenericListV2
         $res = '<tr class="line' . ($this->rs->post_status != 1 ? ' offline' : '') . '"' .
         ' id="p' . $this->rs->post_id . '">';
 
-        $res .= '<td class="maximal"><a href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id()) . '&act=map&id=' . $this->rs->post_id . '" title="' . __('Edit map element') . ' : ' . html::escapeHTML($this->rs->post_title) . '">' . html::escapeHTML($this->rs->post_title) . '</a></td>' .
+        $res .= '<td class="maximal"><a href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id()) . '&act=map&id=' . $this->rs->post_id . '" title="' . __('Edit map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '">' . Html::escapeHTML($this->rs->post_title) . '</a></td>' .
         '<td class="nowrap count">' . Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt) . '</td>' .
         '<td class="nowrap">' . $cat_title . '</td>' .
         '<td class="nowrap">' . __($meta_rs) . '</td>' .
         '<td class="nowrap status">' . $img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach . '</td>';
         if ($type == 'post') {
-            $res .= '<td class="nowrap count"><a class="element-remove" href="' . dcCore::app()->getPostAdminURL($type, $id) . '&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.png" alt="supprimer" /></a></td>';
+            $res .= '<td class="nowrap count"><a class="element-remove" href="' . dcCore::app()->getPostAdminURL($type, $id) . '&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.png" alt="supprimer" /></a></td>';
         } elseif ($type == 'page') {
-            $res .= '<td class="nowrap count"><a class="element-remove" href="' . dcCore::app()->getPostAdminURL($type, $id) . '&upd=1&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.png" alt="supprimer" /></a></td>';
+            $res .= '<td class="nowrap count"><a class="element-remove" href="' . dcCore::app()->getPostAdminURL($type, $id) . '&upd=1&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.png" alt="supprimer" /></a></td>';
         }
         $res .= '</tr>';
 

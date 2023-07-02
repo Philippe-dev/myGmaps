@@ -14,12 +14,12 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\myGmaps;
 
 use dcCore;
-use dcPage;
-use dcPostsActions;
+use Dotclear\Core\Backend\Page;
+use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Helper\Html\Html;
 use Exception;
 
-class BackendActions extends dcPostsActions
+class BackendActions extends ActionsPosts
 {
     protected $use_render = true;
 
@@ -46,7 +46,7 @@ class BackendActions extends dcPostsActions
     {
         dcCore::app()->error->add($e->getMessage());
         $this->beginPage(
-            dcPage::breadcrumb(
+            Page::breadcrumb(
                 [
                     Html::escapeHTML(dcCore::app()->blog->name) => '',
                     My::name()                                  => $this->getRedirection(true),
@@ -65,13 +65,15 @@ class BackendActions extends dcPostsActions
      */
     public function beginPage(string $breadcrumb = '', string $head = ''): void
     {
-        echo
-        '<html><head><title>' . My::name() . '</title>' .
-        dcPage::jsLoad('js/_posts_actions.js') .
-        $head .
-        '</script></head><body>' .
+        Page::openModule(
+            My::name(),
+            Page::jsLoad('js/_posts_actions.js') .
+            $head
+        );
+        echo 
         $breadcrumb .
-        '<p><a class="back" href="' . $this->getRedirection(true) . '">' . __('Back to elements list') . '</a></p>';
+        '<p><a class="back" href="' . $this->getRedirection(true) . '">' . __('Back to pages list') . '</a></p>';
+
     }
 
     /**
@@ -79,8 +81,7 @@ class BackendActions extends dcPostsActions
      */
     public function endPage(): void
     {
-        echo
-        '</body></html>';
+        Page::closeModule();
     }
 
     /**
@@ -91,7 +92,7 @@ class BackendActions extends dcPostsActions
         // We could have added a behavior here, but we want default action to be setup first
         BackendDefaultActions::adminPostsActionsPage($this);
         # --BEHAVIOR-- adminPagesActions -- dcActions
-        dcCore::app()->callBehavior('adminPagesActions', $this);
+        dcCore::app()->callBehavior('adminPostsActions', $this);
     }
 
     /**

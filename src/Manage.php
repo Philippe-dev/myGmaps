@@ -14,33 +14,32 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\myGmaps;
 
 use dcCore;
-use dcNsProcess;
-use adminUserPref;
-use dcPage;
+use Dotclear\Core\Process;
+use Dotclear\Core\Backend\UserPref;
+use Dotclear\Core\Backend\Page;
 use Exception;
 use form;
-use dcPostsActions;
+use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
-use adminPostFilter;
+use Dotclear\Core\Backend\Filter\FilterPosts;
 
-class Manage extends dcNsProcess
+class Manage extends Process
 {
-    protected static $init = false; /** @deprecated since 2.27 */
     /**
      * Initializes the page.
      */
     public static function init(): bool
     {
-        static::$init = My::checkContext(My::MANAGE);
+        self::status(My::checkContext(My::MANAGE));
 
         if (isset($_REQUEST['act']) && $_REQUEST['act'] === 'map') {
-            static::$init = ($_REQUEST['act'] ?? 'list') === 'map' ? ManageMap::init() : true;
+            self::status(($_REQUEST['act'] ?? 'list') === 'map' ? ManageMap::init() : true);
         } elseif (isset($_REQUEST['act']) && $_REQUEST['act'] === 'maps') {
-            static::$init = ($_REQUEST['act'] ?? 'list') === 'maps' ? ManageMaps::init() : true;
+            self::status(($_REQUEST['act'] ?? 'list') === 'maps' ? ManageMaps::init() : true);
         }
 
-        return static::$init;
+        return self::status();
     }
 
     /**
@@ -48,7 +47,7 @@ class Manage extends dcNsProcess
      */
     public static function process(): bool
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return false;
         }
 
@@ -58,8 +57,6 @@ class Manage extends dcNsProcess
             ManageMaps::process();
         }
 
-        $settings = dcCore::app()->blog->settings->get(My::id());
-
         dcCore::app()->admin->default_tab = empty($_REQUEST['tab']) ? 'settings' : $_REQUEST['tab'];
 
         /*
@@ -68,19 +65,19 @@ class Manage extends dcNsProcess
 
         // Save activation
 
-        $myGmaps_enabled = $settings->myGmaps_enabled;
-        $myGmaps_API_key = $settings->myGmaps_API_key;
-        $myGmaps_center  = $settings->myGmaps_center;
-        $myGmaps_zoom    = $settings->myGmaps_zoom;
-        $myGmaps_type    = $settings->myGmaps_type;
+        $myGmaps_enabled = My::settings()->myGmaps_enabled;
+        $myGmaps_API_key = My::settings()->myGmaps_API_key;
+        $myGmaps_center  = My::settings()->myGmaps_center;
+        $myGmaps_zoom    = My::settings()->myGmaps_zoom;
+        $myGmaps_type    = My::settings()->myGmaps_type;
 
         if (!empty($_POST['saveconfig'])) {
             try {
-                $settings->put('myGmaps_enabled', !empty($_POST['myGmaps_enabled']));
-                $settings->put('myGmaps_API_key', $_POST['myGmaps_API_key']);
-                $settings->put('myGmaps_center', $_POST['myGmaps_center']);
-                $settings->put('myGmaps_zoom', $_POST['myGmaps_zoom']);
-                $settings->put('myGmaps_type', $_POST['myGmaps_type']);
+                My::settings()->put('myGmaps_enabled', !empty($_POST['myGmaps_enabled']));
+                My::settings()->put('myGmaps_API_key', $_POST['myGmaps_API_key']);
+                My::settings()->put('myGmaps_center', $_POST['myGmaps_center']);
+                My::settings()->put('myGmaps_zoom', $_POST['myGmaps_zoom']);
+                My::settings()->put('myGmaps_type', $_POST['myGmaps_type']);
 
                 My::redirect(['act' => 'list', 'tab' => 'settings','upd' => 1]);
             } catch (Exception $e) {
@@ -89,7 +86,7 @@ class Manage extends dcNsProcess
         }
 
         dcCore::app()->admin->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
-        dcCore::app()->admin->nb_per_page = adminUserPref::getUserFilters('pages', 'nb');
+        dcCore::app()->admin->nb_per_page = UserPref::getUserFilters('pages', 'nb');
 
         if (!empty($_GET['nb']) && (int) $_GET['nb'] > 0) {
             dcCore::app()->admin->nb_per_page = (int) $_GET['nb'];
@@ -126,7 +123,7 @@ class Manage extends dcNsProcess
      */
     public static function render(): void
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return;
         }
 
@@ -146,12 +143,10 @@ class Manage extends dcNsProcess
             return;
         }
 
-        $settings = dcCore::app()->blog->settings->get(My::id());
-
-        $myGmaps_center = $settings->myGmaps_center;
-        $myGmaps_zoom   = $settings->myGmaps_zoom;
-        $myGmaps_type   = $settings->myGmaps_type;
-        $myGmaps_type   = $settings->myGmaps_type;
+        $myGmaps_center = My::settings()->myGmaps_center;
+        $myGmaps_zoom   = My::settings()->myGmaps_zoom;
+        $myGmaps_type   = My::settings()->myGmaps_type;
+        $myGmaps_type   = My::settings()->myGmaps_type;
 
         // Custom map styles
 
@@ -178,14 +173,14 @@ class Manage extends dcNsProcess
 
         // Actions
 
-        dcCore::app()->admin->posts_actions_page = new dcPostsActions(dcCore::app()->adminurl->get('admin.plugin.' . My::id()));
+        dcCore::app()->admin->posts_actions_page = new ActionsPosts(dcCore::app()->adminurl->get('admin.plugin.' . My::id()));
         if (dcCore::app()->admin->posts_actions_page->process()) {
             return;
         }
 
         // Filters
 
-        dcCore::app()->admin->post_filter = new adminPostFilter();
+        dcCore::app()->admin->post_filter = new FilterPosts();
 
         // Get list params
 
@@ -195,7 +190,7 @@ class Manage extends dcNsProcess
         dcCore::app()->admin->posts_list = null;
 
         dcCore::app()->admin->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
-        dcCore::app()->admin->nb_per_page = adminUserPref::getUserFilters('pages', 'nb');
+        dcCore::app()->admin->nb_per_page = UserPref::getUserFilters('pages', 'nb');
 
         /*
         * Config and list of map elements
@@ -217,7 +212,7 @@ class Manage extends dcNsProcess
             dcCore::app()->error->add($e->getMessage());
         }
 
-        $starting_script = '<script src="https://maps.googleapis.com/maps/api/js?key=' . $settings->myGmaps_API_key . '&libraries=places&callback=Function.prototype"></script>';
+        $starting_script = '<script src="https://maps.googleapis.com/maps/api/js?key=' . My::settings()->myGmaps_API_key . '&libraries=places&callback=Function.prototype"></script>';
 
         $starting_script .= '<script>' . "\n" .
         '//<![CDATA[' . "\n" .
@@ -240,30 +235,30 @@ class Manage extends dcNsProcess
         $starting_script .= '//]]>' . "\n" .
         '</script>';
 
-        dcPage::openModule(
+        Page::openModule(
             My::name(),
             $starting_script .
-            dcPage::jsLoad('js/_posts_list.js') .
-            dcPage::jsMetaEditor() .
+            Page::jsLoad('js/_posts_list.js') .
+            Page::jsMetaEditor() .
             dcCore::app()->admin->post_filter->js(My::manageUrl() . '#entries-list') .
-            dcPage::jsPageTabs(dcCore::app()->admin->default_tab) .
-            dcPage::jsConfirmClose('config-form') .
+            Page::jsPageTabs(dcCore::app()->admin->default_tab) .
+            Page::jsConfirmClose('config-form') .
             My::jsLoad('config.map.min.js') .
             My::cssLoad('admin.css')
         );
 
-        echo dcPage::breadcrumb(
+        echo Page::breadcrumb(
             [
                 html::escapeHTML(dcCore::app()->blog->name) => '',
                 My::name()                                  => My::manageUrl(),
             ]
         ) .
-        dcPage::notices();
+        Page::notices();
 
         // Display messages
 
         if (isset($_GET['upd']) && isset($_GET['act'])) {
-            dcPage::success(__('Configuration has been saved.'));
+            Page::success(__('Configuration has been saved.'));
         }
 
         // Config tab
@@ -273,14 +268,14 @@ class Manage extends dcNsProcess
         '<form method="post" action="' . My::manageUrl() . '" id="config-form">' .
         '<div class="fieldset"><h3>' . __('Activation') . '</h3>' .
             '<p><label class="classic" for="myGmaps_enabled">' .
-            form::checkbox('myGmaps_enabled', '1', $settings->myGmaps_enabled) .
+            form::checkbox('myGmaps_enabled', '1', My::settings()->myGmaps_enabled) .
             __('Enable extension for this blog') . '</label></p>' .
         '</div>' .
         '<div class="fieldset"><h3>' . __('API key') . '</h3>' .
             '<p><label class="maximal" for="myGmaps_API_key">' . __('Google Maps Javascript browser API key:') .
-            '<br />' . form::field('myGmaps_API_key', 80, 255, $settings->myGmaps_API_key) .
+            '<br />' . form::field('myGmaps_API_key', 80, 255, My::settings()->myGmaps_API_key) .
             '</label></p>';
-        if ($settings->myGmaps_API_key == 'AIzaSyCUgB8ZVQD88-T4nSgDlgVtH5fm0XcQAi8') {
+        if (My::settings()->myGmaps_API_key == 'AIzaSyCUgB8ZVQD88-T4nSgDlgVtH5fm0XcQAi8') {
             echo '<p class="warn">' . __('You are currently using a <em>shared</em> API key. To avoid map display restrictions on your blog, use your own API key.') . '</p>';
         }
 
@@ -292,9 +287,9 @@ class Manage extends dcNsProcess
         '<p class="area" id="map_canvas"></p>' .
         '<p class="form-note info maximal mapinfo" style="width: 100%">' . __('Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls.') . '</p>' .
             '<p>' .
-            form::hidden('myGmaps_center', $settings->myGmaps_center) .
-            form::hidden('myGmaps_zoom', $settings->myGmaps_zoom) .
-            form::hidden('myGmaps_type', $settings->myGmaps_type) .
+            form::hidden('myGmaps_center', My::settings()->myGmaps_center) .
+            form::hidden('myGmaps_zoom', My::settings()->myGmaps_zoom) .
+            form::hidden('myGmaps_type', My::settings()->myGmaps_type) .
             form::hidden('map_styles_list', $map_styles_list) .
             form::hidden('map_styles_base_url', $map_styles_base_url) .
             dcCore::app()->formNonce() .
@@ -308,7 +303,7 @@ class Manage extends dcNsProcess
 
         '<div class="multi-part" id="entries-list" title="' . __('Map elements') . '">';
 
-        if ($settings->myGmaps_enabled) {
+        if (My::settings()->myGmaps_enabled) {
             echo '<p class="top-add"><strong><a class="button add" href="' . My::manageUrl() . '&act=map">' . __('New element') . '</a></strong></p>';
         }
 
@@ -339,7 +334,7 @@ class Manage extends dcNsProcess
         echo
         '</div>';
 
-        dcPage::helpBlock('myGmaps');
-        dcPage::closeModule();
+        Page::helpBlock('myGmaps');
+        Page::closeModule();
     }
 }

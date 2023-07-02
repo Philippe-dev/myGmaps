@@ -14,24 +14,21 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\myGmaps;
 
 use dcCore;
-use dcNsProcess;
+use Dotclear\Core\Process;
 use Dotclear\Helper\L10n;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
 
-class Frontend extends dcNsProcess
+class Frontend extends Process
 {
-    protected static $init = false; /** @deprecated since 2.27 */
     public static function init(): bool
     {
-        static::$init = My::checkContext(My::FRONTEND);
-
-        return static::$init;
+        return self::status(My::checkContext(My::FRONTEND));
     }
 
     public static function process(): bool
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return false;
         }
 
@@ -130,24 +127,24 @@ class Frontend extends dcNsProcess
     {
         // Settings
 
-        $settings = dcCore::app()->blog->settings->get(My::id());
+        
 
-        if (!$settings->myGmaps_enabled) {
+        if (!My::settings()->myGmaps_enabled) {
             return;
         }
 
         echo My::cssLoad('public.css') .
-        '<script src="https://maps.googleapis.com/maps/api/js?key=' . $settings->myGmaps_API_key . '&callback=Function.prototype"></script>' . "\n";
+        '<script src="https://maps.googleapis.com/maps/api/js?key=' . My::settings()->myGmaps_API_key . '&callback=Function.prototype"></script>' . "\n";
     }
 
     public static function publicMapContent($core, $_ctx, $aElements = [])
     {
         // Settings
-        $settings = dcCore::app()->blog->settings->get(My::id());
+        
 
         $postTypes = ['post', 'page'];
 
-        if ($settings->myGmaps_enabled) {
+        if (My::settings()->myGmaps_enabled) {
             // Appel depuis un billet, ou depuis une balise de template
 
             $sTemplate     = '';

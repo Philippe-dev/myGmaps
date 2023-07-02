@@ -13,32 +13,26 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\myGmaps;
 
-use dcCore;
-use dcNsProcess;
+use Dotclear\Core\Process;
 
-class Install extends dcNsProcess
+class Install extends Process
 {
-    protected static $init = false; /** @deprecated since 2.27 */
     public static function init(): bool
     {
-        static::$init = My::checkContext(My::INSTALL);
-
-        return static::$init;
+        return self::status(My::checkContext(My::INSTALL));
     }
 
     public static function process(): bool
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return false;
         }
 
-        $settings = dcCore::app()->blog->settings->get(My::id());
-
-        $settings->put('myGmaps_enabled', false, 'boolean', 'Enable myGmaps plugin', false, true);
-        $settings->put('myGmaps_center', '43.0395797336425, 6.126280043989323', 'string', 'Default maps center', false, true);
-        $settings->put('myGmaps_zoom', '12', 'integer', 'Default maps zoom level', false, true);
-        $settings->put('myGmaps_type', 'roadmap', 'string', 'Default maps type', false, true);
-        $settings->put('myGmaps_API_key', 'AIzaSyCUgB8ZVQD88-T4nSgDlgVtH5fm0XcQAi8', 'string', 'Google Maps browser API key', false, true);
+        My::settings()->put('myGmaps_enabled', false, 'boolean', 'Enable myGmaps plugin', false, true);
+        My::settings()->put('myGmaps_center', '43.0395797336425, 6.126280043989323', 'string', 'Default maps center', false, true);
+        My::settings()->put('myGmaps_zoom', '12', 'integer', 'Default maps zoom level', false, true);
+        My::settings()->put('myGmaps_type', 'roadmap', 'string', 'Default maps type', false, true);
+        My::settings()->put('myGmaps_API_key', 'AIzaSyCUgB8ZVQD88-T4nSgDlgVtH5fm0XcQAi8', 'string', 'Google Maps browser API key', false, true);
 
         return true;
     }

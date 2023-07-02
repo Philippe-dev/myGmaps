@@ -14,28 +14,27 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\myGmaps;
 
 use dcCore;
-use dcNsProcess;
-use adminUserPref;
-use dcPage;
+use Dotclear\Core\Backend\UserPref;
 use Exception;
 use form;
+use Dotclear\Core\Backend\Filter\FilterPosts;
+use Dotclear\Core\Process;
+use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
-use adminPostFilter;
 
-class ManageMaps extends dcNsProcess
+class ManageMaps extends Process
 {
     /**
      * Initializes the page.
      */
-    protected static $init = false; /** @deprecated since 2.27 */
     public static function init(): bool
     {
         if (My::checkContext(My::MANAGE)) {
-            static::$init = ($_REQUEST['act'] ?? 'list') === 'maps';
+            self::status(($_REQUEST['act'] ?? 'list') === 'maps');
         }
 
-        return static::$init;
+        return self::status();
     }
 
     /**
@@ -43,7 +42,7 @@ class ManageMaps extends dcNsProcess
      */
     public static function process(): bool
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return false;
         }
 
@@ -52,7 +51,7 @@ class ManageMaps extends dcNsProcess
          */
 
         dcCore::app()->admin->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
-        dcCore::app()->admin->nb_per_page = adminUserPref::getUserFilters('pages', 'nb');
+        dcCore::app()->admin->nb_per_page = UserPref::getUserFilters('pages', 'nb');
 
         if (!empty($_GET['nb']) && (int) $_GET['nb'] > 0) {
             dcCore::app()->admin->nb_per_page = (int) $_GET['nb'];
@@ -89,12 +88,12 @@ class ManageMaps extends dcNsProcess
      */
     public static function render(): void
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return;
         }
 
         // Filters
-        dcCore::app()->admin->post_filter = new adminPostFilter();
+        dcCore::app()->admin->post_filter = new FilterPosts();
 
         // get list params
         $params = dcCore::app()->admin->post_filter->params();
@@ -103,7 +102,7 @@ class ManageMaps extends dcNsProcess
         dcCore::app()->admin->posts_list = null;
 
         dcCore::app()->admin->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
-        dcCore::app()->admin->nb_per_page = adminUserPref::getUserFilters('pages', 'nb');
+        dcCore::app()->admin->nb_per_page = UserPref::getUserFilters('pages', 'nb');
 
         /*
         * List of map elements
@@ -143,25 +142,25 @@ class ManageMaps extends dcNsProcess
             dcCore::app()->error->add($e->getMessage());
         }
 
-        dcPage::openModule(
+        Page::openModule(
             My::name(),
-            dcPage::jsLoad('js/_posts_list.js') .
+            Page::jsLoad('js/_posts_list.js') .
             dcCore::app()->admin->post_filter->js(My::manageUrl() . '&id=' . $post_id . '&act=maps') .
-            dcPage::jsPageTabs(dcCore::app()->admin->default_tab) .
-            dcPage::jsConfirmClose('config-form') .
+            Page::jsPageTabs(dcCore::app()->admin->default_tab) .
+            Page::jsConfirmClose('config-form') .
             My::cssLoad('admin.css')
         );
 
         dcCore::app()->admin->page_title = __('Add elements');
 
-        echo dcPage::breadcrumb(
+        echo Page::breadcrumb(
             [
                 html::escapeHTML(dcCore::app()->blog->name) => '',
                 My::name()                                  => My::manageUrl(),
                 dcCore::app()->admin->page_title            => '',
             ]
         ) .
-        dcPage::notices();
+        Page::notices();
 
         if ($post_type === 'page') {
             echo '<h3>' . __('Select map elements for map attached to page:') . ' <a href="' . dcCore::app()->getPostAdminURL($post_type, $post_id) . '">' . $post_title . '</a></h3>';
@@ -195,7 +194,7 @@ class ManageMaps extends dcNsProcess
             dcCore::app()->admin->post_filter->show()
         );
 
-        dcPage::helpBlock('myGmapsadd');
-        dcPage::closeModule();
+        Page::helpBlock('myGmapsadd');
+        Page::closeModule();
     }
 }

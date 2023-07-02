@@ -17,9 +17,10 @@ use ArrayObject;
 use dcBlog;
 use dcCore;
 use dcAuth;
-use dcAdminCombos;
+use Dotclear\Core\Backend\Combos;
+use Dotclear\Core\Backend\Action\ActionsPostsDefault;
 use Dotclear\Helper\Html\Html;
-use dcPage;
+use Dotclear\Core\Backend\Page;
 use Exception;
 use form;
 
@@ -30,7 +31,7 @@ class BackendDefaultActions
      *
      * @param      BackendActions  $ap     Admin actions instance
      */
-    public static function adminPostsActionsPage(BackendActions $ap)
+    public static function adminPostsActionsPage(BackendActions $ap) : void
     {
         if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
             dcAuth::PERMISSION_PUBLISH,
@@ -43,7 +44,7 @@ class BackendDefaultActions
                     __('Schedule')        => 'schedule',
                     __('Mark as pending') => 'pending',
                 ]],
-                [self::class, 'doChangePostStatus']
+                [ActionsPostsDefault::class, 'doChangePostStatus']
             );
         }
         $ap->addAction(
@@ -51,19 +52,19 @@ class BackendDefaultActions
                 __('Mark as selected')   => 'selected',
                 __('Mark as unselected') => 'unselected',
             ]],
-            [self::class, 'doUpdateSelectedPost']
+            [ActionsPostsDefault::class, 'doUpdateSelectedPost']
         );
         $ap->addAction(
             [__('Change') => [
                 __('Change category') => 'category',
             ]],
-            [self::class, 'doChangePostCategory']
+            [ActionsPostsDefault::class, 'doChangePostCategory']
         );
         $ap->addAction(
             [__('Change') => [
                 __('Change language') => 'lang',
             ]],
-            [self::class, 'doChangePostLang']
+            [ActionsPostsDefault::class, 'doChangePostLang']
         );
         if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
             dcAuth::PERMISSION_ADMIN,
@@ -71,7 +72,7 @@ class BackendDefaultActions
             $ap->addAction(
                 [__('Change') => [
                     __('Change author') => 'author', ]],
-                [self::class, 'doChangePostAuthor']
+                [ActionsPostsDefault::class, 'doChangePostAuthor']
             );
         }
         if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
@@ -81,7 +82,7 @@ class BackendDefaultActions
             $ap->addAction(
                 [__('Delete') => [
                     __('Delete') => 'delete', ]],
-                [self::class, 'doDeletePost']
+                [ActionsPostsDefault::class, 'doDeletePost']
             );
         }
     }
@@ -143,7 +144,7 @@ class BackendDefaultActions
 
         dcCore::app()->blog->updPostsStatus($ids, $status);
 
-        dcPage::addSuccessNotice(
+        Page::addSuccessNotice(
             sprintf(
                 __(
                     '%d element has been successfully updated to status : "%s"',
@@ -174,7 +175,7 @@ class BackendDefaultActions
         $action = $ap->getAction();
         dcCore::app()->blog->updPostsSelected($ids, $action === 'selected');
         if ($action == 'selected') {
-            dcPage::addSuccessNotice(
+            Page::addSuccessNotice(
                 sprintf(
                     __(
                         '%d element has been successfully marked as selected',
@@ -185,7 +186,7 @@ class BackendDefaultActions
                 )
             );
         } else {
-            dcPage::addSuccessNotice(
+            Page::addSuccessNotice(
                 sprintf(
                     __(
                         '%d element has been successfully marked as unselected',
@@ -222,7 +223,7 @@ class BackendDefaultActions
         dcCore::app()->callBehavior('adminBeforePostsDelete', $ids);
 
         dcCore::app()->blog->delPosts($ids);
-        dcPage::addSuccessNotice(
+        Page::addSuccessNotice(
             sprintf(
                 __(
                     '%d element has been successfully deleted',
@@ -276,7 +277,7 @@ class BackendDefaultActions
             if ($new_cat_id) {
                 $title = dcCore::app()->blog->getCategory((int) $new_cat_id)->cat_title;
             }
-            dcPage::addSuccessNotice(
+            Page::addSuccessNotice(
                 sprintf(
                     __(
                         '%d element has been successfully moved to category "%s"',
@@ -291,7 +292,7 @@ class BackendDefaultActions
             $ap->redirect(true);
         } else {
             $ap->beginPage(
-                dcPage::breadcrumb(
+                Page::breadcrumb(
                     [
                         Html::escapeHTML(dcCore::app()->blog->name) => '',
                         $ap->getCallerTitle()                       => $ap->getRedirection(true),
@@ -301,7 +302,7 @@ class BackendDefaultActions
             );
             # categories list
             # Getting categories
-            $categories_combo = dcAdminCombos::getCategoriesCombo(
+            $categories_combo = Combos::getCategoriesCombo(
                 dcCore::app()->blog->getCategories()
             );
             echo
@@ -359,7 +360,7 @@ class BackendDefaultActions
             $cur          = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcBlog::POST_TABLE_NAME);
             $cur->user_id = $new_user_id;
             $cur->update('WHERE post_id ' . dcCore::app()->con->in($ids));
-            dcPage::addSuccessNotice(
+            Page::addSuccessNotice(
                 sprintf(
                     __(
                         '%d element has been successfully set to user "%s"',
@@ -391,14 +392,14 @@ class BackendDefaultActions
                 }
             }
             $ap->beginPage(
-                dcPage::breadcrumb(
+                Page::breadcrumb(
                     [
                         Html::escapeHTML(dcCore::app()->blog->name) => '',
                         $ap->getCallerTitle()                       => $ap->getRedirection(true),
                         __('Change author for this selection')      => '', ]
                 ),
-                dcPage::jsLoad('js/jquery/jquery.autocomplete.js') .
-                dcPage::jsJson('users_list', $usersList)
+                Page::jsLoad('js/jquery/jquery.autocomplete.js') .
+                Page::jsJson('users_list', $usersList)
             );
 
             echo
@@ -435,7 +436,7 @@ class BackendDefaultActions
             $cur            = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcBlog::POST_TABLE_NAME);
             $cur->post_lang = $new_lang;
             $cur->update('WHERE post_id ' . dcCore::app()->con->in($post_ids));
-            dcPage::addSuccessNotice(
+            Page::addSuccessNotice(
                 sprintf(
                     __(
                         '%d element has been successfully set to language "%s"',
@@ -449,7 +450,7 @@ class BackendDefaultActions
             $ap->redirect(true);
         } else {
             $ap->beginPage(
-                dcPage::breadcrumb(
+                Page::breadcrumb(
                     [
                         Html::escapeHTML(dcCore::app()->blog->name) => '',
                         $ap->getCallerTitle()                       => $ap->getRedirection(true),

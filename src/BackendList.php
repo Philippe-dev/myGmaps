@@ -13,17 +13,17 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\myGmaps;
 
-use adminGenericListV2;
 use dcBlog;
 use dcCore;
 use dcAuth;
 use ArrayObject;
+use Dotclear\Core\Backend\Listing\Pager;
+use Dotclear\Core\Backend\Listing\Listing;
 use Dotclear\Helper\Date;
 use Dotclear\Helper\Html\Html;
-use dcPager;
 use form;
 
-class BackendList extends adminGenericListV2
+class BackendList extends Listing
 {
     /**
      * Display admin post list
@@ -42,7 +42,7 @@ class BackendList extends adminGenericListV2
                 echo '<p><strong>' . __('No map element') . '</strong></p>';
             }
         } else {
-            $pager   = new dcPager($page, (int) $this->rs_count, $nb_per_page, 10);
+            $pager   = new Pager($page, (int) $this->rs_count, $nb_per_page, 10);
             $entries = [];
             if (isset($_REQUEST['entries'])) {
                 foreach ($_REQUEST['entries'] as $v) {

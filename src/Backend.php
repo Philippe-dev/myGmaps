@@ -13,36 +13,33 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\myGmaps;
 
-use adminUserPref;
-use dcAdmin;
+use Dotclear\Core\Backend\UserPref;
 use dcCore;
-use dcFavorites;
-use dcPage;
-use dcNsProcess;
+use Dotclear\Core\Backend\Page;
+use Dotclear\Core\Backend\Favorites;
+use Dotclear\Core\Backend\Utility;
+use Dotclear\Core\Process;
 use ArrayObject;
-use dcAdminFilter;
+use Dotclear\Core\Backend\Filter\Filter;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
 use form;
 
-class Backend extends dcNsProcess
+class Backend extends Process
 {
-    protected static $init = false; /** @deprecated since 2.27 */
     public static function init(): bool
     {
-        static::$init = My::checkContext(My::BACKEND);
-
-        return static::$init;
+        return self::status(My::checkContext(My::BACKEND));
     }
 
     public static function process(): bool
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return false;
         }
 
         dcCore::app()->addBehaviors([
-            'adminDashboardFavoritesV2' => function (dcFavorites $favs) {
+            'adminDashboardFavoritesV2' => function (Favorites $favs) {
                 $favs->register(My::id(), [
                     'title'       => My::name(),
                     'url'         => My::manageUrl(),
@@ -55,11 +52,11 @@ class Backend extends dcNsProcess
             },
         ]);
 
-        My::addBackendMenuItem(dcAdmin::MENU_BLOG);
+        My::addBackendMenuItem(Utility::MENU_BLOG);
 
-        $settings = dcCore::app()->blog->settings->get(My::id());
+        
 
-        if ($settings->myGmaps_enabled) {
+        if (My::settings()->myGmaps_enabled) {
             dcCore::app()->addBehavior('adminPostListValueV2', [self::class, 'adminEntryListValue']);
             dcCore::app()->addBehavior('adminPagesListValueV2', [self::class, 'adminEntryListValue']);
         }
@@ -190,11 +187,11 @@ class Backend extends dcNsProcess
 
     public static function adminPostForm($post)
     {
-        $settings = dcCore::app()->blog->settings->get(My::id());
+        
 
         $postTypes = ['post', 'page'];
 
-        if (!$settings->myGmaps_enabled) {
+        if (!My::settings()->myGmaps_enabled) {
             return;
         }
         if (is_null($post) || !in_array($post->post_type, $postTypes)) {
@@ -236,9 +233,9 @@ class Backend extends dcNsProcess
             $myGmaps_zoom   = $map_options[2];
             $myGmaps_type   = $map_options[3];
         } else {
-            $myGmaps_center = $settings->myGmaps_center;
-            $myGmaps_zoom   = $settings->myGmaps_zoom;
-            $myGmaps_type   = $settings->myGmaps_type;
+            $myGmaps_center = My::settings()->myGmaps_center;
+            $myGmaps_zoom   = My::settings()->myGmaps_zoom;
+            $myGmaps_type   = My::settings()->myGmaps_type;
         }
 
         $map_js = My::jsLoad('add.map.min.js') .
@@ -338,7 +335,7 @@ class Backend extends dcNsProcess
             }
 
             dcCore::app()->admin->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
-            dcCore::app()->admin->nb_per_page = adminUserPref::getUserFilters('pages', 'nb');
+            dcCore::app()->admin->nb_per_page = UserPref::getUserFilters('pages', 'nb');
 
             echo '<div id="form-entries">' .
             '<p>' . __('Included elements list') . '</p>' ;
@@ -567,7 +564,7 @@ class Backend extends dcNsProcess
                 ] = $categories->cat_id;
             }
 
-            $filters->append((new dcAdminFilter('cat_id'))
+            $filters->append((new Filter('cat_id'))
                 ->param()
                 ->title(__('Category:'))
                 ->options($combo));
@@ -589,32 +586,32 @@ class Backend extends dcNsProcess
                 __('directions')        => 'directions',
             ];
 
-            $filters->append((new dcAdminFilter('element_type'))
+            $filters->append((new Filter('element_type'))
             ->param('sql', "AND post_meta LIKE '%" . $element_type . "%' ")
             ->title(__('Type:'))
             ->options($element_type_combo));
 
             // Remove unused filters
 
-            $filters->append((new dcAdminFilter('comment'))
+            $filters->append((new Filter('comment'))
                 ->param());
 
-            $filters->append((new dcAdminFilter('trackback'))
+            $filters->append((new Filter('trackback'))
                 ->param());
 
-            $filters->append((new dcAdminFilter('attachment'))
+            $filters->append((new Filter('attachment'))
                 ->param());
 
-            $filters->append((new dcAdminFilter('featuredmedia'))
+            $filters->append((new Filter('featuredmedia'))
             ->param());
 
-            $filters->append((new dcAdminFilter('password'))
+            $filters->append((new Filter('password'))
             ->param());
 
-            $filters->append((new dcAdminFilter('lang'))
+            $filters->append((new Filter('lang'))
             ->param());
 
-            $filters->append((new dcAdminFilter('month'))
+            $filters->append((new Filter('month'))
             ->param());
         } else {
             // Add map filter on posts list
@@ -627,7 +624,7 @@ class Backend extends dcNsProcess
                 __('Without attached map') => 'none',
             ];
 
-            $filters->append((new dcAdminFilter('map'))
+            $filters->append((new Filter('map'))
             ->param('sql', ($map === 'map_options') ? "AND post_meta LIKE '%" . 'map_options' . "%' " : "AND post_meta NOT LIKE '%" . 'map_options' . "%' ")
             ->title(__('Google Map:'))
             ->options($map_combo));
@@ -636,7 +633,7 @@ class Backend extends dcNsProcess
 
     public static function adminBeforePostUpdate($cur, $post_id)
     {
-        $settings = dcCore::app()->blog->settings->get(My::id());
+        
 
         $my_params['post_id']    = $post_id;
         $my_params['no_content'] = true;
@@ -644,7 +641,7 @@ class Backend extends dcNsProcess
 
         $rs = dcCore::app()->blog->getPosts($my_params);
 
-        if (!$settings->myGmaps_enabled) {
+        if (!My::settings()->myGmaps_enabled) {
             return;
         }
 
@@ -663,9 +660,9 @@ class Backend extends dcNsProcess
 
     public static function postHeaders()
     {
-        $settings = dcCore::app()->blog->settings->get(My::id());
+        
 
-        if (!$settings->myGmaps_enabled) {
+        if (!My::settings()->myGmaps_enabled) {
             return;
         }
 
@@ -674,7 +671,7 @@ class Backend extends dcNsProcess
         }
 
         return
-        '<script src="https://maps.googleapis.com/maps/api/js?key=' . $settings->myGmaps_API_key . '&libraries=places&callback=Function.prototype"></script>' . "\n" .
+        '<script src="https://maps.googleapis.com/maps/api/js?key=' . My::settings()->myGmaps_API_key . '&libraries=places&callback=Function.prototype"></script>' . "\n" .
         '<script>' . "\n" .
         '$(document).ready(function() {' . "\n" .
             '$(\'#gmap-area label\').toggleWithLegend($(\'#post-gmap\'), {' . "\n" .
@@ -704,7 +701,7 @@ class Backend extends dcNsProcess
         $meta      = dcCore::app()->meta;
 
         if (!empty($meta->getMetaStr($rs->post_meta, 'map_options')) && in_array($rs->post_type, $postTypes)) {
-            $cols['status'] = str_replace('</td>', '<img style="width: 1.25em; height: 1.25em;" src="' . dcPage::getPF(My::id()) . '/css/img/marker.svg" title="' . __('Attached Map') . '" /></td>', $cols['status']);
+            $cols['status'] = str_replace('</td>', '<img style="width: 1.25em; height: 1.25em;" src="' . Page::getPF(My::id()) . '/css/img/marker.svg" title="' . __('Attached Map') . '" /></td>', $cols['status']);
         }
     }
 }
