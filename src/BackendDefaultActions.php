@@ -31,7 +31,7 @@ class BackendDefaultActions
      *
      * @param      BackendActions  $ap     Admin actions instance
      */
-    public static function adminPostsActionsPage(BackendActions $ap): void
+    public static function adminPostsActionsPage(BackendActions $ap)
     {
         if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
             dcAuth::PERMISSION_PUBLISH,
@@ -44,7 +44,19 @@ class BackendDefaultActions
                     __('Schedule')        => 'schedule',
                     __('Mark as pending') => 'pending',
                 ]],
-                [ActionsPostsDefault::class, 'doChangePostStatus']
+                [self::class, 'doChangePostStatus']
+            );
+        }
+        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
+            dcCore::app()->auth::PERMISSION_PUBLISH,
+            dcCore::app()->auth::PERMISSION_CONTENT_ADMIN,
+        ]), dcCore::app()->blog->id)) {
+            $ap->addAction(
+                [__('First publication') => [
+                    __('Never published')   => 'never',
+                    __('Already published') => 'already',
+                ]],
+                [ActionsPostsDefault::class, 'doChangePostFirstPub']
             );
         }
         $ap->addAction(
@@ -52,19 +64,19 @@ class BackendDefaultActions
                 __('Mark as selected')   => 'selected',
                 __('Mark as unselected') => 'unselected',
             ]],
-            [ActionsPostsDefault::class, 'doUpdateSelectedPost']
+            [self::class, 'doUpdateSelectedPost']
         );
         $ap->addAction(
             [__('Change') => [
                 __('Change category') => 'category',
             ]],
-            [ActionsPostsDefault::class, 'doChangePostCategory']
+            [self::class, 'doChangePostCategory']
         );
         $ap->addAction(
             [__('Change') => [
                 __('Change language') => 'lang',
             ]],
-            [ActionsPostsDefault::class, 'doChangePostLang']
+            [self::class, 'doChangePostLang']
         );
         if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
             dcAuth::PERMISSION_ADMIN,
@@ -72,7 +84,7 @@ class BackendDefaultActions
             $ap->addAction(
                 [__('Change') => [
                     __('Change author') => 'author', ]],
-                [ActionsPostsDefault::class, 'doChangePostAuthor']
+                [self::class, 'doChangePostAuthor']
             );
         }
         if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
@@ -82,7 +94,7 @@ class BackendDefaultActions
             $ap->addAction(
                 [__('Delete') => [
                     __('Delete') => 'delete', ]],
-                [ActionsPostsDefault::class, 'doDeletePost']
+                [self::class, 'doDeletePost']
             );
         }
     }

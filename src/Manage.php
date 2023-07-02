@@ -109,7 +109,7 @@ class Manage extends Process
         }
 
         // Actions combo box
-        dcCore::app()->admin->pages_actions_page          = new BackendActions('plugin.php', ['p' => 'myGmaps','tab' => 'entries-list']);
+        dcCore::app()->admin->pages_actions_page          = new BackendActions(dcCore::app()->adminurl->get('admin.plugin'), ['p' => 'myGmaps','tab' => 'entries-list']);
         dcCore::app()->admin->pages_actions_page_rendered = null;
         if (dcCore::app()->admin->pages_actions_page->process()) {
             dcCore::app()->admin->pages_actions_page_rendered = true;
