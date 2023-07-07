@@ -617,9 +617,9 @@ class ManageMap extends Process
         );
 
         if (!empty($_GET['upd'])) {
-            Page::success(__('Map element has been updated.'));
+            Notices::success(__('Map element has been updated.'));
         } elseif (!empty($_GET['crea'])) {
-            Page::success(__('Map element has been created.'));
+            Notices::success(__('Map element has been created.'));
         }
 
         # HTML conversion

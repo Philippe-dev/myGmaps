@@ -17,6 +17,7 @@ use dcCore;
 use Dotclear\Core\Process;
 use Dotclear\Core\Backend\UserPref;
 use Dotclear\Core\Backend\Page;
+use Dotclear\Core\Backend\Notices;
 use Exception;
 use form;
 use Dotclear\Core\Backend\Action\ActionsPosts;
@@ -253,12 +254,12 @@ class Manage extends Process
                 My::name()                                  => My::manageUrl(),
             ]
         ) .
-        Page::notices();
+        Notices::getNotices();
 
         // Display messages
 
         if (isset($_GET['upd']) && isset($_GET['act'])) {
-            Page::success(__('Configuration has been saved.'));
+            Notices::success(__('Configuration has been saved.'));
         }
 
         // Config tab

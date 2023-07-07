@@ -20,6 +20,7 @@ use form;
 use Dotclear\Core\Backend\Filter\FilterPosts;
 use Dotclear\Core\Process;
 use Dotclear\Core\Backend\Page;
+use Dotclear\Core\Backend\Notices;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
 
@@ -160,7 +161,7 @@ class ManageMaps extends Process
                 dcCore::app()->admin->page_title            => '',
             ]
         ) .
-        Page::notices();
+        Notices::getNotices();
 
         if ($post_type === 'page') {
             echo '<h3>' . __('Select map elements for map attached to page:') . ' <a href="' . dcCore::app()->getPostAdminURL($post_type, $post_id) . '">' . $post_title . '</a></h3>';
