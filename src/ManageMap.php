@@ -20,6 +20,7 @@ use dcCore;
 use dcMedia;
 use Dotclear\Core\Process;
 use Dotclear\Core\Backend\Page;
+use Dotclear\Core\Backend\Notices;
 use dcAuth;
 use Dotclear\Helper\Date;
 use Dotclear\Helper\Html\Html;
