@@ -21,7 +21,7 @@ use Exception;
 
 class BackendActions extends ActionsPosts
 {
-    protected $use_render = true;
+    protected bool $use_render = true;
 
     /**
      * Constructs a new instance.
@@ -42,7 +42,7 @@ class BackendActions extends ActionsPosts
      *
      * @param      Exception  $e      { parameter_description }
      */
-    public function error(Exception $e)
+    public function error(Exception $e): void
     {
         dcCore::app()->error->add($e->getMessage());
         $this->beginPage(
