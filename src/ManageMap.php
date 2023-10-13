@@ -17,7 +17,6 @@ use ArrayObject;
 use Dotclear\Core\Backend\Combos;
 use dcBlog;
 use dcCore;
-use dcMedia;
 use Dotclear\Core\Process;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Backend\Notices;
@@ -194,7 +193,6 @@ class ManageMap extends Process
                 }
 
                 try {
-                    dcCore::app()->media             = new dcMedia();
                     dcCore::app()->admin->post_media = dcCore::app()->media->getPostMedia(dcCore::app()->admin->post_id);
                 } catch (Exception $e) {
                     dcCore::app()->error->add($e->getMessage());
