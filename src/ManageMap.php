@@ -822,7 +822,7 @@ class ManageMap extends Process
             );
 
             # --BEHAVIOR-- adminPostFormItems -- ArrayObject, ArrayObject, MetaRecord|null
-            dcCore::app()->callBehavior('adminPostFormItems', $main_items, $sidebar_items, dcCore::app()->admin->post ?? null);
+            dcCore::app()->callBehavior('adminPostFormItems', $main_items, $sidebar_items, dcCore::app()->admin->post ?? null,'post');
 
             echo
             '<div class="multi-part" title="' . (dcCore::app()->admin->post_id ? __('Edit map element') : __('New element')) .
