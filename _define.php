@@ -13,9 +13,9 @@ $this->registerModule(
     'Google Maps',
     'Add custom maps to your blog',
     'Philippe aka amalgame and contributors',
-    '6.11',
+    '7.0',
     [
-        'requires'    => [['core', '2.27']],
+        'requires'    => [['core', '2.28']],
         'permissions' => dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]),
         'type'        => 'plugin',
         'settings'    => ['self' => '&act=list#settings'],
