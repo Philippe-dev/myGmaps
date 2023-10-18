@@ -9,12 +9,13 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\myGmaps;
 
 use dcBlog;
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Backend\Listing\Pager;
 use Dotclear\Core\Backend\Listing\Listing;
 use Dotclear\Helper\Date;
@@ -114,7 +115,7 @@ class BackendMiniList extends Listing
             $attach     = sprintf($img, sprintf($attach_str, $nb_media), 'attach.png');
         }
 
-        if (dcCore::app()->auth->check('categories', dcCore::app()->blog->id)) {
+        if (App::auth()->check('categories', App::blog()->id)) {
             $cat_link = '<a href="category.php?id=%s">%s</a>';
         } else {
             $cat_link = '%2$s';
@@ -129,21 +130,21 @@ class BackendMiniList extends Listing
             $cat_title = __('None');
         }
 
-        $meta    = dcCore::app()->meta;
+        $meta    = App::meta();
         $meta_rs = $meta->getMetaStr($this->rs->post_meta, 'map');
 
         $res = '<tr class="line' . ($this->rs->post_status != 1 ? ' offline' : '') . '"' .
         ' id="p' . $this->rs->post_id . '">';
 
-        $res .= '<td class="maximal"><a href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id()) . '&act=map&id=' . $this->rs->post_id . '" title="' . __('Edit map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '">' . Html::escapeHTML($this->rs->post_title) . '</a></td>' .
+        $res .= '<td class="maximal"><a href="' . App::backend()->url()->get('admin.plugin.' . My::id()) . '&act=map&id=' . $this->rs->post_id . '" title="' . __('Edit map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '">' . Html::escapeHTML($this->rs->post_title) . '</a></td>' .
         '<td class="nowrap count">' . Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt) . '</td>' .
         '<td class="nowrap">' . $cat_title . '</td>' .
         '<td class="nowrap">' . __($meta_rs) . '</td>' .
         '<td class="nowrap status">' . $img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach . '</td>';
         if ($type == 'post') {
-            $res .= '<td class="nowrap count"><a class="element-remove" href="' . dcCore::app()->getPostAdminURL($type, $id) . '&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.png" alt="supprimer" /></a></td>';
+            $res .= '<td class="nowrap count"><a class="element-remove" href="' . App::postTypes()->get($type)->adminUrl($id) . '&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.png" alt="supprimer" /></a></td>';
         } elseif ($type == 'page') {
-            $res .= '<td class="nowrap count"><a class="element-remove" href="' . dcCore::app()->getPostAdminURL($type, $id) . '&upd=1&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.png" alt="supprimer" /></a></td>';
+            $res .= '<td class="nowrap count"><a class="element-remove" href="' . App::postTypes()->get($type)->adminUrl($id) . '&upd=1&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.png" alt="supprimer" /></a></td>';
         }
         $res .= '</tr>';
 

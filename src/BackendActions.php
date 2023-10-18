@@ -9,11 +9,12 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\myGmaps;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Helper\Html\Html;
@@ -44,13 +45,13 @@ class BackendActions extends ActionsPosts
      */
     public function error(Exception $e): void
     {
-        dcCore::app()->error->add($e->getMessage());
+        App::error()->add($e->getMessage());
         $this->beginPage(
             Page::breadcrumb(
                 [
-                    Html::escapeHTML(dcCore::app()->blog->name) => '',
-                    My::name()                                  => $this->getRedirection(true),
-                    __('Maps actions')                          => '',
+                    Html::escapeHTML(App::blog()->name) => '',
+                    My::name()                          => $this->getRedirection(true),
+                    __('Maps actions')                  => '',
                 ]
             )
         );
@@ -91,7 +92,7 @@ class BackendActions extends ActionsPosts
         // We could have added a behavior here, but we want default action to be setup first
         BackendDefaultActions::adminPostsActionsPage($this);
         # --BEHAVIOR-- adminPagesActions -- dcActions
-        dcCore::app()->callBehavior('adminPostsActions', $this);
+        App::behavior()->callBehavior('adminPostsActions', $this);
     }
 
     /**

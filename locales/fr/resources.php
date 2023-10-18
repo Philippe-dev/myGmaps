@@ -10,15 +10,15 @@
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
 
-if (!isset(dcCore::app()->resources['help']['myGmaps'])) {
-    dcCore::app()->resources['help']['myGmaps'] = dirname(__FILE__) . '/help/maps.html';
-}
-if (!isset(dcCore::app()->resources['help']['myGmap'])) {
-    dcCore::app()->resources['help']['myGmap'] = dirname(__FILE__) . '/help/map.html';
-}
-if (!isset(dcCore::app()->resources['help']['myGmapsadd'])) {
-    dcCore::app()->resources['help']['myGmapsadd'] = dirname(__FILE__) . '/help/addmap.html';
-}
-if (!isset(dcCore::app()->resources['help']['myGmaps_post'])) {
-    dcCore::app()->resources['help']['myGmaps_post'] = dirname(__FILE__) . '/help/myGmaps_post.html';
-}
+declare(strict_types=1);
+
+namespace Dotclear\Plugin\myGmaps;
+
+use Dotclear\App;
+
+App::backend()->resources()->set('help', 'myGmaps', __DIR__ . '/help/maps.html');
+App::backend()->resources()->set('help', 'myGmap', __DIR__ . '/help/map.html');
+App::backend()->resources()->set('help', 'myGmapsadd', __DIR__ . '/help/addmap.html');
+App::backend()->resources()->set('help', 'myGmaps_post', __DIR__ . '/help/myGmaps_post.html');
+
+

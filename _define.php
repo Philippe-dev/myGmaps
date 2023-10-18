@@ -9,6 +9,7 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
+
 $this->registerModule(
     'Google Maps',
     'Add custom maps to your blog',
@@ -16,7 +17,7 @@ $this->registerModule(
     '7.0',
     [
         'requires'    => [['core', '2.28']],
-        'permissions' => dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]),
+        'permissions' => 'My',
         'type'        => 'plugin',
         'settings'    => ['self' => '&act=list#settings'],
         'support'     => 'https://github.com/Philippe-dev/myGmaps',

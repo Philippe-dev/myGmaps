@@ -9,11 +9,12 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\myGmaps;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Backend\UserPref;
 use Exception;
 use form;
@@ -51,11 +52,11 @@ class ManageMaps extends Process
          * Admin page params.
          */
 
-        dcCore::app()->admin->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
-        dcCore::app()->admin->nb_per_page = UserPref::getUserFilters('pages', 'nb');
+        App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+        App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
 
         if (!empty($_GET['nb']) && (int) $_GET['nb'] > 0) {
-            dcCore::app()->admin->nb_per_page = (int) $_GET['nb'];
+            App::backend()->nb_per_page = (int) $_GET['nb'];
         }
 
         // Save added map elements
@@ -66,18 +67,18 @@ class ManageMaps extends Process
                 $post_type = $_POST['post_type'];
                 $post_id   = $_POST['id'];
 
-                $meta = dcCore::app()->meta;
+                $meta = App::meta();
 
                 $entries = implode(',', $entries);
                 foreach ($meta->splitMetaValues($entries) as $tag) {
                     $meta->setPostMeta($post_id, 'map', $tag);
                 }
 
-                dcCore::app()->blog->triggerBlog();
+                App::blog()->triggerBlog();
 
-                Http::redirect(dcCore::app()->getPostAdminURL($post_type, $post_id, false, ['upd' => 1]));
+                Http::redirect(App::postTypes()->get($post_type)->adminUrl($post_id, false, ['upd' => 1]));
             } catch (Exception $e) {
-                dcCore::app()->error->add($e->getMessage());
+                App::error()->add($e->getMessage());
             }
         }
 
@@ -94,16 +95,16 @@ class ManageMaps extends Process
         }
 
         // Filters
-        dcCore::app()->admin->post_filter = new FilterPosts();
+        App::backend()->post_filter = new FilterPosts();
 
         // get list params
-        $params = dcCore::app()->admin->post_filter->params();
+        $params = App::backend()->post_filter->params();
 
-        dcCore::app()->admin->posts      = null;
-        dcCore::app()->admin->posts_list = null;
+        App::backend()->posts      = null;
+        App::backend()->posts_list = null;
 
-        dcCore::app()->admin->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
-        dcCore::app()->admin->nb_per_page = UserPref::getUserFilters('pages', 'nb');
+        App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+        App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
 
         /*
         * List of map elements
@@ -116,65 +117,65 @@ class ManageMaps extends Process
             $my_params['post_id']    = $post_id;
             $my_params['no_content'] = true;
             $my_params['post_type']  = ['post', 'page'];
-            $rs                      = dcCore::app()->blog->getPosts($my_params);
+            $rs                      = App::blog()->getPosts($my_params);
             $post_title              = $rs->post_title;
             $post_type               = $rs->post_type;
             $map_ids                 = $rs->post_meta;
         } catch (Exception $e) {
-            dcCore::app()->error->add($e->getMessage());
+            App::error()->add($e->getMessage());
         }
 
         // Get map ids to exclude from list
 
-        $meta          = dcCore::app()->meta;
+        $meta          = App::meta();
         $elements_list = $meta->getMetaStr($map_ids, 'map');
         $excluded      = !empty($elements_list) ? $meta->splitMetaValues($elements_list) : '';
 
         // Get map elements
 
         try {
-            $params['no_content']            = true;
-            $params['post_type']             = 'map';
-            $params['exclude_post_id']       = $excluded;
-            dcCore::app()->admin->posts      = dcCore::app()->blog->getPosts($params);
-            dcCore::app()->admin->counter    = dcCore::app()->blog->getPosts($params, true);
-            dcCore::app()->admin->posts_list = new BackendList(dcCore::app()->admin->posts, dcCore::app()->admin->counter->f(0));
+            $params['no_content']      = true;
+            $params['post_type']       = 'map';
+            $params['exclude_post_id'] = $excluded;
+            App::backend()->posts      = App::blog()->getPosts($params);
+            App::backend()->counter    = App::blog()->getPosts($params, true);
+            App::backend()->posts_list = new BackendList(App::backend()->posts, App::backend()->counter->f(0));
         } catch (Exception $e) {
-            dcCore::app()->error->add($e->getMessage());
+            App::error()->add($e->getMessage());
         }
 
         Page::openModule(
             My::name(),
             Page::jsLoad('js/_posts_list.js') .
-            dcCore::app()->admin->post_filter->js(My::manageUrl() . '&id=' . $post_id . '&act=maps') .
-            Page::jsPageTabs(dcCore::app()->admin->default_tab) .
+            App::backend()->post_filter->js(My::manageUrl() . '&id=' . $post_id . '&act=maps') .
+            Page::jsPageTabs(App::backend()->default_tab) .
             Page::jsConfirmClose('config-form') .
             My::cssLoad('admin.css')
         );
 
-        dcCore::app()->admin->page_title = __('Add elements');
+        App::backend()->page_title = __('Add elements');
 
         echo Page::breadcrumb(
             [
-                html::escapeHTML(dcCore::app()->blog->name) => '',
-                My::name()                                  => My::manageUrl(),
-                dcCore::app()->admin->page_title            => '',
+                html::escapeHTML(App::blog()->name) => '',
+                My::name()                          => My::manageUrl(),
+                App::backend()->page_title          => '',
             ]
         ) .
         Notices::getNotices();
 
         if ($post_type === 'page') {
-            echo '<h3>' . __('Select map elements for map attached to page:') . ' <a href="' . dcCore::app()->getPostAdminURL($post_type, $post_id) . '">' . $post_title . '</a></h3>';
+            echo '<h3>' . __('Select map elements for map attached to page:') . ' <a href="' . App::postTypes()->get($post_type)->adminUrl($post_id) . '">' . $post_title . '</a></h3>';
         } elseif ($post_type === 'post') {
-            echo '<h3>' . __('Select map elements for map attached to post:') . ' <a href="' . dcCore::app()->getPostAdminURL($post_type, $post_id) . '">' . $post_title . '</a></h3>';
+            echo '<h3>' . __('Select map elements for map attached to post:') . ' <a href="' . App::postTypes()->get($post_type)->adminUrl($post_id) . '">' . $post_title . '</a></h3>';
         }
 
-        dcCore::app()->admin->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="myGmaps" /><input type="hidden" name="id" value="' . $post_id . '" /><input type="hidden" name="act" value="maps" />');
+        App::backend()->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="myGmaps" /><input type="hidden" name="id" value="' . $post_id . '" /><input type="hidden" name="act" value="maps" />');
 
         // Show posts
-        dcCore::app()->admin->posts_list->display(
-            dcCore::app()->admin->post_filter->page,
-            dcCore::app()->admin->post_filter->nb,
+        App::backend()->posts_list->display(
+            App::backend()->post_filter->page,
+            App::backend()->post_filter->nb,
             '<form action="' . My::manageUrl() . '" method="post" id="form-entries">' .
 
             '%s' .
@@ -188,11 +189,11 @@ class ManageMaps extends Process
             form::hidden(['post_type'], $post_type) .
             form::hidden(['id'], $post_id) .
             form::hidden(['act'], 'maps') .
-            dcCore::app()->adminurl->getHiddenFormFields('admin.plugin.' . My::id(), dcCore::app()->admin->post_filter->values()) .
-            dcCore::app()->formNonce() . '</p>' .
+            App::backend()->url()->getHiddenFormFields('admin.plugin.' . My::id(), App::backend()->post_filter->values()) .
+            App::nonce()->getFormNonce() . '</p>' .
             '</div>' .
             '</form>',
-            dcCore::app()->admin->post_filter->show()
+            App::backend()->post_filter->show()
         );
 
         Page::helpBlock('myGmapsadd');

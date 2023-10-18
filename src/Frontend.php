@@ -9,11 +9,12 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\myGmaps;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Process;
 use Dotclear\Helper\L10n;
 use Dotclear\Helper\Html\Html;
@@ -32,37 +33,37 @@ class Frontend extends Process
             return false;
         }
 
-        dcCore::app()->addBehavior('publicEntryAfterContent', [self::class, 'publicMapContent']);
-        dcCore::app()->addBehavior('publicPageAfterContent', [self::class, 'publicMapContent']);
-        dcCore::app()->addBehavior('publicHeadContent', [self::class, 'publicHeadContent']);
+        App::behavior()->addBehavior('publicEntryAfterContent', [self::class, 'publicMapContent']);
+        App::behavior()->addBehavior('publicPageAfterContent', [self::class, 'publicMapContent']);
+        App::behavior()->addBehavior('publicHeadContent', [self::class, 'publicHeadContent']);
 
-        dcCore::app()->tpl->addValue(My::id(), [self::class, 'publicTagMapContent']);
+        App::frontend()->template()->addValue(My::id(), [self::class, 'publicTagMapContent']);
 
-        L10n::set(dirname(__FILE__) . '/locales/' . dcCore::app()->lang . '/main');
+        L10n::set(dirname(__FILE__) . '/locales/' . App::lang()->getLang() . '/main');
 
         return true;
     }
 
     public static function hasMap($post_id)
     {
-        $meta                    = dcCore::app()->meta;
+        $meta                    = App::meta();
         $my_params['post_id']    = $post_id;
         $my_params['no_content'] = true;
         $my_params['post_type']  = ['post', 'page'];
-        dcCore::app()->blog->withoutPassword(false);
-        $rs = dcCore::app()->blog->getPosts($my_params);
+        App::blog()->withoutPassword(false);
+        $rs = App::blog()->getPosts($my_params);
 
         return $meta->getMetaStr($rs->post_meta, 'map_options');
     }
 
     public static function thisPostMap($post_id)
     {
-        $meta                    = dcCore::app()->meta;
+        $meta                    = App::meta();
         $my_params['post_id']    = $post_id;
         $my_params['no_content'] = true;
         $my_params['post_type']  = ['post', 'page'];
-        dcCore::app()->blog->withoutPassword(false);
-        $rs = dcCore::app()->blog->getPosts($my_params);
+        App::blog()->withoutPassword(false);
+        $rs = App::blog()->getPosts($my_params);
 
         return $meta->getMetaStr($rs->post_meta, 'map');
     }
@@ -82,7 +83,7 @@ class Frontend extends Process
 
         if (array_key_exists('ids', $aParams) && !empty($aParams['ids'])) {
             $my_params['post_id'] = $aParams['ids'];
-            $rs1                  = dcCore::app()->blog->getPosts($my_params);
+            $rs1                  = App::blog()->getPosts($my_params);
             while ($rs1->fetch()) { // Evite les doublons
                 $rs[$rs1->post_id] = $rs1->row();
             }
@@ -93,7 +94,7 @@ class Frontend extends Process
         if (array_key_exists('categories', $aParams) && !empty($aParams['categories'])) {
             $my_params['post_id'] = '';
             $my_params['cat_id']  = $aParams['categories'];
-            $rs2                  = dcCore::app()->blog->getPosts($my_params);
+            $rs2                  = App::blog()->getPosts($my_params);
             while ($rs2->fetch()) { // Evite les doublons
                 $rs[$rs2->post_id] = $rs2->row();
             }
@@ -102,7 +103,7 @@ class Frontend extends Process
         // Récupérer tous les éléments de cartes
 
         if (!isset($rs1) && !isset($rs2)) {
-            $rs3 = dcCore::app()->blog->getPosts($my_params);
+            $rs3 = App::blog()->getPosts($my_params);
             while ($rs3->fetch()) {
                 $rs[$rs3->post_id] = $rs3->row();
             }
@@ -113,12 +114,12 @@ class Frontend extends Process
 
     public static function thisPostMapType($post_id)
     {
-        $meta                    = dcCore::app()->meta;
+        $meta                    = App::meta();
         $my_params['post_id']    = $post_id;
         $my_params['no_content'] = true;
         $my_params['post_type']  = 'map';
 
-        $rs = dcCore::app()->blog->getPosts($my_params);
+        $rs = App::blog()->getPosts($my_params);
 
         return $meta->getMetaStr($rs->post_meta, 'map');
     }
@@ -146,17 +147,17 @@ class Frontend extends Process
 
             $sTemplate     = '';
             $isTemplateTag = (!empty($aElements)) ? true : false ;
-            $sPostId       = ($isTemplateTag) ? $aElements['id'] : dcCore::app()->ctx->posts->post_id ;
+            $sPostId       = ($isTemplateTag) ? $aElements['id'] : App::frontend()->context()->posts->post_id ;
 
-            if ($isTemplateTag || (in_array(dcCore::app()->ctx->posts->post_type, $postTypes) && self::hasMap($sPostId) != '')) {
+            if ($isTemplateTag || (in_array(App::frontend()->context()->posts->post_type, $postTypes) && self::hasMap($sPostId) != '')) {
                 // Map styles. Get more styles from http://snazzymaps.com/
 
-                $public_path = dcCore::app()->blog->public_path;
-                $public_url  = dcCore::app()->blog->settings->system->public_url;
-                $blog_url    = dcCore::app()->blog->url;
+                $public_path = App::blog()->public_path;
+                $public_url  = App::blog()->settings->system->public_url;
+                $blog_url    = App::blog()->url;
 
                 $map_styles_dir_path = $public_path . '/myGmaps/styles/';
-                $map_styles_dir_url  = Http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/styles/');
+                $map_styles_dir_url  = Http::concatURL(App::blog()->url, $public_url . '/myGmaps/styles/');
 
                 if (is_dir($map_styles_dir_path)) {
                     $map_styles      = glob($map_styles_dir_path . '*.js');
@@ -182,8 +183,8 @@ class Frontend extends Process
                 if ($isTemplateTag) {
                     $aOptions = $aElements;
                 } else {
-                    $meta             = dcCore::app()->meta;
-                    $post_map_options = explode(',', $meta->getMetaStr(dcCore::app()->ctx->posts->post_meta, 'map_options'));
+                    $meta             = App::meta();
+                    $post_map_options = explode(',', $meta->getMetaStr(App::frontend()->context()->posts->post_meta, 'map_options'));
                     $aOptions         = [
                         'center' => $post_map_options[0] . ',' . $post_map_options[1],
                         'zoom'   => $post_map_options[2],
@@ -204,7 +205,7 @@ class Frontend extends Process
 
                     $params['post_type']   = 'map';
                     $params['post_status'] = '1';
-                    $rs                    = dcCore::app()->blog->getPosts($params);
+                    $rs                    = App::blog()->getPosts($params);
 
                     while ($rs->fetch()) {
                         if (in_array($rs->post_id, $maps_array)) {
@@ -225,7 +226,7 @@ class Frontend extends Process
                     $content = str_replace(["\r\n", "\n", "\r"], '\\n', $content);
                     $content = str_replace(["'"], "\'", $content);
 
-                    $meta        = dcCore::app()->meta;
+                    $meta        = App::meta();
                     $description = $meta->getMetaStr($map_element['post_meta'], 'description');
 
                     $type = self::thisPostMapType($map_element_id);
@@ -382,7 +383,7 @@ class Frontend extends Process
         $aElements   = (isset($attr['elements']) && !empty($attr['elements'])) ? explode(',', $attr['elements']) : [];
         $aCategories = (isset($attr['category']) && !empty($attr['category'])) ? explode(',', $attr['category']) : [];
 
-        return self::publicMapContent(dcCore::app(), null, [
+        return self::publicMapContent(null, null, [
             'id'                   => $sId,
             'center'               => $sCenter,
             'zoom'                 => $iZoom,

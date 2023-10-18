@@ -9,6 +9,7 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\myGmaps;
@@ -16,7 +17,7 @@ namespace Dotclear\Plugin\myGmaps;
 use ArrayObject;
 use Dotclear\Core\Backend\Combos;
 use dcBlog;
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Process;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Backend\Notices;
@@ -45,131 +46,131 @@ class ManageMap extends Process
         }
 
         $params = [];
-        Page::check(dcCore::app()->auth->makePermissions([
-            dcCore::app()->auth::PERMISSION_CONTENT_ADMIN,
+        Page::check(App::auth()->makePermissions([
+            App::auth()::PERMISSION_CONTENT_ADMIN,
         ]));
 
-        Date::setTZ(dcCore::app()->auth->getInfo('user_tz') ?? 'UTC');
+        Date::setTZ(App::auth()->getInfo('user_tz') ?? 'UTC');
 
-        dcCore::app()->admin->post_id            = '';
-        dcCore::app()->admin->cat_id             = '';
-        dcCore::app()->admin->post_dt            = '';
-        dcCore::app()->admin->post_format        = dcCore::app()->auth->getOption('post_format');
-        dcCore::app()->admin->post_editor        = dcCore::app()->auth->getOption('editor');
-        dcCore::app()->admin->post_url           = '';
-        dcCore::app()->admin->post_lang          = dcCore::app()->auth->getInfo('user_lang');
-        dcCore::app()->admin->post_title         = '';
-        dcCore::app()->admin->post_excerpt       = '';
-        dcCore::app()->admin->post_excerpt_xhtml = '';
-        dcCore::app()->admin->post_content       = '';
-        dcCore::app()->admin->post_content_xhtml = '';
-        dcCore::app()->admin->post_notes         = '';
-        dcCore::app()->admin->post_status        = dcCore::app()->auth->getInfo('user_post_status');
-        dcCore::app()->admin->post_selected      = false;
+        App::backend()->post_id            = '';
+        App::backend()->cat_id             = '';
+        App::backend()->post_dt            = '';
+        App::backend()->post_format        = App::auth()->getOption('post_format');
+        App::backend()->post_editor        = App::auth()->getOption('editor');
+        App::backend()->post_url           = '';
+        App::backend()->post_lang          = App::auth()->getInfo('user_lang');
+        App::backend()->post_title         = '';
+        App::backend()->post_excerpt       = '';
+        App::backend()->post_excerpt_xhtml = '';
+        App::backend()->post_content       = '';
+        App::backend()->post_content_xhtml = '';
+        App::backend()->post_notes         = '';
+        App::backend()->post_status        = App::auth()->getInfo('user_post_status');
+        App::backend()->post_selected      = false;
 
-        dcCore::app()->admin->post_media = [];
+        App::backend()->post_media = [];
 
-        dcCore::app()->admin->page_title = __('New map element');
+        App::backend()->page_title = __('New map element');
 
-        dcCore::app()->admin->can_view_page = true;
-        dcCore::app()->admin->can_edit_post = dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
-            dcCore::app()->auth::PERMISSION_USAGE,
-        ]), dcCore::app()->blog->id);
-        dcCore::app()->admin->can_publish = dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
-            dcCore::app()->auth::PERMISSION_PUBLISH,
-            dcCore::app()->auth::PERMISSION_CONTENT_ADMIN,
-        ]), dcCore::app()->blog->id);
-        dcCore::app()->admin->can_delete = false;
+        App::backend()->can_view_page = true;
+        App::backend()->can_edit_post = App::auth()->check(App::auth()->makePermissions([
+            App::auth()::PERMISSION_USAGE,
+        ]), App::blog()->id);
+        App::backend()->can_publish = App::auth()->check(App::auth()->makePermissions([
+            App::auth()::PERMISSION_PUBLISH,
+            App::auth()::PERMISSION_CONTENT_ADMIN,
+        ]), App::blog()->id);
+        App::backend()->can_delete = false;
 
-        $post_headlink                  = '<link rel="%s" title="%s" href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id(), ['act' => 'map','id' => '%s'], '&amp;', true) . '" />';
-        dcCore::app()->admin->post_link = '<a href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id(), ['act' => 'map','id' => '%s'], '&amp;', true) . '" title="%s">%s</a>';
+        $post_headlink            = '<link rel="%s" title="%s" href="' . App::backend()->url()->get('admin.plugin.' . My::id(), ['act' => 'map','id' => '%s'], '&amp;', true) . '" />';
+        App::backend()->post_link = '<a href="' . App::backend()->url()->get('admin.plugin.' . My::id(), ['act' => 'map','id' => '%s'], '&amp;', true) . '" title="%s">%s</a>';
 
-        dcCore::app()->admin->next_link     = null;
-        dcCore::app()->admin->prev_link     = null;
-        dcCore::app()->admin->next_headlink = null;
-        dcCore::app()->admin->prev_headlink = null;
+        App::backend()->next_link     = null;
+        App::backend()->prev_link     = null;
+        App::backend()->next_headlink = null;
+        App::backend()->prev_headlink = null;
         // If user can't publish
 
-        if (!dcCore::app()->admin->can_publish) {
-            dcCore::app()->admin->post_status = dcBlog::POST_PENDING;
+        if (!App::backend()->can_publish) {
+            App::backend()->post_status = dcBlog::POST_PENDING;
         }
 
         // Getting categories
 
-        dcCore::app()->admin->categories_combo = Combos::getCategoriesCombo(
-            dcCore::app()->blog->getCategories(['post_type' => 'map'])
+        App::backend()->categories_combo = Combos::getCategoriesCombo(
+            App::blog()->getCategories(['post_type' => 'map'])
         );
 
         // Status combo
 
-        dcCore::app()->admin->status_combo = Combos::getPostStatusesCombo();
+        App::backend()->status_combo = Combos::getPostStatusesCombo();
 
         // Formaters combo
 
-        $core_formaters    = dcCore::app()->getFormaters();
+        $core_formaters    = App::formater()->getFormaters();
         $available_formats = ['' => ''];
         foreach ($core_formaters as $formats) {
             foreach ($formats as $format) {
-                $available_formats[dcCore::app()->getFormaterName($format)] = $format;
+                $available_formats[App::formater()->getFormaterName($format)] = $format;
             }
         }
-        dcCore::app()->admin->available_formats = $available_formats;
+        App::backend()->available_formats = $available_formats;
 
         // Languages combo
 
-        dcCore::app()->admin->lang_combo = Combos::getLangsCombo(
-            dcCore::app()->blog->getLangs(['order' => 'asc']),
+        App::backend()->lang_combo = Combos::getLangsCombo(
+            App::blog()->getLangs(['order' => 'asc']),
             true
         );
 
         // Validation flag
 
-        dcCore::app()->admin->bad_dt = false;
+        App::backend()->bad_dt = false;
 
         // Get page informations
 
-        dcCore::app()->admin->post = null;
+        App::backend()->post = null;
         if (!empty($_REQUEST['id'])) {
             $params['post_id']   = $_REQUEST['id'];
             $params['post_type'] = 'map';
 
-            dcCore::app()->admin->post = dcCore::app()->blog->getPosts($params);
+            App::backend()->post = App::blog()->getPosts($params);
 
-            if (dcCore::app()->admin->post->isEmpty()) {
-                dcCore::app()->error->add(__('This map element does not exist.'));
-                dcCore::app()->admin->can_view_page = false;
+            if (App::backend()->post->isEmpty()) {
+                App::error()->add(__('This map element does not exist.'));
+                App::backend()->can_view_page = false;
             } else {
-                dcCore::app()->admin->cat_id             = (int) dcCore::app()->admin->post->cat_id;
-                dcCore::app()->admin->post_id            = (int) dcCore::app()->admin->post->post_id;
-                dcCore::app()->admin->post_dt            = date('Y-m-d H:i', strtotime(dcCore::app()->admin->post->post_dt));
-                dcCore::app()->admin->post_format        = dcCore::app()->admin->post->post_format;
-                dcCore::app()->admin->post_url           = dcCore::app()->admin->post->post_url;
-                dcCore::app()->admin->post_lang          = dcCore::app()->admin->post->post_lang;
-                dcCore::app()->admin->post_title         = dcCore::app()->admin->post->post_title;
-                dcCore::app()->admin->post_excerpt       = dcCore::app()->admin->post->post_excerpt;
-                dcCore::app()->admin->post_excerpt_xhtml = dcCore::app()->admin->post->post_excerpt_xhtml;
-                dcCore::app()->admin->post_content       = dcCore::app()->admin->post->post_content;
-                dcCore::app()->admin->post_content_xhtml = dcCore::app()->admin->post->post_content_xhtml;
-                dcCore::app()->admin->post_notes         = dcCore::app()->admin->post->post_notes;
-                dcCore::app()->admin->post_status        = dcCore::app()->admin->post->post_status;
-                dcCore::app()->admin->post_selected      = (bool) dcCore::app()->admin->post->post_selected;
+                App::backend()->cat_id             = (int) App::backend()->post->cat_id;
+                App::backend()->post_id            = (int) App::backend()->post->post_id;
+                App::backend()->post_dt            = date('Y-m-d H:i', strtotime(App::backend()->post->post_dt));
+                App::backend()->post_format        = App::backend()->post->post_format;
+                App::backend()->post_url           = App::backend()->post->post_url;
+                App::backend()->post_lang          = App::backend()->post->post_lang;
+                App::backend()->post_title         = App::backend()->post->post_title;
+                App::backend()->post_excerpt       = App::backend()->post->post_excerpt;
+                App::backend()->post_excerpt_xhtml = App::backend()->post->post_excerpt_xhtml;
+                App::backend()->post_content       = App::backend()->post->post_content;
+                App::backend()->post_content_xhtml = App::backend()->post->post_content_xhtml;
+                App::backend()->post_notes         = App::backend()->post->post_notes;
+                App::backend()->post_status        = App::backend()->post->post_status;
+                App::backend()->post_selected      = (bool) App::backend()->post->post_selected;
 
-                dcCore::app()->admin->page_title = __('Edit map element');
+                App::backend()->page_title = __('Edit map element');
 
-                dcCore::app()->admin->can_edit_post = dcCore::app()->admin->post->isEditable();
-                dcCore::app()->admin->can_delete    = dcCore::app()->admin->post->isDeletable();
+                App::backend()->can_edit_post = App::backend()->post->isEditable();
+                App::backend()->can_delete    = App::backend()->post->isDeletable();
 
-                $next_rs = dcCore::app()->blog->getNextPost(dcCore::app()->admin->post, 1);
-                $prev_rs = dcCore::app()->blog->getNextPost(dcCore::app()->admin->post, -1);
+                $next_rs = App::blog()->getNextPost(App::backend()->post, 1);
+                $prev_rs = App::blog()->getNextPost(App::backend()->post, -1);
 
                 if ($next_rs !== null) {
-                    dcCore::app()->admin->next_link = sprintf(
-                        dcCore::app()->admin->post_link,
+                    App::backend()->next_link = sprintf(
+                        App::backend()->post_link,
                         $next_rs->post_id,
                         Html::escapeHTML(trim(Html::clean($next_rs->post_title))),
                         __('Next element') . '&nbsp;&#187;'
                     );
-                    dcCore::app()->admin->next_headlink = sprintf(
+                    App::backend()->next_headlink = sprintf(
                         $post_headlink,
                         'next',
                         Html::escapeHTML(trim(Html::clean($next_rs->post_title))),
@@ -178,13 +179,13 @@ class ManageMap extends Process
                 }
 
                 if ($prev_rs !== null) {
-                    dcCore::app()->admin->prev_link = sprintf(
-                        dcCore::app()->admin->post_link,
+                    App::backend()->prev_link = sprintf(
+                        App::backend()->post_link,
                         $prev_rs->post_id,
                         Html::escapeHTML(trim(Html::clean($prev_rs->post_title))),
                         '&#171;&nbsp;' . __('Previous element')
                     );
-                    dcCore::app()->admin->prev_headlink = sprintf(
+                    App::backend()->prev_headlink = sprintf(
                         $post_headlink,
                         'previous',
                         Html::escapeHTML(trim(Html::clean($prev_rs->post_title))),
@@ -193,65 +194,65 @@ class ManageMap extends Process
                 }
 
                 try {
-                    dcCore::app()->admin->post_media = dcCore::app()->media->getPostMedia(dcCore::app()->admin->post_id);
+                    App::backend()->post_media = App::media()->getPostMedia(App::backend()->post_id);
                 } catch (Exception $e) {
-                    dcCore::app()->error->add($e->getMessage());
+                    App::error()->add($e->getMessage());
                 }
             }
         }
 
-        if (!empty($_POST) && dcCore::app()->admin->can_edit_post) {
+        if (!empty($_POST) && App::backend()->can_edit_post) {
             // Format content
 
-            dcCore::app()->admin->cat_id       = (int) $_POST['cat_id'];
-            dcCore::app()->admin->post_format  = $_POST['post_format'];
-            dcCore::app()->admin->post_excerpt = $_POST['post_excerpt'];
-            dcCore::app()->admin->post_content = $_POST['post_content'];
+            App::backend()->cat_id       = (int) $_POST['cat_id'];
+            App::backend()->post_format  = $_POST['post_format'];
+            App::backend()->post_excerpt = $_POST['post_excerpt'];
+            App::backend()->post_content = $_POST['post_content'];
 
-            dcCore::app()->admin->post_title = $_POST['post_title'];
+            App::backend()->post_title = $_POST['post_title'];
 
             if (isset($_POST['post_status'])) {
-                dcCore::app()->admin->post_status = (int) $_POST['post_status'];
+                App::backend()->post_status = (int) $_POST['post_status'];
             }
 
             if (empty($_POST['post_dt'])) {
-                dcCore::app()->admin->post_dt = '';
+                App::backend()->post_dt = '';
             } else {
                 try {
-                    dcCore::app()->admin->post_dt = strtotime($_POST['post_dt']);
-                    if (!dcCore::app()->admin->post_dt || dcCore::app()->admin->post_dt == -1) {
-                        dcCore::app()->admin->bad_dt = true;
+                    App::backend()->post_dt = strtotime($_POST['post_dt']);
+                    if (!App::backend()->post_dt || App::backend()->post_dt == -1) {
+                        App::backend()->bad_dt = true;
 
                         throw new Exception(__('Invalid publication date'));
                     }
-                    dcCore::app()->admin->post_dt = date('Y-m-d H:i', dcCore::app()->admin->post_dt);
+                    App::backend()->post_dt = date('Y-m-d H:i', App::backend()->post_dt);
                 } catch (Exception $e) {
-                    dcCore::app()->error->add($e->getMessage());
+                    App::error()->add($e->getMessage());
                 }
             }
 
-            dcCore::app()->admin->post_selected = !empty($_POST['post_selected']);
-            dcCore::app()->admin->post_lang     = $_POST['post_lang'];
+            App::backend()->post_selected = !empty($_POST['post_selected']);
+            App::backend()->post_lang     = $_POST['post_lang'];
 
-            dcCore::app()->admin->post_notes = $_POST['post_notes'];
+            App::backend()->post_notes = $_POST['post_notes'];
 
             if (isset($_POST['post_url'])) {
-                dcCore::app()->admin->post_url = $_POST['post_url'];
+                App::backend()->post_url = $_POST['post_url'];
             }
 
             [
                 $post_excerpt, $post_excerpt_xhtml, $post_content, $post_content_xhtml
             ] = [
-                dcCore::app()->admin->post_excerpt,
-                dcCore::app()->admin->post_excerpt_xhtml,
-                dcCore::app()->admin->post_content,
-                dcCore::app()->admin->post_content_xhtml,
+                App::backend()->post_excerpt,
+                App::backend()->post_excerpt_xhtml,
+                App::backend()->post_content,
+                App::backend()->post_content_xhtml,
             ];
 
-            dcCore::app()->blog->setPostContent(
-                dcCore::app()->admin->post_id,
-                dcCore::app()->admin->post_format,
-                dcCore::app()->admin->post_lang,
+            App::blog()->setPostContent(
+                App::backend()->post_id,
+                App::backend()->post_format,
+                App::backend()->post_lang,
                 $post_excerpt,
                 $post_excerpt_xhtml,
                 $post_content,
@@ -259,41 +260,41 @@ class ManageMap extends Process
             );
 
             [
-                dcCore::app()->admin->post_excerpt,
-                dcCore::app()->admin->post_excerpt_xhtml,
-                dcCore::app()->admin->post_content,
-                dcCore::app()->admin->post_content_xhtml
+                App::backend()->post_excerpt,
+                App::backend()->post_excerpt_xhtml,
+                App::backend()->post_content,
+                App::backend()->post_content_xhtml
             ] = [
                 $post_excerpt, $post_excerpt_xhtml, $post_content, $post_content_xhtml,
             ];
         }
 
-        if (!empty($_POST['delete']) && dcCore::app()->admin->can_delete) {
+        if (!empty($_POST['delete']) && App::backend()->can_delete) {
             // Delete page
 
             try {
                 # --BEHAVIOR-- adminBeforePostDelete -- int
-                dcCore::app()->callBehavior('adminBeforePostDelete', dcCore::app()->admin->post_id);
-                dcCore::app()->blog->delPost(dcCore::app()->admin->post_id);
+                App::behavior()->callBehavior('adminBeforePostDelete', App::backend()->post_id);
+                App::blog()->delPost(App::backend()->post_id);
 
                 My::redirect(['tab' => 'entries-list']);
             } catch (Exception $e) {
-                dcCore::app()->error->add($e->getMessage());
+                App::error()->add($e->getMessage());
             }
         }
 
-        if (!empty($_POST) && !empty($_POST['save']) && dcCore::app()->admin->can_edit_post && !dcCore::app()->admin->bad_dt) {
+        if (!empty($_POST) && !empty($_POST['save']) && App::backend()->can_edit_post && !App::backend()->bad_dt) {
             // Create or update post
 
-            $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcBlog::POST_TABLE_NAME);
+            $cur = App::con()->openCursor(App::con()->prefix() . dcBlog::POST_TABLE_NAME);
 
             if ($_POST['post_content'] == '' || $_POST['post_content'] == __('No description.') || $_POST['post_content'] == '<p>' . __('No description.') . '</p>') {
-                if (dcCore::app()->admin->post_format == 'xhtml') {
-                    dcCore::app()->admin->post_content = '<p>' . __('No description.') . '</p>';
-                    $description                       = 'none';
+                if (App::backend()->post_format == 'xhtml') {
+                    App::backend()->post_content = '<p>' . __('No description.') . '</p>';
+                    $description                 = 'none';
                 } else {
-                    dcCore::app()->admin->post_content = __('No description.');
-                    $description                       = 'none';
+                    App::backend()->post_content = __('No description.');
+                    $description                 = 'none';
                 }
             } else {
                 $description = 'description';
@@ -301,74 +302,74 @@ class ManageMap extends Process
 
             // Magic tweak :)
 
-            dcCore::app()->blog->settings->system->post_url_format = '{t}';
+            App::blog()->settings->system->post_url_format = '{t}';
 
             $cur->post_type          = 'map';
-            $cur->post_dt            = dcCore::app()->admin->post_dt ? date('Y-m-d H:i:00', strtotime(dcCore::app()->admin->post_dt)) : '';
-            $cur->cat_id             = (dcCore::app()->admin->cat_id ?: null);
-            $cur->post_format        = dcCore::app()->admin->post_format;
-            $cur->post_lang          = dcCore::app()->admin->post_lang;
-            $cur->post_title         = dcCore::app()->admin->post_title;
-            $cur->post_excerpt       = dcCore::app()->admin->post_excerpt;
-            $cur->post_excerpt_xhtml = dcCore::app()->admin->post_excerpt_xhtml;
-            $cur->post_content       = dcCore::app()->admin->post_content;
-            $cur->post_content_xhtml = dcCore::app()->admin->post_content_xhtml;
-            $cur->post_notes         = dcCore::app()->admin->post_notes;
-            $cur->post_status        = dcCore::app()->admin->post_status;
-            $cur->post_selected      = (int) dcCore::app()->admin->post_selected;
+            $cur->post_dt            = App::backend()->post_dt ? date('Y-m-d H:i:00', strtotime(App::backend()->post_dt)) : '';
+            $cur->cat_id             = (App::backend()->cat_id ?: null);
+            $cur->post_format        = App::backend()->post_format;
+            $cur->post_lang          = App::backend()->post_lang;
+            $cur->post_title         = App::backend()->post_title;
+            $cur->post_excerpt       = App::backend()->post_excerpt;
+            $cur->post_excerpt_xhtml = App::backend()->post_excerpt_xhtml;
+            $cur->post_content       = App::backend()->post_content;
+            $cur->post_content_xhtml = App::backend()->post_content_xhtml;
+            $cur->post_notes         = App::backend()->post_notes;
+            $cur->post_status        = App::backend()->post_status;
+            $cur->post_selected      = (int) App::backend()->post_selected;
 
             if (isset($_POST['post_url'])) {
-                $cur->post_url = dcCore::app()->admin->post_url;
+                $cur->post_url = App::backend()->post_url;
             }
 
             // Back to UTC in order to keep UTC datetime for creadt/upddt
 
             Date::setTZ('UTC');
 
-            if (dcCore::app()->admin->post_id) {
+            if (App::backend()->post_id) {
                 try {
                     if (isset($_POST['element_type'])) {
                         $tags           = $_POST['element_type'];
                         $myGmaps_center = $_POST['myGmaps_center'];
                         $myGmaps_zoom   = $_POST['myGmaps_zoom'];
                         $myGmaps_type   = $_POST['myGmaps_type'];
-                        $meta           = dcCore::app()->meta;
+                        $meta           = App::meta();
 
-                        $meta->delPostMeta(dcCore::app()->admin->post_id, 'map');
-                        $meta->delPostMeta(dcCore::app()->admin->post_id, 'map_options');
-                        $meta->delPostMeta(dcCore::app()->admin->post_id, 'description');
+                        $meta->delPostMeta(App::backend()->post_id, 'map');
+                        $meta->delPostMeta(App::backend()->post_id, 'map_options');
+                        $meta->delPostMeta(App::backend()->post_id, 'description');
 
                         foreach ($meta->splitMetaValues($tags) as $tag) {
-                            $meta->setPostMeta(dcCore::app()->admin->post_id, 'map', $tag);
+                            $meta->setPostMeta(App::backend()->post_id, 'map', $tag);
                         }
                         $map_options = $myGmaps_center . ',' . $myGmaps_zoom . ',' . $myGmaps_type;
-                        $meta->setPostMeta(dcCore::app()->admin->post_id, 'map_options', $map_options);
-                        $meta->setPostMeta(dcCore::app()->admin->post_id, 'description', $description);
+                        $meta->setPostMeta(App::backend()->post_id, 'map_options', $map_options);
+                        $meta->setPostMeta(App::backend()->post_id, 'description', $description);
                     }
                     // --BEHAVIOR-- adminBeforePostUpdate
-                    dcCore::app()->callBehavior('adminBeforePostUpdate', $cur, dcCore::app()->admin->post_id);
+                    App::behavior()->callBehavior('adminBeforePostUpdate', $cur, App::backend()->post_id);
 
-                    dcCore::app()->blog->updPost(dcCore::app()->admin->post_id, $cur);
+                    App::blog()->updPost(App::backend()->post_id, $cur);
 
                     // --BEHAVIOR-- adminAfterPostUpdate
-                    dcCore::app()->callBehavior('adminAfterPostUpdate', $cur, dcCore::app()->admin->post_id);
+                    App::behavior()->callBehavior('adminAfterPostUpdate', $cur, App::backend()->post_id);
 
-                    My::redirect(['act' => 'map', 'id' => dcCore::app()->admin->post_id, 'upd' => 1]);
+                    My::redirect(['act' => 'map', 'id' => App::backend()->post_id, 'upd' => 1]);
                 } catch (Exception $e) {
-                    dcCore::app()->error->add($e->getMessage());
+                    App::error()->add($e->getMessage());
                 }
             } else {
-                $cur->user_id = dcCore::app()->auth->userID();
+                $cur->user_id = App::auth()->userID();
 
                 try {
-                    $return_id = dcCore::app()->blog->addPost($cur);
+                    $return_id = App::blog()->addPost($cur);
 
                     if (isset($_POST['element_type'])) {
                         $tags           = $_POST['element_type'];
                         $myGmaps_center = $_POST['myGmaps_center'];
                         $myGmaps_zoom   = $_POST['myGmaps_zoom'];
                         $myGmaps_type   = $_POST['myGmaps_type'];
-                        $meta           = dcCore::app()->meta;
+                        $meta           = App::meta();
 
                         foreach ($meta->splitMetaValues($tags) as $tag) {
                             $meta->setPostMeta($return_id, 'map', $tag);
@@ -379,25 +380,25 @@ class ManageMap extends Process
                     }
 
                     // --BEHAVIOR-- adminBeforePostCreate
-                    dcCore::app()->callBehavior('adminBeforePostCreate', $cur);
+                    App::behavior()->callBehavior('adminBeforePostCreate', $cur);
 
                     // --BEHAVIOR-- adminAfterPostCreate
-                    dcCore::app()->callBehavior('adminAfterPostCreate', $cur, $return_id);
+                    App::behavior()->callBehavior('adminAfterPostCreate', $cur, $return_id);
 
                     My::redirect(['act' => 'map', 'id' => $return_id, 'crea' => 1]);
                 } catch (Exception $e) {
-                    dcCore::app()->error->add($e->getMessage());
+                    App::error()->add($e->getMessage());
                 }
             }
 
-            if (!empty($_POST['delete']) && dcCore::app()->admin->can_delete) {
+            if (!empty($_POST['delete']) && App::backend()->can_delete) {
                 try {
                     // --BEHAVIOR-- adminBeforePostDelete
-                    dcCore::app()->callBehavior('adminBeforePostDelete', dcCore::app()->admin->post_id);
-                    dcCore::app()->blog->delPost(dcCore::app()->admin->post_id);
+                    App::behavior()->callBehavior('adminBeforePostDelete', App::backend()->post_id);
+                    App::blog()->delPost(App::backend()->post_id);
                     My::redirect(['act' => 'list']);
                 } catch (Exception $e) {
-                    dcCore::app()->error->add($e->getMessage());
+                    App::error()->add($e->getMessage());
                 }
             }
         }
@@ -418,52 +419,52 @@ class ManageMap extends Process
         $myGmaps_zoom   = My::settings()->myGmaps_zoom;
         $myGmaps_type   = My::settings()->myGmaps_type;
 
-        dcCore::app()->admin->default_tab = 'edit-entry';
-        if (!dcCore::app()->admin->can_edit_post) {
-            dcCore::app()->admin->default_tab = '';
+        App::backend()->default_tab = 'edit-entry';
+        if (!App::backend()->can_edit_post) {
+            App::backend()->default_tab = '';
         }
         if (!empty($_GET['co'])) {
-            dcCore::app()->admin->default_tab = 'comments';
+            App::backend()->default_tab = 'comments';
         }
 
         $admin_post_behavior = '';
-        if (dcCore::app()->admin->post_editor) {
+        if (App::backend()->post_editor) {
             $p_edit = $c_edit = '';
-            if (!empty(dcCore::app()->admin->post_editor[dcCore::app()->admin->post_format])) {
-                $p_edit = dcCore::app()->admin->post_editor[dcCore::app()->admin->post_format];
+            if (!empty(App::backend()->post_editor[App::backend()->post_format])) {
+                $p_edit = App::backend()->post_editor[App::backend()->post_format];
             }
-            if (!empty(dcCore::app()->admin->post_editor['xhtml'])) {
-                $c_edit = dcCore::app()->admin->post_editor['xhtml'];
+            if (!empty(App::backend()->post_editor['xhtml'])) {
+                $c_edit = App::backend()->post_editor['xhtml'];
             }
             if ($p_edit == $c_edit) {
                 # --BEHAVIOR-- adminPostEditor -- string, string, array<int,string>, string
-                $admin_post_behavior .= dcCore::app()->callBehavior(
+                $admin_post_behavior .= App::behavior()->callBehavior(
                     'adminPostEditor',
                     $p_edit,
                     'map',
                     ['#post_content'],
-                    dcCore::app()->admin->post_format
+                    App::backend()->post_format
                 );
             } else {
                 # --BEHAVIOR-- adminPostEditor -- string, string, array<int,string>, string
-                $admin_post_behavior .= dcCore::app()->callBehavior(
+                $admin_post_behavior .= App::behavior()->callBehavior(
                     'adminPostEditor',
                     $p_edit,
                     'map',
                     ['#post_content'],
-                    dcCore::app()->admin->post_format
+                    App::backend()->post_format
                 );
             }
         }
 
         // Custom marker icons
 
-        $public_path = dcCore::app()->blog->public_path;
-        $public_url  = dcCore::app()->blog->settings->system->public_url;
-        $blog_url    = dcCore::app()->blog->url;
+        $public_path = App::blog()->public_path;
+        $public_url  = App::blog()->settings->system->public_url;
+        $blog_url    = App::blog()->url;
 
         $icons_dir_path = $public_path . '/myGmaps/icons/';
-        $icons_dir_url  = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/icons/');
+        $icons_dir_url  = http::concatURL(App::blog()->url, $public_url . '/myGmaps/icons/');
 
         if (is_dir($icons_dir_path)) {
             $images     = glob($icons_dir_path . '*.png');
@@ -483,7 +484,7 @@ class ManageMap extends Process
         // Custom Kml files
 
         $kmls_dir_path = $public_path . '/myGmaps/kml_files/';
-        $kmls_dir_url  = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/kml_files/');
+        $kmls_dir_url  = http::concatURL(App::blog()->url, $public_url . '/myGmaps/kml_files/');
 
         if (is_dir($kmls_dir_path)) {
             $kmls      = glob($kmls_dir_path . '*.kml');
@@ -502,7 +503,7 @@ class ManageMap extends Process
         // Custom map styles
 
         $map_styles_dir_path = $public_path . '/myGmaps/styles/';
-        $map_styles_dir_url  = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/styles/');
+        $map_styles_dir_url  = http::concatURL(App::blog()->url, $public_url . '/myGmaps/styles/');
 
         if (is_dir($map_styles_dir_path)) {
             $map_styles      = glob($map_styles_dir_path . '*.js');
@@ -561,7 +562,7 @@ class ManageMap extends Process
         '</script>';
 
         Page::openModule(
-            dcCore::app()->admin->page_title . ' - ' . My::name(),
+            App::backend()->page_title . ' - ' . My::name(),
             Page::jsModal() .
             Page::jsLoad('js/_post.js') .
             Page::jsMetaEditor() .
@@ -570,22 +571,22 @@ class ManageMap extends Process
             $starting_script .
             Page::jsConfirmClose('entry-form') .
             # --BEHAVIOR-- adminPostHeaders --
-            dcCore::app()->callBehavior('adminPostHeaders') .
-            Page::jsPageTabs(dcCore::app()->admin->default_tab) .
+            App::behavior()->callBehavior('adminPostHeaders') .
+            Page::jsPageTabs(App::backend()->default_tab) .
             My::cssLoad('admin.css') .
             '<style type="text/css">' . "\n" .
             '#options-box, .s-tags, .s-featuredmedia, .s-attachments {' . "\n" .
             'display: none;' . "\n" .
             '}' . "\n" .
             '</style>' . "\n" .
-            dcCore::app()->admin->next_headlink . "\n" . dcCore::app()->admin->prev_headlink
+            App::backend()->next_headlink . "\n" . App::backend()->prev_headlink
         );
 
         $img_status         = '';
         $img_status_pattern = '<img class="img_select_option" alt="%1$s" title="%1$s" src="images/%2$s" />';
 
-        if (dcCore::app()->admin->post_id) {
-            switch (dcCore::app()->admin->post_status) {
+        if (App::backend()->post_id) {
+            switch (App::backend()->post_status) {
                 case dcBlog::POST_PUBLISHED:
                     $img_status = sprintf($img_status_pattern, __('Published'), 'check-on.png');
 
@@ -603,15 +604,15 @@ class ManageMap extends Process
 
                     break;
             }
-            $edit_entry_title = '&ldquo;' . Html::escapeHTML(trim(Html::clean(dcCore::app()->admin->post_title))) . '&rdquo;' . ' ' . $img_status;
+            $edit_entry_title = '&ldquo;' . Html::escapeHTML(trim(Html::clean(App::backend()->post_title))) . '&rdquo;' . ' ' . $img_status;
         } else {
-            $edit_entry_title = dcCore::app()->admin->page_title;
+            $edit_entry_title = App::backend()->page_title;
         }
         echo Page::breadcrumb(
             [
-                Html::escapeHTML(dcCore::app()->blog->name) => '',
-                My::name()                                  => My::manageUrl() . '&tab=entries-list',
-                $edit_entry_title                           => '',
+                Html::escapeHTML(App::blog()->name) => '',
+                My::name()                          => My::manageUrl() . '&tab=entries-list',
+                $edit_entry_title                   => '',
             ]
         );
 
@@ -623,33 +624,33 @@ class ManageMap extends Process
 
         # HTML conversion
         if (!empty($_GET['xconv'])) {
-            dcCore::app()->admin->post_excerpt = dcCore::app()->admin->post_excerpt_xhtml;
-            dcCore::app()->admin->post_content = dcCore::app()->admin->post_content_xhtml;
-            dcCore::app()->admin->post_format  = 'xhtml';
+            App::backend()->post_excerpt = App::backend()->post_excerpt_xhtml;
+            App::backend()->post_content = App::backend()->post_content_xhtml;
+            App::backend()->post_format  = 'xhtml';
 
             Page::message(__('Don\'t forget to validate your HTML conversion by saving your post.'));
         }
 
         echo '';
 
-        if (dcCore::app()->admin->post_id) {
+        if (App::backend()->post_id) {
             echo
             '<p class="nav_prevnext">';
-            if (dcCore::app()->admin->prev_link) {
+            if (App::backend()->prev_link) {
                 echo
-                dcCore::app()->admin->prev_link;
+                App::backend()->prev_link;
             }
-            if (dcCore::app()->admin->next_link && dcCore::app()->admin->prev_link) {
+            if (App::backend()->next_link && App::backend()->prev_link) {
                 echo
                 ' | ';
             }
-            if (dcCore::app()->admin->next_link) {
+            if (App::backend()->next_link) {
                 echo
-                dcCore::app()->admin->next_link;
+                App::backend()->next_link;
             }
 
             # --BEHAVIOR-- adminPostNavLinks -- MetaRecord|null
-            dcCore::app()->callBehavior('adminPostNavLinks', dcCore::app()->admin->post ?? null);
+            App::behavior()->callBehavior('adminPostNavLinks', App::backend()->post ?? null);
 
             echo
             '</p>';
@@ -657,7 +658,7 @@ class ManageMap extends Process
 
         # Exit if we cannot view page
 
-        if (!dcCore::app()->admin->can_view_page) {
+        if (!App::backend()->can_view_page) {
             dcPost::closeModule();
 
             return;
@@ -665,11 +666,11 @@ class ManageMap extends Process
 
         /* Post form if we can edit page
         -------------------------------------------------------- */
-        if (dcCore::app()->admin->can_edit_post) {
-            $meta = dcCore::app()->meta ?? '';
+        if (App::backend()->can_edit_post) {
+            $meta = App::meta() ?? '';
 
-            if (isset(dcCore::app()->admin->post)) {
-                $meta_rs = $meta->getMetaStr(dcCore::app()->admin->post->post_meta, 'map_options');
+            if (isset(App::backend()->post)) {
+                $meta_rs = $meta->getMetaStr(App::backend()->post->post_meta, 'map_options');
                 if ($meta_rs) {
                     $map_options    = explode(',', $meta_rs);
                     $myGmaps_center = $map_options[0] . ',' . $map_options[1];
@@ -684,46 +685,46 @@ class ManageMap extends Process
                         'post_status' => '<p><label for="post_status">' . __('Element status') . '</label> ' .
                         form::combo(
                             'post_status',
-                            dcCore::app()->admin->status_combo,
-                            ['default' => dcCore::app()->admin->post_status, 'disabled' => !dcCore::app()->admin->can_publish]
+                            App::backend()->status_combo,
+                            ['default' => App::backend()->post_status, 'disabled' => !App::backend()->can_publish]
                         ) .
                         '</p>',
                         'post_dt' => '<p><label for="post_dt">' . __('Publication date and hour') . '</label>' .
                         form::datetime('post_dt', [
-                            'default' => Html::escapeHTML(Date::str('%Y-%m-%dT%H:%M', strtotime(dcCore::app()->admin->post_dt))),
-                            'class'   => (dcCore::app()->admin->bad_dt ? 'invalid' : ''),
+                            'default' => Html::escapeHTML(Date::str('%Y-%m-%dT%H:%M', strtotime(App::backend()->post_dt))),
+                            'class'   => (App::backend()->bad_dt ? 'invalid' : ''),
                         ]) .
                         '</p>',
                         'post_lang' => '<p><label for="post_lang">' . __('Element language') . '</label>' .
-                        form::combo('post_lang', dcCore::app()->admin->lang_combo, dcCore::app()->admin->post_lang) .
+                        form::combo('post_lang', App::backend()->lang_combo, App::backend()->post_lang) .
                         '</p>',
                         'post_format' => '<div>' .
                         '<h5 id="label_format"><label for="post_format" class="classic">' . __('Text formatting') . '</label></h5>' .
-                        '<p>' . form::combo('post_format', dcCore::app()->admin->available_formats, dcCore::app()->admin->post_format, 'maximal') . '</p>' .
+                        '<p>' . form::combo('post_format', App::backend()->available_formats, App::backend()->post_format, 'maximal') . '</p>' .
                         '<p class="format_control control_wiki">' .
-                        '<a id="convert-xhtml" class="button' . (dcCore::app()->admin->post_id && dcCore::app()->admin->post_format != 'wiki' ? ' hide' : '') .
-                        '" href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id(), ['act' => 'map', 'id' => dcCore::app()->admin->post_id, 'xconv' => '1']) . '">' .
+                        '<a id="convert-xhtml" class="button' . (App::backend()->post_id && App::backend()->post_format != 'wiki' ? ' hide' : '') .
+                        '" href="' . App::backend()->url()->get('admin.plugin.' . My::id(), ['act' => 'map', 'id' => App::backend()->post_id, 'xconv' => '1']) . '">' .
                         __('Convert to HTML') . '</a></p></div>', ], ],
                 'metas-box' => [
                     'title' => __('Filing'),
                     'items' => [
                         'post_selected' => '<p><label for="post_selected" class="classic">' .
-                        form::checkbox('post_selected', 1, dcCore::app()->admin->post_selected) . ' ' .
+                        form::checkbox('post_selected', 1, App::backend()->post_selected) . ' ' .
                         __('Selected element') . '</label></p>',
                         'cat_id' => '<div>' .
                         '<h5 id="label_cat_id">' . __('Category') . '</h5>' .
                         '<p><label for="cat_id">' . __('Category:') . '</label>' .
-                        form::combo('cat_id', dcCore::app()->admin->categories_combo, dcCore::app()->admin->cat_id, 'maximal') .
+                        form::combo('cat_id', App::backend()->categories_combo, App::backend()->cat_id, 'maximal') .
                         '</p>' .
-                        (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
+                        (App::auth()->check(App::auth()->makePermissions([
                             dcAuth::PERMISSION_CATEGORIES,
-                        ]), dcCore::app()->blog->id) ?
+                        ]), App::blog()->id) ?
                             '<div>' .
                             '<h5 id="create_cat">' . __('Add a new category') . '</h5>' .
                             '<p><label for="new_cat_title">' . __('Title:') . ' ' .
                             form::field('new_cat_title', 30, 255, ['class' => 'maximal']) . '</label></p>' .
                             '<p><label for="new_cat_parent">' . __('Parent:') . ' ' .
-                            form::combo('new_cat_parent', dcCore::app()->admin->categories_combo, '', 'maximal') .
+                            form::combo('new_cat_parent', App::backend()->categories_combo, '', 'maximal') .
                             '</label></p>' .
                             '</div>' :
                             '') .
@@ -736,27 +737,27 @@ class ManageMap extends Process
                         'post_open_comment_tb' => '<div>' .
                         '<h5 id="label_comment_tb">' . __('Comments and trackbacks list') . '</h5>' .
                         '<p><label for="post_open_comment" class="classic">' .
-                        form::checkbox('post_open_comment', 1, dcCore::app()->admin->post_open_comment) . ' ' .
+                        form::checkbox('post_open_comment', 1, App::backend()->post_open_comment) . ' ' .
                         __('Accept comments') . '</label></p>' .
-                        (dcCore::app()->blog->settings->system->allow_comments ?
-                            (self::isContributionAllowed(dcCore::app()->admin->post_id, strtotime(dcCore::app()->admin->post_dt), true) ? '' : '<p class="form-note warn">' .
+                        (App::blog()->settings->system->allow_comments ?
+                            (self::isContributionAllowed(App::backend()->post_id, strtotime(App::backend()->post_dt), true) ? '' : '<p class="form-note warn">' .
                             __('Warning: Comments are not more accepted for this entry.') . '</p>') :
                             '<p class="form-note warn">' .
                             __('Comments are not accepted on this blog so far.') . '</p>') .
                         '<p><label for="post_open_tb" class="classic">' .
-                        form::checkbox('post_open_tb', 1, dcCore::app()->admin->post_open_tb) . ' ' .
+                        form::checkbox('post_open_tb', 1, App::backend()->post_open_tb) . ' ' .
                         __('Accept trackbacks') . '</label></p>' .
-                        (dcCore::app()->blog->settings->system->allow_trackbacks ?
-                            (self::isContributionAllowed(dcCore::app()->admin->post_id, strtotime(dcCore::app()->admin->post_dt), false) ? '' : '<p class="form-note warn">' .
+                        (App::blog()->settings->system->allow_trackbacks ?
+                            (self::isContributionAllowed(App::backend()->post_id, strtotime(App::backend()->post_dt), false) ? '' : '<p class="form-note warn">' .
                             __('Warning: Trackbacks are not more accepted for this entry.') . '</p>') :
                             '<p class="form-note warn">' . __('Trackbacks are not accepted on this blog so far.') . '</p>') .
                         '</div>',
                         'post_password' => '<p><label for="post_password">' . __('Password') . '</label>' .
-                        form::field('post_password', 10, 32, Html::escapeHTML(dcCore::app()->admin->post_password), 'maximal') .
+                        form::field('post_password', 10, 32, Html::escapeHTML(App::backend()->post_password), 'maximal') .
                         '</p>',
                         'post_url' => '<div class="lockable">' .
                         '<p><label for="post_url">' . __('Edit basename') . '</label>' .
-                        form::field('post_url', 10, 255, Html::escapeHTML(dcCore::app()->admin->post_url), 'maximal') .
+                        form::field('post_url', 10, 255, Html::escapeHTML(App::backend()->post_url), 'maximal') .
                         '</p>' .
                         '<p class="form-note warn">' .
                         __('Warning: If you set the URL manually, it may conflict with another entry.') .
@@ -769,9 +770,9 @@ class ManageMap extends Process
                     'post_title' => '<p class="col">' .
                     '<label class="required no-margin bold" for="post_title"><abbr title="' . __('Required field') . '">*</abbr> ' . __('Title:') . '</label>' .
                     form::field('post_title', 20, 255, [
-                        'default'    => Html::escapeHTML(dcCore::app()->admin->post_title),
+                        'default'    => Html::escapeHTML(App::backend()->post_title),
                         'class'      => 'maximal',
-                        'extra_html' => 'required placeholder="' . __('Title') . '" lang="' . dcCore::app()->admin->post_lang . '" spellcheck="true"',
+                        'extra_html' => 'required placeholder="' . __('Title') . '" lang="' . App::backend()->post_lang . '" spellcheck="true"',
                     ]) .
                     '</p>',
 
@@ -791,17 +792,17 @@ class ManageMap extends Process
                     '<div id="map_box"><div class="area" id="map_canvas"></div><div id="panel"></div></div>' .
                     '<div class="form-note info maximal mapinfo"><p>' . __('This map will not be displayed on the blog and is meant only to create, edit and position only one element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties.') . '</p>' .
                     '</div>' .
-                    '<p class="area" id="excerpt">' . form::textarea('post_excerpt', 50, 5, html::escapeHTML(dcCore::app()->admin->post_excerpt)) . '</p>',
+                    '<p class="area" id="excerpt">' . form::textarea('post_excerpt', 50, 5, html::escapeHTML(App::backend()->post_excerpt)) . '</p>',
 
                     'post_content' => '<p class="area" id="content-area"><label class="bold" ' .
                     'for="post_content">' . __('Description:') . '</label> ' .
                     form::textarea(
                         'post_content',
                         50,
-                        dcCore::app()->auth->getOption('edit_size'),
+                        App::auth()->getOption('edit_size'),
                         [
-                            'default'    => Html::escapeHTML(dcCore::app()->admin->post_content),
-                            'extra_html' => 'placeholder="' . __('Description') . '" lang="' . dcCore::app()->admin->post_lang . '" spellcheck="true"',
+                            'default'    => Html::escapeHTML(App::backend()->post_content),
+                            'extra_html' => 'placeholder="' . __('Description') . '" lang="' . App::backend()->post_lang . '" spellcheck="true"',
                         ]
                     ) .
                     '</p>',
@@ -813,8 +814,8 @@ class ManageMap extends Process
                         50,
                         5,
                         [
-                            'default'    => Html::escapeHTML(dcCore::app()->admin->post_notes),
-                            'extra_html' => 'lang="' . dcCore::app()->admin->post_lang . '" spellcheck="true"',
+                            'default'    => Html::escapeHTML(App::backend()->post_notes),
+                            'extra_html' => 'lang="' . App::backend()->post_lang . '" spellcheck="true"',
                         ]
                     ) .
                     '</p>',
@@ -822,12 +823,12 @@ class ManageMap extends Process
             );
 
             # --BEHAVIOR-- adminPostFormItems -- ArrayObject, ArrayObject, MetaRecord|null
-            dcCore::app()->callBehavior('adminPostFormItems', $main_items, $sidebar_items, dcCore::app()->admin->post ?? null,'post');
+            App::behavior()->callBehavior('adminPostFormItems', $main_items, $sidebar_items, App::backend()->post ?? null, 'post');
 
             echo
-            '<div class="multi-part" title="' . (dcCore::app()->admin->post_id ? __('Edit map element') : __('New element')) .
-            sprintf(' &rsaquo; %s', dcCore::app()->getFormaterName(dcCore::app()->admin->post_format)) . '" id="edit-entry">' .
-            '<form action="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id(), ['act' => 'map']) . '" method="post" id="entry-form">' .
+            '<div class="multi-part" title="' . (App::backend()->post_id ? __('Edit map element') : __('New element')) .
+            sprintf(' &rsaquo; %s', App::formater()->getFormaterName(App::backend()->post_format)) . '" id="edit-entry">' .
+            '<form action="' . App::backend()->url()->get('admin.plugin.' . My::id(), ['act' => 'map']) . '" method="post" id="entry-form">' .
             '<div id="entry-wrapper">' .
             '<div id="entry-content"><div class="constrained">' .
             '<h3 class="out-of-screen-if-js">' . __('Edit map element') . '</h3>';
@@ -837,11 +838,11 @@ class ManageMap extends Process
             }
 
             # --BEHAVIOR-- adminPostForm -- MetaRecord|null
-            dcCore::app()->callBehavior('adminPostForm', dcCore::app()->admin->post ?? null, 'map');
+            App::behavior()->callBehavior('adminPostForm', App::backend()->post ?? null, 'map');
 
-            $plugin_QmarkURL = dcCore::app()->blog->getQmarkURL();
+            $plugin_QmarkURL = App::blog()->getQmarkURL();
 
-            echo(isset(dcCore::app()->admin->post->post_id) ? form::hidden('id', dcCore::app()->admin->post->post_id) : '') .
+            echo(isset(App::backend()->post->post_id) ? form::hidden('id', App::backend()->post->post_id) : '') .
             form::hidden('myGmaps_center', $myGmaps_center) .
             form::hidden('myGmaps_zoom', $myGmaps_zoom) .
             form::hidden('myGmaps_type', $myGmaps_type) .
@@ -854,8 +855,8 @@ class ManageMap extends Process
             form::hidden('map_styles_list', $map_styles_list) .
             form::hidden('map_styles_base_url', $map_styles_base_url) ;
 
-            if (isset(dcCore::app()->admin->post)) {
-                echo '<p>' . form::hidden('element_type', $meta->getMetaStr(dcCore::app()->admin->post->post_meta, 'map')) . '</p>';
+            if (isset(App::backend()->post)) {
+                echo '<p>' . form::hidden('element_type', $meta->getMetaStr(App::backend()->post->post_meta, 'map')) . '</p>';
             } else {
                 echo '<p>' . form::hidden('element_type', '') . '</p>';
             }
@@ -865,13 +866,13 @@ class ManageMap extends Process
             '<input type="submit" value="' . __('Save') . ' (s)" ' .
             'accesskey="s" name="save" /> ' ;
 
-            if (!isset(dcCore::app()->admin->post->post_id)) {
+            if (!isset(App::backend()->post->post_id)) {
                 echo
                 '<a id="post-cancel" href="' . My::manageUrl() . '&act=list#entries-list' . '" class="button" accesskey="c">' . __('Cancel') . ' (c)</a>';
             }
 
-            echo(dcCore::app()->admin->can_delete ? '<input type="submit" class="delete" value="' . __('Delete') . '" name="delete" />' : '') .
-                    dcCore::app()->formNonce() .
+            echo(App::backend()->can_delete ? '<input type="submit" class="delete" value="' . __('Delete') . '" name="delete" />' : '') .
+                    App::nonce()->getFormNonce() .
                     '</p>';
 
             echo
@@ -892,14 +893,14 @@ class ManageMap extends Process
             }
 
             # --BEHAVIOR-- adminPostFormSidebar -- MetaRecord|null
-            dcCore::app()->callBehavior('adminPostFormSidebar', dcCore::app()->admin->post ?? null, 'map');
+            App::behavior()->callBehavior('adminPostFormSidebar', App::backend()->post ?? null, 'map');
 
             echo
             '</div>' . // End #entry-sidebar
             '</form>';
 
             # --BEHAVIOR-- adminPostForm -- MetaRecord|null
-            dcCore::app()->callBehavior('adminPostAfterForm', dcCore::app()->admin->post ?? null, 'map');
+            App::behavior()->callBehavior('adminPostAfterForm', App::backend()->post ?? null, 'map');
 
             echo
             '</div>'; // End
@@ -925,11 +926,11 @@ class ManageMap extends Process
             return true;
         }
         if ($com) {
-            if ((dcCore::app()->blog->settings->system->comments_ttl == 0) || (time() - dcCore::app()->blog->settings->system->comments_ttl * 86400 < $dt)) {
+            if ((App::blog()->settings->system->comments_ttl == 0) || (time() - App::blog()->settings->system->comments_ttl * 86400 < $dt)) {
                 return true;
             }
         } else {
-            if ((dcCore::app()->blog->settings->system->trackbacks_ttl == 0) || (time() - dcCore::app()->blog->settings->system->trackbacks_ttl * 86400 < $dt)) {
+            if ((App::blog()->settings->system->trackbacks_ttl == 0) || (time() - App::blog()->settings->system->trackbacks_ttl * 86400 < $dt)) {
                 return true;
             }
         }
@@ -952,7 +953,7 @@ class ManageMap extends Process
             '<table class="comments-list"><tr>' .
             '<th colspan="2" class="first">' . __('Author') . '</th>' .
             '<th>' . __('Date') . '</th>' .
-            (dcCore::app()->admin->show_ip ? '<th class="nowrap">' . __('IP address') . '</th>' : '') .
+            (App::backend()->show_ip ? '<th class="nowrap">' . __('IP address') . '</th>' : '') .
             '<th>' . __('Status') . '</th>' .
             '<th>' . __('Edit') . '</th>' .
             '</tr>';
@@ -965,7 +966,7 @@ class ManageMap extends Process
         }
 
         while ($rs->fetch()) {
-            $comment_url = dcCore::app()->adminurl->get('admin.comment', ['id' => $rs->comment_id]);
+            $comment_url = App::backend()->url()->get('admin.comment', ['id' => $rs->comment_id]);
 
             $img        = '<img alt="%1$s" title="%1$s" src="images/%2$s" />';
             $img_status = '';
@@ -1010,12 +1011,12 @@ class ManageMap extends Process
                 '') . '</td>' .
             '<td class="maximal">' . Html::escapeHTML($rs->comment_author) . '</td>' .
             '<td class="nowrap">' .
-                '<time datetime="' . Date::iso8601(strtotime($rs->comment_dt), dcCore::app()->auth->getInfo('user_tz')) . '">' .
+                '<time datetime="' . Date::iso8601(strtotime($rs->comment_dt), App::auth()->getInfo('user_tz')) . '">' .
                 Date::dt2str(__('%Y-%m-%d %H:%M'), $rs->comment_dt) .
                 '</time>' .
             '</td>' .
             ($show_ip ?
-                '<td class="nowrap"><a href="' . dcCore::app()->adminurl->get('admin.comments', ['ip' => $rs->comment_ip]) . '">' . $rs->comment_ip . '</a></td>' :
+                '<td class="nowrap"><a href="' . App::backend()->url()->get('admin.comments', ['ip' => $rs->comment_ip]) . '">' . $rs->comment_ip . '</a></td>' :
                 '') .
             '<td class="nowrap status">' . $img_status . '</td>' .
             '<td class="nowrap status"><a href="' . $comment_url . '">' .

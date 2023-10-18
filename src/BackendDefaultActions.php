@@ -9,13 +9,14 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\myGmaps;
 
 use ArrayObject;
 use dcBlog;
-use dcCore;
+use Dotclear\App;
 use dcAuth;
 use Dotclear\Core\Backend\Combos;
 use Dotclear\Core\Backend\Action\ActionsPostsDefault;
@@ -33,10 +34,10 @@ class BackendDefaultActions
      */
     public static function adminPostsActionsPage(BackendActions $ap)
     {
-        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
+        if (App::auth()->check(App::auth()->makePermissions([
             dcAuth::PERMISSION_PUBLISH,
             dcAuth::PERMISSION_CONTENT_ADMIN,
-        ]), dcCore::app()->blog->id)) {
+        ]), App::blog()->id)) {
             $ap->addAction(
                 [__('Status') => [
                     __('Publish')         => 'publish',
@@ -47,10 +48,10 @@ class BackendDefaultActions
                 [self::class, 'doChangePostStatus']
             );
         }
-        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
-            dcCore::app()->auth::PERMISSION_PUBLISH,
-            dcCore::app()->auth::PERMISSION_CONTENT_ADMIN,
-        ]), dcCore::app()->blog->id)) {
+        if (App::auth()->check(App::auth()->makePermissions([
+            App::auth()::PERMISSION_PUBLISH,
+            App::auth()::PERMISSION_CONTENT_ADMIN,
+        ]), App::blog()->id)) {
             $ap->addAction(
                 [__('First publication') => [
                     __('Never published')   => 'never',
@@ -78,19 +79,19 @@ class BackendDefaultActions
             ]],
             [self::class, 'doChangePostLang']
         );
-        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
+        if (App::auth()->check(App::auth()->makePermissions([
             dcAuth::PERMISSION_ADMIN,
-        ]), dcCore::app()->blog->id)) {
+        ]), App::blog()->id)) {
             $ap->addAction(
                 [__('Change') => [
                     __('Change author') => 'author', ]],
                 [self::class, 'doChangePostAuthor']
             );
         }
-        if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
+        if (App::auth()->check(App::auth()->makePermissions([
             dcAuth::PERMISSION_DELETE,
             dcAuth::PERMISSION_CONTENT_ADMIN,
-        ]), dcCore::app()->blog->id)) {
+        ]), App::blog()->id)) {
             $ap->addAction(
                 [__('Delete') => [
                     __('Delete') => 'delete', ]],
@@ -154,7 +155,7 @@ class BackendDefaultActions
 
         // Set status of remaining elements
 
-        dcCore::app()->blog->updPostsStatus($ids, $status);
+        App::blog()->updPostsStatus($ids, $status);
 
         Page::addSuccessNotice(
             sprintf(
@@ -164,7 +165,7 @@ class BackendDefaultActions
                     count($ids)
                 ),
                 count($ids),
-                dcCore::app()->blog->getPostStatus($status)
+                App::blog()->getPostStatus($status)
             )
         );
         $ap->redirect(true);
@@ -185,7 +186,7 @@ class BackendDefaultActions
         }
 
         $action = $ap->getAction();
-        dcCore::app()->blog->updPostsSelected($ids, $action === 'selected');
+        App::blog()->updPostsSelected($ids, $action === 'selected');
         if ($action == 'selected') {
             Page::addSuccessNotice(
                 sprintf(
@@ -228,13 +229,13 @@ class BackendDefaultActions
         // Backward compatibility
         foreach ($ids as $id) {
             # --BEHAVIOR-- adminBeforePostDelete -- int
-            dcCore::app()->callBehavior('adminBeforePostDelete', (int) $id);
+            App::behavior()->callBehavior('adminBeforePostDelete', (int) $id);
         }
 
         # --BEHAVIOR-- adminBeforePostsDelete -- array<int,string>
-        dcCore::app()->callBehavior('adminBeforePostsDelete', $ids);
+        App::behavior()->callBehavior('adminBeforePostsDelete', $ids);
 
-        dcCore::app()->blog->delPosts($ids);
+        App::blog()->delPosts($ids);
         Page::addSuccessNotice(
             sprintf(
                 __(
@@ -265,10 +266,10 @@ class BackendDefaultActions
                 throw new Exception(__('No element selected'));
             }
             $new_cat_id = $post['new_cat_id'];
-            if (!empty($post['new_cat_title']) && dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
+            if (!empty($post['new_cat_title']) && App::auth()->check(App::auth()->makePermissions([
                 dcAuth::PERMISSION_CATEGORIES,
-            ]), dcCore::app()->blog->id)) {
-                $cur_cat            = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcCategories::CATEGORY_TABLE_NAME);
+            ]), App::blog()->id)) {
+                $cur_cat            = App::con()->openCursor(App::con()->prefix() . dcCategories::CATEGORY_TABLE_NAME);
                 $cur_cat->cat_title = $post['new_cat_title'];
                 $cur_cat->cat_url   = '';
                 $title              = $cur_cat->cat_title;
@@ -276,18 +277,18 @@ class BackendDefaultActions
                 $parent_cat = !empty($post['new_cat_parent']) ? $post['new_cat_parent'] : '';
 
                 # --BEHAVIOR-- adminBeforeCategoryCreate -- Cursor
-                dcCore::app()->callBehavior('adminBeforeCategoryCreate', $cur_cat);
+                App::behavior()->callBehavior('adminBeforeCategoryCreate', $cur_cat);
 
-                $new_cat_id = dcCore::app()->blog->addCategory($cur_cat, (int) $parent_cat);
+                $new_cat_id = App::blog()->addCategory($cur_cat, (int) $parent_cat);
 
                 # --BEHAVIOR-- adminAfterCategoryCreate -- Cursor, string
-                dcCore::app()->callBehavior('adminAfterCategoryCreate', $cur_cat, $new_cat_id);
+                App::behavior()->callBehavior('adminAfterCategoryCreate', $cur_cat, $new_cat_id);
             }
 
-            dcCore::app()->blog->updPostsCategory($ids, $new_cat_id);
+            App::blog()->updPostsCategory($ids, $new_cat_id);
             $title = __('(No cat)');
             if ($new_cat_id) {
-                $title = dcCore::app()->blog->getCategory((int) $new_cat_id)->cat_title;
+                $title = App::blog()->getCategory((int) $new_cat_id)->cat_title;
             }
             Page::addSuccessNotice(
                 sprintf(
@@ -306,16 +307,16 @@ class BackendDefaultActions
             $ap->beginPage(
                 Page::breadcrumb(
                     [
-                        Html::escapeHTML(dcCore::app()->blog->name) => '',
-                        $ap->getCallerTitle()                       => $ap->getRedirection(true),
-                        __('Change category for this selection')    => '',
+                        Html::escapeHTML(App::blog()->name)      => '',
+                        $ap->getCallerTitle()                    => $ap->getRedirection(true),
+                        __('Change category for this selection') => '',
                     ]
                 )
             );
             # categories list
             # Getting categories
             $categories_combo = Combos::getCategoriesCombo(
-                dcCore::app()->blog->getCategories()
+                App::blog()->getCategories()
             );
             echo
             '<form action="' . $ap->getURI() . '" method="post">' .
@@ -323,9 +324,9 @@ class BackendDefaultActions
             '<p><label for="new_cat_id" class="classic">' . __('Category:') . '</label> ' .
             form::combo(['new_cat_id'], $categories_combo);
 
-            if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
+            if (App::auth()->check(App::auth()->makePermissions([
                 dcAuth::PERMISSION_CATEGORIES,
-            ]), dcCore::app()->blog->id)) {
+            ]), App::blog()->id)) {
                 echo
                 '<div>' .
                 '<p id="new_cat">' . __('Create a new category for the element(s)') . '</p>' .
@@ -338,7 +339,7 @@ class BackendDefaultActions
             }
 
             echo
-            dcCore::app()->formNonce() .
+            App::nonce()->getFormNonce() .
             $ap->getHiddenFields() .
             form::hidden(['action'], 'category') .
             '<input type="submit" value="' . __('Save') . '" /></p>' .
@@ -357,21 +358,21 @@ class BackendDefaultActions
      */
     public static function doChangePostAuthor(BackendActions $ap, ArrayObject $post)
     {
-        if (isset($post['new_auth_id']) && dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
+        if (isset($post['new_auth_id']) && App::auth()->check(App::auth()->makePermissions([
             dcAuth::PERMISSION_ADMIN,
-        ]), dcCore::app()->blog->id)) {
+        ]), App::blog()->id)) {
             $new_user_id = $post['new_auth_id'];
             $ids         = $ap->getIDs();
             if (empty($ids)) {
                 throw new Exception(__('No element selected'));
             }
-            if (dcCore::app()->getUser($new_user_id)->isEmpty()) {
+            if (App::users()->getUser()($new_user_id)->isEmpty()) {
                 throw new Exception(__('This user does not exist'));
             }
 
-            $cur          = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcBlog::POST_TABLE_NAME);
+            $cur          = App::con()->openCursor(App::con()->prefix() . dcBlog::POST_TABLE_NAME);
             $cur->user_id = $new_user_id;
-            $cur->update('WHERE post_id ' . dcCore::app()->con->in($ids));
+            $cur->update('WHERE post_id ' . App::con()->in($ids));
             Page::addSuccessNotice(
                 sprintf(
                     __(
@@ -387,14 +388,14 @@ class BackendDefaultActions
             $ap->redirect(true);
         } else {
             $usersList = [];
-            if (dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
+            if (App::auth()->check(App::auth()->makePermissions([
                 dcAuth::PERMISSION_ADMIN,
-            ]), dcCore::app()->blog->id)) {
+            ]), App::blog()->id)) {
                 $params = [
                     'limit' => 100,
                     'order' => 'nb_post DESC',
                 ];
-                $rs       = dcCore::app()->getUsers($params);
+                $rs       = App::users()->getUser($params);
                 $rsStatic = $rs->toStatic();
                 $rsStatic->extend('rsExtUser');
                 $rsStatic = $rsStatic->toExtStatic();
@@ -406,9 +407,9 @@ class BackendDefaultActions
             $ap->beginPage(
                 Page::breadcrumb(
                     [
-                        Html::escapeHTML(dcCore::app()->blog->name) => '',
-                        $ap->getCallerTitle()                       => $ap->getRedirection(true),
-                        __('Change author for this selection')      => '', ]
+                        Html::escapeHTML(App::blog()->name)    => '',
+                        $ap->getCallerTitle()                  => $ap->getRedirection(true),
+                        __('Change author for this selection') => '', ]
                 ),
                 Page::jsLoad('js/jquery/jquery.autocomplete.js') .
                 Page::jsJson('users_list', $usersList)
@@ -421,7 +422,7 @@ class BackendDefaultActions
             form::field('new_auth_id', 20, 255);
 
             echo
-            dcCore::app()->formNonce() . $ap->getHiddenFields() .
+            App::nonce()->getFormNonce() . $ap->getHiddenFields() .
             form::hidden(['action'], 'author') .
             '<input type="submit" value="' . __('Save') . '" /></p>' .
                 '</form>';
@@ -445,9 +446,9 @@ class BackendDefaultActions
         }
         if (isset($post['new_lang'])) {
             $new_lang       = $post['new_lang'];
-            $cur            = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcBlog::POST_TABLE_NAME);
+            $cur            = App::con()->openCursor(App::con()->prefix() . dcBlog::POST_TABLE_NAME);
             $cur->post_lang = $new_lang;
-            $cur->update('WHERE post_id ' . dcCore::app()->con->in($post_ids));
+            $cur->update('WHERE post_id ' . App::con()->in($post_ids));
             Page::addSuccessNotice(
                 sprintf(
                     __(
@@ -464,15 +465,15 @@ class BackendDefaultActions
             $ap->beginPage(
                 Page::breadcrumb(
                     [
-                        Html::escapeHTML(dcCore::app()->blog->name) => '',
-                        $ap->getCallerTitle()                       => $ap->getRedirection(true),
-                        __('Change language for this selection')    => '',
+                        Html::escapeHTML(App::blog()->name)      => '',
+                        $ap->getCallerTitle()                    => $ap->getRedirection(true),
+                        __('Change language for this selection') => '',
                     ]
                 )
             );
             # lang list
             # Languages combo
-            $rs         = dcCore::app()->blog->getLangs(['order' => 'asc']);
+            $rs         = App::blog()->getLangs(['order' => 'asc']);
             $all_langs  = L10n::getISOcodes(false, true);
             $lang_combo = ['' => '', __('Most used') => [], __('Available') => L10n::getISOcodes(true, true)];
             while ($rs->fetch()) {
@@ -493,7 +494,7 @@ class BackendDefaultActions
             form::combo('new_lang', $lang_combo);
 
             echo
-            dcCore::app()->formNonce() . $ap->getHiddenFields() .
+            App::nonce()->getFormNonce() . $ap->getHiddenFields() .
             form::hidden(['action'], 'lang') .
             '<input type="submit" value="' . __('Save') . '" /></p>' .
                 '</form>';

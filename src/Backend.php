@@ -9,15 +9,15 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\myGmaps;
 
 use Dotclear\Core\Backend\UserPref;
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Backend\Favorites;
-use Dotclear\Core\Backend\Utility;
 use Dotclear\Core\Process;
 use ArrayObject;
 use Dotclear\Core\Backend\Filter\Filter;
@@ -38,68 +38,68 @@ class Backend extends Process
             return false;
         }
 
-        dcCore::app()->addBehaviors([
+        App::behavior()->addBehaviors([
             'adminDashboardFavoritesV2' => function (Favorites $favs) {
                 $favs->register(My::id(), [
                     'title'       => My::name(),
                     'url'         => My::manageUrl(),
                     'small-icon'  => My::icons(),
                     'large-icon'  => My::icons(),
-                    'permissions' => dcCore::app()->auth->makePermissions([
-                        dcCore::app()->auth::PERMISSION_ADMIN,
+                    'permissions' => App::auth()->makePermissions([
+                        App::auth()::PERMISSION_ADMIN,
                     ]),
                 ]);
             },
         ]);
 
-        My::addBackendMenuItem(Utility::MENU_BLOG);
+        My::addBackendMenuItem(App::backend()->menus()::MENU_BLOG);
 
         if (My::settings()->myGmaps_enabled) {
-            dcCore::app()->addBehavior('adminPostListValueV2', [self::class, 'adminEntryListValue']);
-            dcCore::app()->addBehavior('adminPagesListValueV2', [self::class, 'adminEntryListValue']);
+            App::behavior()->addBehavior('adminPostListValueV2', [self::class, 'adminEntryListValue']);
+            App::behavior()->addBehavior('adminPagesListValueV2', [self::class, 'adminEntryListValue']);
         }
 
-        dcCore::app()->addBehavior('adminDashboardFavsIconV2', [self::class, 'dashboardFavsIcon']);
+        App::behavior()->addBehavior('adminDashboardFavsIconV2', [self::class, 'dashboardFavsIcon']);
 
-        dcCore::app()->addBehavior('adminPageHelpBlock', [self::class, 'adminPageHelpBlock']);
-        dcCore::app()->addBehavior('adminPageHTTPHeaderCSP', [self::class, 'adminPageHTTPHeaderCSP']);
+        App::behavior()->addBehavior('adminPageHelpBlock', [self::class, 'adminPageHelpBlock']);
+        App::behavior()->addBehavior('adminPageHTTPHeaderCSP', [self::class, 'adminPageHTTPHeaderCSP']);
 
-        dcCore::app()->addBehavior('adminPostForm', [self::class,  'adminPostForm']);
-        dcCore::app()->addBehavior('adminPageForm', [self::class, 'adminPostForm']);
-        dcCore::app()->addBehavior('adminBeforePostUpdate', [self::class, 'adminBeforePostUpdate']);
-        dcCore::app()->addBehavior('adminBeforePageUpdate', [self::class, 'adminBeforePostUpdate']);
+        App::behavior()->addBehavior('adminPostForm', [self::class,  'adminPostForm']);
+        App::behavior()->addBehavior('adminPageForm', [self::class, 'adminPostForm']);
+        App::behavior()->addBehavior('adminBeforePostUpdate', [self::class, 'adminBeforePostUpdate']);
+        App::behavior()->addBehavior('adminBeforePageUpdate', [self::class, 'adminBeforePostUpdate']);
 
-        dcCore::app()->addBehavior('adminPostFilterV2', [self::class,  'adminPostFilter']);
-        dcCore::app()->addBehavior('adminPostHeaders', [self::class,  'postHeaders']);
-        dcCore::app()->addBehavior('adminPageHeaders', [self::class,  'postHeaders']);
+        App::behavior()->addBehavior('adminPostFilterV2', [self::class,  'adminPostFilter']);
+        App::behavior()->addBehavior('adminPostHeaders', [self::class,  'postHeaders']);
+        App::behavior()->addBehavior('adminPageHeaders', [self::class,  'postHeaders']);
 
         (isset($_GET['p']) && $_GET['p'] == 'pages') ? $type = 'page' : $type = 'post';
 
         if (isset($_GET['remove']) && $_GET['remove'] == 'map') {
             try {
                 $post_id = $_GET['id'];
-                $meta    = dcCore::app()->meta;
+                $meta    = App::meta();
                 $meta->delPostMeta($post_id, 'map');
                 $meta->delPostMeta($post_id, 'map_options');
 
-                dcCore::app()->blog->triggerBlog();
+                App::blog()->triggerBlog();
 
-                Http::redirect(dcCore::app()->getPostAdminURL($type, $post_id, false, ['upd' => 1]));
+                Http::redirect(App::postTypes()->get($type)->adminUrl($post_id, false, ['upd' => 1]));
             } catch (Exception $e) {
-                dcCore::app()->error->add($e->getMessage());
+                App::error()->add($e->getMessage());
             }
         } elseif (!empty($_GET['remove']) && is_numeric($_GET['remove'])) {
             try {
                 $post_id = $_GET['id'];
 
-                $meta = dcCore::app()->meta;
+                $meta = App::meta();
                 $meta->delPostMeta($post_id, 'map', $_GET['remove']);
 
-                dcCore::app()->blog->triggerBlog();
+                App::blog()->triggerBlog();
 
-                Http::redirect(dcCore::app()->getPostAdminURL($type, $post_id, false, ['upd' => 1]));
+                Http::redirect(App::postTypes()->get($type)->adminUrl($post_id, false, ['upd' => 1]));
             } catch (Exception $e) {
-                dcCore::app()->error->add($e->getMessage());
+                App::error()->add($e->getMessage());
             }
         } elseif (!empty($_GET['add']) && $_GET['add'] == 'map') {
             try {
@@ -108,17 +108,17 @@ class Backend extends Process
                 $myGmaps_zoom   = $_GET['zoom'];
                 $myGmaps_type   = $_GET['type'];
 
-                $meta = dcCore::app()->meta;
+                $meta = App::meta();
                 $meta->delPostMeta($post_id, 'map_options');
 
                 $map_options = $myGmaps_center . ',' . $myGmaps_zoom . ',' . $myGmaps_type;
                 $meta->setPostMeta($post_id, 'map_options', $map_options);
 
-                dcCore::app()->blog->triggerBlog();
+                App::blog()->triggerBlog();
 
-                Http::redirect(dcCore::app()->getPostAdminURL($type, $post_id, false, ['upd' => 1]));
+                Http::redirect(App::postTypes()->get($type)->adminUrl($post_id, false, ['upd' => 1]));
             } catch (Exception $e) {
-                dcCore::app()->error->add($e->getMessage());
+                App::error()->add($e->getMessage());
             }
         }
 
@@ -130,7 +130,7 @@ class Backend extends Process
         if ($name == My::id()) {
             $params              = new ArrayObject();
             $params['post_type'] = 'map';
-            $page_count          = dcCore::app()->blog->getPosts($params, true)->f(0);
+            $page_count          = App::blog()->getPosts($params, true)->f(0);
             if ($page_count > 0) {
                 $str_pages = ($page_count > 1) ? __('%d map elements') : __('%d map element');
                 $icon[0]   = My::name() . '<br />' . sprintf($str_pages, $page_count);
@@ -196,18 +196,18 @@ class Backend extends Process
         $id   = $post->post_id;
         $type = $post->post_type;
 
-        $meta          = dcCore::app()->meta;
+        $meta          = App::meta();
         $elements_list = $meta->getMetaStr($post->post_meta, 'map');
         $map_options   = $meta->getMetaStr($post->post_meta, 'map_options');
 
         // Custom map styles
 
-        $public_path = dcCore::app()->blog->public_path;
-        $public_url  = dcCore::app()->blog->settings->system->public_url;
-        $blog_url    = dcCore::app()->blog->url;
+        $public_path = App::blog()->public_path;
+        $public_url  = App::blog()->settings->system->public_url;
+        $blog_url    = App::blog()->url;
 
         $map_styles_dir_path = $public_path . '/myGmaps/styles/';
-        $map_styles_dir_url  = http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/styles/');
+        $map_styles_dir_url  = http::concatURL(App::blog()->url, $public_url . '/myGmaps/styles/');
 
         if (is_dir($map_styles_dir_path)) {
             $map_styles      = glob($map_styles_dir_path . '*.js');
@@ -257,8 +257,8 @@ class Backend extends Process
 
         // redirection URLs
 
-        $addmapurl    = dcCore::app()->getPostAdminURL($post->post_type, $post->post_id) . '&add=map&center=' . $myGmaps_center . '&zoom=' . $myGmaps_zoom . '&type=' . $myGmaps_type . '&upd=1';
-        $removemapurl = dcCore::app()->getPostAdminURL($post->post_type, $post->post_id) . '&remove=map&upd=1';
+        $addmapurl    = App::postTypes()->get($post->post_type)->adminUrl($post->post_id) . '&add=map&center=' . $myGmaps_center . '&zoom=' . $myGmaps_zoom . '&type=' . $myGmaps_type . '&upd=1';
+        $removemapurl = App::postTypes()->get($post->post_type)->adminUrl($post->post_id) . '&remove=map&upd=1';
 
         if ($post->post_type === 'page') {
             $form_note      = '<span class="form-note">' . __('Map attached to this page.') . '</span>';
@@ -296,7 +296,7 @@ class Backend extends Process
             form::hidden('map_styles_base_url', $map_styles_base_url) .
             '</p>' .
             '<p>' . __('Empty map') . '</p>' .
-            '<p class="two-boxes add"><a href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id()) . '&act=maps&id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></p>' .
+            '<p class="two-boxes add"><a href="' . App::backend()->url()->get('admin.plugin.' . My::id()) . '&act=maps&id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></p>' .
             '<p class="two-boxes right"><a class="map-remove delete" href="' . $removemapurl . '"><strong>' . __('Remove map') . '</strong></a></p>' .
             '</div>' .
             '</div>';
@@ -323,23 +323,23 @@ class Backend extends Process
             try {
                 $params['post_id']   = $meta->splitMetaValues($elements_list);
                 $params['post_type'] = 'map';
-                $posts               = dcCore::app()->blog->getPosts($params);
-                $counter             = dcCore::app()->blog->getPosts($params, true);
+                $posts               = App::blog()->getPosts($params);
+                $counter             = App::blog()->getPosts($params, true);
                 $post_list           = new BackendMiniList($posts, $counter->f(0));
             } catch (Exception $e) {
-                dcCore::app()->error->add($e->getMessage());
+                App::error()->add($e->getMessage());
             }
 
-            dcCore::app()->admin->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
-            dcCore::app()->admin->nb_per_page = UserPref::getUserFilters('pages', 'nb');
+            App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+            App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
 
             echo '<div id="form-entries">' .
             '<p>' . __('Included elements list') . '</p>' ;
 
-            $post_list->display(dcCore::app()->admin->page, dcCore::app()->admin->nb_per_page, $enclose_block = '', $post->post_id, $post->post_type);
+            $post_list->display(App::backend()->page, App::backend()->nb_per_page, $enclose_block = '', $post->post_id, $post->post_type);
 
             echo '</div>' .
-            '<p class="two-boxes add"><a href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id()) . '&act=maps&id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></p>' .
+            '<p class="two-boxes add"><a href="' . App::backend()->url()->get('admin.plugin.' . My::id()) . '&act=maps&id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></p>' .
             '<p class="two-boxes right"><a class="map-remove delete" href="' . $removemapurl . '"><strong>' . __('Remove map') . '</strong></a></p>' .
             '</div>' .
             '</div>';
@@ -353,9 +353,9 @@ class Backend extends Process
                 $params['post_id']     = $meta->splitMetaValues($elements_list);
                 $params['post_type']   = 'map';
                 $params['post_status'] = '1';
-                $elements              = dcCore::app()->blog->getPosts($params);
+                $elements              = App::blog()->getPosts($params);
             } catch (Exception $e) {
-                dcCore::app()->error->add($e->getMessage());
+                App::error()->add($e->getMessage());
             }
 
             while ($elements->fetch()) {
@@ -365,7 +365,7 @@ class Backend extends Process
                 $content = str_replace(["\r\n", "\n", "\r"], '\\n', $content);
                 $content = str_replace(["'"], "\'", $content);
 
-                $meta        = dcCore::app()->meta;
+                $meta        = App::meta();
                 $description = $meta->getMetaStr($elements->post_meta, 'description');
                 $type        = $meta->getMetaStr($elements->post_meta, 'map');
 
@@ -524,18 +524,18 @@ class Backend extends Process
 
     public static function adminPostFilter(ArrayObject $filters)
     {
-        if (My::url() === dcCore::app()->adminurl->get('admin.plugin.' . My::id())) {
+        if (My::url() === App::backend()->url()->get('admin.plugin.' . My::id())) {
             // Replace default category filter
 
             $categories = null;
 
             try {
-                $categories = dcCore::app()->blog->getCategories(['post_type' => 'map', 'without_empty' => true]);
+                $categories = App::blog()->getCategories(['post_type' => 'map', 'without_empty' => true]);
                 if ($categories->isEmpty()) {
                     return null;
                 }
             } catch (Exception $e) {
-                dcCore::app()->error->add($e->getMessage());
+                App::error()->add($e->getMessage());
 
                 return null;
             }
@@ -549,14 +549,14 @@ class Backend extends Process
                     $params['no_content'] = true;
                     $params['cat_id']     = $categories->cat_id;
                     $params['post_type']  = 'map';
-                    dcCore::app()->blog->withoutPassword(false);
-                    dcCore::app()->admin->counter = dcCore::app()->blog->getPosts($params, true);
+                    App::blog()->withoutPassword(false);
+                    App::backend()->counter = App::blog()->getPosts($params, true);
                 } catch (Exception $e) {
-                    dcCore::app()->error->add($e->getMessage());
+                    App::error()->add($e->getMessage());
                 }
                 $combo[
                     str_repeat('&nbsp;', ($categories->level - 1) * 4) .
-                    Html::escapeHTML($categories->cat_title) . ' (' . dcCore::app()->admin->counter->f(0) . ')'
+                    Html::escapeHTML($categories->cat_title) . ' (' . App::backend()->counter->f(0) . ')'
                 ] = $categories->cat_id;
             }
 
@@ -633,7 +633,7 @@ class Backend extends Process
         $my_params['no_content'] = true;
         $my_params['post_type']  = ['post', 'page'];
 
-        $rs = dcCore::app()->blog->getPosts($my_params);
+        $rs = App::blog()->getPosts($my_params);
 
         if (!My::settings()->myGmaps_enabled) {
             return;
@@ -643,7 +643,7 @@ class Backend extends Process
             $myGmaps_center = $_POST['myGmaps_center'];
             $myGmaps_zoom   = $_POST['myGmaps_zoom'];
             $myGmaps_type   = $_POST['myGmaps_type'];
-            $meta           = dcCore::app()->meta;
+            $meta           = App::meta();
 
             $meta->delPostMeta($post_id, 'map_options');
 
@@ -690,7 +690,7 @@ class Backend extends Process
     public static function adminEntryListValue($rs, $cols)
     {
         $postTypes = ['post', 'page'];
-        $meta      = dcCore::app()->meta;
+        $meta      = App::meta();
 
         if (!empty($meta->getMetaStr($rs->post_meta, 'map_options')) && in_array($rs->post_type, $postTypes)) {
             $cols['status'] = str_replace('</td>', '<img style="width: 1.25em; height: 1.25em;" src="' . Page::getPF(My::id()) . '/css/img/marker.svg" title="' . __('Attached Map') . '" /></td>', $cols['status']);

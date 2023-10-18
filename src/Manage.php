@@ -9,11 +9,12 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\myGmaps;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Process;
 use Dotclear\Core\Backend\UserPref;
 use Dotclear\Core\Backend\Page;
@@ -58,7 +59,7 @@ class Manage extends Process
             ManageMaps::process();
         }
 
-        dcCore::app()->admin->default_tab = empty($_REQUEST['tab']) ? 'settings' : $_REQUEST['tab'];
+        App::backend()->default_tab = empty($_REQUEST['tab']) ? 'settings' : $_REQUEST['tab'];
 
         /*
          * Admin page params.
@@ -82,38 +83,38 @@ class Manage extends Process
 
                 My::redirect(['act' => 'list', 'tab' => 'settings','upd' => 1]);
             } catch (Exception $e) {
-                dcCore::app()->error->add($e->getMessage());
+                App::error()->add($e->getMessage());
             }
         }
 
-        dcCore::app()->admin->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
-        dcCore::app()->admin->nb_per_page = UserPref::getUserFilters('pages', 'nb');
+        App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+        App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
 
         if (!empty($_GET['nb']) && (int) $_GET['nb'] > 0) {
-            dcCore::app()->admin->nb_per_page = (int) $_GET['nb'];
+            App::backend()->nb_per_page = (int) $_GET['nb'];
         }
 
-        $params['limit']      = [((dcCore::app()->admin->page - 1) * dcCore::app()->admin->nb_per_page), dcCore::app()->admin->nb_per_page];
+        $params['limit']      = [((App::backend()->page - 1) * App::backend()->nb_per_page), App::backend()->nb_per_page];
         $params['post_type']  = 'map';
         $params['no_content'] = true;
         $params['order']      = 'post_title ASC';
 
-        dcCore::app()->admin->posts_list = null;
+        App::backend()->posts_list = null;
 
         try {
-            $pages   = dcCore::app()->blog->getPosts($params);
-            $counter = dcCore::app()->blog->getPosts($params, true);
+            $pages   = App::blog()->getPosts($params);
+            $counter = App::blog()->getPosts($params, true);
 
-            dcCore::app()->admin->posts_list = new BackendList($pages, $counter->f(0));
+            App::backend()->posts_list = new BackendList($pages, $counter->f(0));
         } catch (Exception $e) {
-            dcCore::app()->error->add($e->getMessage());
+            App::error()->add($e->getMessage());
         }
 
         // Actions combo box
-        dcCore::app()->admin->pages_actions_page          = new BackendActions(dcCore::app()->adminurl->get('admin.plugin'), ['p' => 'myGmaps','tab' => 'entries-list']);
-        dcCore::app()->admin->pages_actions_page_rendered = null;
-        if (dcCore::app()->admin->pages_actions_page->process()) {
-            dcCore::app()->admin->pages_actions_page_rendered = true;
+        App::backend()->pages_actions_page          = new BackendActions(App::backend()->url()->get('admin.plugin'), ['p' => 'myGmaps','tab' => 'entries-list']);
+        App::backend()->pages_actions_page_rendered = null;
+        if (App::backend()->pages_actions_page->process()) {
+            App::backend()->pages_actions_page_rendered = true;
         }
 
         return true;
@@ -138,8 +139,8 @@ class Manage extends Process
             return;
         }
 
-        if (dcCore::app()->admin->pages_actions_page_rendered) {
-            dcCore::app()->admin->pages_actions_page->render();
+        if (App::backend()->pages_actions_page_rendered) {
+            App::backend()->pages_actions_page->render();
 
             return;
         }
@@ -151,12 +152,12 @@ class Manage extends Process
 
         // Custom map styles
 
-        $public_path = dcCore::app()->blog->public_path;
-        $public_url  = dcCore::app()->blog->settings->system->public_url;
-        $blog_url    = dcCore::app()->blog->url;
+        $public_path = App::blog()->public_path;
+        $public_url  = App::blog()->settings->system->public_url;
+        $blog_url    = App::blog()->url;
 
         $map_styles_dir_path = $public_path . '/myGmaps/styles/';
-        $map_styles_dir_url  = Http::concatURL(dcCore::app()->blog->url, $public_url . '/myGmaps/styles/');
+        $map_styles_dir_url  = Http::concatURL(App::blog()->url, $public_url . '/myGmaps/styles/');
 
         if (is_dir($map_styles_dir_path)) {
             $map_styles      = glob($map_styles_dir_path . '*.js');
@@ -174,43 +175,43 @@ class Manage extends Process
 
         // Actions
 
-        dcCore::app()->admin->posts_actions_page = new ActionsPosts(dcCore::app()->adminurl->get('admin.plugin.' . My::id()));
-        if (dcCore::app()->admin->posts_actions_page->process()) {
+        App::backend()->posts_actions_page = new ActionsPosts(App::backend()->url()->get('admin.plugin.' . My::id()));
+        if (App::backend()->posts_actions_page->process()) {
             return;
         }
 
         // Filters
 
-        dcCore::app()->admin->post_filter = new FilterPosts();
+        App::backend()->post_filter = new FilterPosts();
 
         // Get list params
 
-        $params = dcCore::app()->admin->post_filter->params();
+        $params = App::backend()->post_filter->params();
 
-        dcCore::app()->admin->posts      = null;
-        dcCore::app()->admin->posts_list = null;
+        App::backend()->posts      = null;
+        App::backend()->posts_list = null;
 
-        dcCore::app()->admin->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
-        dcCore::app()->admin->nb_per_page = UserPref::getUserFilters('pages', 'nb');
+        App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+        App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
 
         /*
         * Config and list of map elements
         */
 
         if (isset($_GET['page'])) {
-            dcCore::app()->admin->default_tab = 'entries-list';
+            App::backend()->default_tab = 'entries-list';
         }
 
         // Get map elements
 
         try {
-            $params['no_content']            = true;
-            $params['post_type']             = 'map';
-            dcCore::app()->admin->posts      = dcCore::app()->blog->getPosts($params);
-            dcCore::app()->admin->counter    = dcCore::app()->blog->getPosts($params, true);
-            dcCore::app()->admin->posts_list = new BackendList(dcCore::app()->admin->posts, dcCore::app()->admin->counter->f(0));
+            $params['no_content']      = true;
+            $params['post_type']       = 'map';
+            App::backend()->posts      = App::blog()->getPosts($params);
+            App::backend()->counter    = App::blog()->getPosts($params, true);
+            App::backend()->posts_list = new BackendList(App::backend()->posts, App::backend()->counter->f(0));
         } catch (Exception $e) {
-            dcCore::app()->error->add($e->getMessage());
+            App::error()->add($e->getMessage());
         }
 
         $starting_script = '<script src="https://maps.googleapis.com/maps/api/js?key=' . My::settings()->myGmaps_API_key . '&libraries=places&callback=Function.prototype"></script>';
@@ -241,8 +242,8 @@ class Manage extends Process
             $starting_script .
             Page::jsLoad('js/_posts_list.js') .
             Page::jsMetaEditor() .
-            dcCore::app()->admin->post_filter->js(My::manageUrl() . '#entries-list') .
-            Page::jsPageTabs(dcCore::app()->admin->default_tab) .
+            App::backend()->post_filter->js(My::manageUrl() . '#entries-list') .
+            Page::jsPageTabs(App::backend()->default_tab) .
             Page::jsConfirmClose('config-form') .
             My::jsLoad('config.map.min.js') .
             My::cssLoad('admin.css')
@@ -250,8 +251,8 @@ class Manage extends Process
 
         echo Page::breadcrumb(
             [
-                html::escapeHTML(dcCore::app()->blog->name) => '',
-                My::name()                                  => My::manageUrl(),
+                html::escapeHTML(App::blog()->name) => '',
+                My::name()                          => My::manageUrl(),
             ]
         ) .
         Notices::getNotices();
@@ -293,7 +294,7 @@ class Manage extends Process
             form::hidden('myGmaps_type', My::settings()->myGmaps_type) .
             form::hidden('map_styles_list', $map_styles_list) .
             form::hidden('map_styles_base_url', $map_styles_base_url) .
-            dcCore::app()->formNonce() .
+            App::nonce()->getFormNonce() .
             '</p></div>' .
             '<p><input type="submit" name="saveconfig" value="' . __('Save configuration') . '" /></p>' .
 
@@ -308,12 +309,12 @@ class Manage extends Process
             echo '<p class="top-add"><strong><a class="button add" href="' . My::manageUrl() . '&act=map">' . __('New element') . '</a></strong></p>';
         }
 
-        dcCore::app()->admin->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="myGmaps" /><input type="hidden" name="tab" value="entries-list" />');
+        App::backend()->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="myGmaps" /><input type="hidden" name="tab" value="entries-list" />');
 
         // Show posts
-        dcCore::app()->admin->posts_list->display(
-            dcCore::app()->admin->post_filter->page,
-            dcCore::app()->admin->post_filter->nb,
+        App::backend()->posts_list->display(
+            App::backend()->post_filter->page,
+            App::backend()->post_filter->nb,
             '<form action="' . My::manageUrl() . '" method="post" id="form-entries">' .
 
             '%s' .
@@ -323,13 +324,13 @@ class Manage extends Process
 
             // Actions
             '<p class="col right"><label for="action" class="classic">' . __('Selected entries action:') . '</label> ' .
-            form::combo('action', dcCore::app()->admin->posts_actions_page->getCombo()) .
+            form::combo('action', App::backend()->posts_actions_page->getCombo()) .
             '<input id="do-action" type="submit" value="' . __('ok') . '" disabled /></p>' .
-            dcCore::app()->adminurl->getHiddenFormFields('admin.plugin.' . My::id(), dcCore::app()->admin->post_filter->values()) .
-            dcCore::app()->formNonce() . '</p>' .
+            App::backend()->url()->getHiddenFormFields('admin.plugin.' . My::id(), App::backend()->post_filter->values()) .
+            App::nonce()->getFormNonce() . '</p>' .
             '</div>' .
             '</form>',
-            dcCore::app()->admin->post_filter->show()
+            App::backend()->post_filter->show()
         );
 
         echo
