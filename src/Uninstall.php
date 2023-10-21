@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace Dotclear\Plugin\colorbox;
+namespace Dotclear\Plugin\myGmaps;
 
 use Dotclear\App;
 use Dotclear\Core\Process;
@@ -40,7 +40,7 @@ class Uninstall extends Process
         // $var   = My::id(); // Var sub-folder
 
         // Database table name
-        // $table = App::con()->prefix() . 'colorbox';
+        // $table = App::con()->prefix() . 'myGmaps';
 
         $user_actions = [
 
