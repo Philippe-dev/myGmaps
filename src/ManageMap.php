@@ -16,12 +16,10 @@ namespace Dotclear\Plugin\myGmaps;
 
 use ArrayObject;
 use Dotclear\Core\Backend\Combos;
-use dcBlog;
 use Dotclear\App;
 use Dotclear\Core\Process;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Backend\Notices;
-use dcAuth;
 use Dotclear\Helper\Date;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
@@ -92,7 +90,7 @@ class ManageMap extends Process
         // If user can't publish
 
         if (!App::backend()->can_publish) {
-            App::backend()->post_status = dcBlog::POST_PENDING;
+            App::backend()->post_status = App::blog()::POST_PENDING;
         }
 
         // Getting categories
@@ -286,7 +284,7 @@ class ManageMap extends Process
         if (!empty($_POST) && !empty($_POST['save']) && App::backend()->can_edit_post && !App::backend()->bad_dt) {
             // Create or update post
 
-            $cur = App::con()->openCursor(App::con()->prefix() . dcBlog::POST_TABLE_NAME);
+            $cur = App::con()->openCursor(App::con()->prefix() . App::blog()::POST_TABLE_NAME);
 
             if ($_POST['post_content'] == '' || $_POST['post_content'] == __('No description.') || $_POST['post_content'] == '<p>' . __('No description.') . '</p>') {
                 if (App::backend()->post_format == 'xhtml') {
@@ -587,19 +585,19 @@ class ManageMap extends Process
 
         if (App::backend()->post_id) {
             switch (App::backend()->post_status) {
-                case dcBlog::POST_PUBLISHED:
+                case App::blog()::POST_PUBLISHED:
                     $img_status = sprintf($img_status_pattern, __('Published'), 'check-on.png');
 
                     break;
-                case dcBlog::POST_UNPUBLISHED:
+                case App::blog()::POST_UNPUBLISHED:
                     $img_status = sprintf($img_status_pattern, __('Unpublished'), 'check-off.png');
 
                     break;
-                case dcBlog::POST_SCHEDULED:
+                case App::blog()::POST_SCHEDULED:
                     $img_status = sprintf($img_status_pattern, __('Scheduled'), 'scheduled.png');
 
                     break;
-                case dcBlog::POST_PENDING:
+                case App::blog()::POST_PENDING:
                     $img_status = sprintf($img_status_pattern, __('Pending'), 'check-wrn.png');
 
                     break;
@@ -717,7 +715,7 @@ class ManageMap extends Process
                         form::combo('cat_id', App::backend()->categories_combo, App::backend()->cat_id, 'maximal') .
                         '</p>' .
                         (App::auth()->check(App::auth()->makePermissions([
-                            dcAuth::PERMISSION_CATEGORIES,
+                            App::auth()::PERMISSION_CATEGORIES,
                         ]), App::blog()->id) ?
                             '<div>' .
                             '<h5 id="create_cat">' . __('Add a new category') . '</h5>' .
@@ -972,22 +970,22 @@ class ManageMap extends Process
             $img_status = '';
             $sts_class  = '';
             switch ($rs->comment_status) {
-                case dcBlog::COMMENT_PUBLISHED:
+                case App::blog()::COMMENT_PUBLISHED:
                     $img_status = sprintf($img, __('Published'), 'check-on.png');
                     $sts_class  = 'sts-online';
 
                     break;
-                case dcBlog::COMMENT_UNPUBLISHED:
+                case App::blog()::COMMENT_UNPUBLISHED:
                     $img_status = sprintf($img, __('Unpublished'), 'check-off.png');
                     $sts_class  = 'sts-offline';
 
                     break;
-                case dcBlog::COMMENT_PENDING:
+                case App::blog()::COMMENT_PENDING:
                     $img_status = sprintf($img, __('Pending'), 'check-wrn.png');
                     $sts_class  = 'sts-pending';
 
                     break;
-                case dcBlog::COMMENT_JUNK:
+                case App::blog()::COMMENT_JUNK:
                     $img_status = sprintf($img, __('Junk'), 'junk.png');
                     $sts_class  = 'sts-junk';
 
@@ -995,7 +993,7 @@ class ManageMap extends Process
             }
 
             echo
-            '<tr class="line ' . ($rs->comment_status != dcBlog::COMMENT_PUBLISHED ? ' offline ' : '') . $sts_class . '"' .
+            '<tr class="line ' . ($rs->comment_status != App::blog()::COMMENT_PUBLISHED ? ' offline ' : '') . $sts_class . '"' .
             ' id="c' . $rs->comment_id . '">' .
 
             '<td class="nowrap">' .

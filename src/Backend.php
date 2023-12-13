@@ -165,21 +165,33 @@ class Backend extends Process
         }
 
         if (isset($csp['script-src'])) {
-            $csp['script-src'] .= ' maps.googleapis.com';
+            $csp['script-src'] .= ' https://*.googleapis.com https://*.gstatic.com *.google.com https://*.ggpht.com *.googleusercontent.com blob:';
         } else {
-            $csp['script-src'] = 'maps.googleapis.com';
+            $csp['script-src'] = 'https://*.googleapis.com https://*.gstatic.com *.google.com https://*.ggpht.com *.googleusercontent.com blob:';
         }
 
         if (isset($csp['img-src'])) {
-            $csp['img-src'] .= ' *.google.com *.googleusercontent.com *.gstatic.com *.googleapis.com *.ggpht.com tile.openstreetmap.org';
+            $csp['img-src'] .= ' https://*.googleapis.com https://*.gstatic.com *.google.com  *.googleusercontent.com data: tile.openstreetmap.org';
         } else {
-            $csp['img-src'] = '*.google.com *.googleusercontent.com *.gstatic.com *.googleapis.com *.ggpht.com tile.openstreetmap.org';
+            $csp['img-src'] = 'https://*.googleapis.com https://*.gstatic.com *.google.com  *.googleusercontent.com data: tile.openstreetmap.org';
+        }
+
+        if (isset($csp['frame-src'])) {
+            $csp['frame-src'] .= ' *.google.com tile.openstreetmap.org';
+        } else {
+            $csp['frame-src'] = '*.google.com tile.openstreetmap.org';
         }
 
         if (isset($csp['style-src'])) {
-            $csp['style-src'] .= ' fonts.googleapis.com';
+            $csp['style-src'] .= ' https://fonts.googleapis.com';
         } else {
-            $csp['style-src'] = 'fonts.googleapis.com';
+            $csp['style-src'] = 'https://fonts.googleapis.com';
+        }
+
+        if (isset($csp['worker-src'])) {
+            $csp['worker-src'] .= ' blob:';
+        } else {
+            $csp['worker-src'] = 'blob:';
         }
     }
 

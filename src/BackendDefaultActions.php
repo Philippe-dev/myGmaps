@@ -15,9 +15,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\myGmaps;
 
 use ArrayObject;
-use dcBlog;
 use Dotclear\App;
-use dcAuth;
 use Dotclear\Core\Backend\Combos;
 use Dotclear\Core\Backend\Action\ActionsPostsDefault;
 use Dotclear\Helper\Html\Html;
@@ -35,8 +33,8 @@ class BackendDefaultActions
     public static function adminPostsActionsPage(BackendActions $ap)
     {
         if (App::auth()->check(App::auth()->makePermissions([
-            dcAuth::PERMISSION_PUBLISH,
-            dcAuth::PERMISSION_CONTENT_ADMIN,
+            App::auth()::PERMISSION_PUBLISH,
+            App::auth()::PERMISSION_CONTENT_ADMIN,
         ]), App::blog()->id)) {
             $ap->addAction(
                 [__('Status') => [
@@ -80,7 +78,7 @@ class BackendDefaultActions
             [self::class, 'doChangePostLang']
         );
         if (App::auth()->check(App::auth()->makePermissions([
-            dcAuth::PERMISSION_ADMIN,
+            App::auth()::PERMISSION_ADMIN,
         ]), App::blog()->id)) {
             $ap->addAction(
                 [__('Change') => [
@@ -89,8 +87,8 @@ class BackendDefaultActions
             );
         }
         if (App::auth()->check(App::auth()->makePermissions([
-            dcAuth::PERMISSION_DELETE,
-            dcAuth::PERMISSION_CONTENT_ADMIN,
+            App::auth()::PERMISSION_DELETE,
+            App::auth()::PERMISSION_CONTENT_ADMIN,
         ]), App::blog()->id)) {
             $ap->addAction(
                 [__('Delete') => [
@@ -111,19 +109,19 @@ class BackendDefaultActions
     {
         switch ($ap->getAction()) {
             case 'unpublish':
-                $status = dcBlog::POST_UNPUBLISHED;
+                $status = App::blog()::POST_UNPUBLISHED;
 
                 break;
             case 'schedule':
-                $status = dcBlog::POST_SCHEDULED;
+                $status = App::blog()::POST_SCHEDULED;
 
                 break;
             case 'pending':
-                $status = dcBlog::POST_PENDING;
+                $status = App::blog()::POST_PENDING;
 
                 break;
             default:
-                $status = dcBlog::POST_PUBLISHED;
+                $status = App::blog()::POST_PUBLISHED;
 
                 break;
         }
@@ -135,12 +133,12 @@ class BackendDefaultActions
 
         // Do not switch to scheduled already published elements
 
-        if ($status === dcBlog::POST_SCHEDULED) {
+        if ($status === App::blog()::POST_SCHEDULED) {
             $rs           = $ap->getRS();
             $excluded_ids = [];
             if ($rs->rows()) {
                 while ($rs->fetch()) {
-                    if ((int) $rs->post_status === dcBlog::POST_PUBLISHED) {
+                    if ((int) $rs->post_status === App::blog()::POST_PUBLISHED) {
                         $excluded_ids[] = (int) $rs->post_id;
                     }
                 }
@@ -267,7 +265,7 @@ class BackendDefaultActions
             }
             $new_cat_id = $post['new_cat_id'];
             if (!empty($post['new_cat_title']) && App::auth()->check(App::auth()->makePermissions([
-                dcAuth::PERMISSION_CATEGORIES,
+                App::auth()::PERMISSION_CATEGORIES,
             ]), App::blog()->id)) {
                 $cur_cat            = App::con()->openCursor(App::con()->prefix() . dcCategories::CATEGORY_TABLE_NAME);
                 $cur_cat->cat_title = $post['new_cat_title'];
@@ -325,7 +323,7 @@ class BackendDefaultActions
             form::combo(['new_cat_id'], $categories_combo);
 
             if (App::auth()->check(App::auth()->makePermissions([
-                dcAuth::PERMISSION_CATEGORIES,
+                App::auth()::PERMISSION_CATEGORIES,
             ]), App::blog()->id)) {
                 echo
                 '<div>' .
@@ -359,7 +357,7 @@ class BackendDefaultActions
     public static function doChangePostAuthor(BackendActions $ap, ArrayObject $post)
     {
         if (isset($post['new_auth_id']) && App::auth()->check(App::auth()->makePermissions([
-            dcAuth::PERMISSION_ADMIN,
+            App::auth()::PERMISSION_ADMIN,
         ]), App::blog()->id)) {
             $new_user_id = $post['new_auth_id'];
             $ids         = $ap->getIDs();
@@ -370,7 +368,7 @@ class BackendDefaultActions
                 throw new Exception(__('This user does not exist'));
             }
 
-            $cur          = App::con()->openCursor(App::con()->prefix() . dcBlog::POST_TABLE_NAME);
+            $cur          = App::con()->openCursor(App::con()->prefix() . App::blog()::POST_TABLE_NAME);
             $cur->user_id = $new_user_id;
             $cur->update('WHERE post_id ' . App::con()->in($ids));
             Page::addSuccessNotice(
@@ -389,7 +387,7 @@ class BackendDefaultActions
         } else {
             $usersList = [];
             if (App::auth()->check(App::auth()->makePermissions([
-                dcAuth::PERMISSION_ADMIN,
+                App::auth()::PERMISSION_ADMIN,
             ]), App::blog()->id)) {
                 $params = [
                     'limit' => 100,
@@ -446,7 +444,7 @@ class BackendDefaultActions
         }
         if (isset($post['new_lang'])) {
             $new_lang       = $post['new_lang'];
-            $cur            = App::con()->openCursor(App::con()->prefix() . dcBlog::POST_TABLE_NAME);
+            $cur            = App::con()->openCursor(App::con()->prefix() . App::blog()::POST_TABLE_NAME);
             $cur->post_lang = $new_lang;
             $cur->update('WHERE post_id ' . App::con()->in($post_ids));
             Page::addSuccessNotice(
