@@ -586,19 +586,19 @@ class ManageMap extends Process
         if (App::backend()->post_id) {
             switch (App::backend()->post_status) {
                 case App::blog()::POST_PUBLISHED:
-                    $img_status = sprintf($img_status_pattern, __('Published'), 'check-on.png');
+                    $img_status = sprintf($img_status_pattern, __('Published'), 'check-on.svg');
 
                     break;
                 case App::blog()::POST_UNPUBLISHED:
-                    $img_status = sprintf($img_status_pattern, __('Unpublished'), 'check-off.png');
+                    $img_status = sprintf($img_status_pattern, __('Unpublished'), 'check-off.svg');
 
                     break;
                 case App::blog()::POST_SCHEDULED:
-                    $img_status = sprintf($img_status_pattern, __('Scheduled'), 'scheduled.png');
+                    $img_status = sprintf($img_status_pattern, __('Scheduled'), 'scheduled.svg');
 
                     break;
                 case App::blog()::POST_PENDING:
-                    $img_status = sprintf($img_status_pattern, __('Pending'), 'check-wrn.png');
+                    $img_status = sprintf($img_status_pattern, __('Pending'), 'check-wrn.svg');
 
                     break;
             }
@@ -971,22 +971,22 @@ class ManageMap extends Process
             $sts_class  = '';
             switch ($rs->comment_status) {
                 case App::blog()::COMMENT_PUBLISHED:
-                    $img_status = sprintf($img, __('Published'), 'check-on.png');
+                    $img_status = sprintf($img, __('Published'), 'check-on.svg');
                     $sts_class  = 'sts-online';
 
                     break;
                 case App::blog()::COMMENT_UNPUBLISHED:
-                    $img_status = sprintf($img, __('Unpublished'), 'check-off.png');
+                    $img_status = sprintf($img, __('Unpublished'), 'check-off.svg');
                     $sts_class  = 'sts-offline';
 
                     break;
                 case App::blog()::COMMENT_PENDING:
-                    $img_status = sprintf($img, __('Pending'), 'check-wrn.png');
+                    $img_status = sprintf($img, __('Pending'), 'check-wrn.svg');
                     $sts_class  = 'sts-pending';
 
                     break;
                 case App::blog()::COMMENT_JUNK:
-                    $img_status = sprintf($img, __('Junk'), 'junk.png');
+                    $img_status = sprintf($img, __('Junk'), 'junk.svg');
                     $sts_class  = 'sts-junk';
 
                     break;
@@ -1018,7 +1018,7 @@ class ManageMap extends Process
                 '') .
             '<td class="nowrap status">' . $img_status . '</td>' .
             '<td class="nowrap status"><a href="' . $comment_url . '">' .
-            '<img src="images/edit-mini.png" alt="" title="' . __('Edit this comment') . '" /> ' . __('Edit') . '</a></td>' .
+            '<img src="images/edit-mini.svg" alt="" title="' . __('Edit this comment') . '" /> ' . __('Edit') . '</a></td>' .
             '</tr>';
         }
 

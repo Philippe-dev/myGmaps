@@ -80,38 +80,38 @@ class BackendMiniList extends Listing
         $img = '<img alt="%1$s" title="%1$s" src="images/%2$s" />';
         switch ($this->rs->post_status) {
             case App::blog()::POST_PUBLISHED:
-                $img_status = sprintf($img, __('published'), 'check-on.png');
+                $img_status = sprintf($img, __('published'), 'check-on.svg');
 
                 break;
             case App::blog()::POST_UNPUBLISHED:
-                $img_status = sprintf($img, __('unpublished'), 'check-off.png');
+                $img_status = sprintf($img, __('unpublished'), 'check-off.svg');
 
                 break;
             case App::blog()::POST_SCHEDULED:
-                $img_status = sprintf($img, __('scheduled'), 'scheduled.png');
+                $img_status = sprintf($img, __('scheduled'), 'scheduled.svg');
 
                 break;
             case App::blog()::POST_PENDING:
-                $img_status = sprintf($img, __('pending'), 'check-wrn.png');
+                $img_status = sprintf($img, __('pending'), 'check-wrn.svg');
 
                 break;
         }
 
         $protected = '';
         if ($this->rs->post_password) {
-            $protected = sprintf($img, __('Protected'), 'locker.png');
+            $protected = sprintf($img, __('Protected'), 'locker.svg');
         }
 
         $selected = '';
         if ($this->rs->post_selected) {
-            $selected = sprintf($img, __('Selected'), 'selected.png');
+            $selected = sprintf($img, __('Selected'), 'selected.svg');
         }
 
         $attach   = '';
         $nb_media = $this->rs->countMedia();
         if ($nb_media > 0) {
             $attach_str = $nb_media == 1 ? __('%d attachment') : __('%d attachments');
-            $attach     = sprintf($img, sprintf($attach_str, $nb_media), 'attach.png');
+            $attach     = sprintf($img, sprintf($attach_str, $nb_media), 'attach.svg');
         }
 
         if (App::auth()->check('categories', App::blog()->id)) {
@@ -141,9 +141,9 @@ class BackendMiniList extends Listing
         '<td class="nowrap">' . __($meta_rs) . '</td>' .
         '<td class="nowrap status">' . $img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach . '</td>';
         if ($type == 'post') {
-            $res .= '<td class="nowrap count"><a class="element-remove" href="' . App::postTypes()->get($type)->adminUrl($id) . '&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.png" alt="supprimer" /></a></td>';
+            $res .= '<td class="nowrap count"><a class="element-remove" href="' . App::postTypes()->get($type)->adminUrl($id) . '&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.svg" alt="supprimer" /></a></td>';
         } elseif ($type == 'page') {
-            $res .= '<td class="nowrap count"><a class="element-remove" href="' . App::postTypes()->get($type)->adminUrl($id) . '&upd=1&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.png" alt="supprimer" /></a></td>';
+            $res .= '<td class="nowrap count"><a class="element-remove" href="' . App::postTypes()->get($type)->adminUrl($id) . '&upd=1&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '"><img src="images/trash.svg" alt="supprimer" /></a></td>';
         }
         $res .= '</tr>';
 

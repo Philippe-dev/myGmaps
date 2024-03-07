@@ -274,3 +274,9 @@ button.delete_map {
 p#excerpt {
   display: none;
 }
+
+/*momentary hack to use svg icons in admin lists*/
+#form-entries img, p.info img, .img_select_option {
+  vertical-align: middle;
+  width: 1.4em;
+}

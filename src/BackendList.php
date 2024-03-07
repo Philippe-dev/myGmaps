@@ -97,13 +97,13 @@ class BackendList extends Listing
 
             $fmt = fn ($title, $image) => sprintf('<img alt="%1$s" title="%1$s" src="images/%2$s" /> %1$s', $title, $image);
             echo '<p class="info">' . __('Legend: ') .
-                $fmt(__('Published'), 'check-on.png') . ' - ' .
-                $fmt(__('Unpublished'), 'check-off.png') . ' - ' .
-                $fmt(__('Scheduled'), 'scheduled.png') . ' - ' .
-                $fmt(__('Pending'), 'check-wrn.png') . ' - ' .
-                $fmt(__('Protected'), 'locker.png') . ' - ' .
-                $fmt(__('Selected'), 'selected.png') . ' - ' .
-                $fmt(__('Attachments'), 'attach.png') .
+                $fmt(__('Published'), 'check-on.svg') . ' - ' .
+                $fmt(__('Unpublished'), 'check-off.svg') . ' - ' .
+                $fmt(__('Scheduled'), 'scheduled.svg') . ' - ' .
+                $fmt(__('Pending'), 'check-wrn.svg') . ' - ' .
+                $fmt(__('Protected'), 'locker.svg') . ' - ' .
+                $fmt(__('Selected'), 'selected.svg') . ' - ' .
+                $fmt(__('Attachments'), 'attach.svg') .
                 '</p>';
 
             echo $blocks[2];
@@ -144,22 +144,22 @@ class BackendList extends Listing
         $sts_class  = '';
         switch ($this->rs->post_status) {
             case App::blog()::POST_PUBLISHED:
-                $img_status = sprintf($img, __('Published'), 'check-on.png', 'published');
+                $img_status = sprintf($img, __('Published'), 'check-on.svg', 'published');
                 $sts_class  = 'sts-online';
 
                 break;
             case App::blog()::POST_UNPUBLISHED:
-                $img_status = sprintf($img, __('Unpublished'), 'check-off.png', 'unpublished');
+                $img_status = sprintf($img, __('Unpublished'), 'check-off.svg', 'unpublished');
                 $sts_class  = 'sts-offline';
 
                 break;
             case App::blog()::POST_SCHEDULED:
-                $img_status = sprintf($img, __('Scheduled'), 'scheduled.png', 'scheduled');
+                $img_status = sprintf($img, __('Scheduled'), 'scheduled.svg', 'scheduled');
                 $sts_class  = 'sts-scheduled';
 
                 break;
             case App::blog()::POST_PENDING:
-                $img_status = sprintf($img, __('Pending'), 'check-wrn.png', 'pending');
+                $img_status = sprintf($img, __('Pending'), 'check-wrn.svg', 'pending');
                 $sts_class  = 'sts-pending';
 
                 break;
@@ -167,19 +167,19 @@ class BackendList extends Listing
 
         $protected = '';
         if ($this->rs->post_password) {
-            $protected = sprintf($img, __('Protected'), 'locker.png', 'locked');
+            $protected = sprintf($img, __('Protected'), 'locker.svg', 'locked');
         }
 
         $selected = '';
         if ($this->rs->post_selected) {
-            $selected = sprintf($img, __('Selected'), 'selected.png', 'selected');
+            $selected = sprintf($img, __('Selected'), 'selected.svg', 'selected');
         }
 
         $attach   = '';
         $nb_media = $this->rs->countMedia();
         if ($nb_media > 0) {
             $attach_str = $nb_media == 1 ? __('%d attachment') : __('%d attachments');
-            $attach     = sprintf($img, sprintf($attach_str, $nb_media), 'attach.png', 'attach');
+            $attach     = sprintf($img, sprintf($attach_str, $nb_media), 'attach.svg', 'attach');
         }
 
         $res = '<tr class="line ' . ($this->rs->post_status != App::blog()::POST_PUBLISHED ? 'offline ' : '') . $sts_class . '"' .
