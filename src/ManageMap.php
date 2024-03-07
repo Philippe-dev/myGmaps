@@ -572,11 +572,6 @@ class ManageMap extends Process
             App::behavior()->callBehavior('adminPostHeaders') .
             Page::jsPageTabs(App::backend()->default_tab) .
             My::cssLoad('admin.css') .
-            '<style type="text/css">' . "\n" .
-            '#options-box, .s-tags, .s-featuredmedia, .s-attachments {' . "\n" .
-            'display: none;' . "\n" .
-            '}' . "\n" .
-            '</style>' . "\n" .
             App::backend()->next_headlink . "\n" . App::backend()->prev_headlink
         );
 

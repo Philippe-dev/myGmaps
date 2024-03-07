@@ -275,6 +275,10 @@ p#excerpt {
   display: none;
 }
 
+#options-box, .s-tags, .s-featuredmedia, .s-attachments {
+  display: none;
+}
+
 /*momentary hack to use svg icons in admin lists*/
 #form-entries img, p.info img, .img_select_option {
   vertical-align: middle;
