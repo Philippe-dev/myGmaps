@@ -564,9 +564,9 @@ class ManageMap extends Process
             Page::jsModal() .
             Page::jsLoad('js/_post.js') .
             Page::jsMetaEditor() .
-            My::jsLoad('element.map.min.js') .
             $admin_post_behavior .
             $starting_script .
+            My::jsLoad('element.map.min.js') .
             Page::jsConfirmClose('entry-form') .
             # --BEHAVIOR-- adminPostHeaders --
             App::behavior()->callBehavior('adminPostHeaders') .

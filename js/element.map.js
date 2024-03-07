@@ -4,7 +4,7 @@ $(() => {
     return;
   }
 
-  if (document.getElementById('edit-entry')) {
+  if (document.getElementById('map_canvas')) {
     // Misc functions
 
     function trim(myString) {
