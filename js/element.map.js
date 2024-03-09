@@ -1276,7 +1276,7 @@ $(() => {
         $(this).removeClass("active");
         $(this).removeClass("inactive");
       });
-      $("#delete_map").blur();
+      $("#delete_map").trigger("blur");
 
       // Save default values
 
@@ -1287,42 +1287,18 @@ $(() => {
       markersArray.length = 0;
       vertexArray.length = 0;
 
-      polyline.setOptions({
-        strokeColor: '#555',
-        strokeOpacity: 0.8,
-        strokeWeight: 3
-      });
+      polyline.setOptions({});
       polylinePath.clear();
       polyline.setMap(null);
 
-      polygon.setOptions({
-        strokeColor: '#555',
-        strokeOpacity: 0.8,
-        strokeWeight: 3,
-        fillColor: '#ccc',
-        fillOpacity: 0.35
-      });
+      polygon.setOptions({});
       polygonPath.clear();
       polygon.setMap(null);
 
-      rectangle.setOptions({
-        strokeColor: '#555',
-        strokeOpacity: 0.8,
-        strokeWeight: 3,
-        fillColor: '#ccc',
-        fillOpacity: 0.35,
-        radius: 100
-      });
+      rectangle.setOptions({});
       rectangle.setMap(null);
 
-      circle.setOptions({
-        strokeColor: '#555',
-        strokeOpacity: 0.8,
-        strokeWeight: 3,
-        fillColor: '#ccc',
-        fillOpacity: 0.35,
-        radius: 100
-      });
+      circle.setOptions({});
       circle.setMap(null);
 
       kmlLayer.setOptions({});
