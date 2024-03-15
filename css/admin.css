@@ -280,7 +280,7 @@ p#excerpt {
 }
 
 /*momentary hack to use svg icons in admin lists*/
-#form-entries img, .img_select_option {
+#form-entries img {
   vertical-align: middle;
   width: 1.4em;
 }
