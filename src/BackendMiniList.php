@@ -145,9 +145,9 @@ class BackendMiniList extends Listing
         '<td class="nowrap">' . __($meta_rs) . '</td>' .
         '<td class="nowrap status">' . $img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach . '</td>';
         if ($type == 'post') {
-            $res .= '<td class="nowrap count"><a class="mark element-remove" href="' . App::postTypes()->get($type)->adminUrl($id) . '&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '"><img class="mark" style="width: 1.4em" src="images/trash.svg" alt="supprimer" /></a></td>';
+            $res .= '<td class="nowrap count"><a class="mark element-remove" href="' . App::postTypes()->get($type)->adminUrl($id) . '&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '"><img class="mark element-remove" src="images/trash.svg" alt="supprimer" /></a></td>';
         } elseif ($type == 'page') {
-            $res .= '<td class="nowrap count"><a class="mark element-remove" href="' . App::postTypes()->get($type)->adminUrl($id) . '&upd=1&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '"><img class="mark" style="width: 1.4em" src="images/trash.svg" alt="supprimer" /></a></td>';
+            $res .= '<td class="nowrap count"><a class="mark element-remove" href="' . App::postTypes()->get($type)->adminUrl($id) . '&upd=1&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '"><img class="mark element-remove" src="images/trash.svg" alt="supprimer" /></a></td>';
         }
         $res .= '</tr>';
 
