@@ -136,7 +136,7 @@ class BackendMiniList extends Listing
         $meta    = App::meta();
         $meta_rs = $meta->getMetaStr($this->rs->post_meta, 'map');
 
-        $res = '<tr class="line' . ($this->rs->post_status != 1 ? ' offline' : '') . '"' .
+        $res = '<tr class="line ' . ($this->rs->post_status != App::blog()::POST_PUBLISHED ? 'offline ' : '') . $sts_class . '"' .
         ' id="p' . $this->rs->post_id . '">';
 
         $res .= '<td class="maximal"><a href="' . App::backend()->url()->get('admin.plugin.' . My::id()) . '&act=map&id=' . $this->rs->post_id . '" title="' . __('Edit map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '">' . Html::escapeHTML($this->rs->post_title) . '</a></td>' .
