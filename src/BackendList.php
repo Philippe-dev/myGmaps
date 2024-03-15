@@ -95,15 +95,15 @@ class BackendList extends Listing
 
             echo $blocks[1];
 
-            $fmt = fn ($title, $image) => sprintf('<img alt="%1$s" title="%1$s" src="images/%2$s" /> %1$s', $title, $image);
+            $fmt = fn ($title, $image, $class) => sprintf('<img alt="%1$s" src="images/%2$s" class="mark mark-%3$s"> %1$s', $title, $image, $class);
             echo '<p class="info">' . __('Legend: ') .
-                $fmt(__('Published'), 'check-on.svg') . ' - ' .
-                $fmt(__('Unpublished'), 'check-off.svg') . ' - ' .
-                $fmt(__('Scheduled'), 'scheduled.svg') . ' - ' .
-                $fmt(__('Pending'), 'check-wrn.svg') . ' - ' .
-                $fmt(__('Protected'), 'locker.svg') . ' - ' .
-                $fmt(__('Selected'), 'selected.svg') . ' - ' .
-                $fmt(__('Attachments'), 'attach.svg') .
+                $fmt(__('Published'), 'published.svg', 'published') . ' - ' .
+                $fmt(__('Unpublished'), 'unpublished.svg', 'unpublished') . ' - ' .
+                $fmt(__('Scheduled'), 'scheduled.svg', 'scheduled') . ' - ' .
+                $fmt(__('Pending'), 'pending.svg', 'pending') . ' - ' .
+                $fmt(__('Protected'), 'locker.svg', 'locked') . ' - ' .
+                $fmt(__('Selected'), 'selected.svg', 'selected') . ' - ' .
+                $fmt(__('Attachments'), 'attach.svg', 'attach') .
                 '</p>';
 
             echo $blocks[2];
