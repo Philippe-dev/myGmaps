@@ -278,9 +278,3 @@ p#excerpt {
 #options-box, .s-tags, .s-featuredmedia, .s-attachments {
   display: none;
 }
-
-/*momentary hack to use svg icons in admin lists*/
-#form-entries img {
-  vertical-align: middle;
-  width: 1.4em;
-}
