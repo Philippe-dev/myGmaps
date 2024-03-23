@@ -364,7 +364,7 @@ class BackendDefaultActions
             if (empty($ids)) {
                 throw new Exception(__('No element selected'));
             }
-            if (App::users()->getUser()($new_user_id)->isEmpty()) {
+            if (App::users()->getUser($new_user_id)->isEmpty()) {
                 throw new Exception(__('This user does not exist'));
             }
 
@@ -393,7 +393,7 @@ class BackendDefaultActions
                     'limit' => 100,
                     'order' => 'nb_post DESC',
                 ];
-                $rs       = App::users()->getUser($params);
+                $rs       = App::users()->getUsers($params);
                 $rsStatic = $rs->toStatic();
                 $rsStatic->extend('rsExtUser');
                 $rsStatic = $rsStatic->toExtStatic();
