@@ -242,7 +242,7 @@ class Manage extends Process
             $starting_script .
             Page::jsLoad('js/_posts_list.js') .
             Page::jsMetaEditor() .
-            App::backend()->post_filter->js(My::manageUrl() . '#entries-list') .
+            App::backend()->post_filter->js(App::backend()->url()->get('admin.plugin'). '&p=' . My::id() . '#entries-list') .
             Page::jsPageTabs(App::backend()->default_tab) .
             Page::jsConfirmClose('config-form') .
             My::jsLoad('config.map.min.js') .

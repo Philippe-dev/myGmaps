@@ -147,7 +147,7 @@ class ManageMaps extends Process
         Page::openModule(
             My::name(),
             Page::jsLoad('js/_posts_list.js') .
-            App::backend()->post_filter->js(My::manageUrl() . '&id=' . $post_id . '&act=maps') .
+            App::backend()->post_filter->js(App::backend()->url()->get('admin.plugin'). '&p=' . My::id() . '&id=' . $post_id . '&act=maps') .
             Page::jsPageTabs(App::backend()->default_tab) .
             Page::jsConfirmClose('config-form') .
             My::cssLoad('admin.css')
