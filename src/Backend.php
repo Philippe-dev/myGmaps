@@ -307,7 +307,7 @@ class Backend extends Process
             form::hidden('map_styles_list', $map_styles_list) .
             form::hidden('map_styles_base_url', $map_styles_base_url) .
             '</p>' .
-            '<p>' . __('Empty map') . '</p>' .
+            '<p class="elements-list">' . __('Empty map') . '</p>' .
             '<ul>' .
             '<li class="add"><a href="' . App::backend()->url()->get('admin.plugin.' . My::id()) . '&act=maps&id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></li>' .
             '<li class="right"><a class="map-remove delete" href="' . $removemapurl . '"><strong>' . __('Remove map') . '</strong></a></li>' .
