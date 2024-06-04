@@ -346,13 +346,15 @@ class Backend extends Process
             App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
 
             echo '<div id="form-entries">' .
-            '<p>' . __('Included elements list') . '</p>' ;
+            '<p class="elements-list">' . __('Included elements list') . '</p>' ;
 
             $post_list->display(App::backend()->page, App::backend()->nb_per_page, $enclose_block = '', $post->post_id, $post->post_type);
 
             echo '</div>' .
-            '<p class="two-boxes add"><a href="' . App::backend()->url()->get('admin.plugin.' . My::id()) . '&act=maps&id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></p>' .
-            '<p class="two-boxes right"><a class="map-remove delete" href="' . $removemapurl . '"><strong>' . __('Remove map') . '</strong></a></p>' .
+            '<ul>' .
+            '<li class="add"><a href="' . App::backend()->url()->get('admin.plugin.' . My::id()) . '&act=maps&id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></li>' .
+            '<li class="right"><a class="map-remove delete" href="' . $removemapurl . '"><strong>' . __('Remove map') . '</strong></a></li>' .
+            '</ul>' .
             '</div>' .
             '</div>';
 
@@ -696,7 +698,7 @@ class Backend extends Process
             '});' . "\n" .
         '});' . "\n" .
         '</script>' . "\n" .
-        My::cssLoad('admin.css') . "\n";
+        My::cssLoad('admin-post.css') . "\n";
     }
 
     public static function adminEntryListValue($rs, $cols)

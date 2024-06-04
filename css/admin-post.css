@@ -1,0 +1,138 @@
+a.map-remove {
+    color: #900;
+}
+
+#map_canvas {
+    height: 600px;
+    border: 1px solid #b6b6b6;
+    border-top: none;
+    margin-bottom: 0.4em;
+}
+
+#infowindow_icons {
+    min-width: 200px;
+}
+
+#infowindow_icons #custom_icons_list {
+    max-height: 100px;
+    overflow: auto;
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+#infowindow_icons #default_icons_list img {
+    max-height: 100px;
+    overflow: auto;
+    border: none;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+#infowindow_polyline {
+    min-width: 150px;
+}
+
+#infowindow_polygon,
+#infowindow_rectangle,
+#infowindow_circle {
+    min-width: 300px;
+}
+
+#infowindow_directions {
+    min-width: 600px;
+}
+
+#infowindow_kml li:hover,
+#infowindow_kml li:focus {
+    background-color: #ccc;
+}
+
+.gm-iw {
+    min-width: 150px;
+}
+
+/* Map Toolbar */
+
+.map_toolbar {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0.2em 0.5em;
+    border: 1px solid #b6b6b6;
+    overflow: hidden;
+    border-radius: 4px 4px 0 0;
+    position: relative;
+    line-height: 30px;
+}
+
+.map_toolbar button {
+    border: none;
+    background: #fff;
+}
+
+.map_toolbar span.search {
+    margin-top: 0.3em;
+}
+
+.map_toolbar input {
+    vertical-align: top;
+    margin: 0.05em 0 0 0;
+    height: 2.35em;
+}
+
+.map_toolbar .qx {
+    border-bottom-left-radius: 0.3em;
+    border-top-left-radius: 0.3em;
+    background: #fff url(index.php?pf=myGmaps/css/img/search.svg) no-repeat 1px
+        center !important;
+    text-indent: 2em;
+    padding: 0;
+    border: 1px solid #ccc;
+}
+
+.map_toolbar .qx:focus {
+    border: 1px solid #bee74b;
+}
+
+#credit-control {
+    background: #e2eaea;
+    opacity: 0.7;
+    padding: 0 5px;
+    font-size: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    white-space: nowrap;
+}
+
+#credit-control a {
+    color: #000;
+}
+
+.element-remove img {
+    vertical-align: middle;
+    width: 1.2em;
+}
+
+#post-gmap {
+    display: block;
+}
+
+#post-gmap ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+#post-gmap li {
+    width: 50%;
+    display: inline-block;
+}
+
+#post-gmap li.right {
+    text-align: right;
+}
+
+.elements-list {
+    margin-top: 2em !important;
+    font-weight: bold;
+}
