@@ -274,10 +274,10 @@ class Backend extends Process
 
         if ($post->post_type === 'page') {
             $form_note      = '<span class="form-note">' . __('Map attached to this page.') . '</span>';
-            $addmap_message = '<p><a href="' . $addmapurl . '">' . __('Add a map to page') . '</a></p>';
+            $addmap_message = '<p class="add"><a href="' . $addmapurl . '">' . __('Add a map to page') . '</a></p>';
         } elseif ($post->post_type === 'post') {
             $form_note      = '<span class="form-note">' . __('Map attached to this post.') . '</span>';
-            $addmap_message = '<p><a href="' . $addmapurl . '">' . __('Add a map to post') . '</a></p>';
+            $addmap_message = '<p class="add"><a href="' . $addmapurl . '">' . __('Add a map to post') . '</a></p>';
         }
 
         if ($elements_list == '' && $map_options == '') {
@@ -285,7 +285,7 @@ class Backend extends Process
             '<label class="bold" for="post-gmap">' . __('Google Map:') . '</label>' .
             $form_note .
             '<div id="post-gmap" >' .
-            '<p>' . __('No map') . '</p>' .
+            '<p class="elements-list">' . __('No map') . '</p>' .
             $addmap_message .
             '</div>' .
             '</div>';
