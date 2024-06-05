@@ -80,8 +80,8 @@ class ManageMap extends Process
         ]), App::blog()->id);
         App::backend()->can_delete = false;
 
-        $post_headlink            = '<link rel="%s" title="%s" href="' . App::backend()->url()->get('admin.plugin.' . My::id(), ['act' => 'map','id' => '%s'], '&amp;', true) . '" />';
-        App::backend()->post_link = '<a href="' . App::backend()->url()->get('admin.plugin.' . My::id(), ['act' => 'map','id' => '%s'], '&amp;', true) . '" title="%s">%s</a>';
+        $post_headlink            = '<link rel="%s" title="%s" href="' . App::backend()->url()->get('admin.plugin.' . My::id(), ['act' => 'map','id' => '%s'], '&', true) . '" />';
+        App::backend()->post_link = '<a href="' . App::backend()->url()->get('admin.plugin.' . My::id(), ['act' => 'map','id' => '%s'], '&', true) . '" title="%s">%s</a>';
 
         App::backend()->next_link     = null;
         App::backend()->prev_link     = null;
