@@ -73,7 +73,7 @@ class BackendActions extends ActionsPosts
         );
         echo
         $breadcrumb .
-        '<p><a class="back" href="' . $this->getRedirection(true) . '">' . __('Back to pages list') . '</a></p>';
+        '<p><a class="back" href="' . $this->getRedirection(true) . '">' . __('Back to elements list') . '</a></p>';
     }
 
     /**

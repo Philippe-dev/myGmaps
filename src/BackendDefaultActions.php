@@ -20,6 +20,7 @@ use Dotclear\Core\Backend\Combos;
 use Dotclear\Core\Backend\Action\ActionsPostsDefault;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Core\Backend\Page;
+use Dotclear\Helper\L10n;
 use Exception;
 use form;
 
