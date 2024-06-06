@@ -1,5 +1,5 @@
 a.map-remove {
-    color: #900;
+    color: var(--delete-color);
 }
 
 #map_canvas {
