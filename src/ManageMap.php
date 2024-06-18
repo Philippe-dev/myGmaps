@@ -613,7 +613,7 @@ class ManageMap extends Process
             Page::message(__('Don\'t forget to validate your HTML conversion by saving your post.'));
         }
 
-        echo '';
+        
 
         if (App::backend()->post_id) {
             echo
@@ -622,17 +622,13 @@ class ManageMap extends Process
                 echo
                 App::backend()->prev_link;
             }
-            if (App::backend()->next_link && App::backend()->prev_link) {
-                echo
-                ' | ';
-            }
             if (App::backend()->next_link) {
                 echo
                 App::backend()->next_link;
             }
 
-            # --BEHAVIOR-- adminPostNavLinks -- MetaRecord|null
-            App::behavior()->callBehavior('adminPostNavLinks', App::backend()->post ?? null);
+            # --BEHAVIOR-- adminPostNavLinks -- MetaRecord|null, string
+            App::behavior()->callBehavior('adminPostNavLinks', App::backend()->post ?? null, 'map');
 
             echo
             '</p>';
