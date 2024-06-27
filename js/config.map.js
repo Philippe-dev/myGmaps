@@ -50,7 +50,8 @@ $(() => {
             value = styles_array[i].replace("_styles.js", "");
             mapTypeIds.push(value);
             
-            let user_style = dotclear.getData(value);
+            const user_style = dotclear.getData(value);
+			
             window[`${value}`] = new google.maps.StyledMapType(user_style.style, { name: user_style.name });
             //console.log(eval('var' + value + ' = new google.maps.StyledMapType(user_style.style, { name: user_style.name });'));
         }
@@ -135,21 +136,6 @@ $(() => {
         const autocomplete = new google.maps.places.Autocomplete(input);
 
         // Map listeners
-
-        google.maps.event.addListener(map, 'center_changed', () => {
-            window.setTimeout(() => {
-                const center = map.getCenter();
-            }, 100);
-        });
-
-        google.maps.event.addListener(map, 'maptypeid_changed', () => {
-            if (map.getMapTypeId() == 'OpenStreetMap') {
-                map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(creditNode);
-                creditNode.innerHTML = credit;
-            } else {
-                map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].clear(creditNode);
-            }
-        });
 
         map.addListener(map, 'center_changed', () => {
             window.setTimeout(() => {
