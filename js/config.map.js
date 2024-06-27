@@ -53,7 +53,6 @@ $(() => {
             const user_style = dotclear.getData(value);
 			
             window[`${value}`] = new google.maps.StyledMapType(user_style.style, { name: user_style.name });
-            //console.log(eval('var' + value + ' = new google.maps.StyledMapType(user_style.style, { name: user_style.name });'));
         }
         const myOptions = {
             zoom: parseFloat(default_zoom),
