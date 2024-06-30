@@ -66,7 +66,7 @@ $(() => {
 		};
 
 		// Short namespaces can be used.
-		const map = new Map(document.getElementById("map_canvas"), myOptions);
+		map = new Map(document.getElementById("map_canvas"), myOptions);
 
 		// Credit OSM if we can ;)
 
