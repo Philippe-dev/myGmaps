@@ -66,7 +66,7 @@ $(() => {
 		};
 
 		// Short namespaces can be used.
-		map = new Map(document.getElementById("map_canvas"), myOptions);
+		const map = new Map(document.getElementById("map_canvas"), myOptions);
 
 		// Credit OSM if we can ;)
 
@@ -126,6 +126,8 @@ $(() => {
 			}
 			const value = window[mapTypeIds[i]];
 			map.mapTypes.set(mapTypeIds[i], value);
+			//map.setMapTypeId(mapTypeIds[i]);
+
 		}
 
 		// Geocoding
