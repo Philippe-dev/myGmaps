@@ -51,7 +51,7 @@ $(() => {
 			mapTypeIds.push(value);
 
 			const user_style = dotclear.getData(value);
-			
+
 			window[`${value}`] = new google.maps.StyledMapType(user_style.style, { name: user_style.name });
 		}
 		const myOptions = {
@@ -126,8 +126,6 @@ $(() => {
 			}
 			const value = window[mapTypeIds[i]];
 			map.mapTypes.set(mapTypeIds[i], value);
-			//map.setMapTypeId(mapTypeIds[i]);
-
 		}
 
 		// Geocoding
