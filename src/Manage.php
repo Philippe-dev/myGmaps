@@ -148,7 +148,6 @@ class Manage extends Process
         $myGmaps_center = My::settings()->myGmaps_center;
         $myGmaps_zoom   = My::settings()->myGmaps_zoom;
         $myGmaps_type   = My::settings()->myGmaps_type;
-        $myGmaps_type   = My::settings()->myGmaps_type;
 
         // Custom map styles
 
@@ -226,13 +225,12 @@ class Manage extends Process
         if (is_dir($map_styles_dir_path)) {
             $list = explode(',', $map_styles_list);
             foreach ($list as $map_style) {
-                $map_style_content = file_get_contents($map_styles_dir_path . '/' . $map_style);
-                $test_replace = preg_replace('\\', '', $map_style_content);
+                $map_style_content = json_decode(file_get_contents($map_styles_dir_path . '/' . $map_style));
                 $var_styles_name   = pathinfo($map_style, PATHINFO_FILENAME);
                 $var_name          = preg_replace('/_styles/s', '', $var_styles_name);
                 $nice_name         = ucwords(preg_replace('/_/s', ' ', $var_name));
                 $style_script .=  Page::jsJson($var_name, [
-                    'style' => json_decode($map_style_content),
+                    'style' => $map_style_content,
                     'name'  => $nice_name,
                 ]);
             }
