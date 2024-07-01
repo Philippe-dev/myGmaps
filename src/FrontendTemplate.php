@@ -59,8 +59,8 @@ class FrontendTemplate
 
         $sOutput = <<<EOT
             <script>
-            //<![CDATA[
-            $(function () {
+            async function initMap(map_{$sMapId}) {
+            const { Map } = await google.maps.importLibrary("maps");
             EOT;
 
         // Set map styles
@@ -86,8 +86,8 @@ class FrontendTemplate
         $sOutput .= $sElements;
 
         $sOutput .= <<<EOT
-            });
-            //]]>
+            }
+            initMap({$sMapId});
             </script>\n
             EOT;
 
