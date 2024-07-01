@@ -246,26 +246,21 @@ class Backend extends Process
             $myGmaps_type   = My::settings()->myGmaps_type;
         }
 
-        $map_js = My::jsLoad('add.map.min.js') .
-        '<script>' . "\n" .
-        '//<![CDATA[' . "\n" .
-        'var neutral_blue_styles = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#193341"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#2c5a71"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#29768a"},{"lightness":-37}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#3e606f"},{"weight":2},{"gamma":0.84}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"weight":0.6},{"color":"#1a3541"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#2c5a71"}]}];' . "\n" .
-        'var neutral_blue = new google.maps.StyledMapType(neutral_blue_styles,{name: "Neutral Blue"});' . "\n";
+        $style_script = '';
 
         if (is_dir($map_styles_dir_path)) {
             $list = explode(',', $map_styles_list);
             foreach ($list as $map_style) {
-                $map_style_content = file_get_contents($map_styles_dir_path . '/' . $map_style);
+                $map_style_content = json_decode(file_get_contents($map_styles_dir_path . '/' . $map_style));
                 $var_styles_name   = pathinfo($map_style, PATHINFO_FILENAME);
                 $var_name          = preg_replace('/_styles/s', '', $var_styles_name);
                 $nice_name         = ucwords(preg_replace('/_/s', ' ', $var_name));
-                $map_js .= 'var ' . $var_styles_name . ' = ' . $map_style_content . ';' . "\n" .
-                'var ' . $var_name . ' = new google.maps.StyledMapType(' . $var_styles_name . ',{name: "' . $nice_name . '"});' . "\n";
+                $style_script .= Page::jsJson($var_name, [
+                    'style' => $map_style_content,
+                    'name'  => $nice_name,
+                ]);
             }
         }
-
-        $map_js .= '//]]>' . "\n" .
-        '</script>';
 
         // redirection URLs
 
@@ -298,7 +293,7 @@ class Backend extends Process
                 '<input size="50" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="' . __('OK') . '" />' .
             '</div>' .
             '<p class="area" id="map_canvas"></p>' .
-            $map_js .
+            $style_script .
             '<p class="form-note info maximal mapinfo" style="width: 100%">' . __('Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls.') . '</p>' .
             '<p>' .
             form::hidden('myGmaps_center', $myGmaps_center) .
@@ -323,7 +318,7 @@ class Backend extends Process
                 '<input size="50" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="' . __('OK') . '" />' .
             '</div>' .
             '<p class="area" id="map_canvas"></p>' .
-            $map_js .
+            $style_script .
             '<p class="form-note info maximal mapinfo" style="width: 100%">' . __('Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls.') . '</p>' .
             '<p>' .
             form::hidden('myGmaps_center', $myGmaps_center) .
@@ -358,13 +353,13 @@ class Backend extends Process
             '<li class="right"><a class="map-remove delete" href="' . $removemapurl . '"><strong>' . __('Remove map') . '</strong></a></li>' .
             '</ul>' .
             '</div>' .
-            '</div>';
+            '</div>'  . "\n" ;
 
             // Display map elements on post map
             $script = '<script>' . "\n" .
-            '//<![CDATA[' . "\n" .
-            '$(document).ready(function() {' . "\n";
 
+            'async function initElements(map_add) {' . "\n";
+            
             try {
                 $params['post_id']     = $meta->splitMetaValues($elements_list);
                 $params['post_type']   = 'map';
@@ -530,8 +525,8 @@ class Backend extends Process
                 $script .= $sOutput;
             }
 
-            $script .= '});' . "\n" .
-            '//]]>' . "\n" .
+            $script .= '}' .
+            
             '</script>';
 
             echo $script;
@@ -679,7 +674,15 @@ class Backend extends Process
         }
 
         return
-        '<script src="https://maps.googleapis.com/maps/api/js?key=' . My::settings()->myGmaps_API_key . '&libraries=places&callback=Function.prototype"></script>' . "\n" .
+        '<script>' . "\n" .
+            '(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({' . "\n" .
+                'key: "' . My::settings()->myGmaps_API_key . '",' . "\n" .
+                'v: "weekly",' . "\n" .
+            '});' . "\n" .
+        '</script>' . "\n" .
+
+        My::jsLoad('add.map.min.js') .
+        
         '<script>' . "\n" .
         '$(document).ready(function() {' . "\n" .
             '$(\'#gmap-area label\').toggleWithLegend($(\'#post-gmap\'), {' . "\n" .

@@ -4,48 +4,16 @@ $(() => {
 		return;
 	}
 
-	if (document.getElementById('map_canvas')) {
-		// Misc functions
-		function trim(myString) {
-			return myString.replace(/^\s+/g, '').replace(/\s+$/g, '');
-		}
+	if (!document.getElementById('map_canvas')) {
+		return;
+	}
 
-		$('#settings').on('onetabload', () => {
-			resizeMap();
-		});
+	let map_add;
 
-		$('#gmap-area label').on('click', () => {
-			resizeMap();
-		});
-
-		function resizeMap() {
-
-			if ($('input[name="myGmaps_center"]').attr('value') == '') {
-				var default_location = new google.maps.LatLng(43.0395797336425, 6.126280043989323);
-				var default_zoom = '12';
-				var default_type = 'roadmap';
-			} else {
-				const parts = $('input[name="myGmaps_center"]').attr('value').split(",");
-				const lat = parseFloat(trim(parts[0]));
-				const lng = parseFloat(trim(parts[1]));
-				var default_location = new google.maps.LatLng(lat, lng);
-				var default_zoom = $('input[name="myGmaps_zoom"]').attr('value');
-				var default_type = $('input[name="myGmaps_type"]').attr('value');
-			}
-			google.maps.event.trigger(map_add, 'resize');
-			map_add.setCenter(default_location);
-			map_add.setZoom(parseFloat(default_zoom));
-		}
-
-		function updateMapOptions() {
-			const default_location = `${map_add.getCenter().lat()},${map_add.getCenter().lng()}`;
-			const default_zoom = map_add.getZoom();
-			const default_type = map_add.getMapTypeId();
-
-			$('input[name=myGmaps_center]').attr('value', default_location);
-			$('input[name=myGmaps_zoom]').attr('value', default_zoom);
-			$('input[name=myGmaps_type]').attr('value', default_type);
-		}
+	async function initMap() {
+		// Request libraries when needed, not in the script tag.
+		const { Map } = await google.maps.importLibrary("maps");
+		const { Places } = await google.maps.importLibrary("places");
 
 		// Display map with default or saved values
 		if ($('input[name="myGmaps_center"]').attr('value') == '') {
@@ -66,10 +34,14 @@ $(() => {
 		}
 
 		// Map styles. Get more styles from https://snazzymaps.com/
+
+		const neutral_blue_styles = [{ "featureType": "water", "elementType": "geometry", "stylers": [{ "color": "#193341" }] }, { "featureType": "landscape", "elementType": "geometry", "stylers": [{ "color": "#2c5a71" }] }, { "featureType": "road", "elementType": "geometry", "stylers": [{ "color": "#29768a" }, { "lightness": -37 }] }, { "featureType": "poi", "elementType": "geometry", "stylers": [{ "color": "#406d80" }] }, { "featureType": "transit", "elementType": "geometry", "stylers": [{ "color": "#406d80" }] }, { "elementType": "labels.text.stroke", "stylers": [{ "visibility": "on" }, { "color": "#3e606f" }, { "weight": 2 }, { "gamma": 0.84 }] }, { "elementType": "labels.text.fill", "stylers": [{ "color": "#ffffff" }] }, { "featureType": "administrative", "elementType": "geometry", "stylers": [{ "weight": 0.6 }, { "color": "#1a3541" }] }, { "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] }, { "featureType": "poi.park", "elementType": "geometry", "stylers": [{ "color": "#2c5a71" }] }];
+		const neutral_blue = new google.maps.StyledMapType(neutral_blue_styles, { name: "Neutral Blue" });
+
 		const mapTypeIds = [google.maps.MapTypeId.ROADMAP,
-			google.maps.MapTypeId.HYBRID,
-			google.maps.MapTypeId.SATELLITE,
-			google.maps.MapTypeId.TERRAIN,
+		google.maps.MapTypeId.HYBRID,
+		google.maps.MapTypeId.SATELLITE,
+		google.maps.MapTypeId.TERRAIN,
 			'OpenStreetMap',
 			'neutral_blue'
 		];
@@ -81,6 +53,9 @@ $(() => {
 			value = styles_array[i].replace("_styles.js", "");
 			mapTypeIds.push(value);
 
+			const user_style = dotclear.getData(value);
+
+			window[value] = new google.maps.StyledMapType(user_style.style, { name: user_style.name });
 		}
 		const myOptions = {
 			zoom: parseFloat(default_zoom),
@@ -93,7 +68,7 @@ $(() => {
 			}
 		};
 
-		map_add = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+		map_add = new Map(document.getElementById("map_canvas"), myOptions);
 
 		// Credit OSM if we can ;)
 		const credit = '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap Contributors</a>';
@@ -179,31 +154,75 @@ $(() => {
 			}
 			updateMapOptions();
 		});
+		
+		initElements(map_add);
+	}
 
-		// Geocoding
-		geocoder = new google.maps.Geocoder();
-
-		function geocode() {
-			const address = document.getElementById("address").value;
-			geocoder.geocode({
-				'address': address,
-				'partialmatch': true
-			}, geocodeResult);
-
-		}
-
-		function geocodeResult(results, status) {
-			if (status == 'OK' && results.length > 0) {
-				map_add.fitBounds(results[0].geometry.viewport);
-			} else {
-				alert(`Geocode was not successful for the following reason: ${status}`);
-			}
-		}
-
-		$('#geocode').on('click', () => {
-			geocode();
-			return false;
-		});
+	function geocode() {
+		const address = document.getElementById("address").value;
+		geocoder.geocode({
+			'address': address,
+			'partialmatch': true
+		}, geocodeResult);
 
 	}
+
+	function geocodeResult(results, status) {
+		if (status == 'OK' && results.length > 0) {
+			map_add.fitBounds(results[0].geometry.viewport);
+		} else {
+			alert(`Geocode was not successful for the following reason: ${status}`);
+		}
+	}
+
+	// Misc functions
+	function trim(myString) {
+		return myString.replace(/^\s+/g, '').replace(/\s+$/g, '');
+	}
+
+	$('#settings').on('onetabload', () => {
+		resizeMap();
+	});
+
+	$('#gmap-area label').on('click', () => {
+		resizeMap();
+	});
+
+	function resizeMap() {
+
+		if ($('input[name="myGmaps_center"]').attr('value') == '') {
+			var default_location = new google.maps.LatLng(43.0395797336425, 6.126280043989323);
+			var default_zoom = '12';
+			var default_type = 'roadmap';
+		} else {
+			const parts = $('input[name="myGmaps_center"]').attr('value').split(",");
+			const lat = parseFloat(trim(parts[0]));
+			const lng = parseFloat(trim(parts[1]));
+			var default_location = new google.maps.LatLng(lat, lng);
+			var default_zoom = $('input[name="myGmaps_zoom"]').attr('value');
+			var default_type = $('input[name="myGmaps_type"]').attr('value');
+		}
+		google.maps.event.trigger(map_add, 'resize');
+		map_add.setCenter(default_location);
+		map_add.setZoom(parseFloat(default_zoom));
+	}
+
+	function updateMapOptions() {
+		const default_location = `${map_add.getCenter().lat()},${map_add.getCenter().lng()}`;
+		const default_zoom = map_add.getZoom();
+		const default_type = map_add.getMapTypeId();
+
+		$('input[name=myGmaps_center]').attr('value', default_location);
+		$('input[name=myGmaps_zoom]').attr('value', default_zoom);
+		$('input[name=myGmaps_type]').attr('value', default_type);
+	}
+
+
+	$('#geocode').on('click', () => {
+		geocode();
+		return false;
+	});
+
+	initMap();
+	
 });
