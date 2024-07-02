@@ -148,7 +148,7 @@ $(() => {
       }
     };
 
-    const map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    map = new Map(document.getElementById("map_canvas"), myOptions);
 
     // Credit OSM if used ;)
 
