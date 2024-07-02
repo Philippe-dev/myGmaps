@@ -4,7 +4,17 @@ $(() => {
     return;
   }
 
-  if (document.getElementById('map_canvas')) {
+  if (!document.getElementById('map_canvas')) {
+    return;
+  }
+
+  let map;
+
+  async function initMap() {
+    // Request libraries when needed, not in the script tag.
+    const { Map } = await google.maps.importLibrary("maps");
+    const { Places } = await google.maps.importLibrary("places");
+
     // Misc functions
 
     function trim(myString) {
@@ -104,6 +114,9 @@ $(() => {
 
     // Map styles. Get more styles from https://snazzymaps.com/
 
+    const neutral_blue_styles = [{ "featureType": "water", "elementType": "geometry", "stylers": [{ "color": "#193341" }] }, { "featureType": "landscape", "elementType": "geometry", "stylers": [{ "color": "#2c5a71" }] }, { "featureType": "road", "elementType": "geometry", "stylers": [{ "color": "#29768a" }, { "lightness": -37 }] }, { "featureType": "poi", "elementType": "geometry", "stylers": [{ "color": "#406d80" }] }, { "featureType": "transit", "elementType": "geometry", "stylers": [{ "color": "#406d80" }] }, { "elementType": "labels.text.stroke", "stylers": [{ "visibility": "on" }, { "color": "#3e606f" }, { "weight": 2 }, { "gamma": 0.84 }] }, { "elementType": "labels.text.fill", "stylers": [{ "color": "#ffffff" }] }, { "featureType": "administrative", "elementType": "geometry", "stylers": [{ "weight": 0.6 }, { "color": "#1a3541" }] }, { "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] }, { "featureType": "poi.park", "elementType": "geometry", "stylers": [{ "color": "#2c5a71" }] }];
+    const neutral_blue = new google.maps.StyledMapType(neutral_blue_styles, { name: "Neutral Blue" });
+
     const mapTypeIds = [google.maps.MapTypeId.ROADMAP,
     google.maps.MapTypeId.HYBRID,
     google.maps.MapTypeId.SATELLITE,
@@ -117,6 +130,10 @@ $(() => {
     for (i in styles_array) {
       value = styles_array[i].replace("_styles.js", "");
       mapTypeIds.push(value);
+
+      const user_style = dotclear.getData(value);
+
+      window[value] = new google.maps.StyledMapType(user_style.style, { name: user_style.name });
     }
 
     const myOptions = {
@@ -1335,4 +1352,7 @@ $(() => {
 
     });
   }
+
+  initMap();
+
 });

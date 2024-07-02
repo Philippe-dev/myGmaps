@@ -517,28 +517,28 @@ class ManageMap extends Process
             $map_styles_base_url = '';
         }
 
-        $starting_script = '<script src="https://maps.googleapis.com/maps/api/js?key=' . My::settings()->myGmaps_API_key . '&libraries=places&callback=Function.prototype"></script>';
+        $starting_script = '<script>' . "\n" .
+            '(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({' . "\n" .
+                'key: "' . My::settings()->myGmaps_API_key . '",' . "\n" .
+                'v: "weekly",' . "\n" .
+            '});' . "\n" .
+        '</script>' . "\n" ;
 
-        $starting_script .= '<script>' . "\n" .
-        '//<![CDATA[' . "\n" .
-            'var neutral_blue_styles = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#193341"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#2c5a71"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#29768a"},{"lightness":-37}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#3e606f"},{"weight":2},{"gamma":0.84}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"weight":0.6},{"color":"#1a3541"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#2c5a71"}]}];' . "\n" .
-            'var neutral_blue = new google.maps.StyledMapType(neutral_blue_styles,{name: "Neutral Blue"});' . "\n";
+        $style_script = '';
 
         if (is_dir($map_styles_dir_path)) {
             $list = explode(',', $map_styles_list);
             foreach ($list as $map_style) {
-                $map_style_content = file_get_contents($map_styles_dir_path . '/' . $map_style);
+                $map_style_content = json_decode(file_get_contents($map_styles_dir_path . '/' . $map_style));
                 $var_styles_name   = pathinfo($map_style, PATHINFO_FILENAME);
                 $var_name          = preg_replace('/_styles/s', '', $var_styles_name);
                 $nice_name         = ucwords(preg_replace('/_/s', ' ', $var_name));
-
-                $starting_script .= 'var ' . $var_styles_name . ' = ' . $map_style_content . ';' . "\n" .
-                'var ' . $var_name . ' = new google.maps.StyledMapType(' . $var_styles_name . ',{name: "' . $nice_name . '"});' . "\n";
+                $style_script .=  Page::jsJson($var_name, [
+                    'style' => $map_style_content,
+                    'name'  => $nice_name,
+                ]);
             }
         }
-
-        $starting_script .= '//]]>' . "\n" .
-        '</script>';
 
         $starting_script .= '<script>' . "\n" .
         '//<![CDATA[' . "\n" .
@@ -566,6 +566,7 @@ class ManageMap extends Process
             Page::jsMetaEditor() .
             $admin_post_behavior .
             $starting_script .
+            $style_script .
             My::jsLoad('element.map.min.js') .
             Page::jsConfirmClose('entry-form') .
             # --BEHAVIOR-- adminPostHeaders --
