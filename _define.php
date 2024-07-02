@@ -13,9 +13,9 @@ $this->registerModule(
     'Google Maps',
     'Add custom maps to your blog',
     'Philippe aka amalgame and contributors',
-    '7.5',
+    '8.0',
     [
-        'requires'    => [['core', '2.30']],
+        'requires'    => [['core', '2.31']],
         'permissions' => 'My',
         'type'        => 'plugin',
         'settings'    => ['self' => '&act=list#settings'],
