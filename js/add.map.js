@@ -154,7 +154,7 @@ $(() => {
 			}
 			updateMapOptions();
 		});
-		
+
 		initElements(map_add);
 	}
 
@@ -224,5 +224,5 @@ $(() => {
 	});
 
 	initMap();
-	
+
 });
