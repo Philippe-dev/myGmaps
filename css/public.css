@@ -1,5 +1,6 @@
 .map_canvas {
-	width: 100% !important
+	width: 100%;
+	border: 1px solid #ccc;
 }
 
 .map_canvas img {
