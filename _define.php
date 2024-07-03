@@ -15,7 +15,7 @@ $this->registerModule(
     'Philippe aka amalgame and contributors',
     '8.0',
     [
-        'requires'    => [['core', '2.31']],
+        'requires'    => [['core', '2.30']],
         'permissions' => 'My',
         'type'        => 'plugin',
         'settings'    => ['self' => '&act=list#settings'],
