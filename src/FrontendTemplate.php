@@ -60,7 +60,7 @@ class FrontendTemplate
         $sOutput = <<<EOT
             <script>
             async function initMap(map_{$sMapId}) {
-            const { Map } = await google.maps.importLibrary("maps");
+            const { Map } = await google.maps.importLibrary("maps");\n
             EOT;
 
         // Set map styles
