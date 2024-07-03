@@ -87,7 +87,7 @@ class FrontendTemplate
 
         $sOutput .= <<<EOT
             }
-            initMap({$sMapId});
+            initMap();
             </script>\n
             EOT;
 

@@ -141,7 +141,7 @@ class Frontend extends Process
         '</script>' . "\n" ; 
     }
 
-    public static function publicMapContent($core, $_ctx, $aElements = [])
+    public static function publicMapContent($attr, $content, $aElements = [])
     {
         // Settings
 
