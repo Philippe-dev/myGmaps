@@ -353,13 +353,13 @@ class Backend extends Process
             '<li class="right"><a class="map-remove delete" href="' . $removemapurl . '"><strong>' . __('Remove map') . '</strong></a></li>' .
             '</ul>' .
             '</div>' .
-            '</div>'  . "\n" ;
+            '</div>' . "\n" ;
 
             // Display map elements on post map
             $script = '<script>' . "\n" .
 
             'async function initElements(map_add) {' . "\n";
-            
+
             try {
                 $params['post_id']     = $meta->splitMetaValues($elements_list);
                 $params['post_type']   = 'map';
@@ -526,7 +526,7 @@ class Backend extends Process
             }
 
             $script .= '}' .
-            
+
             '</script>';
 
             echo $script;
@@ -682,7 +682,7 @@ class Backend extends Process
         '</script>' . "\n" .
 
         My::jsLoad('add.map.min.js') .
-        
+
         '<script>' . "\n" .
         '$(document).ready(function() {' . "\n" .
             '$(\'#gmap-area label\').toggleWithLegend($(\'#post-gmap\'), {' . "\n" .

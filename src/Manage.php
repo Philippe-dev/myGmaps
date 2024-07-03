@@ -229,7 +229,7 @@ class Manage extends Process
                 $var_styles_name   = pathinfo($map_style, PATHINFO_FILENAME);
                 $var_name          = preg_replace('/_styles/s', '', $var_styles_name);
                 $nice_name         = ucwords(preg_replace('/_/s', ' ', $var_name));
-                $style_script .=  Page::jsJson($var_name, [
+                $style_script .= Page::jsJson($var_name, [
                     'style' => $map_style_content,
                     'name'  => $nice_name,
                 ]);

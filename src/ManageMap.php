@@ -533,7 +533,7 @@ class ManageMap extends Process
                 $var_styles_name   = pathinfo($map_style, PATHINFO_FILENAME);
                 $var_name          = preg_replace('/_styles/s', '', $var_styles_name);
                 $nice_name         = ucwords(preg_replace('/_/s', ' ', $var_name));
-                $style_script .=  Page::jsJson($var_name, [
+                $style_script .= Page::jsJson($var_name, [
                     'style' => $map_style_content,
                     'name'  => $nice_name,
                 ]);
@@ -613,8 +613,6 @@ class ManageMap extends Process
 
             Page::message(__('Don\'t forget to validate your HTML conversion by saving your post.'));
         }
-
-        
 
         if (App::backend()->post_id) {
             echo

@@ -138,7 +138,7 @@ class Frontend extends Process
                 'key: "' . My::settings()->myGmaps_API_key . '",' . "\n" .
                 'v: "weekly",' . "\n" .
             '});' . "\n" .
-        '</script>' . "\n" ; 
+        '</script>' . "\n" ;
     }
 
     public static function publicMapContent($attr, $content, $aElements = [])
