@@ -1085,11 +1085,11 @@ $(() => {
 
     }
 
-    $(".map_toolbar button").each(function () {
+    /*$(".map_toolbar button").each(function () {
       if (!$(this).hasClass("active")) {
         $(this).addClass("inactive");
       }
-    });
+    });*/
 
     // ADD NEW OBJECT OR VERTEX POINT
 
@@ -1291,12 +1291,10 @@ $(() => {
 
       $(".map_toolbar button").each(function () {
         $(this).removeClass("active");
-        $(this).removeClass("inactive");
+        $(this).addClass("inactive");
       });
       $("#delete_map").trigger("blur");
-
-      // Save default values
-
+      
       for (i in markersArray) {
         markersArray[i].setMap(null);
       }
@@ -1305,13 +1303,11 @@ $(() => {
       vertexArray.length = 0;
 
       polyline.setOptions({});
-      polylinePath.clear();
       polyline.setMap(null);
 
       polygon.setOptions({});
-      polygonPath.clear();
       polygon.setMap(null);
-
+      
       rectangle.setOptions({});
       rectangle.setMap(null);
 
@@ -1324,11 +1320,10 @@ $(() => {
       geoRssLayer.setOptions({});
       geoRssLayer.setMap(null);
 
-      routePolylinePath.clear();
       routePolyline.setMap(null);
       directionsDisplay.setMap(null);
 
-      $('#element_type').val('notype');
+      $('#element_type').val('');
       $('#post_excerpt').val('');
 
     }
