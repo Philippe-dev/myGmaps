@@ -1300,8 +1300,6 @@ $(() => {
         markersArray[i].setMap(null);
       }
 
-      console.log(polylinePath);
-
       markersArray = [];
       vertexArray = [];
 
