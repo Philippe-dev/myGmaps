@@ -1299,8 +1299,8 @@ $(() => {
         markersArray[i].setMap(null);
       }
 
-      markersArray.length = 0;
-      vertexArray.length = 0;
+      markersArray = [];
+      vertexArray = [];
 
       polyline.setOptions({});
       polyline.setMap(null);
