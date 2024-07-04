@@ -1293,18 +1293,21 @@ $(() => {
         $(this).removeClass("active");
         $(this).addClass("inactive");
       });
+
       $("#delete_map").trigger("blur");
       
       for (i in markersArray) {
         markersArray[i].setMap(null);
       }
 
+      console.log(polylinePath);
+
       markersArray = [];
       vertexArray = [];
 
       polyline.setOptions({});
-      polyline.setMap(null);
-
+      polyline.setMap(null);    
+      
       polygon.setOptions({});
       polygon.setMap(null);
       
