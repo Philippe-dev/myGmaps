@@ -339,31 +339,39 @@ $(() => {
       if (action == 'add_marker') {
         if ($('#post_excerpt').val() == '') {
           addMarker(event.latLng);
+          $("#delete_map").prop("disabled", false);
         }
       } else if (action == 'add_polyline') {
         addPolylineVertex(event.latLng);
+        $("#delete_map").prop("disabled", false);
 
       } else if (action == 'add_polygon') {
         addPolygonVertex(event.latLng);
+        $("#delete_map").prop("disabled", false);
 
       } else if (action == 'add_kml') {
         if ($('#post_excerpt').val() == '') {
           addKml(event.latLng);
+          $("#delete_map").prop("disabled", false);
         }
       } else if (action == 'add_georss') {
         if ($('#post_excerpt').val() == '') {
           addgeoRSS(event.latLng);
+          $("#delete_map").prop("disabled", false);
         }
       } else if (action == 'add_rectangle') {
         if ($('#post_excerpt').val() == '') {
           addRectangle(event.latLng);
+          $("#delete_map").prop("disabled", false);
         }
       } else if (action == 'add_circle') {
         if ($('#post_excerpt').val() == '') {
           addCircle(event.latLng);
+          $("#delete_map").prop("disabled", false);
         }
       } else if (action == 'add_directions' && $('#post_excerpt').val() == '') {
         addDirections(event.latLng);
+        $("#delete_map").prop("disabled", false);
       }
     });
 
@@ -1294,7 +1302,7 @@ $(() => {
         $(this).addClass("inactive");
       });
 
-      $("#delete_map").trigger("blur");
+      $("#delete_map").prop("disabled", true);
       
       for (i in markersArray) {
         markersArray[i].setMap(null);
@@ -1304,7 +1312,7 @@ $(() => {
       vertexArray = [];
 
       polyline.setOptions({});
-      polyline.setMap(null);    
+      polyline.setMap(null);
       
       polygon.setOptions({});
       polygon.setMap(null);

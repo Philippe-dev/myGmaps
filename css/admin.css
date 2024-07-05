@@ -234,6 +234,11 @@ button.delete_map {
   border-color: var(--tabs-border);
 }
 
+button.delete_map:disabled {
+  opacity: 0.5;
+  cursor: inherit
+}
+
 .map_toolbar .qx {
   border-bottom-left-radius: .3em;
   border-top-left-radius: .3em;
