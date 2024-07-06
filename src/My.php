@@ -19,11 +19,6 @@ use Dotclear\Module\MyPlugin;
 
 class My extends MyPlugin
 {
-    public static function url(): string
-    {
-        return App::backend()->getPageURL();
-    }
-
     public static function checkCustomContext(int $context): ?bool
     {
         return match ($context) {
