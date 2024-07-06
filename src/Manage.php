@@ -242,7 +242,7 @@ class Manage extends Process
             $style_script .
             Page::jsLoad('js/_posts_list.js') .
             Page::jsMetaEditor() .
-            App::backend()->post_filter->js(My::manageUrl() . '#entries-list') .
+            App::backend()->post_filter->js(App::backend()->url()->get('admin.plugin'). '&p=' . My::id() . '#entries-list') .
             Page::jsPageTabs(App::backend()->default_tab) .
             Page::jsConfirmClose('config-form') .
             My::jsLoad('config.map.min.js') .
@@ -309,7 +309,7 @@ class Manage extends Process
             echo '<p class="top-add"><strong><a class="button add" href="' . My::manageUrl() . '&act=map">' . __('New element') . '</a></strong></p>';
         }
 
-        App::backend()->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="myGmaps" /><input type="hidden" name="tab" value="entries-list" />');
+        App::backend()->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="' . My::id() . '" /><input type="hidden" name="tab" value="entries-list" />');
 
         // Show posts
         App::backend()->posts_list->display(
