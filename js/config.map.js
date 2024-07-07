@@ -151,49 +151,47 @@ $(() => {
 			}
 		});
 
-
-	}
-
-	function trim(myString) {
-		return myString.replace(/^\s+/g, '').replace(/\s+$/g, '')
-	}
-
-	// Geocoding
-
-	function geocode() {
-		const address = document.getElementById("address").value;
-		geocoder.geocode({
-			'address': address,
-			'partialmatch': true
-		}, geocodeResult);
-
-	}
-
-	function geocodeResult(results, status) {
-		if (status == 'OK' && results.length > 0) {
-			map.fitBounds(results[0].geometry.viewport);
-		} else {
-			alert(`Geocode was not successful for the following reason: ${status}`);
+		function trim(myString) {
+			return myString.replace(/^\s+/g, '').replace(/\s+$/g, '')
 		}
+
+		// Geocoding
+
+		function geocode() {
+			const address = document.getElementById("address").value;
+			geocoder.geocode({
+				'address': address,
+				'partialmatch': true
+			}, geocodeResult);
+
+		}
+
+		function geocodeResult(results, status) {
+			if (status == 'OK' && results.length > 0) {
+				map.fitBounds(results[0].geometry.viewport);
+			} else {
+				alert(`Geocode was not successful for the following reason: ${status}`);
+			}
+		}
+
+		$('#geocode').on('click', () => {
+			geocode();
+			return false;
+		});
+
+		$('#config-form').submit(() => {
+			const default_location = `${map.getCenter().lat()}, ${map.getCenter().lng()}`;
+
+			const default_zoom = map.getZoom();
+			const default_type = map.getMapTypeId();
+
+			$('input[name="myGmaps_center"]').attr('value', default_location);
+			$('input[name="myGmaps_zoom"]').attr('value', default_zoom);
+			$('input[name="myGmaps_type"]').attr('value', default_type);
+			return true;
+
+		});
 	}
-
-	$('#geocode').on('click', () => {
-		geocode();
-		return false;
-	});
-
-	$('#config-form').submit(() => {
-		const default_location = `${map.getCenter().lat()}, ${map.getCenter().lng()}`;
-
-		const default_zoom = map.getZoom();
-		const default_type = map.getMapTypeId();
-
-		$('input[name="myGmaps_center"]').attr('value', default_location);
-		$('input[name="myGmaps_zoom"]').attr('value', default_zoom);
-		$('input[name="myGmaps_type"]').attr('value', default_type);
-		return true;
-
-	});
 
 	initMap();
 

@@ -156,72 +156,72 @@ $(() => {
 		});
 
 		initElements(map_add);
-	}
 
-	function geocode() {
-		const address = document.getElementById("address").value;
-		geocoder.geocode({
-			'address': address,
-			'partialmatch': true
-		}, geocodeResult);
+		function geocode() {
+			const address = document.getElementById("address").value;
+			geocoder.geocode({
+				'address': address,
+				'partialmatch': true
+			}, geocodeResult);
 
-	}
-
-	function geocodeResult(results, status) {
-		if (status == 'OK' && results.length > 0) {
-			map_add.fitBounds(results[0].geometry.viewport);
-		} else {
-			alert(`Geocode was not successful for the following reason: ${status}`);
 		}
-	}
 
-	// Misc functions
-	function trim(myString) {
-		return myString.replace(/^\s+/g, '').replace(/\s+$/g, '');
-	}
-
-	$('#settings').on('onetabload', () => {
-		resizeMap();
-	});
-
-	$('#gmap-area label').on('click', () => {
-		resizeMap();
-	});
-
-	function resizeMap() {
-
-		if ($('input[name="myGmaps_center"]').attr('value') == '') {
-			var default_location = new google.maps.LatLng(43.0395797336425, 6.126280043989323);
-			var default_zoom = '12';
-			var default_type = 'roadmap';
-		} else {
-			const parts = $('input[name="myGmaps_center"]').attr('value').split(",");
-			const lat = parseFloat(trim(parts[0]));
-			const lng = parseFloat(trim(parts[1]));
-			var default_location = new google.maps.LatLng(lat, lng);
-			var default_zoom = $('input[name="myGmaps_zoom"]').attr('value');
-			var default_type = $('input[name="myGmaps_type"]').attr('value');
+		function geocodeResult(results, status) {
+			if (status == 'OK' && results.length > 0) {
+				map_add.fitBounds(results[0].geometry.viewport);
+			} else {
+				alert(`Geocode was not successful for the following reason: ${status}`);
+			}
 		}
-		google.maps.event.trigger(map_add, 'resize');
-		map_add.setCenter(default_location);
-		map_add.setZoom(parseFloat(default_zoom));
+
+		// Misc functions
+		function trim(myString) {
+			return myString.replace(/^\s+/g, '').replace(/\s+$/g, '');
+		}
+
+		$('#settings').on('onetabload', () => {
+			resizeMap();
+		});
+
+		$('#gmap-area label').on('click', () => {
+			resizeMap();
+		});
+
+		function resizeMap() {
+
+			if ($('input[name="myGmaps_center"]').attr('value') == '') {
+				var default_location = new google.maps.LatLng(43.0395797336425, 6.126280043989323);
+				var default_zoom = '12';
+				var default_type = 'roadmap';
+			} else {
+				const parts = $('input[name="myGmaps_center"]').attr('value').split(",");
+				const lat = parseFloat(trim(parts[0]));
+				const lng = parseFloat(trim(parts[1]));
+				var default_location = new google.maps.LatLng(lat, lng);
+				var default_zoom = $('input[name="myGmaps_zoom"]').attr('value');
+				var default_type = $('input[name="myGmaps_type"]').attr('value');
+			}
+			google.maps.event.trigger(map_add, 'resize');
+			map_add.setCenter(default_location);
+			map_add.setZoom(parseFloat(default_zoom));
+		}
+
+		function updateMapOptions() {
+			const default_location = `${map_add.getCenter().lat()},${map_add.getCenter().lng()}`;
+			const default_zoom = map_add.getZoom();
+			const default_type = map_add.getMapTypeId();
+
+			$('input[name=myGmaps_center]').attr('value', default_location);
+			$('input[name=myGmaps_zoom]').attr('value', default_zoom);
+			$('input[name=myGmaps_type]').attr('value', default_type);
+		}
+
+
+		$('#geocode').on('click', () => {
+			geocode();
+			return false;
+		});
 	}
-
-	function updateMapOptions() {
-		const default_location = `${map_add.getCenter().lat()},${map_add.getCenter().lng()}`;
-		const default_zoom = map_add.getZoom();
-		const default_type = map_add.getMapTypeId();
-
-		$('input[name=myGmaps_center]').attr('value', default_location);
-		$('input[name=myGmaps_zoom]').attr('value', default_zoom);
-		$('input[name=myGmaps_type]').attr('value', default_type);
-	}
-
-
-	$('#geocode').on('click', () => {
-		geocode();
-		return false;
-	});
 
 	initMap();
 
