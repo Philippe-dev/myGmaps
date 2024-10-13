@@ -32,7 +32,7 @@ class BackendList extends Listing
      * @param      string  $enclose_block  The enclose block
      * @param      bool    $filter         The filter
      */
-    public function display(int $page, int $nb_per_page, string $enclose_block = '', bool $filter = false)
+    public function display(int $page, int $nb_per_page, string $enclose_block = '', bool $filter = false): void
     {
         if ($this->rs->isEmpty()) {
             if ($filter) {
