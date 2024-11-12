@@ -1,4 +1,4 @@
-$(() => {
+dotclear.ready(() => {
 
 	if (!document.getElementById) {
 		return;
