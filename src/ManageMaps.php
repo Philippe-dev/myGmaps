@@ -170,7 +170,7 @@ class ManageMaps extends Process
             echo '<h3>' . __('Select map elements for map attached to post:') . ' <a href="' . App::postTypes()->get($post_type)->adminUrl($post_id) . '">' . $post_title . '</a></h3>';
         }
 
-        App::backend()->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="' . My::id() . '" /><input type="hidden" name="id" value="' . $post_id . '" /><input type="hidden" name="act" value="maps" />');
+        App::backend()->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="' . My::id() . '"><input type="hidden" name="id" value="' . $post_id . '"><input type="hidden" name="act" value="maps">');
 
         // Show posts
         App::backend()->posts_list->display(
@@ -184,7 +184,7 @@ class ManageMaps extends Process
             '<p class="col checkboxes-helpers"></p>' .
 
             '<p class="col right">' .
-            '<input type="submit" value="' . __('Add selected map elements') . '" /> <a class="button reset" href="post.php?id=' . $post_id . '">' . __('Cancel') . '</a></p>' .
+            '<input type="submit" value="' . __('Add selected map elements') . '"> <a class="button reset" href="post.php?id=' . $post_id . '">' . __('Cancel') . '</a></p>' .
             '<p>' .
             form::hidden(['post_type'], $post_type) .
             form::hidden(['id'], $post_id) .

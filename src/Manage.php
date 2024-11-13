@@ -275,7 +275,7 @@ class Manage extends Process
         '</div>' .
         '<div class="fieldset"><h3>' . __('API key') . '</h3>' .
             '<p><label class="maximal" for="myGmaps_API_key">' . __('Google Maps Javascript browser API key:') .
-            '<br />' . form::field('myGmaps_API_key', 80, 255, My::settings()->myGmaps_API_key) .
+            '<br>' . form::field('myGmaps_API_key', 80, 255, My::settings()->myGmaps_API_key) .
             '</label></p>';
         if (My::settings()->myGmaps_API_key == 'AIzaSyCUgB8ZVQD88-T4nSgDlgVtH5fm0XcQAi8') {
             echo '<p class="warn">' . __('You are currently using a <em>shared</em> API key. To avoid map display restrictions on your blog, use your own API key.') . '</p>';
@@ -284,7 +284,7 @@ class Manage extends Process
         echo '</div>' .
         '<div class="fieldset"><h3>' . __('Default map options') . '</h3>' .
         '<div class="map_toolbar"><span class="search">' . __('Search:') . '</span><span class="map_spacer">&nbsp;</span>' .
-            '<input size="50" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="' . __('OK') . '" />' .
+            '<input size="50" maxlength="255" type="text" id="address" class="qx"><input id="geocode" type="submit" value="' . __('OK') . '">' .
         '</div>' .
         '<p class="area" id="map_canvas"></p>' .
         '<p class="form-note info maximal mapinfo" style="width: 100%">' . __('Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls.') . '</p>' .
@@ -296,7 +296,7 @@ class Manage extends Process
             form::hidden('map_styles_base_url', $map_styles_base_url) .
             App::nonce()->getFormNonce() .
             '</p></div>' .
-            '<p><input type="submit" name="saveconfig" value="' . __('Save configuration') . '" /></p>' .
+            '<p><input type="submit" name="saveconfig" value="' . __('Save configuration') . '"></p>' .
 
         '</form>' .
         '</div>' .
@@ -309,7 +309,7 @@ class Manage extends Process
             echo '<p class="top-add"><strong><a class="button add" href="' . My::manageUrl() . '&act=map">' . __('New element') . '</a></strong></p>';
         }
 
-        App::backend()->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="' . My::id() . '" /><input type="hidden" name="tab" value="entries-list" />');
+        App::backend()->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="' . My::id() . '"><input type="hidden" name="tab" value="entries-list">');
 
         // Show posts
         App::backend()->posts_list->display(
@@ -325,7 +325,7 @@ class Manage extends Process
             // Actions
             '<p class="col right"><label for="action" class="classic">' . __('Selected entries action:') . '</label> ' .
             form::combo('action', App::backend()->posts_actions_page->getCombo()) .
-            '<input id="do-action" type="submit" value="' . __('ok') . '" disabled /></p>' .
+            '<input id="do-action" type="submit" value="' . __('ok') . '" disabled></p>' .
             App::backend()->url()->getHiddenFormFields('admin.plugin.' . My::id(), App::backend()->post_filter->values()) .
             App::nonce()->getFormNonce() . '</p>' .
             '</div>' .

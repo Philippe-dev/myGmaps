@@ -419,10 +419,10 @@ dotclear.ready(() => {
     google.maps.event.addListener(polyline, 'click', function (event) {
       const infowindowPolyline =
         '<div id="infowindow_polyline" class="col">' +
-        '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '" /></p>' +
-        '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + this.strokeOpacity + '" /></p>' +
-        '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + this.strokeWeight + '" /></p>' +
-        '<p><input type="button" id="save" value="OK" /></p>' +
+        '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '"></p>' +
+        '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + this.strokeOpacity + '"></p>' +
+        '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + this.strokeWeight + '"></p>' +
+        '<p><input type="button" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(event.latLng);
       infowindow.setContent(infowindowPolyline);
@@ -454,15 +454,15 @@ dotclear.ready(() => {
       const infowindowPolygon =
         '<div id="infowindow_polygon">' +
         '<div class="two-boxes"' +
-        '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '" /></p>' +
-        '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + this.strokeOpacity + '" /></p>' +
-        '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + this.strokeWeight + '" /></p>' +
+        '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '"></p>' +
+        '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + this.strokeOpacity + '"></p>' +
+        '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + this.strokeWeight + '"></p>' +
         '</div>' +
         '<div class="two-boxes"' +
-        '<p><label for="fill_color">' + fill_color_msg + '</label><input type="text" id="fill_color" size="10" value="' + this.fillColor + '" /></p>' +
-        '<p><label for="fill_opacity">' + fill_opacity_msg + '</label><input type="text" id="fill_opacity" size="10" value="' + this.fillOpacity + '" /></p>' +
+        '<p><label for="fill_color">' + fill_color_msg + '</label><input type="text" id="fill_color" size="10" value="' + this.fillColor + '"></p>' +
+        '<p><label for="fill_opacity">' + fill_opacity_msg + '</label><input type="text" id="fill_opacity" size="10" value="' + this.fillOpacity + '"></p>' +
         '</div>' +
-        '<p><input type="button" id="save" value="OK" /></p>' +
+        '<p><input type="button" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(event.latLng);
       infowindow.setContent(infowindowPolygon);
@@ -485,15 +485,15 @@ dotclear.ready(() => {
       const infowindowRectangle =
         '<div id="infowindow_rectangle">' +
         '<div class="two-boxes"' +
-        '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '" /></p>' +
-        '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + this.strokeOpacity + '" /></p>' +
-        '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + this.strokeWeight + '" /></p>' +
+        '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '"></p>' +
+        '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + this.strokeOpacity + '"></p>' +
+        '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + this.strokeWeight + '"></p>' +
         '</div>' +
         '<div class="two-boxes"' +
-        '<p><label for="fill_color">' + fill_color_msg + '</label><input type="text" id="fill_color" size="10" value="' + this.fillColor + '" /></p>' +
-        '<p><label for="fill_opacity">' + fill_opacity_msg + '</label><input type="text" id="fill_opacity" size="10" value="' + this.fillOpacity + '" /></p>' +
+        '<p><label for="fill_color">' + fill_color_msg + '</label><input type="text" id="fill_color" size="10" value="' + this.fillColor + '"></p>' +
+        '<p><label for="fill_opacity">' + fill_opacity_msg + '</label><input type="text" id="fill_opacity" size="10" value="' + this.fillOpacity + '"></p>' +
         '</div>' +
-        '<p><input type="button" id="save" value="OK" /></p>' +
+        '<p><input type="button" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(event.latLng);
       infowindow.setContent(infowindowRectangle);
@@ -514,16 +514,16 @@ dotclear.ready(() => {
       const infowindowCircle =
         '<div id="infowindow_circle">' +
         '<div class="two-boxes"' +
-        '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '" /></p>' +
-        '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + this.strokeOpacity + '" /></p>' +
-        '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + this.strokeWeight + '" /></p>' +
+        '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '"></p>' +
+        '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + this.strokeOpacity + '"></p>' +
+        '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + this.strokeWeight + '"></p>' +
         '</div>' +
         '<div class="two-boxes"' +
-        '<p><label for="fill_color">' + fill_color_msg + '</label><input type="text" id="fill_color" size="10" value="' + this.fillColor + '" /></p>' +
-        '<p><label for="fill_opacity">' + fill_opacity_msg + '</label><input type="text" id="fill_opacity" size="10" value="' + this.fillOpacity + '" /></p>' +
-        '<p><label for="circle_radius">' + circle_radius_msg + '</label><input type="text" id="circle_radius" size="10" value="' + this.radius + '" /></p>' +
+        '<p><label for="fill_color">' + fill_color_msg + '</label><input type="text" id="fill_color" size="10" value="' + this.fillColor + '"></p>' +
+        '<p><label for="fill_opacity">' + fill_opacity_msg + '</label><input type="text" id="fill_opacity" size="10" value="' + this.fillOpacity + '"></p>' +
+        '<p><label for="circle_radius">' + circle_radius_msg + '</label><input type="text" id="circle_radius" size="10" value="' + this.radius + '"></p>' +
         '</div>' +
-        '<p><input type="button" id="save" value="OK" /></p>' +
+        '<p><input type="button" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(event.latLng);
       infowindow.setContent(infowindowCircle);
@@ -552,7 +552,7 @@ dotclear.ready(() => {
           '<div style="max-height: 100px;overflow: auto">' +
           custom_kmls +
           '</div>' +
-          '<hr />';
+          '<hr>';
       } else {
         var has_custom_kmls = '';
       }
@@ -561,8 +561,8 @@ dotclear.ready(() => {
         '<div id="infowindow_kml" style="cursor: pointer">' +
         has_custom_kmls +
         '<h4>' + kml_url_msg + '</h4>' +
-        '<p><input type="text" id="kml_url" size="80" value="' + $('#post_excerpt').val() + '" /></p>' +
-        '<p><input type="button" id="save" value="OK" /></p>' +
+        '<p><input type="text" id="kml_url" size="80" value="' + $('#post_excerpt').val() + '"></p>' +
+        '<p><input type="button" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(event.latLng);
       infowindow.setContent(infowindowKml);
@@ -575,8 +575,8 @@ dotclear.ready(() => {
       const infowindowgeoRss =
         '<div id="infowindow_georss" style="cursor: pointer">' +
         '<h4>' + geoRss_url_msg + '</h4>' +
-        '<p><input type="text" id="geoRss_url" size="80" value="' + $('#post_excerpt').val() + '" /></p>' +
-        '<p><input type="button" id="save" value="OK" /></p>' +
+        '<p><input type="text" id="geoRss_url" size="80" value="' + $('#post_excerpt').val() + '"></p>' +
+        '<p><input type="button" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(event.latLng);
       infowindow.setContent(infowindowgeoRss);
@@ -605,17 +605,17 @@ dotclear.ready(() => {
         '<div id="infowindow_directions" style="cursor: pointer">' +
         '<div class="two-cols clearfix">' +
         '<div class="col70">' +
-        '<p><label for="directions_start">' + directions_start_msg + '</label><input type="text" id="directions_start" size="40" value="' + start + '" /></p>' +
-        '<p><label for="directions_end">' + directions_end_msg + '</label><input type="text" id="directions_end" size="40" value="' + end + '" /></p>' +
-        '<p><label for="directions_show"><input type="checkbox" id="directions_show" ' + state + ' />' + directions_show_msg + '</label></p>' +
+        '<p><label for="directions_start">' + directions_start_msg + '</label><input type="text" id="directions_start" size="40" value="' + start + '"></p>' +
+        '<p><label for="directions_end">' + directions_end_msg + '</label><input type="text" id="directions_end" size="40" value="' + end + '"></p>' +
+        '<p><label for="directions_show"><input type="checkbox" id="directions_show" ' + state + '>' + directions_show_msg + '</label></p>' +
         '</div>' +
         '<div class="col30">' +
-        '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + color + '" />' +
-        '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + opacity + '" />' +
-        '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + weight + '" />' +
+        '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + color + '">' +
+        '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + opacity + '">' +
+        '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + weight + '">' +
         '</div>' +
         '</div>' +
-        '<p><input type="button" id="save" value="OK" />' +
+        '<p><input type="button" id="save" value="OK">' +
         '</div>';
 
       infowindow.setPosition(event.latLng);
@@ -642,7 +642,7 @@ dotclear.ready(() => {
       const icons_list = $("#icons_list").val();
       const icons_array = icons_list.split(',');
       for (i in icons_array) {
-        const this_icon = `<img src="${icons_base_url}${icons_array[i]}" alt="${icons_array[i]}" />`;
+        const this_icon = `<img src="${icons_base_url}${icons_array[i]}" alt="${icons_array[i]}">`;
         myIcons.push(this_icon);
       }
     }
@@ -657,7 +657,7 @@ dotclear.ready(() => {
         '<div id="custom_icons_list">' +
         custom_icons +
         '</div>' +
-        '<hr />';
+        '<hr>';
     } else {
       var has_custom_icons = '';
     }
@@ -667,13 +667,13 @@ dotclear.ready(() => {
       has_custom_icons +
       '<div id="default_icons_list">' +
       '<h4>' + default_icons_msg + '</h4>' +
-      '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-blue.png" alt="marker-blue.png"  />' +
-      '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-green.png" alt="marker-green.png"  />' +
-      '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-grey.png" alt="marker-grey.png"  />' +
-      '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-orange.png" alt="marker-orange.png"  />' +
-      '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-purple.png" alt="marker-purple.png"  />' +
-      '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-yellow.png" alt="marker-yellow.png"  />' +
-      '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker.png" alt="marker.png"  />&nbsp;' +
+      '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-blue.png" alt="marker-blue.png" >' +
+      '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-green.png" alt="marker-green.png" >' +
+      '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-grey.png" alt="marker-grey.png" >' +
+      '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-orange.png" alt="marker-orange.png" >' +
+      '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-purple.png" alt="marker-purple.png" >' +
+      '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker-yellow.png" alt="marker-yellow.png" >' +
+      '<img src="' + default_icons_url + 'pf=myGmaps/icons/marker.png" alt="marker.png" >&nbsp;' +
       '</div>' +
       '</div>';
 
@@ -1226,7 +1226,7 @@ dotclear.ready(() => {
           '<div style="max-height: 100px;overflow: auto">' +
           custom_kmls +
           '</div>' +
-          '<hr />';
+          '<hr>';
       } else {
         var has_custom_kmls = '';
       }
@@ -1235,8 +1235,8 @@ dotclear.ready(() => {
         '<div id="infowindow_kml" style="cursor: pointer">' +
         has_custom_kmls +
         '<h4>' + kml_url_msg + '</h4>' +
-        '<p><input type="text" id="kml_url" size="80" value="' + $('#post_excerpt').val() + '" /></p>' +
-        '<p><input type="button" id="save" value="OK" /></p>' +
+        '<p><input type="text" id="kml_url" size="80" value="' + $('#post_excerpt').val() + '"></p>' +
+        '<p><input type="button" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(location);
       infowindow.setContent(infowindowKml);
@@ -1249,8 +1249,8 @@ dotclear.ready(() => {
       const infowindowgeoRss =
         '<div id="infowindow_georss" style="cursor: pointer">' +
         '<h4>' + geoRss_url_msg + '</h4>' +
-        '<p><input type="text" id="geoRss_url" size="80" value="' + $('#post_excerpt').val() + '" /></p>' +
-        '<p><input type="button" id="save" value="OK" /></p>' +
+        '<p><input type="text" id="geoRss_url" size="80" value="' + $('#post_excerpt').val() + '"></p>' +
+        '<p><input type="button" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(location);
       infowindow.setContent(infowindowgeoRss);
@@ -1268,17 +1268,17 @@ dotclear.ready(() => {
         '<div id="infowindow_directions" style="cursor: pointer">' +
         '<div class="two-cols clearfix">' +
         '<div class="col70">' +
-        '<p><label for="directions_start">' + directions_start_msg + '</label><input type="text" id="directions_start" size="40" value="" /></p>' +
-        '<p><label for="directions_end">' + directions_end_msg + '</label><input type="text" id="directions_end" size="40" value="" /></p>' +
-        '<p><label for="directions_show"><input type="checkbox" id="directions_show" />' + directions_show_msg + '</label></p>' +
+        '<p><label for="directions_start">' + directions_start_msg + '</label><input type="text" id="directions_start" size="40" value=""></p>' +
+        '<p><label for="directions_end">' + directions_end_msg + '</label><input type="text" id="directions_end" size="40" value=""></p>' +
+        '<p><label for="directions_show"><input type="checkbox" id="directions_show">' + directions_show_msg + '</label></p>' +
         '</div>' +
         '<div class="col30">' +
-        '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + color + '" /></p>' +
-        '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + opacity + '" /></p>' +
-        '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + weight + '" /></p>' +
+        '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + color + '"></p>' +
+        '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + opacity + '"></p>' +
+        '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + weight + '"></p>' +
         '</div>' +
         '</div>' +
-        '<p><input type="button" id="save" value="OK" />' +
+        '<p><input type="button" id="save" value="OK">' +
         '</div>';
 
       infowindow.setPosition(location);

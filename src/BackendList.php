@@ -139,7 +139,7 @@ class BackendList extends Listing
             $cat_title = __('(No cat)');
         }
 
-        $img        = '<img alt="%1$s" title="%1$s" src="images/%2$s" class="mark mark-%3$s" />';
+        $img        = '<img alt="%1$s" title="%1$s" src="images/%2$s" class="mark mark-%3$s">';
         $img_status = '';
         $sts_class  = '';
         switch ($this->rs->post_status) {

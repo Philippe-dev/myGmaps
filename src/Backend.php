@@ -133,7 +133,7 @@ class Backend extends Process
             $page_count          = App::blog()->getPosts($params, true)->f(0);
             if ($page_count > 0) {
                 $str_pages = ($page_count > 1) ? __('%d map elements') : __('%d map element');
-                $icon[0]   = My::name() . '<br />' . sprintf($str_pages, $page_count);
+                $icon[0]   = My::name() . '<br>' . sprintf($str_pages, $page_count);
             } else {
                 $icon[0] = My::name();
             }
@@ -290,7 +290,7 @@ class Backend extends Process
             $form_note .
             '<div id="post-gmap" >' .
             '<div class="map_toolbar"><span class="search">' . __('Search:') . '</span><span class="map_spacer">&nbsp;</span>' .
-                '<input size="50" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="' . __('OK') . '" />' .
+                '<input size="50" maxlength="255" type="text" id="address" class="qx"><input id="geocode" type="submit" value="' . __('OK') . '">' .
             '</div>' .
             '<p class="area" id="map_canvas"></p>' .
             $style_script .
@@ -315,7 +315,7 @@ class Backend extends Process
             $form_note .
             '<div id="post-gmap" >' .
             '<div class="map_toolbar"><span class="search">' . __('Search:') . '</span><span class="map_spacer">&nbsp;</span>' .
-                '<input size="50" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="' . __('OK') . '" />' .
+                '<input size="50" maxlength="255" type="text" id="address" class="qx"><input id="geocode" type="submit" value="' . __('OK') . '">' .
             '</div>' .
             '<p class="area" id="map_canvas"></p>' .
             $style_script .
@@ -712,7 +712,7 @@ class Backend extends Process
         $meta      = App::meta();
 
         if (!empty($meta->getMetaStr($rs->post_meta, 'map_options')) && in_array($rs->post_type, $postTypes)) {
-            $cols['status'] = str_replace('</td>', '<img class="mark mark-attach" src="' . Page::getPF(My::id()) . '/css/img/marker.svg" title="' . __('Attached Map') . '" /></td>', $cols['status']);
+            $cols['status'] = str_replace('</td>', '<img class="mark mark-attach" src="' . Page::getPF(My::id()) . '/css/img/marker.svg" title="' . __('Attached Map') . '"></td>', $cols['status']);
         }
     }
 }

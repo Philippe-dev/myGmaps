@@ -341,7 +341,7 @@ class BackendDefaultActions
             App::nonce()->getFormNonce() .
             $ap->getHiddenFields() .
             form::hidden(['action'], 'category') .
-            '<input type="submit" value="' . __('Save') . '" /></p>' .
+            '<input type="submit" value="' . __('Save') . '"></p>' .
                 '</form>';
             $ap->endPage();
         }
@@ -423,7 +423,7 @@ class BackendDefaultActions
             echo
             App::nonce()->getFormNonce() . $ap->getHiddenFields() .
             form::hidden(['action'], 'author') .
-            '<input type="submit" value="' . __('Save') . '" /></p>' .
+            '<input type="submit" value="' . __('Save') . '"></p>' .
                 '</form>';
             $ap->endPage();
         }
@@ -495,7 +495,7 @@ class BackendDefaultActions
             echo
             App::nonce()->getFormNonce() . $ap->getHiddenFields() .
             form::hidden(['action'], 'lang') .
-            '<input type="submit" value="' . __('Save') . '" /></p>' .
+            '<input type="submit" value="' . __('Save') . '"></p>' .
                 '</form>';
             $ap->endPage();
         }

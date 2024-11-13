@@ -80,7 +80,7 @@ class ManageMap extends Process
         ]), App::blog()->id);
         App::backend()->can_delete = false;
 
-        $post_headlink            = '<link rel="%s" title="%s" href="' . App::backend()->url()->get('admin.plugin.' . My::id(), ['act' => 'map','id' => '%s'], '&', true) . '" />';
+        $post_headlink            = '<link rel="%s" title="%s" href="' . App::backend()->url()->get('admin.plugin.' . My::id(), ['act' => 'map','id' => '%s'], '&', true) . '">';
         App::backend()->post_link = '<a href="' . App::backend()->url()->get('admin.plugin.' . My::id(), ['act' => 'map','id' => '%s'], '&', true) . '" title="%s">%s</a>';
 
         App::backend()->next_link     = null;
@@ -755,7 +755,7 @@ class ManageMap extends Process
 
                     'post_excerpt' => '<label for="post_excerpt" class="bold">' . __('Type and position:') . '</label>' .
                     '<div class="map_toolbar">' . __('Search:') . '<span class="map_spacer">&nbsp;</span>' .
-                    '<input size="40" maxlength="255" type="text" id="address" class="qx" /><input id="geocode" type="submit" value="' . __('OK') . '" /><span class="map_spacer">&nbsp;</span>' .
+                    '<input size="40" maxlength="255" type="text" id="address" class="qx"><input id="geocode" type="submit" value="' . __('OK') . '"><span class="map_spacer">&nbsp;</span>' .
                     '<button id="add_marker" class="add_marker" type="button" title="' . __('Point of interest') . '"><span>' . __('Point of interest') . '</span></button>' .
                     '<button id="add_polyline" class="add_polyline" type="button" title="' . __('Polyline') . '"><span>' . __('Polyline') . '</span></button>' .
                     '<button id="add_polygon" class="add_polygon" type="button" title="' . __('Polygon') . '"><span>' . __('Polygon') . '</span></button>' .
@@ -841,14 +841,14 @@ class ManageMap extends Process
             echo
             '<p class="border-top">' .
             '<input type="submit" value="' . __('Save') . ' (s)" ' .
-            'accesskey="s" name="save" /> ' ;
+            'accesskey="s" name="save"> ' ;
 
             if (!isset(App::backend()->post->post_id)) {
                 echo
                 '<a id="post-cancel" href="' . My::manageUrl() . '&act=list#entries-list' . '" class="button" accesskey="c">' . __('Cancel') . ' (c)</a>';
             }
 
-            echo(App::backend()->can_delete ? '<input type="submit" class="delete" value="' . __('Delete') . '" name="delete" />' : '') .
+            echo(App::backend()->can_delete ? '<input type="submit" class="delete" value="' . __('Delete') . '" name="delete">' : '') .
                     App::nonce()->getFormNonce() .
                     '</p>';
 
@@ -945,7 +945,7 @@ class ManageMap extends Process
         while ($rs->fetch()) {
             $comment_url = App::backend()->url()->get('admin.comment', ['id' => $rs->comment_id]);
 
-            $img        = '<img alt="%1$s" title="%1$s" src="images/%2$s" />';
+            $img        = '<img alt="%1$s" title="%1$s" src="images/%2$s">';
             $img_status = '';
             $sts_class  = '';
             switch ($rs->comment_status) {
@@ -997,7 +997,7 @@ class ManageMap extends Process
                 '') .
             '<td class="nowrap status">' . $img_status . '</td>' .
             '<td class="nowrap status"><a href="' . $comment_url . '">' .
-            '<img src="images/edit-mini.svg" alt="" title="' . __('Edit this comment') . '" /> ' . __('Edit') . '</a></td>' .
+            '<img src="images/edit-mini.svg" alt="" title="' . __('Edit this comment') . '"> ' . __('Edit') . '</a></td>' .
             '</tr>';
         }
 
