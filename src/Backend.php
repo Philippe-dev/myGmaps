@@ -20,7 +20,7 @@ use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Backend\Favorites;
 use Dotclear\Core\Process;
 use ArrayObject;
-use Dotclear\Core\Backend\Filter\Filter;
+use Dotclear\Helper\Stack\Filter;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
 use form;
