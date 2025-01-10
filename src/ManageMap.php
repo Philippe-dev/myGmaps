@@ -580,13 +580,16 @@ class ManageMap extends Process
         $img_status_pattern = '<img class="mark mark-%3$s" alt="%1$s" src="images/%2$s">';
 
         if (App::backend()->post_id) {
-            $img_status = match ((int) App::backend()->post_status) {
-                App::blog()::POST_PUBLISHED   => sprintf($img_status_pattern, __('Published'), 'published.svg', 'published'),
-                App::blog()::POST_UNPUBLISHED => sprintf($img_status_pattern, __('Unpublished'), 'unpublished.svg', 'unpublished'),
-                App::blog()::POST_SCHEDULED   => sprintf($img_status_pattern, __('Scheduled'), 'scheduled.svg', 'scheduled'),
-                App::blog()::POST_PENDING     => sprintf($img_status_pattern, __('Pending'), 'pending.svg', 'pending'),
-                default                       => '',
-            };
+            try {
+                $img_status = match ((int) App::backend()->post_status) {
+                    App::status()->post()::PUBLISHED   => sprintf($img_status_pattern, __('Published'), 'published.svg', 'published'),
+                    App::status()->post()::UNPUBLISHED => sprintf($img_status_pattern, __('Unpublished'), 'unpublished.svg', 'unpublished'),
+                    App::status()->post()::SCHEDULED   => sprintf($img_status_pattern, __('Scheduled'), 'scheduled.svg', 'scheduled'),
+                    App::status()->post()::PENDING     => sprintf($img_status_pattern, __('Pending'), 'pending.svg', 'pending'),
+                };
+            } catch (UnhandledMatchError) {
+            }
+
             $edit_entry_title = '&ldquo;' . Html::escapeHTML(trim(Html::clean(App::backend()->post_title))) . '&rdquo;' . ' ' . $img_status;
         } else {
             $edit_entry_title = App::backend()->page_title;
@@ -659,7 +662,7 @@ class ManageMap extends Process
                 'status-box' => [
                     'title' => __('Status'),
                     'items' => [
-                        'post_status' => '<p><label for="post_status">' . __('Element status') . '</label> ' .
+                        'post_status' => '<p><label for="post_status">' . __('Element status') . ' ' . $img_status . '</label>' .
                         form::combo(
                             'post_status',
                             App::backend()->status_combo,
