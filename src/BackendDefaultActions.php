@@ -17,6 +17,7 @@ namespace Dotclear\Plugin\myGmaps;
 use ArrayObject;
 use Dotclear\App;
 use Dotclear\Core\Backend\Combos;
+use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Backend\Action\ActionsPostsDefault;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Core\Backend\Page;
@@ -31,22 +32,22 @@ class BackendDefaultActions
      *
      * @param      BackendActions  $ap     Admin actions instance
      */
-    public static function adminPostsActionsPage(BackendActions $ap)
+    public static function adminPostsActionsPage(BackendActions $ap): void
     {
         if (App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_PUBLISH,
             App::auth()::PERMISSION_CONTENT_ADMIN,
-        ]), App::blog()->id)) {
+        ]), App::blog()->id())) {
+            $actions = [];
+            foreach (App::status()->post()->dump(false) as $status) {
+                $actions[__($status->name())] = $status->id();
+            }
             $ap->addAction(
-                [__('Status') => [
-                    __('Publish')         => 'publish',
-                    __('Unpublish')       => 'unpublish',
-                    __('Schedule')        => 'schedule',
-                    __('Mark as pending') => 'pending',
-                ]],
-                [self::class, 'doChangePostStatus']
+                [__('Status') => $actions],
+                self::doChangePostStatus(...)
             );
         }
+
         if (App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_PUBLISH,
             App::auth()::PERMISSION_CONTENT_ADMIN,
@@ -106,57 +107,41 @@ class BackendDefaultActions
      *
      * @throws     Exception             (description)
      */
-    public static function doChangePostStatus(BackendActions $ap)
+    public static function doChangePostStatus(BackendActions $ap): void
     {
-        switch ($ap->getAction()) {
-            case 'unpublish':
-                $status = App::blog()::POST_UNPUBLISHED;
-
-                break;
-            case 'schedule':
-                $status = App::blog()::POST_SCHEDULED;
-
-                break;
-            case 'pending':
-                $status = App::blog()::POST_PENDING;
-
-                break;
-            default:
-                $status = App::blog()::POST_PUBLISHED;
-
-                break;
-        }
+        // unknown to published
+        $status = App::status()->post()->has((string) $ap->getAction()) ?
+            App::status()->post()->level((string) $ap->getAction()) :
+            App::status()->post()::PUBLISHED;
 
         $ids = $ap->getIDs();
-        if (empty($ids)) {
+        if ($ids === []) {
             throw new Exception(__('No element selected'));
         }
 
-        // Do not switch to scheduled already published elements
-
-        if ($status === App::blog()::POST_SCHEDULED) {
+        // Do not switch to scheduled already published entries
+        if ($status === App::status()->post()::SCHEDULED) {
             $rs           = $ap->getRS();
             $excluded_ids = [];
             if ($rs->rows()) {
                 while ($rs->fetch()) {
-                    if ((int) $rs->post_status === App::blog()::POST_PUBLISHED) {
+                    if ((int) $rs->post_status >= App::status()->post()::PUBLISHED) {
                         $excluded_ids[] = (int) $rs->post_id;
                     }
                 }
             }
-            if (count($excluded_ids)) {
+            if ($excluded_ids !== []) {
                 $ids = array_diff($ids, $excluded_ids);
             }
         }
-        if (count($ids) === 0) {
+        if ($ids === []) {
             throw new Exception(__('Published elements cannot be set to scheduled'));
         }
 
-        // Set status of remaining elements
-
+        // Set status of remaining entries
         App::blog()->updPostsStatus($ids, $status);
 
-        Page::addSuccessNotice(
+        Notices::addSuccessNotice(
             sprintf(
                 __(
                     '%d element has been successfully updated to status : "%s"',
@@ -164,9 +149,10 @@ class BackendDefaultActions
                     count($ids)
                 ),
                 count($ids),
-                App::blog()->getPostStatus($status)
+                App::status()->post()->name($status)
             )
         );
+
         $ap->redirect(true);
     }
 
@@ -177,7 +163,7 @@ class BackendDefaultActions
      *
      * @throws     Exception
      */
-    public static function doUpdateSelectedPost(BackendActions $ap)
+    public static function doUpdateSelectedPost(BackendActions $ap): void
     {
         $ids = $ap->getIDs();
         if (empty($ids)) {
@@ -187,7 +173,7 @@ class BackendDefaultActions
         $action = $ap->getAction();
         App::blog()->updPostsSelected($ids, $action === 'selected');
         if ($action == 'selected') {
-            Page::addSuccessNotice(
+            Notices::addSuccessNotice(
                 sprintf(
                     __(
                         '%d element has been successfully marked as selected',
@@ -198,7 +184,7 @@ class BackendDefaultActions
                 )
             );
         } else {
-            Page::addSuccessNotice(
+            Notices::addSuccessNotice(
                 sprintf(
                     __(
                         '%d element has been successfully marked as unselected',
@@ -219,7 +205,7 @@ class BackendDefaultActions
      *
      * @throws     Exception
      */
-    public static function doDeletePost(BackendActions $ap)
+    public static function doDeletePost(BackendActions $ap): void
     {
         $ids = $ap->getIDs();
         if (empty($ids)) {
@@ -235,7 +221,7 @@ class BackendDefaultActions
         App::behavior()->callBehavior('adminBeforePostsDelete', $ids);
 
         App::blog()->delPosts($ids);
-        Page::addSuccessNotice(
+        Notices::addSuccessNotice(
             sprintf(
                 __(
                     '%d element has been successfully deleted',
@@ -257,7 +243,7 @@ class BackendDefaultActions
      *
      * @throws     Exception             If no entry selected
      */
-    public static function doChangePostCategory(BackendActions $ap, ArrayObject $post)
+    public static function doChangePostCategory(BackendActions $ap, ArrayObject $post): void
     {
         if (isset($post['new_cat_id'])) {
             $ids = $ap->getIDs();
@@ -289,7 +275,7 @@ class BackendDefaultActions
             if ($new_cat_id) {
                 $title = App::blog()->getCategory((int) $new_cat_id)->cat_title;
             }
-            Page::addSuccessNotice(
+            Notices::addSuccessNotice(
                 sprintf(
                     __(
                         '%d element has been successfully moved to category "%s"',
@@ -355,7 +341,7 @@ class BackendDefaultActions
      *
      * @throws     Exception             If no entry selected
      */
-    public static function doChangePostAuthor(BackendActions $ap, ArrayObject $post)
+    public static function doChangePostAuthor(BackendActions $ap, ArrayObject $post): void
     {
         if (isset($post['new_auth_id']) && App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_ADMIN,
@@ -372,7 +358,7 @@ class BackendDefaultActions
             $cur          = App::con()->openCursor(App::con()->prefix() . App::blog()::POST_TABLE_NAME);
             $cur->user_id = $new_user_id;
             $cur->update('WHERE post_id ' . App::con()->in($ids));
-            Page::addSuccessNotice(
+            Notices::addSuccessNotice(
                 sprintf(
                     __(
                         '%d element has been successfully set to user "%s"',
@@ -437,7 +423,7 @@ class BackendDefaultActions
      *
      * @throws     Exception             If no entry selected
      */
-    public static function doChangePostLang(BackendActions $ap, ArrayObject $post)
+    public static function doChangePostLang(BackendActions $ap, ArrayObject $post): void
     {
         $post_ids = $ap->getIDs();
         if (empty($post_ids)) {
@@ -448,7 +434,7 @@ class BackendDefaultActions
             $cur            = App::con()->openCursor(App::con()->prefix() . App::blog()::POST_TABLE_NAME);
             $cur->post_lang = $new_lang;
             $cur->update('WHERE post_id ' . App::con()->in($post_ids));
-            Page::addSuccessNotice(
+            Notices::addSuccessNotice(
                 sprintf(
                     __(
                         '%d element has been successfully set to language "%s"',
@@ -489,7 +475,7 @@ class BackendDefaultActions
             '<form action="' . $ap->getURI() . '" method="post">' .
             $ap->getCheckboxes() .
 
-            '<p><label for="new_lang" class="classic">' . __('Entry language:') . '</label> ' .
+            '<p><label for="new_lang" class="classic">' . __('Element language:') . '</label> ' .
             form::combo('new_lang', $lang_combo);
 
             echo
