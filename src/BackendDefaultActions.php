@@ -48,18 +48,6 @@ class BackendDefaultActions
             );
         }
 
-        if (App::auth()->check(App::auth()->makePermissions([
-            App::auth()::PERMISSION_PUBLISH,
-            App::auth()::PERMISSION_CONTENT_ADMIN,
-        ]), App::blog()->id)) {
-            $ap->addAction(
-                [__('First publication') => [
-                    __('Never published')   => 'never',
-                    __('Already published') => 'already',
-                ]],
-                [ActionsPostsDefault::class, 'doChangePostFirstPub']
-            );
-        }
         $ap->addAction(
             [__('Mark') => [
                 __('Mark as selected')   => 'selected',
