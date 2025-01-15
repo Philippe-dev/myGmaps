@@ -126,7 +126,7 @@ button.add_marker.inactive {
 
 button.add_marker.active {
   background-image: url(index.php?pf=myGmaps/css/img/marker.svg);
-  background-color: var(--body-background)
+  background-color: var(--fieldset-focus-background)
 }
 
 button.add_polyline,
@@ -137,7 +137,7 @@ button.add_polyline.inactive {
 
 button.add_polyline.active {
   background-image: url(index.php?pf=myGmaps/css/img/polyline.svg);
-  background-color: var(--body-background)
+  background-color: var(--fieldset-focus-background)
 }
 
 button.add_polygon,
@@ -148,7 +148,7 @@ button.add_polygon.inactive {
 
 button.add_polygon.active {
   background-image: url(index.php?pf=myGmaps/css/img/polygon.svg);
-  background-color: var(--body-background)
+  background-color: var(--fieldset-focus-background)
 }
 
 button.add_rectangle,
@@ -159,7 +159,7 @@ button.add_rectangle.inactive {
 
 button.add_rectangle.active {
   background-image: url(index.php?pf=myGmaps/css/img/rectangle.svg);
-  background-color: var(--body-background)
+  background-color: var(--fieldset-focus-background)
 }
 
 button.add_circle,
@@ -170,7 +170,7 @@ button.add_circle.inactive {
 
 button.add_circle.active {
   background-image: url(index.php?pf=myGmaps/css/img/circle.svg);
-  background-color: var(--body-background)
+  background-color: var(--fieldset-focus-background)
 }
 
 button.add_kml,
@@ -181,7 +181,7 @@ button.add_kml.inactive {
 
 button.add_kml.active {
   background-image: url(index.php?pf=myGmaps/css/img/kml.svg);
-  background-color: var(--body-background)
+  background-color: var(--fieldset-focus-background)
 }
 
 button.add_georss,
@@ -192,7 +192,7 @@ button.add_georss.inactive {
 
 button.add_georss.active {
   background-image: url(index.php?pf=myGmaps/css/img/feed.svg);
-  background-color: var(--body-background)
+  background-color: var(--fieldset-focus-background)
 }
 
 button.add_directions,
@@ -203,7 +203,7 @@ button.add_directions.inactive {
 
 button.add_directions.active {
   background-image: url(index.php?pf=myGmaps/css/img/directions.svg);
-  background-color: var(--body-background)
+  background-color: var(--fieldset-focus-background)
 }
 
 button.delete_map {
