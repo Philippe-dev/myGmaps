@@ -95,17 +95,6 @@ a.map-remove {
   background-repeat: no-repeat;
 }
 
-.map_toolbar button:hover,
-.map_toolbar button:focus {
-  border: 1px solid #3a539b;
-}
-
-.map_toolbar button.inactive:hover,
-.map_toolbar button.inactive:focus {
-  border: 1px solid #8f8f8f;
-}
-
-.map_toolbar button.active,
 .map_toolbar button.active {
   border: 2px solid #8f8f8f;
 }
@@ -130,96 +119,88 @@ span.map_spacer {
 }
 
 button.add_marker,
-button.add_marker.inactive:hover {
+button.add_marker.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/marker-bw.svg);
   background-size: 100%;
 }
 
-button.add_marker:hover,
 button.add_marker.active {
   background-image: url(index.php?pf=myGmaps/css/img/marker.svg);
   background-color: var(--body-background)
 }
 
 button.add_polyline,
-button.add_polyline.inactive:hover {
+button.add_polyline.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/polyline-bw.svg);
   background-size: 80%;
 }
 
-button.add_polyline:hover,
 button.add_polyline.active {
   background-image: url(index.php?pf=myGmaps/css/img/polyline.svg);
   background-color: var(--body-background)
 }
 
 button.add_polygon,
-button.add_polygon.inactive:hover {
+button.add_polygon.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/polygon-bw.svg);
   background-size: 90%;
 }
 
-button.add_polygon:hover,
 button.add_polygon.active {
   background-image: url(index.php?pf=myGmaps/css/img/polygon.svg);
   background-color: var(--body-background)
 }
 
 button.add_rectangle,
-button.add_rectangle.inactive:hover {
+button.add_rectangle.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/rectangle-bw.svg);
   background-size: 80%;
 }
 
-button.add_rectangle:hover,
 button.add_rectangle.active {
   background-image: url(index.php?pf=myGmaps/css/img/rectangle.svg);
   background-color: var(--body-background)
 }
 
 button.add_circle,
-button.add_circle.inactive:hover {
+button.add_circle.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/circle-bw.svg);
   background-size: 80%;
 }
 
-button.add_circle:hover,
 button.add_circle.active {
   background-image: url(index.php?pf=myGmaps/css/img/circle.svg);
   background-color: var(--body-background)
 }
 
 button.add_kml,
-button.add_kml.inactive:hover {
+button.add_kml.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/kml-bw.svg);
   background-size: 100%;
 }
 
-button.add_kml:hover,
 button.add_kml.active {
   background-image: url(index.php?pf=myGmaps/css/img/kml.svg);
   background-color: var(--body-background)
 }
 
 button.add_georss,
-button.add_georss.inactive:hover {
+button.add_georss.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/feed-bw.svg);
   background-size: 100%;
 }
 
-button.add_georss:hover,
 button.add_georss.active {
   background-image: url(index.php?pf=myGmaps/css/img/feed.svg);
   background-color: var(--body-background)
 }
 
 button.add_directions,
-button.add_directions.inactive:hover {
+button.add_directions.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/directions-bw.svg);
   background-size: 60%;
 }
 
-button.add_directions:hover,
 button.add_directions.active {
   background-image: url(index.php?pf=myGmaps/css/img/directions.svg);
   background-color: var(--body-background)
