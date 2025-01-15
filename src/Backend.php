@@ -758,7 +758,7 @@ class Backend extends Process
         }
 
         $map = '';
-        $map = sprintf($map_img, __('Attached Map'), Page::getPF(My::id()) . '/css/img/marker.svg', 'attach');
+        $map = sprintf($map_img, __('Attached Map'), Page::getPF(My::id()) . '/icon.svg', 'map');
 
         if (!empty($meta->getMetaStr($rs->post_meta, 'map_options')) && in_array($rs->post_type, $postTypes)) {
             $cols['status'] = '<td class="nowrap status count">' . $img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach . ' ' . $map . '</td>';

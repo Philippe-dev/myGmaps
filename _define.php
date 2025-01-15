@@ -13,7 +13,7 @@ $this->registerModule(
     'Google Maps',
     'Add custom maps to your blog',
     'Philippe aka amalgame and contributors',
-    '8.2',
+    '8.3',
     [
         'requires'    => [['core', '2.33']],
         'permissions' => 'My',
