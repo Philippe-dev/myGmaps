@@ -126,6 +126,7 @@ button.add_marker.inactive {
 
 button.add_marker.active {
   background-image: url(index.php?pf=myGmaps/css/img/marker.svg);
+  background-size: 90%;
   background-color: var(--fieldset-focus-background)
 }
 

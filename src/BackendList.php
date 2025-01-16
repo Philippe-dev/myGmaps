@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\myGmaps;
 
 use Dotclear\App;
+use Dotclear\Core\Backend\Page;
 use ArrayObject;
 use Dotclear\Core\Backend\Listing\Pager;
 use Dotclear\Core\Backend\Listing\Listing;
@@ -188,6 +189,28 @@ class BackendList extends Listing
         $meta    = App::meta();
         $meta_rs = $meta->getMetaStr($this->rs->post_meta, 'map');
 
+        $imgf = '<img alt="%1$s" title="%1$s" src="' . Page::getPF(My::id()) . '/css/img/%2$s" class="mark mark-%3$s">';
+
+        $img_type = '';
+
+        if ($meta_rs === 'point of interest') {
+            $img_type = sprintf($imgf, __('point of interest'), 'marker.svg', 'map');
+        } elseif ($meta_rs === 'polyline') {
+            $img_type = sprintf($imgf, __('polyline'), 'polyline.svg', 'map');
+        } elseif ($meta_rs === 'polygon') {
+            $img_type = sprintf($imgf, __('polygon'), 'polygon.svg', 'map');
+        } elseif ($meta_rs === 'circle') {
+            $img_type = sprintf($imgf, __('circle'), 'circle.svg', 'map');
+        } elseif ($meta_rs === 'rectangle') {
+            $img_type = sprintf($imgf, __('rectangle'), 'rectangle.svg', 'map');
+        } elseif ($meta_rs === 'included kml file') {
+            $img_type = sprintf($imgf, __('included kml file'), 'kml.svg', 'map');
+        } elseif ($meta_rs === 'GeoRSS feed') {
+            $img_type = sprintf($imgf, __('GeoRSS feed'), 'feed.svg', 'map');
+        } elseif ($meta_rs === 'directions') {
+            $img_type = sprintf($imgf, __('directions'), 'directions.svg', 'map');
+        }
+
         $cols = [
             'check' => '<td class="nowrap">' .
             form::checkbox(
@@ -209,7 +232,7 @@ class BackendList extends Listing
                 '</td>',
             'category' => '<td class="nowrap">' . $cat_title . '</td>',
             'author'   => '<td class="nowrap">' . Html::escapeHTML($this->rs->user_id) . '</td>',
-            'type'     => '<td class="nowrap">' . __($meta_rs) . '</td>',
+            'type'     => '<td class="nowrap count">' . $img_type . '</td>',
             'status'   => '<td class="nowrap status">' . $img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach . '</td>',
         ];
         $cols = new ArrayObject($cols);
