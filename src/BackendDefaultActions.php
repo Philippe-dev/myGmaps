@@ -53,13 +53,13 @@ class BackendDefaultActions
                 __('Mark as selected')   => 'selected',
                 __('Mark as unselected') => 'unselected',
             ]],
-            [self::class, 'doUpdateSelectedPost']
+            self::doUpdateSelectedPost(...)
         );
         $ap->addAction(
             [__('Change') => [
                 __('Change category') => 'category',
             ]],
-            [self::class, 'doChangePostCategory']
+            self::doChangePostCategory(...)
         );
         $ap->addAction(
             [__('Change') => [
@@ -73,7 +73,7 @@ class BackendDefaultActions
             $ap->addAction(
                 [__('Change') => [
                     __('Change author') => 'author', ]],
-                [self::class, 'doChangePostAuthor']
+                self::doChangePostAuthor(...)
             );
         }
         if (App::auth()->check(App::auth()->makePermissions([
@@ -83,7 +83,7 @@ class BackendDefaultActions
             $ap->addAction(
                 [__('Delete') => [
                     __('Delete') => 'delete', ]],
-                [self::class, 'doDeletePost']
+                self::doDeletePost(...)
             );
         }
     }
