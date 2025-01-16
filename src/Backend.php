@@ -711,56 +711,55 @@ class Backend extends Process
         $postTypes = ['post', 'page'];
         $meta      = App::meta();
 
-        $img = '<img alt="%1$s" title="%1$s" src="images/%2$s" class="mark mark-%3$s">';
-
-        $map_img = '<img alt="%1$s" title="%1$s" src="%2$s" class="mark mark-%3$s">';
-
-        $img_status = '';
-        $sts_class  = '';
-        switch ($rs->post_status) {
-            case App::blog()::POST_PUBLISHED:
-                $img_status = sprintf($img, __('Published'), 'check-on.svg', 'published');
-                $sts_class  = 'sts-online';
-
-                break;
-            case App::blog()::POST_UNPUBLISHED:
-                $img_status = sprintf($img, __('Unpublished'), 'check-off.svg', 'unpublished');
-                $sts_class  = 'sts-offline';
-
-                break;
-            case App::blog()::POST_SCHEDULED:
-                $img_status = sprintf($img, __('Scheduled'), 'scheduled.svg', 'scheduled');
-                $sts_class  = 'sts-scheduled';
-
-                break;
-            case App::blog()::POST_PENDING:
-                $img_status = sprintf($img, __('Pending'), 'check-wrn.svg', 'pending');
-                $sts_class  = 'sts-pending';
-
-                break;
-        }
-
-        $protected = '';
-        if ($rs->post_password) {
-            $protected = sprintf($img, __('Protected'), 'locker.svg', 'locked');
-        }
-
-        $selected = '';
-        if ($rs->post_selected) {
-            $selected = sprintf($img, __('Selected'), 'selected.svg', 'selected');
-        }
-
-        $attach   = '';
-        $nb_media = $rs->countMedia();
-        if ($nb_media > 0) {
-            $attach_str = $nb_media == 1 ? __('%d attachment') : __('%d attachments');
-            $attach     = sprintf($img, sprintf($attach_str, $nb_media), 'attach.svg', 'attach');
-        }
-
-        $map = '';
-        $map = sprintf($map_img, __('Attached Map'), Page::getPF(My::id()) . '/icon.svg', 'map');
-
         if (!empty($meta->getMetaStr($rs->post_meta, 'map_options')) && in_array($rs->post_type, $postTypes)) {
+            $img     = '<img alt="%1$s" title="%1$s" src="images/%2$s" class="mark mark-%3$s">';
+            $map_img = '<img alt="%1$s" title="%1$s" src="%2$s" class="mark mark-%3$s">';
+
+            $img_status = '';
+            $sts_class  = '';
+            switch ($rs->post_status) {
+                case App::blog()::POST_PUBLISHED:
+                    $img_status = sprintf($img, __('Published'), 'check-on.svg', 'published');
+                    $sts_class  = 'sts-online';
+
+                    break;
+                case App::blog()::POST_UNPUBLISHED:
+                    $img_status = sprintf($img, __('Unpublished'), 'check-off.svg', 'unpublished');
+                    $sts_class  = 'sts-offline';
+
+                    break;
+                case App::blog()::POST_SCHEDULED:
+                    $img_status = sprintf($img, __('Scheduled'), 'scheduled.svg', 'scheduled');
+                    $sts_class  = 'sts-scheduled';
+
+                    break;
+                case App::blog()::POST_PENDING:
+                    $img_status = sprintf($img, __('Pending'), 'check-wrn.svg', 'pending');
+                    $sts_class  = 'sts-pending';
+
+                    break;
+            }
+
+            $protected = '';
+            if ($rs->post_password) {
+                $protected = sprintf($img, __('Protected'), 'locker.svg', 'locked');
+            }
+
+            $selected = '';
+            if ($rs->post_selected) {
+                $selected = sprintf($img, __('Selected'), 'selected.svg', 'selected');
+            }
+
+            $attach   = '';
+            $nb_media = $rs->countMedia();
+            if ($nb_media > 0) {
+                $attach_str = $nb_media == 1 ? __('%d attachment') : __('%d attachments');
+                $attach     = sprintf($img, sprintf($attach_str, $nb_media), 'attach.svg', 'attach');
+            }
+
+            $map = '';
+            $map = sprintf($map_img, __('Attached Map'), Page::getPF(My::id()) . '/icon.svg', 'map');
+
             $cols['status'] = '<td class="nowrap status count">' . $img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach . ' ' . $map . '</td>';
         }
     }
