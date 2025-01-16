@@ -177,7 +177,7 @@ button.add_circle.active {
 button.add_kml,
 button.add_kml.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/kml-bw.svg);
-  background-size: 100%;
+  background-size: 80%;
 }
 
 button.add_kml.active {
@@ -188,7 +188,7 @@ button.add_kml.active {
 button.add_georss,
 button.add_georss.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/feed-bw.svg);
-  background-size: 100%;
+  background-size: 80%;
 }
 
 button.add_georss.active {
