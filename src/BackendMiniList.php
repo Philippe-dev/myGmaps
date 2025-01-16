@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\myGmaps;
 
 use Dotclear\App;
+use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Backend\Listing\Pager;
 use Dotclear\Core\Backend\Listing\Listing;
 use Dotclear\Helper\Date;
@@ -136,13 +137,35 @@ class BackendMiniList extends Listing
         $meta    = App::meta();
         $meta_rs = $meta->getMetaStr($this->rs->post_meta, 'map');
 
+        $imgf = '<img alt="%1$s" title="%1$s" src="' . Page::getPF(My::id()) . '/css/img/%2$s" class="mark mark-%3$s">';
+
+        $img_type = '';
+
+        if ($meta_rs === 'point of interest') {
+            $img_type = sprintf($imgf, __('point of interest'), 'marker.svg', 'map');
+        } elseif ($meta_rs === 'polyline') {
+            $img_type = sprintf($imgf, __('polyline'), 'polyline.svg', 'map');
+        } elseif ($meta_rs === 'polygon') {
+            $img_type = sprintf($imgf, __('polygon'), 'polygon.svg', 'map');
+        } elseif ($meta_rs === 'circle') {
+            $img_type = sprintf($imgf, __('circle'), 'circle.svg', 'map');
+        } elseif ($meta_rs === 'rectangle') {
+            $img_type = sprintf($imgf, __('rectangle'), 'rectangle.svg', 'map');
+        } elseif ($meta_rs === 'included kml file') {
+            $img_type = sprintf($imgf, __('included kml file'), 'kml.svg', 'map');
+        } elseif ($meta_rs === 'GeoRSS feed') {
+            $img_type = sprintf($imgf, __('GeoRSS feed'), 'feed.svg', 'map');
+        } elseif ($meta_rs === 'directions') {
+            $img_type = sprintf($imgf, __('directions'), 'directions.svg', 'map');
+        }
+
         $res = '<tr class="line ' . ($this->rs->post_status != App::blog()::POST_PUBLISHED ? 'offline ' : '') . $sts_class . '"' .
         ' id="p' . $this->rs->post_id . '">';
 
         $res .= '<td class="maximal"><a href="' . App::backend()->url()->get('admin.plugin.' . My::id()) . '&act=map&id=' . $this->rs->post_id . '" title="' . __('Edit map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '">' . Html::escapeHTML($this->rs->post_title) . '</a></td>' .
         '<td class="nowrap count">' . Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt) . '</td>' .
         '<td class="nowrap">' . $cat_title . '</td>' .
-        '<td class="nowrap">' . __($meta_rs) . '</td>' .
+        '<td class="nowrap count">' . $img_type . '</td>' .
         '<td class="nowrap status">' . $img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach . '</td>';
         if ($type == 'post') {
             $res .= '<td class="nowrap count"><a class="mark element-remove" href="' . App::postTypes()->get($type)->adminUrl($id) . '&remove=' . $this->rs->post_id . '" title="' . __('Remove map element') . ' : ' . Html::escapeHTML($this->rs->post_title) . '"><img class="mark element-remove" src="images/trash.svg" alt="supprimer"></a></td>';
