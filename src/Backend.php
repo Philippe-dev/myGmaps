@@ -634,7 +634,8 @@ class Backend extends Process
             $filters->append((new Filter('map'))
             ->param('sql', ($map === 'map_options') ? "AND post_meta LIKE '%" . 'map_options' . "%' " : "AND post_meta NOT LIKE '%" . 'map_options' . "%' ")
             ->title(__('Google Map:'))
-            ->options($map_combo));
+            ->options($map_combo)
+            ->prime(true));
         }
     }
 
