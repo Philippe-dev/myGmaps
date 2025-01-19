@@ -779,7 +779,7 @@ class ManageMap extends Process
                     form::textarea(
                         'post_content',
                         50,
-                        App::auth()->getOption('edit_size'),
+                        10,
                         [
                             'default'    => Html::escapeHTML(App::backend()->post_content),
                             'extra_html' => 'placeholder="' . __('Description') . '" lang="' . App::backend()->post_lang . '" spellcheck="true"',
