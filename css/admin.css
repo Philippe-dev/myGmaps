@@ -4,7 +4,7 @@ a.map-remove {
 
 #map_canvas {
   height: 600px;
-  border: 1px solid var(--tabs-border);
+  border: 1px solid var(--msg-info-border);
   border-top: none;
   margin-bottom: .4em
 }
@@ -59,7 +59,7 @@ a.map-remove {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   padding: .2em .5em;
-  border: 1px solid var(--pager-border);
+  border: 1px solid var(--msg-info-border);
   overflow: hidden;
   border-radius: 4px 4px 0 0;
   position: relative;
@@ -90,7 +90,6 @@ a.map-remove {
   width: 40px;
   height: 40px;
   margin-left: 2px;
-  margin-bottom: 2px;
   background-position: 50% 50%;
   background-repeat: no-repeat;
 }
