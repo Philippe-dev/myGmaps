@@ -4,7 +4,7 @@ a.map-remove {
 
 #map_canvas {
     height: 600px;
-    border: 1px solid var(--pager-border);
+    border: 1px solid var(--tabs-border);
     border-top: none;
     margin-bottom: 0.4em;
 }
