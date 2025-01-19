@@ -761,7 +761,7 @@ class Backend extends Process
             $map = '';
             $map = sprintf($map_img, __('Attached Map'), Page::getPF(My::id()) . '/icon.svg', 'map');
 
-            $cols['status'] = '<td class="nowrap status count">' . $img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach . ' ' . $map . '</td>';
+            $cols['status'] = '<td class="nowrap status">' . $img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach . ' ' . $map . '</td>';
         }
     }
 }
