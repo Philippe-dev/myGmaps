@@ -136,3 +136,7 @@ a.map-remove {
     margin-top: 2em !important;
     font-weight: bold;
 }
+
+.form-note.mapinfo {
+    margin-top: 0
+}

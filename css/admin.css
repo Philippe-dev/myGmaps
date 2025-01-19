@@ -270,3 +270,7 @@ p#excerpt {
   vertical-align: middle;
   width: 1.2em;
 }
+
+.form-note.mapinfo {
+  margin-top: 0
+}
