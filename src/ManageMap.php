@@ -767,10 +767,10 @@ class ManageMap extends Process
                     '<button id="add_kml" class="add_kml" type="button" title="' . __('Included Kml file') . '"><span>' . __('Included Kml file') . '</span></button>' .
                     '<button id="add_georss" class="add_georss" type="button" title="' . __('GeoRSS Feed') . '"><span>' . __('GeoRSS Feed') . '</span></button>' .
                     '<button id="add_directions" class="add_directions" type="button" title="' . __('Directions') . '"><span>' . __('Directions') . '</span></button>' .
-                    '<button id="delete_map" type="button" class="delete_map" title="' . __('Delete') . '"><span>' . __('Delete') . '</span></button>' .
+                    '<button id="delete_map" type="button" class="delete_map" title="' . __('Erase') . '"><span>' . __('Erase') . '</span></button>' .
                     '</div>' .
                     '<div id="map_box"><div class="area" id="map_canvas"></div><div id="panel"></div></div>' .
-                    '<div class="form-note info maximal mapinfo"><p>' . __('This map will not be displayed on the blog and is meant only to create, edit and position only one element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties.') . '</p>' .
+                    '<div class="form-note info maximal mapinfo"><p>' . __('This map will not be displayed on the blog and is meant only to create, edit and position <strong>only one</strong> element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties.') . '</p>' .
                     '</div>' .
                     '<p class="area" id="excerpt">' . form::textarea('post_excerpt', 50, 5, html::escapeHTML(App::backend()->post_excerpt)) . '</p>',
 

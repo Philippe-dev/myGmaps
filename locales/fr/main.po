@@ -360,12 +360,12 @@ msgid "Directions"
 msgstr "Itinéraire"
 
 #: src/ManageMap.php:770
-msgid "Initialize map"
-msgstr "Initialiser la carte"
+msgid "Erase"
+msgstr "Effacer"
 
 #: src/ManageMap.php:773
-msgid "This map will not be displayed on the blog and is meant only to create, edit and position only one element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties."
-msgstr "Cette carte ne sera pas affichée sur le blog, et n'est destinée qu'à créer, positionner ou éditer un seul élément à la fois. Choisissez un outil, cliquez sur la carte pour créer votre élément, puis cliquer sur l'élément pour modifier ses propriétés."
+msgid "This map will not be displayed on the blog and is meant only to create, edit and position <strong>only one</strong> element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties."
+msgstr "Cette carte ne sera pas affichée sur le blog, et n'est destinée qu'à créer, positionner ou éditer <strong>un seul</strong> élément à la fois. Choisissez un outil, cliquez sur la carte pour créer votre élément, puis cliquer sur l'élément pour modifier ses propriétés."
 
 #: src/ManageMaps.php:168
 msgid "Select map elements for map attached to page:"
