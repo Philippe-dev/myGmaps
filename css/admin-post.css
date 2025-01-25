@@ -72,6 +72,7 @@ a.map-remove {
 }
 
 .map_toolbar span.search {
+    display: inline-block;
     margin-top: 0.3em;
 }
 
