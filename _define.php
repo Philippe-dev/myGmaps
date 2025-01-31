@@ -19,7 +19,7 @@ $this->registerModule(
         'requires'    => [['core', '2.33']],
         'permissions' => 'My',
         'type'        => 'plugin',
-        'settings'    => ['self' => '&act=list#settings'],
+        'settings'    => ['self' => '&act=list#parameters'],
         'support'     => 'https://github.com/Philippe-dev/myGmaps',
     ]
 );
