@@ -59,7 +59,7 @@ class Manage extends Process
             ManageMaps::process();
         }
 
-        App::backend()->default_tab = empty($_REQUEST['tab']) ? 'settings' : $_REQUEST['tab'];
+        App::backend()->default_tab = empty($_REQUEST['tab']) ? 'parameters' : $_REQUEST['tab'];
 
         /*
          * Admin page params.
