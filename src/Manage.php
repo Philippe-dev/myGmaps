@@ -81,7 +81,7 @@ class Manage extends Process
                 My::settings()->put('myGmaps_zoom', $_POST['myGmaps_zoom']);
                 My::settings()->put('myGmaps_type', $_POST['myGmaps_type']);
 
-                My::redirect(['act' => 'list', 'tab' => 'settings','upd' => 1]);
+                My::redirect(['act' => 'list', 'tab' => 'parameters','upd' => 1]);
             } catch (Exception $e) {
                 App::error()->add($e->getMessage());
             }
