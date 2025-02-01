@@ -13,9 +13,9 @@ $this->registerModule(
     'Google Maps',
     'Add custom maps to your blog',
     'Philippe aka amalgame and contributors',
-    '8.5',
+    '8.6',
     [
-        'date'     => '2025-01-31T00:00:13+0100',
+        'date'     => '2025-02-01T00:00:13+0100',
         'requires'    => [['core', '2.33']],
         'permissions' => 'My',
         'type'        => 'plugin',
