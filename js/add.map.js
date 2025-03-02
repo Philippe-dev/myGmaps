@@ -16,21 +16,25 @@ dotclear.ready(() => {
 		const { Places } = await google.maps.importLibrary("places");
 
 		// Display map with default or saved values
-		if ($('input[name="myGmaps_center"]').attr('value') == '') {
+		const centerInput = document.querySelector('input[name="myGmaps_center"]');
+		const zoomInput = document.querySelector('input[name="myGmaps_zoom"]');
+		const typeInput = document.querySelector('input[name="myGmaps_type"]');
+
+		if (centerInput.value === '') {
 			var default_location = new google.maps.LatLng(43.0395797336425, 6.126280043989323);
 			var default_zoom = '12';
 			var default_type = 'roadmap';
 
-			$('input[name="myGmaps_center"]').attr('value', default_location);
-			$('input[name="myGmaps_zoom"]').attr('value', default_zoom);
-			$('input[name="myGmaps_type"]').attr('value', default_type);
+			centerInput.value = default_location;
+			zoomInput.value = default_zoom;
+			typeInput.value = default_type;
 		} else {
-			const parts = $('input[name="myGmaps_center"]').attr('value').split(",");
+			const parts = centerInput.value.split(",");
 			const lat = parseFloat(trim(parts[0]));
 			const lng = parseFloat(trim(parts[1]));
 			var default_location = new google.maps.LatLng(lat, lng);
-			var default_zoom = $('input[name="myGmaps_zoom"]').attr('value');
-			var default_type = $('input[name="myGmaps_type"]').attr('value');
+			var default_zoom = zoomInput.value;
+			var default_type = typeInput.value;
 		}
 
 		// Map styles. Get more styles from https://snazzymaps.com/
@@ -46,11 +50,10 @@ dotclear.ready(() => {
 			'neutral_blue'
 		];
 
-
-		const map_styles_list = $('#map_styles_list').attr('value');
+		const map_styles_list = document.getElementById('map_styles_list').value;
 		const styles_array = map_styles_list.split(',');
-		for (i in styles_array) {
-			value = styles_array[i].replace("_styles.js", "");
+		for (let i in styles_array) {
+			let value = styles_array[i].replace("_styles.js", "");
 			mapTypeIds.push(value);
 
 			const user_style = dotclear.getData(value);
@@ -120,11 +123,11 @@ dotclear.ready(() => {
 			maxZoom: 18
 		}));
 
-		for (i in mapTypeIds) {
+		for (let i in mapTypeIds) {
 			if (i < 6) {
 				continue;
 			}
-			var value = window[mapTypeIds[i]];
+			let value = window[mapTypeIds[i]];
 			map_add.mapTypes.set(mapTypeIds[i], value);
 		}
 
@@ -179,45 +182,21 @@ dotclear.ready(() => {
 			return myString.replace(/^\s+/g, '').replace(/\s+$/g, '');
 		}
 
-		$('#settings').on('onetabload', () => {
+		document.querySelector('#gmap-area label').addEventListener('click', () => {
 			resizeMap();
 		});
-
-		$('#gmap-area label').on('click', () => {
-			resizeMap();
-		});
-
-		function resizeMap() {
-
-			if ($('input[name="myGmaps_center"]').attr('value') == '') {
-				var default_location = new google.maps.LatLng(43.0395797336425, 6.126280043989323);
-				var default_zoom = '12';
-				var default_type = 'roadmap';
-			} else {
-				const parts = $('input[name="myGmaps_center"]').attr('value').split(",");
-				const lat = parseFloat(trim(parts[0]));
-				const lng = parseFloat(trim(parts[1]));
-				var default_location = new google.maps.LatLng(lat, lng);
-				var default_zoom = $('input[name="myGmaps_zoom"]').attr('value');
-				var default_type = $('input[name="myGmaps_type"]').attr('value');
-			}
-			google.maps.event.trigger(map_add, 'resize');
-			map_add.setCenter(default_location);
-			map_add.setZoom(parseFloat(default_zoom));
-		}
 
 		function updateMapOptions() {
 			const default_location = `${map_add.getCenter().lat()},${map_add.getCenter().lng()}`;
 			const default_zoom = map_add.getZoom();
 			const default_type = map_add.getMapTypeId();
 
-			$('input[name=myGmaps_center]').attr('value', default_location);
-			$('input[name=myGmaps_zoom]').attr('value', default_zoom);
-			$('input[name=myGmaps_type]').attr('value', default_type);
+			centerInput.value = default_location;
+			zoomInput.value = default_zoom;
+			typeInput.value = default_type;
 		}
 
-
-		$('#geocode').on('click', () => {
+		document.getElementById('geocode').addEventListener('click', () => {
 			geocode();
 			return false;
 		});

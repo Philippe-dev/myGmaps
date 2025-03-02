@@ -28,16 +28,17 @@ dotclear.ready(() => {
 
     // Toolbar actions
 
-    $(".map_toolbar button").on('click', function () {
-
-      if ($(this).attr('id') == 'delete_map') {
-        deleteMap();
-      } else if ($('#post_excerpt').val() == '') {
-        $(".map_toolbar button").each(function () {
-          $(this).removeClass("active");
-        });
-        $(this).addClass("active");
-      }
+    document.querySelectorAll(".map_toolbar button").forEach(button => {
+      button.addEventListener('click', function () {
+        if (this.id === 'delete_map') {
+          deleteMap();
+        } else if (document.getElementById('post_excerpt').value === '') {
+          document.querySelectorAll(".map_toolbar button").forEach(btn => {
+            btn.classList.remove("active");
+          });
+          this.classList.add("active");
+        }
+      });
     });
 
     // OBJECTS UPDATE FUNCTIONS
@@ -51,8 +52,8 @@ dotclear.ready(() => {
       element_values = vertexArray.join('\n');
       element_values = `${element_values}\n${polyline.strokeWeight}` +
         "|" + polyline.strokeOpacity + "|" + polyline.strokeColor;
-      $('#element_type').val('polyline');
-      $('#post_excerpt').val(element_values);
+      document.getElementById('element_type').value = 'polyline';
+      document.getElementById('post_excerpt').value = element_values;
     }
 
     function updatePolygon() {
@@ -65,8 +66,8 @@ dotclear.ready(() => {
       element_values = `${element_values}\n${polygon.strokeWeight}` +
         "|" + polygon.strokeOpacity + "|" + polygon.strokeColor +
         "|" + polygon.fillColor + "|" + polygon.fillOpacity;
-      $('#element_type').val('polygon');
-      $('#post_excerpt').val(element_values);
+      document.getElementById('element_type').value = 'polygon';
+      document.getElementById('post_excerpt').value = element_values;
     }
 
     function updateRectangle() {
@@ -79,8 +80,8 @@ dotclear.ready(() => {
       element_values = `${element_values}\n${rectangle.strokeWeight}` +
         "|" + rectangle.strokeOpacity + "|" + rectangle.strokeColor +
         "|" + rectangle.fillColor + "|" + rectangle.fillOpacity;
-      $('#element_type').val('rectangle');
-      $('#post_excerpt').val(element_values);
+      document.getElementById('element_type').value = 'rectangle';
+      document.getElementById('post_excerpt').value = element_values;
     }
 
     function updateCircle() {
@@ -91,25 +92,25 @@ dotclear.ready(() => {
       element_values = `${element_values}\n${circle.strokeWeight}` +
         "|" + circle.strokeOpacity + "|" + circle.strokeColor +
         "|" + circle.fillColor + "|" + circle.fillOpacity;
-      $('#element_type').val('circle');
-      $('#post_excerpt').val(element_values);
+      document.getElementById('element_type').value = 'circle';
+      document.getElementById('post_excerpt').value = element_values;
     }
 
     // INITIALIZE MAP WITH DEFAULT SETTINGS AND OBJECTS
 
     // Display map with default or existing values
 
-    if ($('input[name=myGmaps_center]').val() == '') {
+    if (document.querySelector('input[name=myGmaps_center]').value == '') {
       var latlng = new google.maps.LatLng(43.0395797336425, 6.126280043989323);
       var default_zoom = '12';
       var default_type = 'roadmap';
     } else {
-      var parts = $('input[name=myGmaps_center]').val().split(",");
+      var parts = document.querySelector('input[name=myGmaps_center]').value.split(",");
       var lat = parseFloat(trim(parts[0]));
       var lng = parseFloat(trim(parts[1]));
       var latlng = new google.maps.LatLng(lat, lng);
-      var default_zoom = $('input[name=myGmaps_zoom]').val();
-      var default_type = $('input[name=myGmaps_type]').val();
+      var default_zoom = document.querySelector('input[name=myGmaps_zoom]').value;
+      var default_type = document.querySelector('input[name=myGmaps_type]').value;
     }
 
     // Map styles. Get more styles from https://snazzymaps.com/
@@ -125,7 +126,7 @@ dotclear.ready(() => {
       'neutral_blue'
     ];
 
-    const map_styles_list = $('#map_styles_list').val();
+    const map_styles_list = document.getElementById('map_styles_list').value;
     const styles_array = map_styles_list.split(',');
     for (i in styles_array) {
       value = styles_array[i].replace("_styles.js", "");
@@ -226,10 +227,9 @@ dotclear.ready(() => {
       }
     }
 
-    $('#geocode').on('click', () => {
+    document.getElementById('geocode').addEventListener('click', () => {
       geocode();
       return false;
-
     });
 
     // Set default objects
@@ -327,51 +327,51 @@ dotclear.ready(() => {
       infowindow.close();
 
       let action = 'none';
-      const hasButtonActive = ($(".map_toolbar button.active").length > 0 ? true : false);
-      $(".map_toolbar button").each(function () {
-        if ($(this).hasClass("active")) {
-          action = ($(this).attr('id'));
+      const hasButtonActive = (document.querySelectorAll(".map_toolbar button.active").length > 0 ? true : false);
+      document.querySelectorAll(".map_toolbar button").forEach(button => {
+        if (button.classList.contains("active")) {
+          action = (button.id);
         } else if (hasButtonActive) {
-          $(this).addClass("inactive");
+          button.classList.add("inactive");
         }
       });
 
       if (action == 'add_marker') {
-        if ($('#post_excerpt').val() == '') {
+        if (document.getElementById('post_excerpt').value == '') {
           addMarker(event.latLng);
-          $("#delete_map").prop("disabled", false);
+          document.getElementById("delete_map").disabled = false;
         }
       } else if (action == 'add_polyline') {
         addPolylineVertex(event.latLng);
-        $("#delete_map").prop("disabled", false);
+        document.getElementById("delete_map").disabled = false;
 
       } else if (action == 'add_polygon') {
         addPolygonVertex(event.latLng);
-        $("#delete_map").prop("disabled", false);
+        document.getElementById("delete_map").disabled = false;
 
       } else if (action == 'add_kml') {
-        if ($('#post_excerpt').val() == '') {
+        if (document.getElementById('post_excerpt').value == '') {
           addKml(event.latLng);
-          $("#delete_map").prop("disabled", false);
+          document.getElementById("delete_map").disabled = false;
         }
       } else if (action == 'add_georss') {
-        if ($('#post_excerpt').val() == '') {
+        if (document.getElementById('post_excerpt').value == '') {
           addgeoRSS(event.latLng);
-          $("#delete_map").prop("disabled", false);
+          document.getElementById("delete_map").disabled = false;
         }
       } else if (action == 'add_rectangle') {
-        if ($('#post_excerpt').val() == '') {
+        if (document.getElementById('post_excerpt').value == '') {
           addRectangle(event.latLng);
-          $("#delete_map").prop("disabled", false);
+          document.getElementById("delete_map").disabled = false;
         }
       } else if (action == 'add_circle') {
-        if ($('#post_excerpt').val() == '') {
+        if (document.getElementById('post_excerpt').value == '') {
           addCircle(event.latLng);
-          $("#delete_map").prop("disabled", false);
+          document.getElementById("delete_map").disabled = false;
         }
-      } else if (action == 'add_directions' && $('#post_excerpt').val() == '') {
+      } else if (action == 'add_directions' && document.getElementById('post_excerpt').value == '') {
         addDirections(event.latLng);
-        $("#delete_map").prop("disabled", false);
+        document.getElementById("delete_map").disabled = false;
       }
     });
 
@@ -534,9 +534,9 @@ dotclear.ready(() => {
 
     google.maps.event.addListener(kmlLayer, 'click', (event) => {
       const myKmls = [];
-      if ($("#kmls_list").val() != '') {
-        const kmls_base_url = $("#kmls_base_url").val();
-        const kmls_list = $("#kmls_list").val();
+      if (document.getElementById("kmls_list").value != '') {
+        const kmls_base_url = document.getElementById("kmls_base_url").value;
+        const kmls_list = document.getElementById("kmls_list").value;
         const kmls_array = kmls_list.split(',');
         for (i in kmls_array) {
           this_kml = `<li>${kmls_array[i]}</li>`;
@@ -561,7 +561,7 @@ dotclear.ready(() => {
         '<div id="infowindow_kml" style="cursor: pointer">' +
         has_custom_kmls +
         '<h4>' + kml_url_msg + '</h4>' +
-        '<p><input type="text" id="kml_url" size="80" value="' + $('#post_excerpt').val() + '"></p>' +
+        '<p><input type="text" id="kml_url" size="80" value="' + document.getElementById('post_excerpt').value + '"></p>' +
         '<p><input type="button" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(event.latLng);
@@ -575,7 +575,7 @@ dotclear.ready(() => {
       const infowindowgeoRss =
         '<div id="infowindow_georss" style="cursor: pointer">' +
         '<h4>' + geoRss_url_msg + '</h4>' +
-        '<p><input type="text" id="geoRss_url" size="80" value="' + $('#post_excerpt').val() + '"></p>' +
+        '<p><input type="text" id="geoRss_url" size="80" value="' + document.getElementById('post_excerpt').value + '"></p>' +
         '<p><input type="button" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(event.latLng);
@@ -637,9 +637,9 @@ dotclear.ready(() => {
     // Icons infowindow
 
     const myIcons = [];
-    if ($("#icons_list").val() != '') {
-      const icons_base_url = $("#icons_base_url").val();
-      const icons_list = $("#icons_list").val();
+    if (document.getElementById("icons_list").value != '') {
+      const icons_base_url = document.getElementById("icons_base_url").value;
+      const icons_list = document.getElementById("icons_list").value;
       const icons_array = icons_list.split(',');
       for (i in icons_array) {
         const this_icon = `<img src="${icons_base_url}${icons_array[i]}" alt="${icons_array[i]}">`;
@@ -650,7 +650,7 @@ dotclear.ready(() => {
     let custom_icons = myIcons.join();
     custom_icons = custom_icons.replace(/\,/g, '');
 
-    var default_icons_url = $("#plugin_QmarkURL").val();
+    var default_icons_url = document.getElementById("plugin_QmarkURL").value;
 
     if (custom_icons != '') {
       var has_custom_icons = `<h4>${custom_icons_msg}</h4>` +
@@ -679,192 +679,211 @@ dotclear.ready(() => {
 
     // Infowindows actions
 
-    $(document).on('click', '#infowindow_icons img', function () {
-      let element_values = $('#post_excerpt').val();
-      const parts = element_values.split("|");
-      const lat = parseFloat(parts[0]);
-      const lng = parseFloat(parts[1]);
-      marker.setIcon($(this).attr("src"));
-      const icon = $(this).attr("src");
-      element_values = `${marker.position.lat()}|${marker.position.lng()}|${icon}`;
-      $('#post_excerpt').val(element_values);
-      infowindow.close();
+    document.addEventListener('click', (event) => {
+      if (event.target.matches('#infowindow_icons img')) {
+        let element_values = document.getElementById('post_excerpt').value;
+        const parts = element_values.split("|");
+        const lat = parseFloat(parts[0]);
+        const lng = parseFloat(parts[1]);
+        marker.setIcon(event.target.src);
+        const icon = event.target.src;
+        element_values = `${marker.position.lat()}|${marker.position.lng()}|${icon}`;
+        document.getElementById('post_excerpt').value = element_values;
+        infowindow.close();
+      }
     });
 
-    $(document).on('click', '#infowindow_polyline #save', () => {
-      const color = $('#stroke_color').val();
-      const opacity = $('#stroke_opacity').val();
-      const weight = $('#stroke_weight').val();
-      polyline.setOptions({
-        strokeColor: color,
-        strokeOpacity: parseFloat(opacity),
-        strokeWeight: parseFloat(weight)
-      });
-
-      updatePolyline();
-
-      infowindow.close();
-    });
-
-    $(document).on('click', '#infowindow_polygon #save', () => {
-      const color = $('#stroke_color').val();
-      const opacity = $('#stroke_opacity').val();
-      const weight = $('#stroke_weight').val();
-      const fill_color = $('#fill_color').val();
-      const fill_opacity = $('#fill_opacity').val();
-      polygon.setOptions({
-        strokeColor: color,
-        strokeOpacity: parseFloat(opacity),
-        strokeWeight: parseFloat(weight),
-        fillColor: fill_color,
-        fillOpacity: parseFloat(fill_opacity)
-      });
-
-      updatePolygon();
-
-      infowindow.close();
-    });
-
-    $(document).on('click', '#infowindow_rectangle #save', () => {
-      const weight = $('#stroke_weight').val();
-      const opacity = $('#stroke_opacity').val();
-      const color = $('#stroke_color').val();
-      const fill_color = $('#fill_color').val();
-      const fill_opacity = $('#fill_opacity').val();
-
-      rectangle.setOptions({
-        strokeColor: color,
-        strokeOpacity: parseFloat(opacity),
-        strokeWeight: parseFloat(weight),
-        fillColor: fill_color,
-        fillOpacity: parseFloat(fill_opacity)
-      });
-
-      updateRectangle();
-
-      infowindow.close();
-    });
-
-    $(document).on('click', '#infowindow_circle #save', () => {
-      const weight = $('#stroke_weight').val();
-      const opacity = $('#stroke_opacity').val();
-      const color = $('#stroke_color').val();
-      const fill_color = $('#fill_color').val();
-      const fill_opacity = $('#fill_opacity').val();
-      const radius = $('#circle_radius').val();
-
-      circle.setOptions({
-        strokeColor: color,
-        strokeOpacity: parseFloat(opacity),
-        strokeWeight: parseFloat(weight),
-        fillColor: fill_color,
-        fillOpacity: parseFloat(fill_opacity),
-        radius: parseFloat(radius)
-      });
-
-      updateCircle();
-
-      infowindow.close();
-    });
-
-    $(document).on('click', '#infowindow_kml li', function () {
-      const li_clicked_url = $("#kmls_base_url").val() + $(this).text();
-      $('#kml_url').val(li_clicked_url).focus();
-    });
-
-    $(document).on('click', '#infowindow_kml #save', () => {
-      kmlLayer.setMap(null);
-      const url = $('#kml_url').val();
-      if (url != null && url != '' && is_url(url)) {
-        kmlLayer.setOptions({
-          url,
-          preserveViewport: true,
-          suppressInfoWindows: true
+    document.addEventListener('click', (event) => {
+      if (event.target.matches('#infowindow_polyline #save')) {
+        const color = document.getElementById('stroke_color').value;
+        const opacity = document.getElementById('stroke_opacity').value;
+        const weight = document.getElementById('stroke_weight').value;
+        polyline.setOptions({
+          strokeColor: color,
+          strokeOpacity: parseFloat(opacity),
+          strokeWeight: parseFloat(weight)
         });
 
-        // Save values and type
+        updatePolyline();
 
-        $('#element_type').val('included kml file');
-        $('#post_excerpt').val(url);
+        infowindow.close();
       }
-
-      kmlLayer.setMap(map);
-      infowindow.close();
     });
 
-    $(document).on('click', '#infowindow_georss #save', () => {
-      geoRssLayer.setMap(null);
-      const url = $('#geoRss_url').val();
-      if (url != null && url != '' && is_url(url)) {
-        geoRssLayer.setOptions({
-          url,
-          preserveViewport: true,
-          suppressInfoWindows: true
+    document.addEventListener('click', (event) => {
+      if (event.target.matches('#infowindow_polygon #save')) {
+        const color = document.getElementById('stroke_color').value;
+        const opacity = document.getElementById('stroke_opacity').value;
+        const weight = document.getElementById('stroke_weight').value;
+        const fill_color = document.getElementById('fill_color').value;
+        const fill_opacity = document.getElementById('fill_opacity').value;
+        polygon.setOptions({
+          strokeColor: color,
+          strokeOpacity: parseFloat(opacity),
+          strokeWeight: parseFloat(weight),
+          fillColor: fill_color,
+          fillOpacity: parseFloat(fill_opacity)
         });
 
-        // Save values and type
+        updatePolygon();
 
-        $('#element_type').val('GeoRSS feed');
-        $('#post_excerpt').val(url);
+        infowindow.close();
       }
-
-      geoRssLayer.setMap(map);
-      infowindow.close();
     });
 
-    $(document).on('click', '#infowindow_directions #save', () => {
-      const start = $('#directions_start').val();
-      const end = $('#directions_end').val();
-      const show = $('#directions_show').prop('checked');
-      const color = $('#stroke_color').val();
-      const opacity = $('#stroke_opacity').val();
-      const weight = $('#stroke_weight').val();
+    document.addEventListener('click', (event) => {
+      if (event.target.matches('#infowindow_rectangle #save')) {
+        const weight = document.getElementById('stroke_weight').value;
+        const opacity = document.getElementById('stroke_opacity').value;
+        const color = document.getElementById('stroke_color').value;
+        const fill_color = document.getElementById('fill_color').value;
+        const fill_opacity = document.getElementById('fill_opacity').value;
 
-      const polylineRendererOptions = {
-        strokeColor: color,
-        strokeOpacity: opacity,
-        strokeWeight: weight
-      };
+        rectangle.setOptions({
+          strokeColor: color,
+          strokeOpacity: parseFloat(opacity),
+          strokeWeight: parseFloat(weight),
+          fillColor: fill_color,
+          fillOpacity: parseFloat(fill_opacity)
+        });
 
-      const rendererOptions = {
-        polylineOptions: polylineRendererOptions
-      };
+        updateRectangle();
 
-      const request = {
-        origin: start,
-        destination: end,
-        travelMode: google.maps.TravelMode.DRIVING
-      };
+        infowindow.close();
+      }
+    });
 
-      directionsService.route(request, (result, status) => {
-        if (status == google.maps.DirectionsStatus.OK) {
-          const routePath = result.routes[0].overview_path;
-          routePolyline.setPath(routePath);
-          directionsDisplay.setOptions({
-            options: rendererOptions
+    document.addEventListener('click', (event) => {
+      if (event.target.matches('#infowindow_circle #save')) {
+        const weight = document.getElementById('stroke_weight').value;
+        const opacity = document.getElementById('stroke_opacity').value;
+        const color = document.getElementById('stroke_color').value;
+        const fill_color = document.getElementById('fill_color').value;
+        const fill_opacity = document.getElementById('fill_opacity').value;
+        const radius = document.getElementById('circle_radius').value;
+
+        circle.setOptions({
+          strokeColor: color,
+          strokeOpacity: parseFloat(opacity),
+          strokeWeight: parseFloat(weight),
+          fillColor: fill_color,
+          fillOpacity: parseFloat(fill_opacity),
+          radius: parseFloat(radius)
+        });
+
+        updateCircle();
+
+        infowindow.close();
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      if (event.target.matches('#infowindow_kml li')) {
+        const li_clicked_url = document.getElementById("kmls_base_url").value + event.target.textContent;
+        document.getElementById('kml_url').value = li_clicked_url;
+        document.getElementById('kml_url').focus();
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      if (event.target.matches('#infowindow_kml #save')) {
+        kmlLayer.setMap(null);
+        const url = document.getElementById('kml_url').value;
+        if (url != null && url != '' && is_url(url)) {
+          kmlLayer.setOptions({
+            url,
+            preserveViewport: true,
+            suppressInfoWindows: true
           });
-          directionsDisplay.setDirections(result);
-          directionsDisplay.setMap(map);
+
+          // Save values and type
+
+          document.getElementById('element_type').value = 'included kml file';
+          document.getElementById('post_excerpt').value = url;
         }
-      });
 
-      // Save values and type
+        kmlLayer.setMap(map);
+        infowindow.close();
+      }
+    });
 
-      element_values = `${start}|${end}|${weight}` +
-        "|" + opacity + "|" + color + "|" + show;
+    document.addEventListener('click', (event) => {
+      if (event.target.matches('#infowindow_georss #save')) {
+        geoRssLayer.setMap(null);
+        const url = document.getElementById('geoRss_url').value;
+        if (url != null && url != '' && is_url(url)) {
+          geoRssLayer.setOptions({
+            url,
+            preserveViewport: true,
+            suppressInfoWindows: true
+          });
 
-      $('#element_type').val('directions');
-      $('#post_excerpt').val(element_values);
+          // Save values and type
 
-      directionsDisplay.setMap(map);
-      routePolyline.setMap(map);
-      infowindow.close();
+          document.getElementById('element_type').value = 'GeoRSS feed';
+          document.getElementById('post_excerpt').value = url;
+        }
+
+        geoRssLayer.setMap(map);
+        infowindow.close();
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      if (event.target.matches('#infowindow_directions #save')) {
+        const start = document.getElementById('directions_start').value;
+        const end = document.getElementById('directions_end').value;
+        const show = document.getElementById('directions_show').checked;
+        const color = document.getElementById('stroke_color').value;
+        const opacity = document.getElementById('stroke_opacity').value;
+        const weight = document.getElementById('stroke_weight').value;
+
+        const polylineRendererOptions = {
+          strokeColor: color,
+          strokeOpacity: opacity,
+          strokeWeight: weight
+        };
+
+        const rendererOptions = {
+          polylineOptions: polylineRendererOptions
+        };
+
+        const request = {
+          origin: start,
+          destination: end,
+          travelMode: google.maps.TravelMode.DRIVING
+        };
+
+        directionsService.route(request, (result, status) => {
+          if (status == google.maps.DirectionsStatus.OK) {
+            const routePath = result.routes[0].overview_path;
+            routePolyline.setPath(routePath);
+            directionsDisplay.setOptions({
+              options: rendererOptions
+            });
+            directionsDisplay.setDirections(result);
+            directionsDisplay.setMap(map);
+          }
+        });
+
+        // Save values and type
+
+        element_values = `${start}|${end}|${weight}` +
+          "|" + opacity + "|" + color + "|" + show;
+
+        document.getElementById('element_type').value = 'directions';
+        document.getElementById('post_excerpt').value = element_values;
+
+        directionsDisplay.setMap(map);
+        routePolyline.setMap(map);
+        infowindow.close();
+      }
     });
 
     // PLACE EXISTING ELEMENTS
 
-    var element_values = $('#post_excerpt').val();
-    const element_type = $('input[name=element_type]').val();
+    var element_values = document.getElementById('post_excerpt').value;
+    const element_type = document.querySelector('input[name=element_type]').value;
 
     // Place existing marker if any
 
@@ -881,7 +900,7 @@ dotclear.ready(() => {
         map
       });
       markersArray.push(marker);
-      $('#add_marker').addClass("active");
+      document.getElementById('add_marker').classList.add("active");
       infowindow.setContent(infowindowIcons);
 
       // Listeners
@@ -892,7 +911,7 @@ dotclear.ready(() => {
 
       google.maps.event.addListener(marker, "dragend", () => {
         element_values = `${marker.position.lat()}|${marker.position.lng()}|${icon}`
-        $('#post_excerpt').val(element_values);
+        document.getElementById('post_excerpt').value = element_values;
       });
 
       // Place existing polyline if any
@@ -922,7 +941,7 @@ dotclear.ready(() => {
       polylinePath = polyline.getPath();
 
       polyline.setMap(map);
-      $('#add_polyline').addClass("active");
+      document.getElementById('add_polyline').classList.add("active");
 
       // Place existing polygon if any
 
@@ -955,7 +974,7 @@ dotclear.ready(() => {
       polygonPath = polygon.getPath();
 
       polygon.setMap(map);
-      $('#add_polygon').addClass("active");
+      document.getElementById('add_polygon').classList.add("active");
 
       // Place existing rectangle if any
 
@@ -988,7 +1007,7 @@ dotclear.ready(() => {
         fillOpacity: parseFloat(fill_opacity)
       });
 
-      $('#add_rectangle').addClass("active");
+      document.getElementById('add_rectangle').classList.add("active");
       rectangle.setMap(map);
 
       // Place existing circle if any
@@ -1019,7 +1038,7 @@ dotclear.ready(() => {
         radius: parseFloat(radius)
       });
 
-      $('#add_circle').addClass("active");
+      document.getElementById('add_circle').classList.add("active");
       circle.setMap(map);
 
       // Place existing kml if any
@@ -1032,7 +1051,7 @@ dotclear.ready(() => {
         suppressInfoWindows: true
       });
 
-      $('#add_kml').addClass("active");
+      document.getElementById('add_kml').classList.add("active");
       kmlLayer.setMap(map);
 
       // Place existing geoRSS if any
@@ -1045,7 +1064,7 @@ dotclear.ready(() => {
         suppressInfoWindows: true
       });
 
-      $('#add_georss').addClass("active");
+      document.getElementById('add_georss').classList.add("active");
       geoRssLayer.setMap(map);
 
       // Place existing directions if any
@@ -1088,14 +1107,14 @@ dotclear.ready(() => {
         }
       });
 
-      $('#add_directions').addClass("active");
+      document.getElementById('add_directions').classList.add("active");
       routePolyline.setMap(map);
 
     }
 
-    /*$(".map_toolbar button").each(function () {
-      if (!$(this).hasClass("active")) {
-        $(this).addClass("inactive");
+    /*document.querySelectorAll(".map_toolbar button").forEach(button => {
+      if (!button.classList.contains("active")) {
+        button.classList.add("inactive");
       }
     });*/
 
@@ -1125,15 +1144,15 @@ dotclear.ready(() => {
 
       google.maps.event.addListener(marker, "dragend", () => {
         element_values = `${marker.position.lat()}|${marker.position.lng()}|${marker.icon}`;
-        $('#post_excerpt').val(element_values);
+        document.getElementById('post_excerpt').value = element_values;
       });
 
       // Save values
 
       element_values = `${marker.position.lat()}|${marker.position.lng()}|${marker.icon}`;
 
-      $('#element_type').val('point of interest');
-      $('#post_excerpt').val(element_values);
+      document.getElementById('element_type').value = 'point of interest';
+      document.getElementById('post_excerpt').value = element_values;
 
     }
 
@@ -1208,9 +1227,9 @@ dotclear.ready(() => {
 
     function addKml(location) {
       const myKmls = [];
-      if ($("#kmls_list").val() != '') {
-        const kmls_base_url = $("#kmls_base_url").val();
-        const kmls_list = $("#kmls_list").val();
+      if (document.getElementById("kmls_list").value != '') {
+        const kmls_base_url = document.getElementById("kmls_base_url").value;
+        const kmls_list = document.getElementById("kmls_list").value;
         const kmls_array = kmls_list.split(',');
         for (i in kmls_array) {
           this_kml = `<li>${kmls_array[i]}</li>`;
@@ -1235,7 +1254,7 @@ dotclear.ready(() => {
         '<div id="infowindow_kml" style="cursor: pointer">' +
         has_custom_kmls +
         '<h4>' + kml_url_msg + '</h4>' +
-        '<p><input type="text" id="kml_url" size="80" value="' + $('#post_excerpt').val() + '"></p>' +
+        '<p><input type="text" id="kml_url" size="80" value="' + document.getElementById('post_excerpt').value + '"></p>' +
         '<p><input type="button" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(location);
@@ -1249,7 +1268,7 @@ dotclear.ready(() => {
       const infowindowgeoRss =
         '<div id="infowindow_georss" style="cursor: pointer">' +
         '<h4>' + geoRss_url_msg + '</h4>' +
-        '<p><input type="text" id="geoRss_url" size="80" value="' + $('#post_excerpt').val() + '"></p>' +
+        '<p><input type="text" id="geoRss_url" size="80" value="' + document.getElementById('post_excerpt').value + '"></p>' +
         '<p><input type="button" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(location);
@@ -1297,12 +1316,12 @@ dotclear.ready(() => {
 
     function deleteMap() {
 
-      $(".map_toolbar button").each(function () {
-        $(this).removeClass("active");
-        $(this).addClass("inactive");
+      document.querySelectorAll(".map_toolbar button").forEach(button => {
+        button.classList.remove("active");
+        button.classList.add("inactive");
       });
 
-      $("#delete_map").prop("disabled", true);
+      document.getElementById("delete_map").disabled = true;
       
       for (i in markersArray) {
         markersArray[i].setMap(null);
@@ -1332,28 +1351,27 @@ dotclear.ready(() => {
       routePolyline.setMap(null);
       directionsDisplay.setMap(null);
 
-      $('#element_type').val('');
-      $('#post_excerpt').val('');
+      document.getElementById('element_type').value = '';
+      document.getElementById('post_excerpt').value = '';
 
     }
 
     // SUBMIT FORM AND SAVE ELEMENT
 
-    $('#entry-form').submit(() => {
-      const element_type = $('#element_type').val();
-      if (element_type == '') {
-        $('#element_type').val('notype');
+    document.getElementById('entry-form').addEventListener('submit', () => {
+      const element_type = document.getElementById('element_type').value;
+      if (element_type === '') {
+        document.getElementById('element_type').value = 'notype';
       }
 
       const default_location = `${map.getCenter().lat()},${map.getCenter().lng()}`;
       const default_zoom = map.getZoom();
       const default_type = map.getMapTypeId();
 
-      $('input[name=myGmaps_center]').attr('value', default_location);
-      $('input[name=myGmaps_zoom]').attr('value', default_zoom);
-      $('input[name=myGmaps_type]').attr('value', default_type);
+      document.querySelector('input[name=myGmaps_center]').value = default_location;
+      document.querySelector('input[name=myGmaps_zoom]').value = default_zoom;
+      document.querySelector('input[name=myGmaps_type]').value = default_type;
       return true;
-
     });
   }
 
