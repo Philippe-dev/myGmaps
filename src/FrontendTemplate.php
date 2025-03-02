@@ -543,7 +543,6 @@ class FrontendTemplate
                     "<div class=\"post-infowindow\" id=\"post-infowindow_{$sMapId}\">"+content+"</div>"
                 );
                 infowindow_{$sMapId}.open(map_{$sMapId}, marker);
-                document.getElementById("#post-infowindow_{$sMapId}").parentNode.style.overflow = "hidden";
             }\n
             EOT;
 
@@ -567,7 +566,6 @@ class FrontendTemplate
                     "<div class=\"post-infowindow\" id=\"post-infowindow_{$sMapId}\">"+content+"</div>"
                 );
                 infowindow_{$sMapId}.open(map_{$sMapId});
-                document.getElementById("#post-infowindow_{$sMapId}").closest("div#map_canvas_{$sMapId}").style.overflow = "hidden";
             }\n
             EOT;
 
