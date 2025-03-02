@@ -162,11 +162,7 @@ dotclear.ready(() => {
 
 		function geocode() {
 			const address = document.getElementById("address").value;
-			geocoder.geocode({
-				'address': address,
-				'partialmatch': true
-			}, geocodeResult);
-
+			geocoder.geocode({ 'address': address, 'partialmatch': true }, geocodeResult);
 		}
 
 		function geocodeResult(results, status) {
@@ -192,9 +188,9 @@ dotclear.ready(() => {
 			typeInput.value = default_type;
 		}
 
-		document.getElementById('geocode').addEventListener('click', () => {
+		document.getElementById('geocode').addEventListener('click', (e) => {
+			e.preventDefault();
 			geocode();
-			return false;
 		});
 	}
 

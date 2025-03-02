@@ -227,9 +227,9 @@ dotclear.ready(() => {
       }
     }
 
-    document.getElementById('geocode').addEventListener('click', () => {
+    document.getElementById('geocode').addEventListener('click', (e) => {
+      e.preventDefault();
       geocode();
-      return false;
     });
 
     // Set default objects
