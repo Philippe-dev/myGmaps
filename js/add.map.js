@@ -182,10 +182,6 @@ dotclear.ready(() => {
 			return myString.replace(/^\s+/g, '').replace(/\s+$/g, '');
 		}
 
-		document.querySelector('#gmap-area label').addEventListener('click', () => {
-			resizeMap();
-		});
-
 		function updateMapOptions() {
 			const default_location = `${map_add.getCenter().lat()},${map_add.getCenter().lng()}`;
 			const default_zoom = map_add.getZoom();
