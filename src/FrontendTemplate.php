@@ -499,9 +499,9 @@ class FrontendTemplate
             };
             EOT;
         if ($bDisplayDirection == 'true') {
-            $sOutput .= '$("#map_box_' . $sMapId . '").addClass( "directions" );' . "\n";
+            $sOutput .= 'document.getElementById("map_box_' . $sMapId . '").classList.add("directions");' . "\n";
         } else {
-            $sOutput .= '$("#map_box_' . $sMapId . '").addClass( "no-directions" );' . "\n";
+            $sOutput .= 'document.getElementById("map_box_' . $sMapId . '").classList.add("no-directions");' . "\n";
         }
 
         $sOutput .= <<<EOT
@@ -543,7 +543,7 @@ class FrontendTemplate
                     "<div class=\"post-infowindow\" id=\"post-infowindow_{$sMapId}\">"+content+"</div>"
                 );
                 infowindow_{$sMapId}.open(map_{$sMapId}, marker);
-                $("#post-infowindow_{$sMapId}").parent("div", "div#map_canvas_{$sMapId}").css("overflow","hidden");
+                document.getElementById("#post-infowindow_{$sMapId}").parentNode.style.overflow = "hidden";
             }\n
             EOT;
 
@@ -567,7 +567,7 @@ class FrontendTemplate
                     "<div class=\"post-infowindow\" id=\"post-infowindow_{$sMapId}\">"+content+"</div>"
                 );
                 infowindow_{$sMapId}.open(map_{$sMapId});
-                $("#post-infowindow_{$sMapId}").parent("div", "div#map_canvas_{$sMapId}").css("overflow","hidden");
+                document.getElementById("#post-infowindow_{$sMapId}").closest("div#map_canvas_{$sMapId}").style.overflow = "hidden";
             }\n
             EOT;
 
