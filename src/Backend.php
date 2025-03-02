@@ -505,7 +505,7 @@ class Backend extends Process
                             "<div class=\"post-infowindow\" id=\"post-infowindow_add\">"+content+"</div>"
                         );
                         infowindow_add.open(map_add);
-                        $("#post-infowindow_add").parent("div", "div#map_canvas_add").css("overflow","hidden");
+                        
                     }\n
                     EOT;
                 $script .= $sOutput;
@@ -519,7 +519,7 @@ class Backend extends Process
                             "<div class=\"post-infowindow\" id=\"post-infowindow_add\">"+content+"</div>"
                         );
                         infowindow_add.open(map_add, marker);
-                        $("#post-infowindow_add").parent("div", "div#map_canvas_add").css("overflow","hidden");
+                        
                     }\n
                     EOT;
                 $script .= $sOutput;
@@ -685,22 +685,26 @@ class Backend extends Process
         My::jsLoad('add.map.min.js') .
 
         '<script>' . "\n" .
-        '$(document).ready(function() {' . "\n" .
-            '$(\'#gmap-area label\').toggleWithLegend($(\'#post-gmap\'), {' . "\n" .
-                'legend_click: true,' . "\n" .
-                'user_pref: \'dcx_gmap_detail\'' . "\n" .
-            '})' . "\n" .
-            '$(\'a.map-remove\').on(\'click\', function() {' . "\n" .
-            'msg = \'' . __('Are you sure you want to remove this map?') . '\';' . "\n" .
-            'if (!window.confirm(msg)) {' . "\n" .
-                'return false;' . "\n" .
-            '}' . "\n" .
+        'document.addEventListener("DOMContentLoaded", function() {' . "\n" .
+            'document.querySelector("#gmap-area label").addEventListener("click", function() {' . "\n" .
+            'var postGmap = document.querySelector("#post-gmap");' . "\n" .
+            'postGmap.style.display = postGmap.style.display === "none" ? "block" : "none";' . "\n" .
             '});' . "\n" .
-            '$(\'a.element-remove\').on(\'click\', function() {' . "\n" .
-            'msg = \'' . __('Are you sure you want to remove this element?') . '\';' . "\n" .
-            'if (!window.confirm(msg)) {' . "\n" .
-                'return false;' . "\n" .
-            '}' . "\n" .
+            'document.querySelectorAll("a.map-remove").forEach(function(element) {' . "\n" .
+            'element.addEventListener("click", function(event) {' . "\n" .
+                'var msg = "' . __('Are you sure you want to remove this map?') . '";' . "\n" .
+                'if (!window.confirm(msg)) {' . "\n" .
+                'event.preventDefault();' . "\n" .
+                '}' . "\n" .
+            '});' . "\n" .
+            '});' . "\n" .
+            'document.querySelectorAll("a.element-remove").forEach(function(element) {' . "\n" .
+            'element.addEventListener("click", function(event) {' . "\n" .
+                'var msg = "' . __('Are you sure you want to remove this element?') . '";' . "\n" .
+                'if (!window.confirm(msg)) {' . "\n" .
+                'event.preventDefault();' . "\n" .
+                '}' . "\n" .
+            '});' . "\n" .
             '});' . "\n" .
         '});' . "\n" .
         '</script>' . "\n" .
