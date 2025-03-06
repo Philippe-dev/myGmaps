@@ -622,11 +622,14 @@ dotclear.ready(() => {
       infowindow.setContent(infowindowDirections);
       infowindow.open(map);
 
-      const input1 = document.getElementById('directions_start');
-      var autocomplete = new google.maps.places.Autocomplete(input1);
-
-      const input2 = document.getElementById('directions_end');
-      var autocomplete = new google.maps.places.Autocomplete(input2);
+      if (document.getElementById('directions_start')) {
+        const input = document.getElementById('directions_start');
+        const autocomplete_start = new google.maps.places.Autocomplete(input);
+      }
+      if (document.getElementById('directions_end')) {
+        const input = document.getElementById('directions_end');
+        const autocomplete_start = new google.maps.places.Autocomplete(input);
+      } 
 
     });
 
@@ -830,6 +833,7 @@ dotclear.ready(() => {
     });
 
     document.addEventListener('click', (event) => {
+      
       if (event.target.matches('#infowindow_directions #save')) {
         const start = document.getElementById('directions_start').value;
         const end = document.getElementById('directions_end').value;
@@ -864,6 +868,7 @@ dotclear.ready(() => {
             directionsDisplay.setDirections(result);
             directionsDisplay.setMap(map);
           }
+
         });
 
         // Save values and type
@@ -1109,14 +1114,7 @@ dotclear.ready(() => {
 
       document.getElementById('add_directions').classList.add("active");
       routePolyline.setMap(map);
-
     }
-
-    /*document.querySelectorAll(".map_toolbar button").forEach(button => {
-      if (!button.classList.contains("active")) {
-        button.classList.add("inactive");
-      }
-    });*/
 
     // ADD NEW OBJECT OR VERTEX POINT
 
@@ -1302,13 +1300,7 @@ dotclear.ready(() => {
 
       infowindow.setPosition(location);
       infowindow.setContent(infowindowDirections);
-      infowindow.open(map);
-
-      const input1 = document.getElementById('directions_start');
-      var autocomplete = new google.maps.places.Autocomplete(input1);
-
-      const input2 = document.getElementById('directions_end');
-      var autocomplete = new google.maps.places.Autocomplete(input2);
+      infowindow.open(map); 
     }
 
 
