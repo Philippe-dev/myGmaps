@@ -585,6 +585,10 @@ dotclear.ready(() => {
 
     // directions listener
 
+    google.maps.event.addListener(polylinePath, 'set_at', debounce(() => {
+      updatePolyline();
+    }, 250));
+
     google.maps.event.addListener(routePolyline, 'click', (event) => {
       const parts = element_values.split("|");
 
@@ -622,14 +626,13 @@ dotclear.ready(() => {
       infowindow.setContent(infowindowDirections);
       infowindow.open(map);
 
-      if (document.getElementById('directions_start')) {
-        const input = document.getElementById('directions_start');
-        const autocomplete_start = new google.maps.places.Autocomplete(input);
-      }
-      if (document.getElementById('directions_end')) {
-        const input = document.getElementById('directions_end');
-        const autocomplete_start = new google.maps.places.Autocomplete(input);
-      } 
+      // Initialize autocomplete for directions_start and directions_end fields after infowindow is opened
+      google.maps.event.addListenerOnce(infowindow, 'domready', () => {
+        const startInput = document.getElementById('directions_start');
+        const endInput = document.getElementById('directions_end');
+        new google.maps.places.Autocomplete(startInput);
+        new google.maps.places.Autocomplete(endInput);
+      });
 
     });
 
@@ -833,7 +836,7 @@ dotclear.ready(() => {
     });
 
     document.addEventListener('click', (event) => {
-      
+
       if (event.target.matches('#infowindow_directions #save')) {
         const start = document.getElementById('directions_start').value;
         const end = document.getElementById('directions_end').value;
@@ -1300,7 +1303,15 @@ dotclear.ready(() => {
 
       infowindow.setPosition(location);
       infowindow.setContent(infowindowDirections);
-      infowindow.open(map); 
+      infowindow.open(map);
+
+      // Initialize autocomplete for directions_start and directions_end fields after infowindow is opened
+      google.maps.event.addListenerOnce(infowindow, 'domready', () => {
+        const startInput = document.getElementById('directions_start');
+        const endInput = document.getElementById('directions_end');
+        new google.maps.places.Autocomplete(startInput);
+        new google.maps.places.Autocomplete(endInput);
+      });
     }
 
 
@@ -1314,7 +1325,7 @@ dotclear.ready(() => {
       });
 
       document.getElementById("delete_map").disabled = true;
-      
+
       for (i in markersArray) {
         markersArray[i].setMap(null);
       }
@@ -1324,10 +1335,10 @@ dotclear.ready(() => {
 
       polyline.setOptions({});
       polyline.setMap(null);
-      
+
       polygon.setOptions({});
       polygon.setMap(null);
-      
+
       rectangle.setOptions({});
       rectangle.setMap(null);
 
