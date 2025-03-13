@@ -14,6 +14,7 @@ dotclear.ready(() => {
     // Request libraries when needed, not in the script tag.
     const { Map } = await google.maps.importLibrary("maps");
     const { Places } = await google.maps.importLibrary("places");
+    const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
 
     // Misc functions
 
@@ -138,6 +139,7 @@ dotclear.ready(() => {
     }
 
     const myOptions = {
+      mapId: "element-map",
       zoom: parseFloat(default_zoom),
       center: latlng,
       scrollwheel: false,
@@ -893,6 +895,7 @@ dotclear.ready(() => {
     var element_values = document.getElementById('post_excerpt').value;
     const element_type = document.querySelector('input[name=element_type]').value;
 
+
     // Place existing marker if any
 
     if (element_type == 'point of interest') {
@@ -901,10 +904,13 @@ dotclear.ready(() => {
       var lng = parseFloat(parts[1]);
       const icon = parts[2];
       var location = new google.maps.LatLng(lat, lng);
-      marker = new google.maps.Marker({
+      const Img = document.createElement('img');
+      Img.src = icon;
+
+      marker = new google.maps.marker.AdvancedMarkerElement({
         position: location,
         draggable: true,
-        icon,
+        content: Img,
         map
       });
       markersArray.push(marker);
@@ -1126,10 +1132,13 @@ dotclear.ready(() => {
     function addMarker(location) {
 
       // Initialize
+      const Img = document.createElement('img');
+      Img.src = `${default_icons_url}pf=myGmaps/icons/marker.png`;
 
-      marker = new google.maps.Marker({
+
+      marker = new google.maps.marker.AdvancedMarkerElement({
         position: location,
-        icon: `${default_icons_url}pf=myGmaps/icons/marker.png`,
+        content: Img,
         draggable: true,
         map
       });
