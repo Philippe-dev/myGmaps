@@ -14,6 +14,7 @@ dotclear.ready(() => {
 		// Request libraries when needed, not in the script tag.
 		const { Map } = await google.maps.importLibrary("maps");
 		const { Places } = await google.maps.importLibrary("places");
+		const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
 		// Display map with default or saved values
 		const centerInput = document.querySelector('input[name="myGmaps_center"]');
@@ -61,6 +62,7 @@ dotclear.ready(() => {
 			window[value] = new google.maps.StyledMapType(user_style.style, { name: user_style.name });
 		}
 		const myOptions = {
+			mapId : "add_map",
 			zoom: parseFloat(default_zoom),
 			center: default_location,
 			scrollwheel: false,

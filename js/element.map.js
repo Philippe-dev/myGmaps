@@ -693,9 +693,10 @@ dotclear.ready(() => {
         const parts = element_values.split("|");
         const lat = parseFloat(parts[0]);
         const lng = parseFloat(parts[1]);
-        marker.setIcon(event.target.src);
+        marker.content.src = event.target.src;
         const icon = event.target.src;
-        element_values = `${marker.position.lat()}|${marker.position.lng()}|${icon}`;
+        const position = marker.position;
+        element_values = `${position.lat}|${position.lng}|${icon}`;
         document.getElementById('post_excerpt').value = element_values;
         infowindow.close();
       }
@@ -909,7 +910,7 @@ dotclear.ready(() => {
 
       marker = new google.maps.marker.AdvancedMarkerElement({
         position: location,
-        draggable: true,
+        gmpDraggable: true,
         content: Img,
         map
       });
@@ -924,7 +925,9 @@ dotclear.ready(() => {
       });
 
       google.maps.event.addListener(marker, "dragend", () => {
-        element_values = `${marker.position.lat()}|${marker.position.lng()}|${icon}`
+        const icon = marker.content.src;
+        const position = marker.position;
+        element_values = `${position.lat}|${position.lng}|${icon}`;
         document.getElementById('post_excerpt').value = element_values;
       });
 
@@ -1139,7 +1142,7 @@ dotclear.ready(() => {
       marker = new google.maps.marker.AdvancedMarkerElement({
         position: location,
         content: Img,
-        draggable: true,
+        gmpDraggable: true,
         map
       });
       markersArray.push(marker);
@@ -1153,13 +1156,16 @@ dotclear.ready(() => {
       });
 
       google.maps.event.addListener(marker, "dragend", () => {
-        element_values = `${marker.position.lat()}|${marker.position.lng()}|${marker.icon}`;
+        const icon = marker.content.src;
+        const position = marker.position;
+        element_values = `${position.lat}|${position.lng}|${icon}`;
         document.getElementById('post_excerpt').value = element_values;
       });
 
       // Save values
-
-      element_values = `${marker.position.lat()}|${marker.position.lng()}|${marker.icon}`;
+      const icon = marker.content.src;
+      const position = marker.position;
+      element_values = element_values = `${position.lat}|${position.lng}|${icon}`;
 
       document.getElementById('element_type').value = 'point of interest';
       document.getElementById('post_excerpt').value = element_values;

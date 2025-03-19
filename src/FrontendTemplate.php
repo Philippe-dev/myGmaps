@@ -61,6 +61,7 @@ class FrontendTemplate
             <script>
             async function initMap() {
             const { Map } = await google.maps.importLibrary("maps");\n
+            const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");\n
             EOT;
 
         // Set map styles
@@ -148,6 +149,7 @@ class FrontendTemplate
 
         $sOutput .= <<<EOT
             var myOptions = {
+                mapId: "map_{$sMapId}",
                 zoom: parseFloat({$sZoom}),
                 center: new google.maps.LatLng({$sCenter}),
                 scrollwheel: false,
@@ -268,13 +270,15 @@ class FrontendTemplate
         $sIcon     = $aOptions['icon'];
 
         $sOutput = <<<EOT
-            marker = new google.maps.Marker({
-                icon : "{$sIcon}",
+            let Img_{$sId} = document.createElement('img');
+            Img_{$sId}.src = "{$sIcon}";    
+            let marker_{$sId} = new google.maps.marker.AdvancedMarkerElement({
+                content: Img_{$sId},
                 position: new google.maps.LatLng({$sPosition}),
                 title: title_{$sId},
                 map: map_{$sMapId}
             });
-            google.maps.event.addListener(marker, "click", function() {
+            google.maps.event.addListener(marker_{$sId}, "click", function() {
                 openmarkerinfowindow(this,title_{$sId},content_{$sId});
             });\n
             EOT;

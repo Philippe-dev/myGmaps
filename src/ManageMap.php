@@ -465,7 +465,11 @@ class ManageMap extends Process
         $icons_dir_url  = http::concatURL(App::blog()->url, $public_url . '/myGmaps/icons/');
 
         if (is_dir($icons_dir_path)) {
-            $images     = glob($icons_dir_path . '*.png');
+            $images = array_merge(
+                glob($icons_dir_path . '*.png'),
+                glob($icons_dir_path . '*.svg'),
+                glob($icons_dir_path . '*.jpg'),
+            );
             $icons_list = [];
             foreach ($images as $image) {
                 $image = basename($image);
