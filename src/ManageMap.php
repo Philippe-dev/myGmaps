@@ -467,7 +467,7 @@ class ManageMap extends Process
         if (is_dir($icons_dir_path)) {
             $images = array_merge(
                 glob($icons_dir_path . '*.png'),
-                glob($icons_dir_path . '*.svg'),
+                //glob($icons_dir_path . '*.svg'),
                 glob($icons_dir_path . '*.jpg'),
             );
             $icons_list = [];
