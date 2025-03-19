@@ -650,16 +650,8 @@ dotclear.ready(() => {
       const icons_list = document.getElementById("icons_list").value;
       const icons_array = icons_list.split(',');
       for (i in icons_array) {
-        const iconElement = document.createElement('img');
-        if (icons_array[i].endsWith('.svg')) {
-          iconElement.src = `${icons_base_url}${icons_array[i]}`;
-          iconElement.style.width = '32px'; // Resize SVG icon width
-          iconElement.style.height = '32px'; // Resize SVG icon height
-        } else {
-          iconElement.src = `${icons_base_url}${icons_array[i]}`;
-        }
-        iconElement.alt = icons_array[i];
-        myIcons.push(iconElement.outerHTML);
+        const this_icon = `<img src="${icons_base_url}${icons_array[i]}" alt="${icons_array[i]}">`;
+        myIcons.push(this_icon);
       }
     }
 
@@ -914,13 +906,7 @@ dotclear.ready(() => {
       const icon = parts[2];
       var location = new google.maps.LatLng(lat, lng);
       const Img = document.createElement('img');
-      if (icon.endsWith('.svg')) {
-        Img.src = icon;
-        Img.style.width = '40px'; // Resize SVG icon width
-        Img.style.height = '40px'; // Resize SVG icon height
-      } else {
-        Img.src = icon;
-      }
+      Img.src = icon;
 
       marker = new google.maps.marker.AdvancedMarkerElement({
         position: location,

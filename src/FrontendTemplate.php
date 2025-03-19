@@ -275,11 +275,6 @@ class FrontendTemplate
             let marker_{$sId} = new google.maps.marker.AdvancedMarkerElement({
                 content: Img_{$sId},
                 position: new google.maps.LatLng({$sPosition}),
-                content: Img_{$sId}.tagName === 'IMG' && Img_{$sId}.src.endsWith('.svg') ? (() => {
-                    Img_{$sId}.style.width = '40px';
-                    Img_{$sId}.style.height = '40px';
-                    return Img_{$sId};
-                })() : Img_{$sId},
                 title: title_{$sId},
                 map: map_{$sMapId}
             });
