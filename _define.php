@@ -15,7 +15,7 @@ $this->registerModule(
     'Philippe aka amalgame and contributors',
     '9.0',
     [
-        'date'     => '2025-03-19T00:00:13+0100',
+        'date'        => '2025-03-19T00:00:13+0100',
         'requires'    => [['core', '2.33']],
         'permissions' => 'My',
         'type'        => 'plugin',
