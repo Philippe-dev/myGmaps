@@ -703,6 +703,10 @@ dotclear.ready(() => {
         const lng = parseFloat(parts[1]);
         marker.content.src = event.target.src;
         const icon = event.target.src;
+        if (marker.content.src.endsWith('.svg')) {
+          marker.style.width = '32px'; // Resize SVG icon width
+          marker.style.height = '32px'; // Resize SVG icon height
+        }
         const position = marker.position;
         element_values = `${position.lat}|${position.lng}|${icon}`;
         document.getElementById('post_excerpt').value = element_values;
