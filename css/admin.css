@@ -120,12 +120,12 @@ span.map_spacer {
 button.add_marker,
 button.add_marker.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/marker-bw.svg);
-  background-size: 100%;
+  background-size: 80%;
 }
 
 button.add_marker.active {
   background-image: url(index.php?pf=myGmaps/css/img/marker.svg);
-  background-size: 90%;
+  background-size: 80%;
   background-color: var(--fieldset-focus-background)
 }
 
@@ -143,7 +143,7 @@ button.add_polyline.active {
 button.add_polygon,
 button.add_polygon.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/polygon-bw.svg);
-  background-size: 90%;
+  background-size: 80%;
 }
 
 button.add_polygon.active {
@@ -198,7 +198,7 @@ button.add_georss.active {
 button.add_directions,
 button.add_directions.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/directions-bw.svg);
-  background-size: 60%;
+  background-size: 80%;
 }
 
 button.add_directions.active {
@@ -208,7 +208,7 @@ button.add_directions.active {
 
 button.delete_map {
   background-image: url(index.php?pf=myGmaps/css/img/clean.svg);
-  background-size: 90%;
+  background-size: 80%;
   position: absolute;
   right: .5em;
   top: .2em;
