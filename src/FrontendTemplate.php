@@ -273,7 +273,6 @@ class FrontendTemplate
             let Img_{$sId} = document.createElement('img');
             Img_{$sId}.src = "{$sIcon}";    
             let marker_{$sId} = new google.maps.marker.AdvancedMarkerElement({
-                content: Img_{$sId},
                 position: new google.maps.LatLng({$sPosition}),
                 content: Img_{$sId},
                 title: title_{$sId},
@@ -387,7 +386,6 @@ class FrontendTemplate
                 new google.maps.LatLng({$sBound1}),
                 new google.maps.LatLng({$sBound2})
             );
-
             var rectangle = new google.maps.Rectangle({
                 strokeColor: "{$sStrokeColor}",
                 strokeOpacity: {$sStrokeOpacity},
