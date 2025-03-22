@@ -54,7 +54,7 @@ a.map-remove {
   min-width: 150px
 }
 
-gmp-advanced-marker img[src$=".svg"] {
+gmp-advanced-marker img[src$=".svg"], #infowindow_icons img[src$=".svg"] {
   width: 40px;
   height: 40px;
 }

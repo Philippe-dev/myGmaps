@@ -651,13 +651,7 @@ dotclear.ready(() => {
       const icons_array = icons_list.split(',');
       for (i in icons_array) {
         const iconElement = document.createElement('img');
-        if (icons_array[i].endsWith('.svg')) {
-          iconElement.src = `${icons_base_url}${icons_array[i]}`;
-          iconElement.style.width = '40px'; // Resize SVG icon width
-          iconElement.style.height = '40px'; // Resize SVG icon height
-        } else {
-          iconElement.src = `${icons_base_url}${icons_array[i]}`;
-        }
+        iconElement.src = `${icons_base_url}${icons_array[i]}`;
         iconElement.alt = icons_array[i];
         myIcons.push(iconElement.outerHTML);
       }
@@ -705,13 +699,6 @@ dotclear.ready(() => {
         contentImg.src = event.target.src;
         marker.content = contentImg;
         const icon = event.target.tagName === 'IMG' ? event.target.src : '';
-        if (marker.content.src.endsWith('.svg')) {
-          marker.style.width = '40px'; // Resize SVG icon width
-          marker.style.height = '40px'; // Resize SVG icon height
-        } else if (marker.content.src.endsWith('.png') | [marker.content.src.endsWith('.jpg') | marker.content.src.endsWith('.jpeg')]) {
-          marker.style.width = ''; // Remove inline width
-          marker.style.height = ''; // Remove inline height
-        }
         const position = marker.position;
         element_values = `${position.lat}|${position.lng}|${icon}`;
         document.getElementById('post_excerpt').value = element_values;
@@ -923,14 +910,7 @@ dotclear.ready(() => {
       const icon = parts[2];
       var location = new google.maps.LatLng(lat, lng);
       const Img = document.createElement('img');
-      if (icon.endsWith('.svg')) {
-        Img.src = icon;
-        Img.style.width = '40px'; // Resize SVG icon width
-        Img.style.height = '40px'; // Resize SVG icon height
-      } else {
-        Img.src = icon;
-      }
-
+      Img.src = icon;
       marker = new google.maps.marker.AdvancedMarkerElement({
         position: location,
         gmpDraggable: true,

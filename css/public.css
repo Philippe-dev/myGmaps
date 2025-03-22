@@ -77,6 +77,11 @@
 	white-space: normal
 }
 
+gmp-advanced-marker img[src$=".svg"] {
+	width: 40px;
+	height: 40px;
+}
+
 #credit-control {
 	background: #E2EAEA;
 	opacity: 0.7;
