@@ -701,11 +701,16 @@ dotclear.ready(() => {
         const parts = element_values.split("|");
         const lat = parseFloat(parts[0]);
         const lng = parseFloat(parts[1]);
-        marker.content.src = event.target.src;
-        const icon = event.target.src;
+        const contentImg = document.createElement('img');
+        contentImg.src = event.target.src;
+        marker.content = contentImg;
+        const icon = event.target.tagName === 'IMG' ? event.target.src : '';
         if (marker.content.src.endsWith('.svg')) {
           marker.style.width = '40px'; // Resize SVG icon width
           marker.style.height = '40px'; // Resize SVG icon height
+        } else if (marker.content.src.endsWith('.png') | [marker.content.src.endsWith('.jpg') | marker.content.src.endsWith('.jpeg')]) {
+          marker.style.width = ''; // Remove inline width
+          marker.style.height = ''; // Remove inline height
         }
         const position = marker.position;
         element_values = `${position.lat}|${position.lng}|${icon}`;
