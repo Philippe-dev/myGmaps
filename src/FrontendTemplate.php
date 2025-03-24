@@ -424,12 +424,12 @@ class FrontendTemplate
         $sOutput = <<<EOT
             var circle = new google.maps.Circle({
                 center: new google.maps.LatLng({$sCenter}),
-                radius: {$sRadius},
                 strokeColor: "{$sStrokeColor}",
                 strokeOpacity: {$sStrokeOpacity},
                 strokeWeight: {$sStrokeWeight},
                 fillColor: "{$sFillColor}",
-                fillOpacity: {$sFillOpacity}
+                fillOpacity: {$sFillOpacity},
+                radius: {$sRadius}
             });
             circle.setMap(map_{$sMapId});
             google.maps.event.addListener(circle, "click", function(event) {
