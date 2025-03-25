@@ -424,7 +424,7 @@ dotclear.ready(() => {
         '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '"></p>' +
         '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + this.strokeOpacity + '"></p>' +
         '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + this.strokeWeight + '"></p>' +
-        '<p><input type="button" id="save" value="OK"></p>' +
+        '<p><input type="submit" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(event.latLng);
       infowindow.setContent(infowindowPolyline);
@@ -464,7 +464,7 @@ dotclear.ready(() => {
         '<p><label for="fill_color">' + fill_color_msg + '</label><input type="text" id="fill_color" size="10" value="' + this.fillColor + '"></p>' +
         '<p><label for="fill_opacity">' + fill_opacity_msg + '</label><input type="text" id="fill_opacity" size="10" value="' + this.fillOpacity + '"></p>' +
         '</div>' +
-        '<p><input type="button" id="save" value="OK"></p>' +
+        '<p><input type="submit" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(event.latLng);
       infowindow.setContent(infowindowPolygon);
@@ -495,7 +495,7 @@ dotclear.ready(() => {
         '<p><label for="fill_color">' + fill_color_msg + '</label><input type="text" id="fill_color" size="10" value="' + this.fillColor + '"></p>' +
         '<p><label for="fill_opacity">' + fill_opacity_msg + '</label><input type="text" id="fill_opacity" size="10" value="' + this.fillOpacity + '"></p>' +
         '</div>' +
-        '<p><input type="button" id="save" value="OK"></p>' +
+        '<p><input type="submit" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(event.latLng);
       infowindow.setContent(infowindowRectangle);
@@ -525,7 +525,7 @@ dotclear.ready(() => {
         '<p><label for="fill_opacity">' + fill_opacity_msg + '</label><input type="text" id="fill_opacity" size="10" value="' + this.fillOpacity + '"></p>' +
         '<p><label for="circle_radius">' + circle_radius_msg + '</label><input type="text" id="circle_radius" size="10" value="' + this.radius + '"></p>' +
         '</div>' +
-        '<p><input type="button" id="save" value="OK"></p>' +
+        '<p><input type="submit" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(event.latLng);
       infowindow.setContent(infowindowCircle);
@@ -564,7 +564,7 @@ dotclear.ready(() => {
         has_custom_kmls +
         '<h4>' + kml_url_msg + '</h4>' +
         '<p><input type="text" id="kml_url" size="80" value="' + document.getElementById('post_excerpt').value + '"></p>' +
-        '<p><input type="button" id="save" value="OK"></p>' +
+        '<p><input type="submit" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(event.latLng);
       infowindow.setContent(infowindowKml);
@@ -578,7 +578,7 @@ dotclear.ready(() => {
         '<div id="infowindow_georss" style="cursor: pointer">' +
         '<h4>' + geoRss_url_msg + '</h4>' +
         '<p><input type="text" id="geoRss_url" size="80" value="' + document.getElementById('post_excerpt').value + '"></p>' +
-        '<p><input type="button" id="save" value="OK"></p>' +
+        '<p><input type="submit" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(event.latLng);
       infowindow.setContent(infowindowgeoRss);
@@ -621,7 +621,7 @@ dotclear.ready(() => {
         '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + weight + '">' +
         '</div>' +
         '</div>' +
-        '<p><input type="button" id="save" value="OK">' +
+        '<p><input type="submit" id="save" value="OK">' +
         '</div>';
 
       infowindow.setPosition(event.latLng);
@@ -1274,7 +1274,7 @@ dotclear.ready(() => {
         has_custom_kmls +
         '<h4>' + kml_url_msg + '</h4>' +
         '<p><input type="text" id="kml_url" size="80" value="' + document.getElementById('post_excerpt').value + '"></p>' +
-        '<p><input type="button" id="save" value="OK"></p>' +
+        '<p><input type="submit" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(location);
       infowindow.setContent(infowindowKml);
@@ -1288,7 +1288,7 @@ dotclear.ready(() => {
         '<div id="infowindow_georss" style="cursor: pointer">' +
         '<h4>' + geoRss_url_msg + '</h4>' +
         '<p><input type="text" id="geoRss_url" size="80" value="' + document.getElementById('post_excerpt').value + '"></p>' +
-        '<p><input type="button" id="save" value="OK"></p>' +
+        '<p><input type="submit" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(location);
       infowindow.setContent(infowindowgeoRss);
@@ -1316,7 +1316,7 @@ dotclear.ready(() => {
         '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + weight + '"></p>' +
         '</div>' +
         '</div>' +
-        '<p><input type="button" id="save" value="OK">' +
+        '<p><input type="submit" id="save" value="OK">' +
         '</div>';
 
       infowindow.setPosition(location);
