@@ -481,6 +481,7 @@ dotclear.ready(() => {
     }
     initkmlLayer();
 
+    //initialize geoRSS
     let geoRssLayer;
     function initgeoRSSLayer() {
       geoRssLayer = new google.maps.KmlLayer({});
@@ -560,7 +561,7 @@ dotclear.ready(() => {
         infowindow.setContent(infowindowDirections);
         infowindow.open(map);
 
-        // Initialize autocomplete for directions_start and directions_end fields after infowindow is opened
+        // Initialize autocomplete for directions_start and directions_end
         google.maps.event.addListenerOnce(infowindow, 'domready', () => {
           const startInput = document.getElementById('directions_start');
           const endInput = document.getElementById('directions_end');
@@ -1337,7 +1338,7 @@ dotclear.ready(() => {
       infowindow.setContent(infowindowDirections);
       infowindow.open(map);
 
-      // Initialize autocomplete for directions_start and directions_end fields after infowindow is opened
+      // Initialize autocomplete for directions_start and directions_end
       google.maps.event.addListenerOnce(infowindow, 'domready', () => {
         const startInput = document.getElementById('directions_start');
         const endInput = document.getElementById('directions_end');
