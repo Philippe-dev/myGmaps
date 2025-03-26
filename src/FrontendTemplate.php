@@ -110,8 +110,8 @@ class FrontendTemplate
         $sOutput     = '';
 
         $sNeutralBlueStyle = <<<EOT
-            var neutral_blue_styles = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#193341"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#2c5a71"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#29768a"},{"lightness":-37}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#3e606f"},{"weight":2},{"gamma":0.84}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"weight":0.6},{"color":"#1a3541"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#2c5a71"}]}];
-            var neutral_blue = new google.maps.StyledMapType(neutral_blue_styles,{name: "Neutral Blue"});\n
+            const neutral_blue_styles = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#193341"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#2c5a71"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#29768a"},{"lightness":-37}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#3e606f"},{"weight":2},{"gamma":0.84}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"weight":0.6},{"color":"#1a3541"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#2c5a71"}]}];
+            const neutral_blue = new google.maps.StyledMapType(neutral_blue_styles,{name: "Neutral Blue"});\n
             EOT;
 
         $custom_style = false;
@@ -141,14 +141,14 @@ class FrontendTemplate
                 $sStyleNiceName   = ucwords(preg_replace('/_/s', ' ', $sStyleName));
 
                 $sOutput .= <<<EOT
-                    var {$sStyleId} = {$sStyleDefinition};
-                    var {$sStyleName} = new google.maps.StyledMapType({$sStyleId},{name: "{$sStyleNiceName}"});\n
+                    let {$sStyleId} = {$sStyleDefinition};
+                    let {$sStyleName} = new google.maps.StyledMapType({$sStyleId},{name: "{$sStyleNiceName}"});\n
                     EOT;
             }
         }
 
         $sOutput .= <<<EOT
-            var myOptions = {
+            let myOptions = {
                 mapId: "map_{$sMapId}",
                 zoom: parseFloat({$sZoom}),
                 center: new google.maps.LatLng({$sCenter}),
@@ -158,7 +158,7 @@ class FrontendTemplate
                     mapTypeIds: ["{$sStyle}"]
                 }
             };
-            var map_{$sMapId} = new google.maps.Map(document.getElementById("map_canvas_{$sMapId}"), myOptions);\n
+            let map_{$sMapId} = new google.maps.Map(document.getElementById("map_canvas_{$sMapId}"), myOptions);\n
             EOT;
 
         if ($custom_style) {
@@ -168,8 +168,8 @@ class FrontendTemplate
                 EOT;
         } elseif ($custom_style == false && $sStyle == 'OpenStreetMap') {
             $sOutput .= <<<EOT
-                var credit = '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap Contributors</a>';
-                var creditNode = document.createElement('div');
+                let credit = '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap Contributors</a>';
+                let creditNode = document.createElement('div');
                 creditNode.id = 'credit-control';
                 creditNode.index = 1;
                 map_{$sMapId}.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(creditNode);
@@ -211,7 +211,7 @@ class FrontendTemplate
         }
 
         $sOutput .= <<<EOT
-            var infowindow_{$sMapId} = new google.maps.InfoWindow({});
+            let infowindow_{$sMapId} = new google.maps.InfoWindow({});
             google.maps.event.addListener(map_{$sMapId}, "click", function (event) {
                 infowindow_{$sMapId}.close();
             });\n
@@ -234,8 +234,8 @@ class FrontendTemplate
         $sType        = $aElementOptions['type'];
 
         $sOutput = <<<EOT
-            var title_{$sId} = "{$sTitle}";
-            var content_{$sId} = '{$sDescription}';\n
+            let title_{$sId} = "{$sTitle}";
+            let content_{$sId} = '{$sDescription}';\n
             EOT;
 
         if ($sType == 'point of interest') {
@@ -307,15 +307,15 @@ class FrontendTemplate
         $sPath = substr($sPath, 0, -1);
 
         $sOutput = <<<EOT
-            var polyline = new google.maps.Polyline({
+            let polyline_$sId = new google.maps.Polyline({
                 path: [{$sPath}],
                 strokeColor: "{$sStrokeColor}",
                 strokeOpacity: {$sStrokeOpacity},
                 strokeWeight: {$sStrokeWeight}
             });
-            polyline.setMap(map_{$sMapId});
-            google.maps.event.addListener(polyline, "click", function(event) {
-                var pos = event.latLng;
+            polyline_$sId.setMap(map_{$sMapId});
+            google.maps.event.addListener(polyline_$sId, "click", function(event) {
+                let pos = event.latLng;
                 openpolyinfowindow(title_{$sId},content_{$sId},pos);
             });\n
             EOT;
@@ -346,7 +346,7 @@ class FrontendTemplate
         $sPath = substr($sPath, 0, -1);
 
         $sOutput = <<<EOT
-            var polygon = new google.maps.Polygon({
+            let polygon_$sId = new google.maps.Polygon({
                 path: [{$sPath}],
                 strokeColor: "{$sStrokeColor}",
                 strokeOpacity: {$sStrokeOpacity},
@@ -354,9 +354,9 @@ class FrontendTemplate
                 fillColor: "{$sFillColor}",
                 fillOpacity: {$sFillOpacity}
             });
-            polygon.setMap(map_{$sMapId});
-            google.maps.event.addListener(polygon, "click", function(event) {
-                var pos = event.latLng;
+            polygon_$sId.setMap(map_{$sMapId});
+            google.maps.event.addListener(polygon_$sId, "click", function(event) {
+                let pos = event.latLng;
                 openpolyinfowindow(title_{$sId},content_{$sId},pos);
             });\n
             EOT;
@@ -382,21 +382,21 @@ class FrontendTemplate
         $sFillOpacity   = $aOptions['fill_opacity'];
 
         $sOutput = <<<EOT
-            var bounds = new google.maps.LatLngBounds(
+            let bounds_{$sId} = new google.maps.LatLngBounds(
                 new google.maps.LatLng({$sBound1}),
                 new google.maps.LatLng({$sBound2})
             );
-            var rectangle = new google.maps.Rectangle({
+            let rectangle_{$sId} = new google.maps.Rectangle({
                 strokeColor: "{$sStrokeColor}",
                 strokeOpacity: {$sStrokeOpacity},
                 strokeWeight: {$sStrokeWeight},
                 fillColor: "{$sFillColor}",
                 fillOpacity: {$sFillOpacity}
             });
-            rectangle.setBounds(bounds);
-            rectangle.setMap(map_{$sMapId});
-            google.maps.event.addListener(rectangle, "click", function(event) {
-                var pos = event.latLng;
+            rectangle_{$sId}.setBounds(bounds_{$sId});
+            rectangle_{$sId}.setMap(map_{$sMapId});
+            google.maps.event.addListener(rectangle_{$sId}, "click", function(event) {
+                let pos = event.latLng;
                 openpolyinfowindow(title_{$sId},content_{$sId},pos);
             });\n
             EOT;
@@ -422,7 +422,7 @@ class FrontendTemplate
         $sFillOpacity   = $aOptions['fill_opacity'];
 
         $sOutput = <<<EOT
-            var circle = new google.maps.Circle({
+            let circle_{$sId} = new google.maps.Circle({
                 center: new google.maps.LatLng({$sCenter}),
                 strokeColor: "{$sStrokeColor}",
                 strokeOpacity: {$sStrokeOpacity},
@@ -431,9 +431,9 @@ class FrontendTemplate
                 fillOpacity: {$sFillOpacity},
                 radius: {$sRadius}
             });
-            circle.setMap(map_{$sMapId});
-            google.maps.event.addListener(circle, "click", function(event) {
-                var pos = event.latLng;
+            circle_{$sId}.setMap(map_{$sMapId});
+            google.maps.event.addListener(circle_{$sId}, "click", function(event) {
+                let pos = event.latLng;
                 openpolyinfowindow(title_{$sId},content_{$sId},pos);
             });\n
             EOT;
@@ -450,10 +450,11 @@ class FrontendTemplate
         );
         $sMapId = $aOptions['map_id'];
         $sLayer = $aOptions['layer'];
+        $sId    = $aOptions['element_id'];
 
         $sOutput = <<<EOT
-            var layer = new google.maps.KmlLayer("{$sLayer}", {preserveViewport: true});
-            layer.setMap(map_{$sMapId});\n
+            let layer_{$sId} = new google.maps.KmlLayer("{$sLayer}", {preserveViewport: true});
+            layer_{$sId}.setMap(map_{$sMapId});\n
             EOT;
 
         return $sOutput;
@@ -476,53 +477,53 @@ class FrontendTemplate
         $bDisplayDirection = $aOptions['display_direction'];
 
         $sOutput = <<<EOT
-            var routePolyline;
-            var routePolylineOptions = {
-                strokeColor: "#555",
-                strokeOpacity: 0,
-                strokeWeight: 20,
+            let routePolyline_$sId;
+            let routePolylineOptions_$sId = {
+                strokeColor: "{$sStrokeColor}",
+                strokeOpacity: parseFloat({$sStrokeOpacity}),
+                strokeWeight: parseFloat({$sStrokeWeight}),
                 zIndex: 1
             };
-            routePolyline = new google.maps.Polyline(routePolylineOptions);
-            var routePolylinePath = routePolyline.getPath();
-            var directionsService = new google.maps.DirectionsService();
-            var polylineRendererOptions = {
+            routePolyline_$sId = new google.maps.Polyline(routePolylineOptions_$sId);
+            let routePolylinePath_$sId = routePolyline_$sId.getPath();
+            let directionsService_$sId = new google.maps.DirectionsService();
+            let polylineRendererOptions_$sId = {
                 strokeColor: "{$sStrokeColor}",
                 strokeOpacity: parseFloat({$sStrokeOpacity}),
                 strokeWeight: parseFloat({$sStrokeWeight})
             }
-            var rendererOptions = {
-                polylineOptions: polylineRendererOptions
+            let rendererOptions_$sId = {
+                polylineOptions_$sId: polylineRendererOptions_$sId
             }
-            var directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
-            var request = {
+            let directionsDisplay_$sId = new google.maps.DirectionsRenderer(rendererOptions_$sId);
+            let request_$sId = {
                 origin: "{$sOrigin}",
                 destination: "{$sDestination}",
                 travelMode: google.maps.TravelMode.DRIVING
             };
             EOT;
         if ($bDisplayDirection == 'true') {
-            $sOutput .= 'document.getElementById("map_box_' . $sMapId . '").classList.add("directions");' . "\n";
+            $sOutput .= 'if (document.getElementById("map_box_' . $sMapId . '")) {document.getElementById("map_box_' . $sMapId . '").classList.add("directions");}' . "\n";
         } else {
-            $sOutput .= 'document.getElementById("map_box_' . $sMapId . '").classList.add("no-directions");' . "\n";
+            $sOutput .= 'if (document.getElementById("map_box_' . $sMapId . '")) {document.getElementById("map_box_' . $sMapId . '").classList.add("no-directions")};' . "\n";
         }
 
         $sOutput .= <<<EOT
-            directionsService.route(request, function(result, status) {
+            directionsService_$sId.route(request_$sId, function(result, status) {
                 if (status == google.maps.DirectionsStatus.OK) {
-                    var routePath = result.routes[0].overview_path;
-                    routePolyline.setPath(routePath);
-                    directionsDisplay.setPanel(document.getElementById("panel_{$sMapId}"));
-                    directionsDisplay.setOptions({options: rendererOptions});
-                    directionsDisplay.setDirections(result);
-                    directionsDisplay.setMap(map_{$sMapId});
-                    routePolyline.setMap(map_{$sMapId});
+                    let routePath = result.routes[0].overview_path;
+                    routePolyline_$sId.setPath(routePath);
+                    directionsDisplay_$sId.setPanel(document.getElementById("panel_{$sMapId}"));
+                    directionsDisplay_$sId.setOptions({options: rendererOptions_$sId});
+                    directionsDisplay_$sId.setDirections(result);
+                    directionsDisplay_$sId.setMap(map_{$sMapId});
+                    routePolyline_$sId.setMap(map_{$sMapId});
                 } else {
                     alert(status);
                 }
             });
-            google.maps.event.addListener(routePolyline, "click", function(event) {
-                var pos = event.latLng;
+            google.maps.event.addListener(routePolyline_$sId, "click", function(event) {
+                let pos = event.latLng;
                 openpolyinfowindow(title_{$sId},content_{$sId},pos);
             });\n
             EOT;

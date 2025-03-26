@@ -21,10 +21,14 @@ dotclear.ready(() => {
 		const zoomInput = document.querySelector('input[name="myGmaps_zoom"]');
 		const typeInput = document.querySelector('input[name="myGmaps_type"]');
 
+		let default_zoom;
+		let default_type;
+		let default_location;
+
 		if (centerInput.value === '') {
-			var default_location = new google.maps.LatLng(43.0395797336425, 6.126280043989323);
-			var default_zoom = '12';
-			var default_type = 'roadmap';
+			default_location = new google.maps.LatLng(43.0395797336425, 6.126280043989323);
+			default_zoom = '12';
+			default_type = 'roadmap';
 
 			centerInput.value = default_location;
 			zoomInput.value = default_zoom;
@@ -33,9 +37,9 @@ dotclear.ready(() => {
 			const parts = centerInput.value.split(",");
 			const lat = parseFloat(trim(parts[0]));
 			const lng = parseFloat(trim(parts[1]));
-			var default_location = new google.maps.LatLng(lat, lng);
-			var default_zoom = zoomInput.value;
-			var default_type = typeInput.value;
+			default_location = new google.maps.LatLng(lat, lng);
+			default_zoom = zoomInput.value;
+			default_type = typeInput.value;
 		}
 
 		// Map styles. Get more styles from https://snazzymaps.com/
@@ -62,7 +66,7 @@ dotclear.ready(() => {
 			window[value] = new google.maps.StyledMapType(user_style.style, { name: user_style.name });
 		}
 		const myOptions = {
-			mapId : "add_map",
+			mapId: "add_map",
 			zoom: parseFloat(default_zoom),
 			center: default_location,
 			scrollwheel: false,
@@ -160,7 +164,9 @@ dotclear.ready(() => {
 			updateMapOptions();
 		});
 
-		initElements(map_add);
+		if (typeof initElements === 'function') {
+			initElements(map_add);
+		}
 
 		function geocode() {
 			const address = document.getElementById("address").value;

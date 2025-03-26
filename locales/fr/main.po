@@ -1,14 +1,14 @@
 # Language: Français
-# Module: myGmaps - 8.3
-# Date: 2025-01-16 11:12:10
-# Translated with translater 2023.11.04
+# Module: myGmaps - 9.1
+# Date: 2025-03-26 09:53:24
+# Translated with translater 2025.03.03
 
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: myGmaps 8.3\n"
+"Project-Id-Version: myGmaps 9.1\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-01-16T11:12:10+00:00\n"
+"PO-Revision-Date: 2025-03-26T09:53:24+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -74,49 +74,49 @@ msgid "none"
 msgstr "aucun"
 
 #: src/Backend.php:586
-#: src/BackendList.php:197
+#: src/BackendList.php:195
 #: src/BackendMiniList.php:145
 msgid "point of interest"
 msgstr "point d'intérêt"
 
 #: src/Backend.php:587
-#: src/BackendList.php:199
+#: src/BackendList.php:197
 #: src/BackendMiniList.php:147
 msgid "polyline"
 msgstr "ligne brisée"
 
 #: src/Backend.php:588
-#: src/BackendList.php:201
+#: src/BackendList.php:199
 #: src/BackendMiniList.php:149
 msgid "polygon"
 msgstr "polygone"
 
 #: src/Backend.php:589
-#: src/BackendList.php:205
+#: src/BackendList.php:203
 #: src/BackendMiniList.php:153
 msgid "rectangle"
 msgstr "rectangle"
 
 #: src/Backend.php:590
-#: src/BackendList.php:203
+#: src/BackendList.php:201
 #: src/BackendMiniList.php:151
 msgid "circle"
 msgstr "cercle"
 
 #: src/Backend.php:591
-#: src/BackendList.php:207
+#: src/BackendList.php:205
 #: src/BackendMiniList.php:155
 msgid "included kml file"
 msgstr "fichier kml inclus"
 
 #: src/Backend.php:592
-#: src/BackendList.php:209
+#: src/BackendList.php:207
 #: src/BackendMiniList.php:157
 msgid "GeoRSS feed"
 msgstr "flux GeoRSS"
 
 #: src/Backend.php:593
-#: src/BackendList.php:211
+#: src/BackendList.php:209
 #: src/BackendMiniList.php:159
 msgid "directions"
 msgstr "itinéraire"
@@ -129,15 +129,15 @@ msgstr "Avec une carte attachée"
 msgid "Without attached map"
 msgstr "Sans carte attachée"
 
-#: src/Backend.php:694
+#: src/Backend.php:695
 msgid "Are you sure you want to remove this map?"
 msgstr "Voulez-vous vraiment supprimer cette carte ?"
 
-#: src/Backend.php:700
+#: src/Backend.php:703
 msgid "Are you sure you want to remove this element?"
 msgstr "Voulez-vous vraiment supprimer cet élément ?"
 
-#: src/Backend.php:762
+#: src/Backend.php:766
 msgid "Attached Map"
 msgstr "Carte attachée"
 
@@ -231,7 +231,7 @@ msgid "Map elements"
 msgstr "Éléments de carte"
 
 #: src/Manage.php:309
-#: src/ManageMap.php:809
+#: src/ManageMap.php:813
 msgid "New element"
 msgstr "Nouvel élément"
 
@@ -255,115 +255,115 @@ msgstr "Élément précédent"
 msgid "No description."
 msgstr "Pas de description."
 
-#: src/ManageMap.php:545
+#: src/ManageMap.php:549
 msgid "Stroke color"
 msgstr "Couleur du trait"
 
-#: src/ManageMap.php:546
+#: src/ManageMap.php:550
 msgid "Stroke opacity"
 msgstr "Opacité du trait"
 
-#: src/ManageMap.php:547
+#: src/ManageMap.php:551
 msgid "Stroke weight"
 msgstr "Épaisseur du trait"
 
-#: src/ManageMap.php:548
+#: src/ManageMap.php:552
 msgid "Circle radius"
 msgstr "Rayon du cercle"
 
-#: src/ManageMap.php:549
+#: src/ManageMap.php:553
 msgid "Fill color"
 msgstr "Couleur du fond"
 
-#: src/ManageMap.php:550
+#: src/ManageMap.php:554
 msgid "Fill opacity"
 msgstr "Opacité du fond"
 
-#: src/ManageMap.php:551
+#: src/ManageMap.php:555
 msgid "Default icons"
 msgstr "Icônes par défaut"
 
-#: src/ManageMap.php:552
+#: src/ManageMap.php:556
 msgid "Custom icons"
 msgstr "Icônes personnelles"
 
-#: src/ManageMap.php:555
+#: src/ManageMap.php:559
 msgid "Custom Kml files"
 msgstr "Fichiers kml personnels"
 
-#: src/ManageMap.php:556
+#: src/ManageMap.php:560
 msgid "Start:"
 msgstr "Départ :"
 
-#: src/ManageMap.php:557
+#: src/ManageMap.php:561
 msgid "End:"
 msgstr "Arrivée :"
 
-#: src/ManageMap.php:558
+#: src/ManageMap.php:562
 msgid "Display directions panel in public map"
 msgstr "Afficher les détails sur la carte publique"
 
-#: src/ManageMap.php:606
+#: src/ManageMap.php:610
 msgid "Map element has been updated."
 msgstr "L'élément de carte a été mis à jour."
 
-#: src/ManageMap.php:608
+#: src/ManageMap.php:612
 msgid "Map element has been created."
 msgstr "L'élément de carte a été créé."
 
-#: src/ManageMap.php:665
+#: src/ManageMap.php:669
 msgid "Element status"
 msgstr "État de l'élément"
 
-#: src/ManageMap.php:678
+#: src/ManageMap.php:682
 msgid "Element language"
 msgstr "Langue de l'élément"
 
-#: src/ManageMap.php:693
+#: src/ManageMap.php:697
 msgid "Selected element"
 msgstr "Élément sélectionné"
 
-#: src/ManageMap.php:759
+#: src/ManageMap.php:763
 msgid "Type and position:"
 msgstr "Type et position :"
 
-#: src/ManageMap.php:762
+#: src/ManageMap.php:766
 msgid "Point of interest"
 msgstr "Point d'intérêt"
 
-#: src/ManageMap.php:763
+#: src/ManageMap.php:767
 msgid "Polyline"
 msgstr "Ligne brisée"
 
-#: src/ManageMap.php:764
+#: src/ManageMap.php:768
 msgid "Polygon"
 msgstr "Polygone"
 
-#: src/ManageMap.php:765
+#: src/ManageMap.php:769
 msgid "Rectangle"
 msgstr "Rectangle"
 
-#: src/ManageMap.php:766
+#: src/ManageMap.php:770
 msgid "Circle"
 msgstr "Cercle"
 
-#: src/ManageMap.php:767
+#: src/ManageMap.php:771
 msgid "Included Kml file"
 msgstr "Fichier kml inclus"
 
-#: src/ManageMap.php:768
+#: src/ManageMap.php:772
 msgid "GeoRSS Feed"
 msgstr "Flux GeoRSS"
 
-#: src/ManageMap.php:769
+#: src/ManageMap.php:773
 msgid "Directions"
 msgstr "Itinéraire"
 
-#: src/ManageMap.php:770
+#: src/ManageMap.php:774
 msgid "Erase"
 msgstr "Effacer"
 
-#: src/ManageMap.php:773
+#: src/ManageMap.php:777
 msgid "This map will not be displayed on the blog and is meant only to create, edit and position <strong>only one</strong> element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties."
 msgstr "Cette carte ne sera pas affichée sur le blog, et n'est destinée qu'à créer, positionner ou éditer <strong>un seul</strong> élément à la fois. Choisissez un outil, cliquez sur la carte pour créer votre élément, puis cliquer sur l'élément pour modifier ses propriétés."
 

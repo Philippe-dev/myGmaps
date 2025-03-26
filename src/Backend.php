@@ -488,7 +488,7 @@ class Backend extends Process
 
             if ($has_poly = true || $has_marker = true) {
                 $sOutput = <<<EOT
-                    var infowindow_add = new google.maps.InfoWindow({});
+                    let infowindow_add = new google.maps.InfoWindow({});
                     google.maps.event.addListener(map_add, "click", function (event) {
                         infowindow_add.close();
                     });\n
@@ -687,12 +687,12 @@ class Backend extends Process
         '<script>' . "\n" .
         'document.addEventListener("DOMContentLoaded", function() {' . "\n" .
             'document.querySelector("#gmap-area label").addEventListener("click", function() {' . "\n" .
-            'var postGmap = document.querySelector("#post-gmap");' . "\n" .
+            'let postGmap = document.querySelector("#post-gmap");' . "\n" .
             'postGmap.style.display = postGmap.style.display === "none" ? "block" : "none";' . "\n" .
             '});' . "\n" .
             'document.querySelectorAll("a.map-remove").forEach(function(element) {' . "\n" .
             'element.addEventListener("click", function(event) {' . "\n" .
-                'var msg = "' . __('Are you sure you want to remove this map?') . '";' . "\n" .
+                'let msg = "' . __('Are you sure you want to remove this map?') . '";' . "\n" .
                 'if (!window.confirm(msg)) {' . "\n" .
                 'event.preventDefault();' . "\n" .
                 '}' . "\n" .
@@ -700,7 +700,7 @@ class Backend extends Process
             '});' . "\n" .
             'document.querySelectorAll("a.element-remove").forEach(function(element) {' . "\n" .
             'element.addEventListener("click", function(event) {' . "\n" .
-                'var msg = "' . __('Are you sure you want to remove this element?') . '";' . "\n" .
+                'let msg = "' . __('Are you sure you want to remove this element?') . '";' . "\n" .
                 'if (!window.confirm(msg)) {' . "\n" .
                 'event.preventDefault();' . "\n" .
                 '}' . "\n" .

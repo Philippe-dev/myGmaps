@@ -100,18 +100,21 @@ dotclear.ready(() => {
     // INITIALIZE MAP WITH DEFAULT SETTINGS AND OBJECTS
 
     // Display map with default or existing values
+    let latlng;
+    let default_zoom;
+    let default_type;
 
     if (document.querySelector('input[name=myGmaps_center]').value == '') {
-      var latlng = new google.maps.LatLng(43.0395797336425, 6.126280043989323);
-      var default_zoom = '12';
-      var default_type = 'roadmap';
+      latlng = new google.maps.LatLng(43.0395797336425, 6.126280043989323);
+      default_zoom = '12';
+      default_type = 'roadmap';
     } else {
-      var parts = document.querySelector('input[name=myGmaps_center]').value.split(",");
-      var lat = parseFloat(trim(parts[0]));
-      var lng = parseFloat(trim(parts[1]));
-      var latlng = new google.maps.LatLng(lat, lng);
-      var default_zoom = document.querySelector('input[name=myGmaps_zoom]').value;
-      var default_type = document.querySelector('input[name=myGmaps_type]').value;
+      const parts = document.querySelector('input[name=myGmaps_center]').value.split(",");
+      const lat = parseFloat(trim(parts[0]));
+      const lng = parseFloat(trim(parts[1]));
+      latlng = new google.maps.LatLng(lat, lng);
+      default_zoom = document.querySelector('input[name=myGmaps_zoom]').value;
+      default_type = document.querySelector('input[name=myGmaps_type]').value;
     }
 
     // Map styles. Get more styles from https://snazzymaps.com/
@@ -119,10 +122,11 @@ dotclear.ready(() => {
     const neutral_blue_styles = [{ "featureType": "water", "elementType": "geometry", "stylers": [{ "color": "#193341" }] }, { "featureType": "landscape", "elementType": "geometry", "stylers": [{ "color": "#2c5a71" }] }, { "featureType": "road", "elementType": "geometry", "stylers": [{ "color": "#29768a" }, { "lightness": -37 }] }, { "featureType": "poi", "elementType": "geometry", "stylers": [{ "color": "#406d80" }] }, { "featureType": "transit", "elementType": "geometry", "stylers": [{ "color": "#406d80" }] }, { "elementType": "labels.text.stroke", "stylers": [{ "visibility": "on" }, { "color": "#3e606f" }, { "weight": 2 }, { "gamma": 0.84 }] }, { "elementType": "labels.text.fill", "stylers": [{ "color": "#ffffff" }] }, { "featureType": "administrative", "elementType": "geometry", "stylers": [{ "weight": 0.6 }, { "color": "#1a3541" }] }, { "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] }, { "featureType": "poi.park", "elementType": "geometry", "stylers": [{ "color": "#2c5a71" }] }];
     const neutral_blue = new google.maps.StyledMapType(neutral_blue_styles, { name: "Neutral Blue" });
 
-    const mapTypeIds = [google.maps.MapTypeId.ROADMAP,
-    google.maps.MapTypeId.HYBRID,
-    google.maps.MapTypeId.SATELLITE,
-    google.maps.MapTypeId.TERRAIN,
+    const mapTypeIds = [
+      google.maps.MapTypeId.ROADMAP,
+      google.maps.MapTypeId.HYBRID,
+      google.maps.MapTypeId.SATELLITE,
+      google.maps.MapTypeId.TERRAIN,
       'OpenStreetMap',
       'neutral_blue'
     ];
@@ -205,7 +209,7 @@ dotclear.ready(() => {
       if (i < 6) {
         continue;
       }
-      var value = window[mapTypeIds[i]];
+      const value = window[mapTypeIds[i]];
       map.mapTypes.set(mapTypeIds[i], value);
     }
 
@@ -236,92 +240,340 @@ dotclear.ready(() => {
 
     // Set default objects
 
-    var markersArray = [];
-    var vertexArray = [];
+    let markersArray = [];
+    let vertexArray = [];
 
-    var polyline;
-    const polylineOptions = {
-      strokeColor: '#555',
-      strokeOpacity: 0.8,
-      strokeWeight: 3,
-      draggable: true,
-      editable: true
-    };
-    polyline = new google.maps.Polyline(polylineOptions);
-    var polylinePath = polyline.getPath();
+    //initialize polyline
+    let polyline;
+    let polylinePath;
+    function initPolyline() {
+      const polylineOptions = {
+        strokeColor: '#555',
+        strokeOpacity: 0.8,
+        strokeWeight: 3,
+        draggable: true,
+        editable: true
+      };
+      polyline = new google.maps.Polyline(polylineOptions);
+      polylinePath = polyline.getPath();
 
-    var polygon;
-    const polygonOptions = {
-      strokeColor: '#555',
-      strokeOpacity: 0.8,
-      strokeWeight: 3,
-      fillColor: '#ccc',
-      fillOpacity: 0.35,
-      draggable: true,
-      editable: true
-    };
-    polygon = new google.maps.Polygon(polygonOptions);
-    var polygonPath = polygon.getPath();
+      google.maps.event.addListener(polyline, 'rightclick', (mev) => {
+        if (mev.vertex != null) {
+          polyline.getPath().removeAt(mev.vertex);
+        }
+      });
 
-    var rectangle;
-    const rectangleOptions = {
-      strokeColor: '#555',
-      strokeOpacity: 0.8,
-      strokeWeight: 3,
-      fillColor: '#ccc',
-      fillOpacity: 0.35,
-      draggable: true,
-      editable: true
-    };
-    rectangle = new google.maps.Rectangle(rectangleOptions);
+      google.maps.event.addListener(polylinePath, 'insert_at', debounce(() => {
+        updatePolyline();
+      }, 250));
 
-    var circle;
-    const circleOptions = {
-      strokeColor: '#555',
-      strokeOpacity: 0.8,
-      strokeWeight: 3,
-      fillColor: '#ccc',
-      fillOpacity: 0.35,
-      center: latlng,
-      draggable: true,
-      editable: true,
-      radius: 1000
-    };
-    circle = new google.maps.Circle(circleOptions);
+      google.maps.event.addListener(polylinePath, 'remove_at', debounce(() => {
+        updatePolyline();
+      }, 250));
 
-    var kmlLayer;
-    kmlLayer = new google.maps.KmlLayer({});
+      google.maps.event.addListener(polylinePath, 'set_at', debounce(() => {
+        updatePolyline();
+      }, 250));
 
-    var geoRssLayer;
-    geoRssLayer = new google.maps.KmlLayer({});
+      google.maps.event.addListener(polyline, 'click', function (event) {
+        const infowindowPolyline =
+          '<div id="infowindow_polyline" class="col">' +
+          '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '"></p>' +
+          '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + this.strokeOpacity + '"></p>' +
+          '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + this.strokeWeight + '"></p>' +
+          '<p><input type="submit" id="save" value="OK"></p>' +
+          '</div>';
+        infowindow.setPosition(event.latLng);
+        infowindow.setContent(infowindowPolyline);
+        infowindow.open(map);
 
-    const directionsService = new google.maps.DirectionsService();
-
-    var polylineRendererOptions = {
-      strokeColor: '#555',
-      strokeOpacity: 0.8,
-      strokeWeight: 3
+      });
     }
-    var rendererOptions = {
-      polylineOptions: polylineRendererOptions
+    initPolyline();
+
+    //initialize polygon
+    let polygon;
+    let polygonPath;
+    function initPolygon() {
+      const polygonOptions = {
+        strokeColor: '#555',
+        strokeOpacity: 0.8,
+        strokeWeight: 3,
+        fillColor: '#ccc',
+        fillOpacity: 0.35,
+        draggable: true,
+        editable: true
+      };
+      polygon = new google.maps.Polygon(polygonOptions);
+      polygonPath = polygon.getPath();
+
+      google.maps.event.addListener(polygon, 'rightclick', (mev) => {
+        if (mev.vertex != null) {
+          polygon.getPath().removeAt(mev.vertex);
+        }
+      });
+
+      google.maps.event.addListener(polygonPath, 'insert_at', debounce(() => {
+        updatePolygon();
+      }, 250));
+
+      google.maps.event.addListener(polygonPath, 'remove_at', debounce(() => {
+        updatePolygon();
+      }, 250));
+
+      google.maps.event.addListener(polygonPath, 'set_at', debounce(() => {
+        updatePolygon();
+      }, 250));
+
+      google.maps.event.addListener(polygon, 'click', function (event) {
+        const infowindowPolygon =
+          '<div id="infowindow_polygon">' +
+          '<div class="two-boxes"' +
+          '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '"></p>' +
+          '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + this.strokeOpacity + '"></p>' +
+          '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + this.strokeWeight + '"></p>' +
+          '</div>' +
+          '<div class="two-boxes"' +
+          '<p><label for="fill_color">' + fill_color_msg + '</label><input type="text" id="fill_color" size="10" value="' + this.fillColor + '"></p>' +
+          '<p><label for="fill_opacity">' + fill_opacity_msg + '</label><input type="text" id="fill_opacity" size="10" value="' + this.fillOpacity + '"></p>' +
+          '</div>' +
+          '<p><input type="submit" id="save" value="OK"></p>' +
+          '</div>';
+        infowindow.setPosition(event.latLng);
+        infowindow.setContent(infowindowPolygon);
+        infowindow.open(map);
+
+      });
     }
-    var directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+    initPolygon();
 
+    //initialize rectangle
+    let rectangle = null;
+    function initRectangle() {
+      const rectangleOptions = {
+        strokeColor: '#555',
+        strokeOpacity: 0.8,
+        strokeWeight: 3,
+        fillColor: '#ccc',
+        fillOpacity: 0.35,
+        draggable: true,
+        editable: true
+      };
+      rectangle = new google.maps.Rectangle(rectangleOptions);
 
-    var routePolyline;
-    const routePolylineOptions = {
-      strokeColor: '#555',
-      strokeOpacity: 0,
-      strokeWeight: 20,
-      zIndex: 1
-    };
-    routePolyline = new google.maps.Polyline(routePolylineOptions);
-    var routePolylinePath = routePolyline.getPath();
+      google.maps.event.addListener(rectangle, 'bounds_changed', debounce(() => {
+        updateRectangle();
+      }, 250));
+
+      google.maps.event.addListener(rectangle, 'dragend', debounce(() => {
+        updateRectangle();
+      }, 250));
+
+      google.maps.event.addListener(rectangle, 'click', function (event) {
+        const infowindowRectangle =
+          '<div id="infowindow_rectangle">' +
+          '<div class="two-boxes"' +
+          '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '"></p>' +
+          '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + this.strokeOpacity + '"></p>' +
+          '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + this.strokeWeight + '"></p>' +
+          '</div>' +
+          '<div class="two-boxes"' +
+          '<p><label for="fill_color">' + fill_color_msg + '</label><input type="text" id="fill_color" size="10" value="' + this.fillColor + '"></p>' +
+          '<p><label for="fill_opacity">' + fill_opacity_msg + '</label><input type="text" id="fill_opacity" size="10" value="' + this.fillOpacity + '"></p>' +
+          '</div>' +
+          '<p><input type="submit" id="save" value="OK"></p>' +
+          '</div>';
+        infowindow.setPosition(event.latLng);
+        infowindow.setContent(infowindowRectangle);
+        infowindow.open(map);
+      });
+    }
+    initRectangle();
+
+    //initialize circle
+    let circle;
+    function initCircle() {
+      const circleOptions = {
+        strokeColor: '#555',
+        strokeOpacity: 0.8,
+        strokeWeight: 3,
+        fillColor: '#ccc',
+        fillOpacity: 0.35,
+        center: latlng,
+        draggable: true,
+        editable: true,
+        radius: 1000
+      };
+      circle = new google.maps.Circle(circleOptions);
+
+      google.maps.event.addListener(circle, 'center_changed', debounce(() => {
+        updateCircle();
+      }, 250));
+
+      google.maps.event.addListener(circle, 'radius_changed', debounce(() => {
+        updateCircle();
+      }, 250));
+
+      google.maps.event.addListener(circle, 'click', function (event) {
+        const infowindowCircle =
+          '<div id="infowindow_circle">' +
+          '<div class="two-boxes"' +
+          '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '"></p>' +
+          '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + this.strokeOpacity + '"></p>' +
+          '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + this.strokeWeight + '"></p>' +
+          '</div>' +
+          '<div class="two-boxes"' +
+          '<p><label for="fill_color">' + fill_color_msg + '</label><input type="text" id="fill_color" size="10" value="' + this.fillColor + '"></p>' +
+          '<p><label for="fill_opacity">' + fill_opacity_msg + '</label><input type="text" id="fill_opacity" size="10" value="' + this.fillOpacity + '"></p>' +
+          '<p><label for="circle_radius">' + circle_radius_msg + '</label><input type="text" id="circle_radius" size="10" value="' + this.radius + '"></p>' +
+          '</div>' +
+          '<p><input type="submit" id="save" value="OK"></p>' +
+          '</div>';
+        infowindow.setPosition(event.latLng);
+        infowindow.setContent(infowindowCircle);
+        infowindow.open(map);
+      });
+    }
+    initCircle();
+
+    //initialize kml
+    let kmlLayer;
+    let custom_kmls;
+    let has_custom_kmls;
+    function initkmlLayer() {
+      kmlLayer = new google.maps.KmlLayer({});
+      google.maps.event.addListener(kmlLayer, 'click', (event) => {
+        const myKmls = [];
+        if (document.getElementById("kmls_list").value != '') {
+          const kmls_base_url = document.getElementById("kmls_base_url").value;
+          const kmls_list = document.getElementById("kmls_list").value;
+          const kmls_array = kmls_list.split(',');
+          for (i in kmls_array) {
+            this_kml = `<li>${kmls_array[i]}</li>`;
+            myKmls.push(this_kml);
+          }
+        }
+
+        custom_kmls = myKmls.join();
+        custom_kmls = `<ul>${custom_kmls.replace(/\,/g, '')}</ul>`;
+
+        if (myKmls != '') {
+          has_custom_kmls = `<h4>${custom_kmls_msg}</h4>` +
+            '<div style="max-height: 100px;overflow: auto">' +
+            custom_kmls +
+            '</div>' +
+            '<hr>';
+        } else {
+          has_custom_kmls = '';
+        }
+
+        const infowindowKml =
+          '<div id="infowindow_kml" style="cursor: pointer">' +
+          has_custom_kmls +
+          '<h4>' + kml_url_msg + '</h4>' +
+          '<p><input type="text" id="kml_url" size="80" value="' + document.getElementById('post_excerpt').value + '"></p>' +
+          '<p><input type="submit" id="save" value="OK"></p>' +
+          '</div>';
+        infowindow.setPosition(event.latLng);
+        infowindow.setContent(infowindowKml);
+        infowindow.open(map);
+      });
+    }
+    initkmlLayer();
+
+    let geoRssLayer;
+    function initgeoRSSLayer() {
+      geoRssLayer = new google.maps.KmlLayer({});
+      google.maps.event.addListener(geoRssLayer, 'click', (event) => {
+        const infowindowgeoRss =
+          '<div id="infowindow_georss" style="cursor: pointer">' +
+          '<h4>' + geoRss_url_msg + '</h4>' +
+          '<p><input type="text" id="geoRss_url" size="80" value="' + document.getElementById('post_excerpt').value + '"></p>' +
+          '<p><input type="submit" id="save" value="OK"></p>' +
+          '</div>';
+        infowindow.setPosition(event.latLng);
+        infowindow.setContent(infowindowgeoRss);
+        infowindow.open(map);
+      });
+    }
+    initgeoRSSLayer();
+
+    //initialize directions
+    let directionsService;
+    let directionsDisplay;
+    let routePolyline;
+    let routePolylinePath;
+    function initDirections() {
+      directionsService = new google.maps.DirectionsService();
+
+      const polylineRendererOptions = {
+        strokeColor: '#555',
+        strokeOpacity: 0.8,
+        strokeWeight: 3
+      }
+      const rendererOptions = {
+        polylineOptions: polylineRendererOptions
+      }
+      directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+
+      const routePolylineOptions = {
+        strokeColor: '#555',
+        strokeOpacity: 0,
+        strokeWeight: 20,
+        zIndex: 1
+      };
+      routePolyline = new google.maps.Polyline(routePolylineOptions);
+      routePolylinePath = routePolyline.getPath();
+
+      google.maps.event.addListener(polylinePath, 'set_at', debounce(() => {
+        updatePolyline();
+      }, 250));
+
+      google.maps.event.addListener(routePolyline, 'click', (event) => {
+        const parts = element_values.split("|");
+        const start = parts[0];
+        const end = parts[1];
+        const weight = parts[2];
+        const opacity = parts[3];
+        const color = parts[4];
+        const show = parts[5];
+        const state = show == 'true' ? 'checked = "checked"' : '';
+
+        const infowindowDirections =
+          '<div id="infowindow_directions" style="cursor: pointer">' +
+          '<div class="two-cols clearfix">' +
+          '<div class="col70">' +
+          '<p><label for="directions_start">' + directions_start_msg + '</label><input type="text" id="directions_start" size="40" value="' + start + '"></p>' +
+          '<p><label for="directions_end">' + directions_end_msg + '</label><input type="text" id="directions_end" size="40" value="' + end + '"></p>' +
+          '<p><label for="directions_show"><input type="checkbox" id="directions_show" ' + state + '>' + directions_show_msg + '</label></p>' +
+          '</div>' +
+          '<div class="col30">' +
+          '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + color + '">' +
+          '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + opacity + '">' +
+          '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + weight + '">' +
+          '</div>' +
+          '</div>' +
+          '<p><input type="submit" id="save" value="OK">' +
+          '</div>';
+
+        infowindow.setPosition(event.latLng);
+        infowindow.setContent(infowindowDirections);
+        infowindow.open(map);
+
+        // Initialize autocomplete for directions_start and directions_end fields after infowindow is opened
+        google.maps.event.addListenerOnce(infowindow, 'domready', () => {
+          const startInput = document.getElementById('directions_start');
+          const endInput = document.getElementById('directions_end');
+          new google.maps.places.Autocomplete(startInput);
+          new google.maps.places.Autocomplete(endInput);
+        });
+
+      });
+    }
+    initDirections();
 
     const input = document.getElementById('address');
     const autocomplete = new google.maps.places.Autocomplete(input);
-
-    // OBJECTS LISTENERS
 
     // Map listeners
 
@@ -398,249 +650,9 @@ dotclear.ready(() => {
       }
     }
 
-    // Polyline listeners
-
-    google.maps.event.addListener(polyline, 'rightclick', (mev) => {
-      if (mev.vertex != null) {
-        polyline.getPath().removeAt(mev.vertex);
-      }
-    });
-
-    google.maps.event.addListener(polylinePath, 'insert_at', debounce(() => {
-      updatePolyline();
-    }, 250));
-
-    google.maps.event.addListener(polylinePath, 'remove_at', debounce(() => {
-      updatePolyline();
-    }, 250));
-
-    google.maps.event.addListener(polylinePath, 'set_at', debounce(() => {
-      updatePolyline();
-    }, 250));
-
-    google.maps.event.addListener(polyline, 'click', function (event) {
-      const infowindowPolyline =
-        '<div id="infowindow_polyline" class="col">' +
-        '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '"></p>' +
-        '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + this.strokeOpacity + '"></p>' +
-        '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + this.strokeWeight + '"></p>' +
-        '<p><input type="submit" id="save" value="OK"></p>' +
-        '</div>';
-      infowindow.setPosition(event.latLng);
-      infowindow.setContent(infowindowPolyline);
-      infowindow.open(map);
-
-    });
-
-    // Polygon listeners
-
-    google.maps.event.addListener(polygon, 'rightclick', (mev) => {
-      if (mev.vertex != null) {
-        polygon.getPath().removeAt(mev.vertex);
-      }
-    });
-
-    google.maps.event.addListener(polygonPath, 'insert_at', debounce(() => {
-      updatePolygon();
-    }, 250));
-
-    google.maps.event.addListener(polygonPath, 'remove_at', debounce(() => {
-      updatePolygon();
-    }, 250));
-
-    google.maps.event.addListener(polygonPath, 'set_at', debounce(() => {
-      updatePolygon();
-    }, 250));
-
-    google.maps.event.addListener(polygon, 'click', function (event) {
-      const infowindowPolygon =
-        '<div id="infowindow_polygon">' +
-        '<div class="two-boxes"' +
-        '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '"></p>' +
-        '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + this.strokeOpacity + '"></p>' +
-        '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + this.strokeWeight + '"></p>' +
-        '</div>' +
-        '<div class="two-boxes"' +
-        '<p><label for="fill_color">' + fill_color_msg + '</label><input type="text" id="fill_color" size="10" value="' + this.fillColor + '"></p>' +
-        '<p><label for="fill_opacity">' + fill_opacity_msg + '</label><input type="text" id="fill_opacity" size="10" value="' + this.fillOpacity + '"></p>' +
-        '</div>' +
-        '<p><input type="submit" id="save" value="OK"></p>' +
-        '</div>';
-      infowindow.setPosition(event.latLng);
-      infowindow.setContent(infowindowPolygon);
-      infowindow.open(map);
-
-    });
-
-    // Rectangle listeners
-
-
-    google.maps.event.addListener(rectangle, 'bounds_changed', debounce(() => {
-      updateRectangle();
-    }, 250));
-
-    google.maps.event.addListener(rectangle, 'dragend', debounce(() => {
-      updateRectangle();
-    }, 250));
-
-    google.maps.event.addListener(rectangle, 'click', function (event) {
-      const infowindowRectangle =
-        '<div id="infowindow_rectangle">' +
-        '<div class="two-boxes"' +
-        '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '"></p>' +
-        '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + this.strokeOpacity + '"></p>' +
-        '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + this.strokeWeight + '"></p>' +
-        '</div>' +
-        '<div class="two-boxes"' +
-        '<p><label for="fill_color">' + fill_color_msg + '</label><input type="text" id="fill_color" size="10" value="' + this.fillColor + '"></p>' +
-        '<p><label for="fill_opacity">' + fill_opacity_msg + '</label><input type="text" id="fill_opacity" size="10" value="' + this.fillOpacity + '"></p>' +
-        '</div>' +
-        '<p><input type="submit" id="save" value="OK"></p>' +
-        '</div>';
-      infowindow.setPosition(event.latLng);
-      infowindow.setContent(infowindowRectangle);
-      infowindow.open(map);
-    });
-
-    //Circle listeners
-
-    google.maps.event.addListener(circle, 'center_changed', debounce(() => {
-      updateCircle();
-    }, 250));
-
-    google.maps.event.addListener(circle, 'radius_changed', debounce(() => {
-      updateCircle();
-    }, 250));
-
-    google.maps.event.addListener(circle, 'click', function (event) {
-      const infowindowCircle =
-        '<div id="infowindow_circle">' +
-        '<div class="two-boxes"' +
-        '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + this.strokeColor + '"></p>' +
-        '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + this.strokeOpacity + '"></p>' +
-        '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + this.strokeWeight + '"></p>' +
-        '</div>' +
-        '<div class="two-boxes"' +
-        '<p><label for="fill_color">' + fill_color_msg + '</label><input type="text" id="fill_color" size="10" value="' + this.fillColor + '"></p>' +
-        '<p><label for="fill_opacity">' + fill_opacity_msg + '</label><input type="text" id="fill_opacity" size="10" value="' + this.fillOpacity + '"></p>' +
-        '<p><label for="circle_radius">' + circle_radius_msg + '</label><input type="text" id="circle_radius" size="10" value="' + this.radius + '"></p>' +
-        '</div>' +
-        '<p><input type="submit" id="save" value="OK"></p>' +
-        '</div>';
-      infowindow.setPosition(event.latLng);
-      infowindow.setContent(infowindowCircle);
-      infowindow.open(map);
-    });
-
-    //Kml listener
-
-    google.maps.event.addListener(kmlLayer, 'click', (event) => {
-      const myKmls = [];
-      if (document.getElementById("kmls_list").value != '') {
-        const kmls_base_url = document.getElementById("kmls_base_url").value;
-        const kmls_list = document.getElementById("kmls_list").value;
-        const kmls_array = kmls_list.split(',');
-        for (i in kmls_array) {
-          this_kml = `<li>${kmls_array[i]}</li>`;
-          myKmls.push(this_kml);
-        }
-      }
-
-      let custom_kmls = myKmls.join();
-      custom_kmls = `<ul>${custom_kmls.replace(/\,/g, '')}</ul>`;
-
-      if (myKmls != '') {
-        var has_custom_kmls = `<h4>${custom_kmls_msg}</h4>` +
-          '<div style="max-height: 100px;overflow: auto">' +
-          custom_kmls +
-          '</div>' +
-          '<hr>';
-      } else {
-        var has_custom_kmls = '';
-      }
-
-      const infowindowKml =
-        '<div id="infowindow_kml" style="cursor: pointer">' +
-        has_custom_kmls +
-        '<h4>' + kml_url_msg + '</h4>' +
-        '<p><input type="text" id="kml_url" size="80" value="' + document.getElementById('post_excerpt').value + '"></p>' +
-        '<p><input type="submit" id="save" value="OK"></p>' +
-        '</div>';
-      infowindow.setPosition(event.latLng);
-      infowindow.setContent(infowindowKml);
-      infowindow.open(map);
-    });
-
-    // GeoRSS listener
-
-    google.maps.event.addListener(geoRssLayer, 'click', (event) => {
-      const infowindowgeoRss =
-        '<div id="infowindow_georss" style="cursor: pointer">' +
-        '<h4>' + geoRss_url_msg + '</h4>' +
-        '<p><input type="text" id="geoRss_url" size="80" value="' + document.getElementById('post_excerpt').value + '"></p>' +
-        '<p><input type="submit" id="save" value="OK"></p>' +
-        '</div>';
-      infowindow.setPosition(event.latLng);
-      infowindow.setContent(infowindowgeoRss);
-      infowindow.open(map);
-    });
-
-    // directions listener
-
-    google.maps.event.addListener(polylinePath, 'set_at', debounce(() => {
-      updatePolyline();
-    }, 250));
-
-    google.maps.event.addListener(routePolyline, 'click', (event) => {
-      const parts = element_values.split("|");
-
-      const start = parts[0];
-      const end = parts[1];
-      const weight = parts[2];
-      const opacity = parts[3];
-      const color = parts[4];
-      const show = parts[5];
-
-      if (show == 'true') {
-        var state = 'checked = "checked"';
-      } else {
-        var state = '';
-      }
-
-      const infowindowDirections =
-        '<div id="infowindow_directions" style="cursor: pointer">' +
-        '<div class="two-cols clearfix">' +
-        '<div class="col70">' +
-        '<p><label for="directions_start">' + directions_start_msg + '</label><input type="text" id="directions_start" size="40" value="' + start + '"></p>' +
-        '<p><label for="directions_end">' + directions_end_msg + '</label><input type="text" id="directions_end" size="40" value="' + end + '"></p>' +
-        '<p><label for="directions_show"><input type="checkbox" id="directions_show" ' + state + '>' + directions_show_msg + '</label></p>' +
-        '</div>' +
-        '<div class="col30">' +
-        '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + color + '">' +
-        '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + opacity + '">' +
-        '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + weight + '">' +
-        '</div>' +
-        '</div>' +
-        '<p><input type="submit" id="save" value="OK">' +
-        '</div>';
-
-      infowindow.setPosition(event.latLng);
-      infowindow.setContent(infowindowDirections);
-      infowindow.open(map);
-
-      // Initialize autocomplete for directions_start and directions_end fields after infowindow is opened
-      google.maps.event.addListenerOnce(infowindow, 'domready', () => {
-        const startInput = document.getElementById('directions_start');
-        const endInput = document.getElementById('directions_end');
-        new google.maps.places.Autocomplete(startInput);
-        new google.maps.places.Autocomplete(endInput);
-      });
-
-    });
-
     // INFOWINDOW SETTINGS AND ACTIONS
 
-    var infowindow = new google.maps.InfoWindow({});
+    const infowindow = new google.maps.InfoWindow({});
 
     // Icons infowindow
 
@@ -658,21 +670,23 @@ dotclear.ready(() => {
     }
 
     let custom_icons = myIcons.join();
+    let has_custom_icons;
+
     custom_icons = custom_icons.replace(/\,/g, '');
 
-    var default_icons_url = document.getElementById("plugin_QmarkURL").value;
+    const default_icons_url = document.getElementById("plugin_QmarkURL").value;
 
     if (custom_icons != '') {
-      var has_custom_icons = `<h4>${custom_icons_msg}</h4>` +
+      has_custom_icons = `<h4>${custom_icons_msg}</h4>` +
         '<div id="custom_icons_list">' +
         custom_icons +
         '</div>' +
         '<hr>';
     } else {
-      var has_custom_icons = '';
+      has_custom_icons = '';
     }
 
-    var infowindowIcons =
+    const infowindowIcons =
       '<div id="infowindow_icons" style="cursor: pointer">' +
       has_custom_icons +
       '<div id="default_icons_list">' +
@@ -897,18 +911,18 @@ dotclear.ready(() => {
 
     // PLACE EXISTING ELEMENTS
 
-    var element_values = document.getElementById('post_excerpt').value;
-    const element_type = document.querySelector('input[name=element_type]').value;
+    let element_values = document.getElementById('post_excerpt').value;
+    let element_type = document.querySelector('input[name=element_type]').value;
 
 
     // Place existing marker if any
 
     if (element_type == 'point of interest') {
-      var parts = element_values.split("|");
-      var lat = parseFloat(parts[0]);
-      var lng = parseFloat(parts[1]);
+      const parts = element_values.split("|");
+      const lat = parseFloat(parts[0]);
+      const lng = parseFloat(parts[1]);
       const icon = parts[2];
-      var location = new google.maps.LatLng(lat, lng);
+      const location = new google.maps.LatLng(lat, lng);
       const Img = document.createElement('img');
       Img.src = icon;
       marker = new google.maps.marker.AdvancedMarkerElement({
@@ -937,20 +951,20 @@ dotclear.ready(() => {
       // Place existing polyline if any
 
     } else if (element_type == 'polyline') {
-      var lines = element_values.split("\n");
-      for (var i = 0; i < lines.length - 1; i++) {
-        var parts = lines[i].split("|");
-        var lat = parseFloat(parts[0]);
-        var lng = parseFloat(parts[1]);
-        var location = new google.maps.LatLng(lat, lng);
+      const lines = element_values.split("\n");
+      for (let i = 0; i < lines.length - 1; i++) {
+        const parts = lines[i].split("|");
+        const lat = parseFloat(parts[0]);
+        const lng = parseFloat(parts[1]);
+        const location = new google.maps.LatLng(lat, lng);
         polylinePath.push(location);
       }
 
       const polyline_options = lines.pop();
-      var parts = polyline_options.split("|");
-      var weight = parseFloat(parts[0]);
-      var opacity = parseFloat(parts[1]);
-      var color = parts[2];
+      const parts = polyline_options.split("|");
+      const weight = parseFloat(parts[0]);
+      const opacity = parseFloat(parts[1]);
+      const color = parts[2];
 
       polyline.setOptions({
         strokeColor: color,
@@ -966,22 +980,22 @@ dotclear.ready(() => {
       // Place existing polygon if any
 
     } else if (element_type == 'polygon') {
-      var lines = element_values.split("\n");
-      for (var i = 0; i < lines.length - 1; i++) {
-        var parts = lines[i].split("|");
-        var lat = parseFloat(parts[0]);
-        var lng = parseFloat(parts[1]);
-        var location = new google.maps.LatLng(lat, lng);
+      const lines = element_values.split("\n");
+      for (let i = 0; i < lines.length - 1; i++) {
+        const parts = lines[i].split("|");
+        const lat = parseFloat(parts[0]);
+        const lng = parseFloat(parts[1]);
+        const location = new google.maps.LatLng(lat, lng);
         polygonPath.push(location);
       }
 
       const polygon_options = lines.pop();
-      var parts = polygon_options.split("|");
-      var weight = parseFloat(parts[0]);
-      var opacity = parseFloat(parts[1]);
-      var color = parts[2];
-      var fill_color = parts[3];
-      var fill_opacity = parseFloat(parts[4]);
+      const parts = polygon_options.split("|");
+      const weight = parseFloat(parts[0]);
+      const opacity = parseFloat(parts[1]);
+      const color = parts[2];
+      const fill_color = parts[3];
+      const fill_opacity = parseFloat(parts[4]);
 
       polygon.setOptions({
         strokeColor: color,
@@ -999,9 +1013,9 @@ dotclear.ready(() => {
       // Place existing rectangle if any
 
     } else if (element_type == 'rectangle') {
-      var lines = element_values.split("\n");
+      const lines = element_values.split("\n");
 
-      var parts = lines[0].split("|");
+      const parts = lines[0].split("|");
       const swlat = parseFloat(parts[0]);
       const nelng = parseFloat(parts[1]);
       const nelat = parseFloat(parts[2]);
@@ -1012,12 +1026,12 @@ dotclear.ready(() => {
 
       rectangle.setBounds(bounds);
 
-      var parts2 = lines[1].split("|");
-      var weight = parseFloat(parts2[0]);
-      var opacity = parseFloat(parts2[1]);
-      var color = parts2[2];
-      var fill_color = parts2[3];
-      var fill_opacity = parseFloat(parts2[4]);
+      const parts2 = lines[1].split("|");
+      const weight = parseFloat(parts2[0]);
+      const opacity = parseFloat(parts2[1]);
+      const color = parts2[2];
+      const fill_color = parts2[3];
+      const fill_opacity = parseFloat(parts2[4]);
 
       rectangle.setOptions({
         strokeColor: color,
@@ -1033,20 +1047,20 @@ dotclear.ready(() => {
       // Place existing circle if any
 
     } else if (element_type == 'circle') {
-      var lines = element_values.split("\n");
+      const lines = element_values.split("\n");
 
-      var parts = lines[0].split("|");
-      var lat = parseFloat(parts[0]);
-      var lng = parseFloat(parts[1]);
+      const parts = lines[0].split("|");
+      const lat = parseFloat(parts[0]);
+      const lng = parseFloat(parts[1]);
       const radius = parseFloat(parts[2]);
-      var location = new google.maps.LatLng(lat, lng);
+      const location = new google.maps.LatLng(lat, lng);
 
-      var parts2 = lines[1].split("|");
-      var weight = parseFloat(parts2[0]);
-      var opacity = parseFloat(parts2[1]);
-      var color = parts2[2];
-      var fill_color = parts2[3];
-      var fill_opacity = parseFloat(parts2[4]);
+      const parts2 = lines[1].split("|");
+      const weight = parseFloat(parts2[0]);
+      const opacity = parseFloat(parts2[1]);
+      const color = parts2[2];
+      const fill_color = parts2[3];
+      const fill_opacity = parseFloat(parts2[4]);
 
       circle.setOptions({
         strokeColor: color,
@@ -1090,23 +1104,23 @@ dotclear.ready(() => {
       // Place existing directions if any
 
     } else if (element_type == 'directions') {
-      var parts = element_values.split("|");
+      const parts = element_values.split("|");
 
       const start = parts[0];
       const end = parts[1];
-      var weight = parts[2];
-      var opacity = parts[3];
-      var color = parts[4];
+      const weight = parts[2];
+      const opacity = parts[3];
+      const color = parts[4];
 
-      var polylineRendererOptions = {
+      const polylineRendererOptions = {
         strokeColor: color,
         strokeOpacity: opacity,
         strokeWeight: weight
-      }
+      };
 
-      var rendererOptions = {
+      const rendererOptions = {
         polylineOptions: polylineRendererOptions
-      }
+      };
 
       const request = {
         origin: start,
@@ -1246,8 +1260,8 @@ dotclear.ready(() => {
 
     function addKml(location) {
       const myKmls = [];
+      let has_custom_kmls;
       if (document.getElementById("kmls_list").value != '') {
-        const kmls_base_url = document.getElementById("kmls_base_url").value;
         const kmls_list = document.getElementById("kmls_list").value;
         const kmls_array = kmls_list.split(',');
         for (i in kmls_array) {
@@ -1260,13 +1274,13 @@ dotclear.ready(() => {
       custom_kmls = `<ul>${custom_kmls.replace(/\,/g, '')}</ul>`;
 
       if (myKmls != '') {
-        var has_custom_kmls = `<h4>${custom_kmls_msg}</h4>` +
+        has_custom_kmls = `<h4>${custom_kmls_msg}</h4>` +
           '<div style="max-height: 100px;overflow: auto">' +
           custom_kmls +
           '</div>' +
           '<hr>';
       } else {
-        var has_custom_kmls = '';
+        has_custom_kmls = '';
       }
 
       const infowindowKml =
@@ -1274,7 +1288,7 @@ dotclear.ready(() => {
         has_custom_kmls +
         '<h4>' + kml_url_msg + '</h4>' +
         '<p><input type="text" id="kml_url" size="80" value="' + document.getElementById('post_excerpt').value + '"></p>' +
-        '<p><input type="submit" id="save" value="OK"></p>' +
+        '<p><input type="button" id="save" value="OK"></p>' +
         '</div>';
       infowindow.setPosition(location);
       infowindow.setContent(infowindowKml);
@@ -1353,24 +1367,31 @@ dotclear.ready(() => {
 
       polyline.setOptions({});
       polyline.setMap(null);
+      initPolyline();
 
       polygon.setOptions({});
       polygon.setMap(null);
+      initPolygon();
 
       rectangle.setOptions({});
       rectangle.setMap(null);
+      initRectangle();
 
       circle.setOptions({});
       circle.setMap(null);
+      initCircle();
 
       kmlLayer.setOptions({});
       kmlLayer.setMap(null);
+      initkmlLayer();
 
       geoRssLayer.setOptions({});
       geoRssLayer.setMap(null);
+      initgeoRSSLayer();
 
       routePolyline.setMap(null);
       directionsDisplay.setMap(null);
+      initDirections();
 
       document.getElementById('element_type').value = '';
       document.getElementById('post_excerpt').value = '';

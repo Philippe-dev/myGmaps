@@ -57,7 +57,7 @@ dotclear.ready(() => {
 
 		const mapStylesList = document.getElementById('map_styles_list').value;
 		const styles_array = mapStylesList.split(',');
-		for (let i in styles_array) {
+		for (const i in styles_array) {
 			const value = styles_array[i].replace("_styles.js", "");
 			mapTypeIds.push(value);
 
@@ -116,7 +116,7 @@ dotclear.ready(() => {
 			maxZoom: 18
 		}));
 
-		for (let i in mapTypeIds) {
+		for (const i in mapTypeIds) {
 			if (i < 6) {
 				continue;
 			}
