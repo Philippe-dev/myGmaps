@@ -59,9 +59,10 @@ class FrontendTemplate
 
         $sOutput = <<<EOT
             <script>
+            'use strict';
             async function initMap() {
             const { Map } = await google.maps.importLibrary("maps");
-            const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+            const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");\n
             EOT;
 
         // Set map styles
@@ -141,14 +142,14 @@ class FrontendTemplate
                 $sStyleNiceName   = ucwords(preg_replace('/_/s', ' ', $sStyleName));
 
                 $sOutput .= <<<EOT
-                    let {$sStyleId} = {$sStyleDefinition};
-                    let {$sStyleName} = new google.maps.StyledMapType({$sStyleId},{name: "{$sStyleNiceName}"});\n
+                    const {$sStyleId} = {$sStyleDefinition};
+                    const {$sStyleName} = new google.maps.StyledMapType({$sStyleId},{name: "{$sStyleNiceName}"});\n
                     EOT;
             }
         }
 
         $sOutput .= <<<EOT
-            let myOptions = {
+            const myOptions = {
                 mapId: "map_{$sMapId}",
                 zoom: parseFloat({$sZoom}),
                 center: new google.maps.LatLng({$sCenter}),
@@ -158,7 +159,7 @@ class FrontendTemplate
                     mapTypeIds: ["{$sStyle}"]
                 }
             };
-            let map_{$sMapId} = new google.maps.Map(document.getElementById("map_canvas_{$sMapId}"), myOptions);\n
+            const map_{$sMapId} = new google.maps.Map(document.getElementById("map_canvas_{$sMapId}"), myOptions);\n
             EOT;
 
         if ($custom_style) {
@@ -168,8 +169,8 @@ class FrontendTemplate
                 EOT;
         } elseif ($custom_style == false && $sStyle == 'OpenStreetMap') {
             $sOutput .= <<<EOT
-                let credit = '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap Contributors</a>';
-                let creditNode = document.createElement('div');
+                const credit = '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap Contributors</a>';
+                const creditNode = document.createElement('div');
                 creditNode.id = 'credit-control';
                 creditNode.index = 1;
                 map_{$sMapId}.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(creditNode);
@@ -211,7 +212,7 @@ class FrontendTemplate
         }
 
         $sOutput .= <<<EOT
-            let infowindow_{$sMapId} = new google.maps.InfoWindow({});
+            const infowindow_{$sMapId} = new google.maps.InfoWindow({});
             google.maps.event.addListener(map_{$sMapId}, "click", function (event) {
                 infowindow_{$sMapId}.close();
             });\n
@@ -234,8 +235,8 @@ class FrontendTemplate
         $sType        = $aElementOptions['type'];
 
         $sOutput = <<<EOT
-            let title_{$sId} = "{$sTitle}";
-            let content_{$sId} = '{$sDescription}';\n
+            const title_{$sId} = "{$sTitle}";
+            const content_{$sId} = '{$sDescription}';\n
             EOT;
 
         if ($sType == 'point of interest') {
@@ -270,9 +271,9 @@ class FrontendTemplate
         $sIcon     = $aOptions['icon'];
 
         $sOutput = <<<EOT
-            let Img_{$sId} = document.createElement('img');
+            const Img_{$sId} = document.createElement('img');
             Img_{$sId}.src = "{$sIcon}";    
-            let marker_{$sId} = new google.maps.marker.AdvancedMarkerElement({
+            const marker_{$sId} = new google.maps.marker.AdvancedMarkerElement({
                 position: new google.maps.LatLng({$sPosition}),
                 content: Img_{$sId},
                 title: title_{$sId},
@@ -307,7 +308,7 @@ class FrontendTemplate
         $sPath = substr($sPath, 0, -1);
 
         $sOutput = <<<EOT
-            let polyline_$sId = new google.maps.Polyline({
+            const polyline_$sId = new google.maps.Polyline({
                 path: [{$sPath}],
                 strokeColor: "{$sStrokeColor}",
                 strokeOpacity: {$sStrokeOpacity},
@@ -315,7 +316,7 @@ class FrontendTemplate
             });
             polyline_$sId.setMap(map_{$sMapId});
             google.maps.event.addListener(polyline_$sId, "click", function(event) {
-                let pos = event.latLng;
+                const pos = event.latLng;
                 openpolyinfowindow(title_{$sId},content_{$sId},pos);
             });\n
             EOT;
@@ -346,7 +347,7 @@ class FrontendTemplate
         $sPath = substr($sPath, 0, -1);
 
         $sOutput = <<<EOT
-            let polygon_$sId = new google.maps.Polygon({
+            const polygon_$sId = new google.maps.Polygon({
                 path: [{$sPath}],
                 strokeColor: "{$sStrokeColor}",
                 strokeOpacity: {$sStrokeOpacity},
@@ -356,7 +357,7 @@ class FrontendTemplate
             });
             polygon_$sId.setMap(map_{$sMapId});
             google.maps.event.addListener(polygon_$sId, "click", function(event) {
-                let pos = event.latLng;
+                const pos = event.latLng;
                 openpolyinfowindow(title_{$sId},content_{$sId},pos);
             });\n
             EOT;
@@ -382,11 +383,11 @@ class FrontendTemplate
         $sFillOpacity   = $aOptions['fill_opacity'];
 
         $sOutput = <<<EOT
-            let bounds_{$sId} = new google.maps.LatLngBounds(
+            const bounds_{$sId} = new google.maps.LatLngBounds(
                 new google.maps.LatLng({$sBound1}),
                 new google.maps.LatLng({$sBound2})
             );
-            let rectangle_{$sId} = new google.maps.Rectangle({
+            const rectangle_{$sId} = new google.maps.Rectangle({
                 strokeColor: "{$sStrokeColor}",
                 strokeOpacity: {$sStrokeOpacity},
                 strokeWeight: {$sStrokeWeight},
@@ -396,7 +397,7 @@ class FrontendTemplate
             rectangle_{$sId}.setBounds(bounds_{$sId});
             rectangle_{$sId}.setMap(map_{$sMapId});
             google.maps.event.addListener(rectangle_{$sId}, "click", function(event) {
-                let pos = event.latLng;
+                const pos = event.latLng;
                 openpolyinfowindow(title_{$sId},content_{$sId},pos);
             });\n
             EOT;
@@ -422,7 +423,7 @@ class FrontendTemplate
         $sFillOpacity   = $aOptions['fill_opacity'];
 
         $sOutput = <<<EOT
-            let circle_{$sId} = new google.maps.Circle({
+            const circle_{$sId} = new google.maps.Circle({
                 center: new google.maps.LatLng({$sCenter}),
                 strokeColor: "{$sStrokeColor}",
                 strokeOpacity: {$sStrokeOpacity},
@@ -433,7 +434,7 @@ class FrontendTemplate
             });
             circle_{$sId}.setMap(map_{$sMapId});
             google.maps.event.addListener(circle_{$sId}, "click", function(event) {
-                let pos = event.latLng;
+                const pos = event.latLng;
                 openpolyinfowindow(title_{$sId},content_{$sId},pos);
             });\n
             EOT;
@@ -453,7 +454,7 @@ class FrontendTemplate
         $sId    = $aOptions['element_id'];
 
         $sOutput = <<<EOT
-            let layer_{$sId} = new google.maps.KmlLayer("{$sLayer}", {preserveViewport: true});
+            const layer_{$sId} = new google.maps.KmlLayer("{$sLayer}", {preserveViewport: true});
             layer_{$sId}.setMap(map_{$sMapId});\n
             EOT;
 
@@ -477,26 +478,26 @@ class FrontendTemplate
         $bDisplayDirection = $aOptions['display_direction'];
 
         $sOutput = <<<EOT
-            let routePolyline_$sId;
-            let routePolylineOptions_$sId = {
+            const routePolyline_$sId;
+            const routePolylineOptions_$sId = {
                 strokeColor: "{$sStrokeColor}",
                 strokeOpacity: parseFloat({$sStrokeOpacity}),
                 strokeWeight: parseFloat({$sStrokeWeight}),
                 zIndex: 1
             };
             routePolyline_$sId = new google.maps.Polyline(routePolylineOptions_$sId);
-            let routePolylinePath_$sId = routePolyline_$sId.getPath();
-            let directionsService_$sId = new google.maps.DirectionsService();
-            let polylineRendererOptions_$sId = {
+            const routePolylinePath_$sId = routePolyline_$sId.getPath();
+            const directionsService_$sId = new google.maps.DirectionsService();
+            const polylineRendererOptions_$sId = {
                 strokeColor: "{$sStrokeColor}",
                 strokeOpacity: parseFloat({$sStrokeOpacity}),
                 strokeWeight: parseFloat({$sStrokeWeight})
             }
-            let rendererOptions_$sId = {
+            const rendererOptions_$sId = {
                 polylineOptions_$sId: polylineRendererOptions_$sId
             }
-            let directionsDisplay_$sId = new google.maps.DirectionsRenderer(rendererOptions_$sId);
-            let request_$sId = {
+            const directionsDisplay_$sId = new google.maps.DirectionsRenderer(rendererOptions_$sId);
+            const request_$sId = {
                 origin: "{$sOrigin}",
                 destination: "{$sDestination}",
                 travelMode: google.maps.TravelMode.DRIVING
@@ -511,7 +512,7 @@ class FrontendTemplate
         $sOutput .= <<<EOT
             directionsService_$sId.route(request_$sId, function(result, status) {
                 if (status == google.maps.DirectionsStatus.OK) {
-                    let routePath = result.routes[0].overview_path;
+                    const routePath = result.routes[0].overview_path;
                     routePolyline_$sId.setPath(routePath);
                     directionsDisplay_$sId.setPanel(document.getElementById("panel_{$sMapId}"));
                     directionsDisplay_$sId.setOptions({options: rendererOptions_$sId});
@@ -523,7 +524,7 @@ class FrontendTemplate
                 }
             });
             google.maps.event.addListener(routePolyline_$sId, "click", function(event) {
-                let pos = event.latLng;
+                const pos = event.latLng;
                 openpolyinfowindow(title_{$sId},content_{$sId},pos);
             });\n
             EOT;

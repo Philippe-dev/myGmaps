@@ -1,3 +1,5 @@
+'use strict';
+
 dotclear.ready(() => {
 
   if (!document.getElementById) {
@@ -133,8 +135,8 @@ dotclear.ready(() => {
 
     const map_styles_list = document.getElementById('map_styles_list').value;
     const styles_array = map_styles_list.split(',');
-    for (i in styles_array) {
-      value = styles_array[i].replace("_styles.js", "");
+    for (const i in styles_array) {
+      const value = styles_array[i].replace("_styles.js", "");
       mapTypeIds.push(value);
 
       const user_style = dotclear.getData(value);
@@ -205,7 +207,7 @@ dotclear.ready(() => {
       maxZoom: 18
     }));
 
-    for (i in mapTypeIds) {
+    for (let i in mapTypeIds) {
       if (i < 6) {
         continue;
       }
@@ -215,7 +217,7 @@ dotclear.ready(() => {
 
     // Geocoding
 
-    geocoder = new google.maps.Geocoder();
+    const geocoder = new google.maps.Geocoder();
 
     function geocode() {
       const address = document.getElementById("address").value;
@@ -242,6 +244,7 @@ dotclear.ready(() => {
 
     let markersArray = [];
     let vertexArray = [];
+    let marker;
 
     //initialize polyline
     let polyline;
@@ -448,7 +451,7 @@ dotclear.ready(() => {
           const kmls_base_url = document.getElementById("kmls_base_url").value;
           const kmls_list = document.getElementById("kmls_list").value;
           const kmls_array = kmls_list.split(',');
-          for (i in kmls_array) {
+          for (const i in kmls_array) {
             this_kml = `<li>${kmls_array[i]}</li>`;
             myKmls.push(this_kml);
           }
@@ -662,7 +665,7 @@ dotclear.ready(() => {
       const icons_base_url = document.getElementById("icons_base_url").value;
       const icons_list = document.getElementById("icons_list").value;
       const icons_array = icons_list.split(',');
-      for (i in icons_array) {
+      for (const i in icons_array) {
         const iconElement = document.createElement('img');
         iconElement.src = `${icons_base_url}${icons_array[i]}`;
         iconElement.alt = icons_array[i];
@@ -1265,8 +1268,8 @@ dotclear.ready(() => {
       if (document.getElementById("kmls_list").value != '') {
         const kmls_list = document.getElementById("kmls_list").value;
         const kmls_array = kmls_list.split(',');
-        for (i in kmls_array) {
-          this_kml = `<li>${kmls_array[i]}</li>`;
+        for (const i in kmls_array) {
+          const this_kml = `<li>${kmls_array[i]}</li>`;
           myKmls.push(this_kml);
         }
       }
@@ -1359,7 +1362,7 @@ dotclear.ready(() => {
 
       document.getElementById("delete_map").disabled = true;
 
-      for (i in markersArray) {
+      for (const i in markersArray) {
         markersArray[i].setMap(null);
       }
 

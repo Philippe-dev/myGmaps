@@ -1,3 +1,5 @@
+'use strict';
+
 dotclear.ready(() => {
 
 	if (!document.getElementById) {
@@ -57,8 +59,8 @@ dotclear.ready(() => {
 
 		const map_styles_list = document.getElementById('map_styles_list').value;
 		const styles_array = map_styles_list.split(',');
-		for (let i in styles_array) {
-			let value = styles_array[i].replace("_styles.js", "");
+		for (const i in styles_array) {
+			const value = styles_array[i].replace("_styles.js", "");
 			mapTypeIds.push(value);
 
 			const user_style = dotclear.getData(value);
@@ -129,15 +131,15 @@ dotclear.ready(() => {
 			maxZoom: 18
 		}));
 
-		for (let i in mapTypeIds) {
+		for (const i in mapTypeIds) {
 			if (i < 6) {
 				continue;
 			}
-			let value = window[mapTypeIds[i]];
+			const value = window[mapTypeIds[i]];
 			map_add.mapTypes.set(mapTypeIds[i], value);
 		}
 
-		geocoder = new google.maps.Geocoder();
+		const geocoder = new google.maps.Geocoder();
 
 		const input = document.getElementById('address');
 		const autocomplete = new google.maps.places.Autocomplete(input);
