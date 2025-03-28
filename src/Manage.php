@@ -33,7 +33,8 @@ use Dotclear\Helper\Html\Form\Label;
 use Dotclear\Helper\Html\Form\Legend;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Note;
-use Dotclear\Helper\Text;
+use Dotclear\Helper\Html\Form\Text;
+
 
 class Manage extends Process
 {
@@ -275,7 +276,7 @@ class Manage extends Process
         // Config tab
 
         echo
-        (new Div('add-link'))
+        (new Div('parameters'))
             ->class('multi-part')
             ->title(__('Parameters'))
             ->items([
@@ -285,23 +286,42 @@ class Manage extends Process
                     ->fields([
                         (new Fieldset())->class('fieldset')->legend((new Legend(__('Activation'))))->fields([
                             (new Para())->items([
-                                (new Checkbox('myGmaps_enabled', My::settings()->active))->value(1),
+                                (new Checkbox('myGmaps_enabled', (bool) My::settings()->myGmaps_enabled)) ,
                                 (new Label(__('Enable extension for this blog'), Label::OUTSIDE_LABEL_AFTER))->for('myGmaps_enabled')->class('classic'),
                             ]),
                         ]),
                         (new Fieldset())->class('fieldset')->legend((new Legend(__('API key'))))->fields([
                             (new Para())->items([
+                                (new Input('recipients'))
+                                    ->class('maximal')
+                                    ->size(80)
+                                    ->maxlength(255)
+                                    ->value(My::settings()->myGmaps_API_key)
+                                    ->required(true)
+                                    ->placeholder(__('API key'))
+                                    ->label((new Label(
+                                        (new Text('abbr', '*'))->title(__('Required field'))->render() . __('Google Maps Javascript browser API key:'),
+                                        Label::INSIDE_TEXT_BEFORE
+                                    ))->id('myGmaps_API_key')->class('required')->title(__('Required field'))),
+                            ]),
+                        ]),
+                        (new Fieldset())->class('fieldset')->legend((new Legend(__('Default map options'))))->fields([
+                            (new Para())->items([
                                 (new Input('myGmaps_API_key'))
-                                ->size(30)
-                                ->maxlength(255)
-                                ->value(Html::escapeHTML(App::backend()->link_title))
-                                ->required(true)                                
-                                ->title(__('Required field')),
-                                (new Label(__('Google Maps Javascript browser API key:'), Label::OUTSIDE_LABEL_AFTER))->for('myGmaps_API_key')->class('classic'),
+                                    ->class('maximal')
+                                    ->size(80)
+                                    ->maxlength(255)
+                                    ->value(My::settings()->myGmaps_API_key)
+                                    ->required(true)
+                                    ->placeholder(__('API key'))
+                                    ->label((new Label(
+                                        (new Text('abbr', '*'))->title(__('Required field'))->render() . __('Google Maps Javascript browser API key:'),
+                                        Label::INSIDE_TEXT_BEFORE
+                                    ))->id('myGmaps_API_key')->class('required')->title(__('Required field'))),
                             ]),
                         ]),
                     ]),
-        ])->render();
+        ]           )->render();
 
         /*echo
         '<div class="multi-part" id="parameters" title="' . __('Parameters') . '">' .
