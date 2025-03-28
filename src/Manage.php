@@ -38,7 +38,6 @@ use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Form\Submit;
 use Dotclear\Helper\Html\Form\Link;
 
-
 class Manage extends Process
 {
     /**
@@ -289,7 +288,7 @@ class Manage extends Process
                     ->fields([
                         (new Fieldset())->class('fieldset')->legend((new Legend(__('Activation'))))->fields([
                             (new Para())->items([
-                                (new Checkbox('myGmaps_enabled', (bool) My::settings()->myGmaps_enabled)) ,
+                                (new Checkbox('myGmaps_enabled', (bool) My::settings()->myGmaps_enabled)),
                                 (new Label(__('Enable extension for this blog'), Label::OUTSIDE_LABEL_AFTER))->for('myGmaps_enabled')->class('classic'),
                             ]),
                         ]),
@@ -307,11 +306,11 @@ class Manage extends Process
                                         Label::OUTSIDE_TEXT_BEFORE
                                     ))
                                     ->id('myGmaps_API_key')->class('required')->title(__('Required field'))),
-                                    (My::settings()->myGmaps_API_key == 'AIzaSyCUgB8ZVQD88-T4nSgDlgVtH5fm0XcQAi8' ?
-                                        (new Text('span', __('You are currently using a <em>shared</em> API key. To avoid map display restrictions on your blog, use your own API key.')))
-                                            ->class('warn') :
-                                        (new None())),
-                                    ]),
+                                (My::settings()->myGmaps_API_key == 'AIzaSyCUgB8ZVQD88-T4nSgDlgVtH5fm0XcQAi8' ?
+                                    (new Text('span', __('You are currently using a <em>shared</em> API key. To avoid map display restrictions on your blog, use your own API key.')))
+                                        ->class('warn') :
+                                    (new None())),
+                            ]),
                         ]),
                         (new Fieldset())->class('fieldset')->legend((new Legend(__('Default map options'))))->fields([
                             (new Div())->class('map_toolbar')->items([
@@ -322,9 +321,9 @@ class Manage extends Process
                                     ->maxlength(255)
                                     ->class('qx'),
                                 (new Input('geocode'))
-                                ->type('submit')    
+                                ->type('submit')
                                 ->value(__('OK')),
-                               
+
                             ]),
                             (new Para())
                                 ->class('area')
@@ -349,8 +348,8 @@ class Manage extends Process
                                     ->type('hidden')
                                     ->value($map_styles_base_url),
                                 (new Para())->items([
-                                (new Submit(['saveconfig']))
-                                    ->value(__('Save configuration')),
+                                    (new Submit(['saveconfig']))
+                                        ->value(__('Save configuration')),
                                     ... My::hiddenFields(),
                                 ]),
                             ]),
@@ -371,15 +370,19 @@ class Manage extends Process
                 ->class('top-add')
                 ->items([
                     new Text(
-                        null,                        
+                        null,
                         (new Link())
                         ->class('button add')
                         ->href(My::manageUrl() . '&act=map')
-                        ->text(__('New element'))->render()                       
-                    ) 
-                ]): (new None())),       
+                        ->text(__('New element'))->render()
+                    ),
+                ]) : (new None())),
             ])
         ->render();
+
+        App::backend()->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="' . My::id() . '"><input type="hidden" name="tab" value="entries-list">');
+
+        # Show posts
         
 
         /*'<div class="multi-part" id="entries-list" title="' . __('Map elements') . '">';
