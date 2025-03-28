@@ -57,7 +57,7 @@ class Manage extends Process
 
         // Actions
         // -------
-        App::backend()->posts_actions_page = new ActionsPosts(App::backend()->url()->get('admin.posts'));
+        App::backend()->posts_actions_page = new ActionsPosts(App::backend()->url()->get('admin.plugin.' . My::id()));
         if (App::backend()->posts_actions_page->process()) {
             return self::status(false);
         }
@@ -96,7 +96,7 @@ class Manage extends Process
             $posts   = App::blog()->getPosts($params);
             $counter = App::blog()->getPosts($params, true);
 
-            App::backend()->post_list = new ListingPosts($posts, $counter->f(0));
+            App::backend()->post_list = new BackendList($posts, $counter->f(0));
         } catch (Exception $e) {
             App::error()->add($e->getMessage());
         }
@@ -234,18 +234,10 @@ class Manage extends Process
 
         // Actions
 
-        App::backend()->posts_actions_page = new ActionsPosts(App::backend()->url()->get('admin.plugin.' . My::id()));
+        App::backend()->posts_actions_page = new BackendActions(App::backend()->url()->get('admin.plugin.' . My::id()));
         if (App::backend()->posts_actions_page->process()) {
             return;
         }
-
-        // Filters
-
-        App::backend()->post_filter = new FilterPosts();
-
-        // Get list params
-
-        $params = App::backend()->post_filter->params();
 
         App::backend()->posts      = null;
         App::backend()->posts_list = null;
@@ -429,8 +421,19 @@ class Manage extends Process
             ])
         ->render();
 
-        App::backend()->post_filter->display('admin.plugin.' . My::id());
-        //'<input type="hidden" name="p" value="' . My::id() . '"><input type="hidden" name="tab" value="entries-list">');
+        $block = (new Para())
+                    ->items([
+                        (new Input('tab'))
+                            ->type('hidden')
+                            ->value('entries-list'),
+                        (new Input('p'))
+                            ->type('hidden')
+                            ->value(My::id()),
+                    ])
+                    ->render();
+
+
+        App::backend()->post_filter->display('admin.plugin.' . My::id(),$block);
 
         # Show posts
 
