@@ -15,16 +15,25 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\myGmaps;
 
 use Dotclear\App;
-use Dotclear\Core\Process;
 use Dotclear\Core\Backend\UserPref;
-use Dotclear\Core\Backend\Page;
-use Dotclear\Core\Backend\Notices;
 use Exception;
-use form;
 use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
 use Dotclear\Core\Backend\Filter\FilterPosts;
+use Dotclear\Core\Backend\Notices;
+use Dotclear\Core\Process;
+use Dotclear\Core\Backend\Page;
+use Dotclear\Helper\Html\Form\Form;
+use Dotclear\Helper\Html\Form\Checkbox;
+use Dotclear\Helper\Html\Form\Div;
+use Dotclear\Helper\Html\Form\Fieldset;
+use Dotclear\Helper\Html\Form\Input;
+use Dotclear\Helper\Html\Form\Label;
+use Dotclear\Helper\Html\Form\Legend;
+use Dotclear\Helper\Html\Form\Para;
+use Dotclear\Helper\Html\Form\Note;
+use Dotclear\Helper\Text;
 
 class Manage extends Process
 {
@@ -242,7 +251,7 @@ class Manage extends Process
             $style_script .
             Page::jsLoad('js/_posts_list.js') .
             Page::jsMetaEditor() .
-            App::backend()->post_filter->js(App::backend()->url()->get('admin.plugin'). '&p=' . My::id() . '#entries-list') .
+            App::backend()->post_filter->js(App::backend()->url()->get('admin.plugin') . '&p=' . My::id() . '#entries-list') .
             Page::jsPageTabs(App::backend()->default_tab) .
             Page::jsConfirmClose('config-form') .
             My::jsLoad('config.map.min.js') .
@@ -266,6 +275,35 @@ class Manage extends Process
         // Config tab
 
         echo
+        (new Div('add-link'))
+            ->class('multi-part')
+            ->title(__('Parameters'))
+            ->items([
+                (new Form('config-form'))
+                    ->method('post')
+                    ->action(My::manageUrl())
+                    ->fields([
+                        (new Fieldset())->class('fieldset')->legend((new Legend(__('Activation'))))->fields([
+                            (new Para())->items([
+                                (new Checkbox('myGmaps_enabled', My::settings()->active))->value(1),
+                                (new Label(__('Enable extension for this blog'), Label::OUTSIDE_LABEL_AFTER))->for('myGmaps_enabled')->class('classic'),
+                            ]),
+                        ]),
+                        (new Fieldset())->class('fieldset')->legend((new Legend(__('API key'))))->fields([
+                            (new Para())->items([
+                                (new Input('myGmaps_API_key'))
+                                ->size(30)
+                                ->maxlength(255)
+                                ->value(Html::escapeHTML(App::backend()->link_title))
+                                ->required(true)                                
+                                ->title(__('Required field')),
+                                (new Label(__('Google Maps Javascript browser API key:'), Label::OUTSIDE_LABEL_AFTER))->for('myGmaps_API_key')->class('classic'),
+                            ]),
+                        ]),
+                    ]),
+        ])->render();
+
+        /*echo
         '<div class="multi-part" id="parameters" title="' . __('Parameters') . '">' .
         '<form method="post" action="' . My::manageUrl() . '" id="config-form">' .
         '<div class="fieldset"><h3>' . __('Activation') . '</h3>' .
@@ -334,7 +372,7 @@ class Manage extends Process
         );
 
         echo
-        '</div>';
+        '</div>';*/
 
         Page::helpBlock('myGmaps');
         Page::closeModule();
