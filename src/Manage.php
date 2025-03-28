@@ -33,6 +33,7 @@ use Dotclear\Helper\Html\Form\Label;
 use Dotclear\Helper\Html\Form\Legend;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Note;
+use Dotclear\Helper\Html\Form\None;
 use Dotclear\Helper\Html\Form\Text;
 
 
@@ -290,21 +291,6 @@ class Manage extends Process
                                 (new Label(__('Enable extension for this blog'), Label::OUTSIDE_LABEL_AFTER))->for('myGmaps_enabled')->class('classic'),
                             ]),
                         ]),
-                        (new Fieldset())->class('fieldset')->legend((new Legend(__('API key'))))->fields([
-                            (new Para())->items([
-                                (new Input('recipients'))
-                                    ->class('maximal')
-                                    ->size(80)
-                                    ->maxlength(255)
-                                    ->value(My::settings()->myGmaps_API_key)
-                                    ->required(true)
-                                    ->placeholder(__('API key'))
-                                    ->label((new Label(
-                                        (new Text('abbr', '*'))->title(__('Required field'))->render() . __('Google Maps Javascript browser API key:'),
-                                        Label::INSIDE_TEXT_BEFORE
-                                    ))->id('myGmaps_API_key')->class('required')->title(__('Required field'))),
-                            ]),
-                        ]),
                         (new Fieldset())->class('fieldset')->legend((new Legend(__('Default map options'))))->fields([
                             (new Para())->items([
                                 (new Input('myGmaps_API_key'))
@@ -318,7 +304,12 @@ class Manage extends Process
                                         (new Text('abbr', '*'))->title(__('Required field'))->render() . __('Google Maps Javascript browser API key:'),
                                         Label::INSIDE_TEXT_BEFORE
                                     ))->id('myGmaps_API_key')->class('required')->title(__('Required field'))),
-                            ]),
+                                    (new Text(null, '')),
+                                    (My::settings()->myGmaps_API_key == 'AIzaSyCUgB8ZVQD88-T4nSgDlgVtH5fm0XcQAi8' ?
+                                        (new Text('span', __('You are currently using a <em>shared</em> API key. To avoid map display restrictions on your blog, use your own API key.')))
+                                            ->class('warn') :
+                                        (new None())),
+                                    ]),
                         ]),
                     ]),
         ]           )->render();
