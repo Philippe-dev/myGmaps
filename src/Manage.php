@@ -330,7 +330,6 @@ class Manage extends Process
                                 ->id('map_canvas'),
                             (new Note())
                                 ->class('form-note info maximal mapinfo')
-                                ->style('width: 100%')
                                 ->text(__('Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls.')),
                             (new Para())->items([
                                 (new Input('myGmaps_center'))
