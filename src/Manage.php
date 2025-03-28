@@ -35,6 +35,7 @@ use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Note;
 use Dotclear\Helper\Html\Form\None;
 use Dotclear\Helper\Html\Form\Text;
+use Dotclear\Helper\Html\Form\Submit;
 
 
 class Manage extends Process
@@ -305,7 +306,6 @@ class Manage extends Process
                                         Label::OUTSIDE_TEXT_BEFORE
                                     ))
                                     ->id('myGmaps_API_key')->class('required')->title(__('Required field'))),
-                                    (new Text()),
                                     (My::settings()->myGmaps_API_key == 'AIzaSyCUgB8ZVQD88-T4nSgDlgVtH5fm0XcQAi8' ?
                                         (new Text('span', __('You are currently using a <em>shared</em> API key. To avoid map display restrictions on your blog, use your own API key.')))
                                             ->class('warn') :
@@ -313,7 +313,47 @@ class Manage extends Process
                                     ]),
                         ]),
                         (new Fieldset())->class('fieldset')->legend((new Legend(__('Default map options'))))->fields([
-
+                            (new Div())->class('map_toolbar')->items([
+                                (new Text('span', __('Search:')))->class('search'),
+                                (new Text('span', '&nbsp;'))->class('map_spacer'),
+                                (new Input('address'))
+                                    ->size(50)
+                                    ->maxlength(255)
+                                    ->class('qx'),
+                                (new Input('geocode'))
+                                ->type('submit')    
+                                ->value(__('OK')),
+                               
+                            ]),
+                            (new Para())
+                                ->class('area')
+                                ->id('map_canvas'),
+                            (new Note())
+                                ->class('form-note info maximal mapinfo')
+                                ->style('width: 100%')
+                                ->text(__('Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls.')),
+                            (new Para())->items([
+                                (new Input('myGmaps_center'))
+                                    ->type('hidden')
+                                    ->value(My::settings()->myGmaps_center),
+                                (new Input('myGmaps_zoom'))
+                                    ->type('hidden')
+                                    ->value(My::settings()->myGmaps_zoom),
+                                (new Input('myGmaps_type'))
+                                    ->type('hidden')
+                                    ->value(My::settings()->myGmaps_type),
+                                (new Input('map_styles_list'))
+                                    ->type('hidden')
+                                    ->value($map_styles_list),
+                                (new Input('map_styles_base_url'))
+                                    ->type('hidden')
+                                    ->value($map_styles_base_url),
+                                (new Para())->items([
+                                (new Submit(['saveconfig']))
+                                    ->value(__('Save configuration')),
+                                    ... My::hiddenFields(),
+                                ]),
+                            ]),
                         ]),
                     ]),
             ])
