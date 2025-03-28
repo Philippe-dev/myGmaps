@@ -21,6 +21,7 @@ use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
 use Dotclear\Core\Backend\Filter\FilterPosts;
+use Dotclear\Core\Backend\Listing\ListingPosts;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Process;
 use Dotclear\Core\Backend\Page;
@@ -37,6 +38,7 @@ use Dotclear\Helper\Html\Form\None;
 use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Form\Submit;
 use Dotclear\Helper\Html\Form\Link;
+use Dotclear\Helper\Html\Form\Select;
 
 class Manage extends Process
 {
@@ -51,6 +53,52 @@ class Manage extends Process
             self::status(($_REQUEST['act'] ?? 'list') === 'map' ? ManageMap::init() : true);
         } elseif (isset($_REQUEST['act']) && $_REQUEST['act'] === 'maps') {
             self::status(($_REQUEST['act'] ?? 'list') === 'maps' ? ManageMaps::init() : true);
+        }
+
+        // Actions
+        // -------
+        App::backend()->posts_actions_page = new ActionsPosts(App::backend()->url()->get('admin.posts'));
+        if (App::backend()->posts_actions_page->process()) {
+            return self::status(false);
+        }
+
+        // Filters
+        // -------
+        App::backend()->post_filter = new FilterPosts();
+
+        // get list params
+        $params = App::backend()->post_filter->params();
+
+        // lexical sort
+        $sortby_lex = [
+            // key in sorty_combo (see above) => field in SQL request
+            'post_title' => 'post_title',
+            'cat_title'  => 'cat_title',
+            'user_id'    => 'P.user_id', ];
+
+        # --BEHAVIOR-- adminPostsSortbyLexCombo -- array<int,array<string,string>>
+        App::behavior()->callBehavior('adminPostsSortbyLexCombo', [&$sortby_lex]);
+
+        $params['order'] = (array_key_exists(App::backend()->post_filter->sortby, $sortby_lex) ?
+            App::con()->lexFields($sortby_lex[App::backend()->post_filter->sortby]) :
+            App::backend()->post_filter->sortby) . ' ' . App::backend()->post_filter->order;
+
+        $params['no_content'] = true;
+
+        // List
+        // ----
+        App::backend()->post_list = null;
+
+        try {
+            $params['no_content'] = true;
+            $params['post_type']  = 'map';
+
+            $posts   = App::blog()->getPosts($params);
+            $counter = App::blog()->getPosts($params, true);
+
+            App::backend()->post_list = new ListingPosts($posts, $counter->f(0));
+        } catch (Exception $e) {
+            App::error()->add($e->getMessage());
         }
 
         return self::status();
@@ -377,13 +425,51 @@ class Manage extends Process
                         ->text(__('New element'))->render()
                     ),
                 ]) : (new None())),
+
             ])
         ->render();
 
-        App::backend()->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="' . My::id() . '"><input type="hidden" name="tab" value="entries-list">');
+        App::backend()->post_filter->display('admin.plugin.' . My::id());
+        //'<input type="hidden" name="p" value="' . My::id() . '"><input type="hidden" name="tab" value="entries-list">');
 
         # Show posts
-        
+
+        $combo = App::backend()->posts_actions_page->getCombo();
+        if (is_array($combo)) {
+            $block = (new Form('form-entries'))
+                ->method('post')
+                ->action(My::manageUrl())
+                ->fields([
+                    (new Text(null, '%s')), // Here will go the posts list
+                    (new Div())
+                        ->class('two-cols')
+                        ->items([
+                            (new Para())->class(['col', 'checkboxes-helpers']),
+                            (new Para())
+                                ->class(['col', 'right', 'form-buttons'])
+                                ->items([
+                                    (new Select('action'))
+                                        ->items($combo)
+                                        ->label(new Label(__('Selected entries action:'), Label::IL_TF)),
+                                    (new Submit('do-action', __('ok')))
+                                        ->disabled(true),
+                                    App::nonce()->formNonce(),
+                                    ... App::backend()->url()->hiddenFormFields('admin.plugin.' . My::id(), App::backend()->post_filter->values()),
+                                ]),
+                        ]),
+                ])
+            ->render();
+        } else {
+            $block = (new Text(null, '%s'))
+            ->render();
+        }
+
+        App::backend()->post_list->display(
+            App::backend()->post_filter->page,
+            App::backend()->post_filter->nb,
+            $block,
+            App::backend()->post_filter->show()
+        );
 
         /*'<div class="multi-part" id="entries-list" title="' . __('Map elements') . '">';
 
