@@ -21,7 +21,6 @@ use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
 use Dotclear\Core\Backend\Filter\FilterPosts;
-use Dotclear\Core\Backend\Listing\ListingPosts;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Process;
 use Dotclear\Core\Backend\Page;
@@ -87,16 +86,14 @@ class Manage extends Process
 
         // List
         // ----
-        App::backend()->post_list = null;
 
         try {
             $params['no_content'] = true;
             $params['post_type']  = 'map';
 
-            $posts   = App::blog()->getPosts($params);
-            $counter = App::blog()->getPosts($params, true);
-
-            App::backend()->post_list = new BackendList($posts, $counter->f(0));
+            App::backend()->posts      = App::blog()->getPosts($params);
+            App::backend()->counter    = App::blog()->getPosts($params, true);
+            App::backend()->posts_list = new BackendList(App::backend()->posts, App::backend()->counter->f(0));
         } catch (Exception $e) {
             App::error()->add($e->getMessage());
         }
@@ -159,22 +156,11 @@ class Manage extends Process
         $params['no_content'] = true;
         $params['order']      = 'post_title ASC';
 
-        App::backend()->posts_list = null;
-
-        try {
-            $pages   = App::blog()->getPosts($params);
-            $counter = App::blog()->getPosts($params, true);
-
-            App::backend()->posts_list = new BackendList($pages, $counter->f(0));
-        } catch (Exception $e) {
-            App::error()->add($e->getMessage());
-        }
-
         // Actions combo box
-        App::backend()->pages_actions_page          = new BackendActions(App::backend()->url()->get('admin.plugin'), ['p' => 'myGmaps','tab' => 'entries-list']);
-        App::backend()->pages_actions_page_rendered = null;
-        if (App::backend()->pages_actions_page->process()) {
-            App::backend()->pages_actions_page_rendered = true;
+        App::backend()->posts_actions_page          = new BackendActions(App::backend()->url()->get('admin.plugin'), ['p' => 'myGmaps','tab' => 'entries-list']);
+        App::backend()->posts_actions_page_rendered = null;
+        if (App::backend()->posts_actions_page->process()) {
+            App::backend()->posts_actions_page_rendered = true;
         }
 
         return true;
@@ -199,8 +185,8 @@ class Manage extends Process
             return;
         }
 
-        if (App::backend()->pages_actions_page_rendered) {
-            App::backend()->pages_actions_page->render();
+        if (App::backend()->posts_actions_page_rendered) {
+            App::backend()->posts_actions_page->render();
 
             return;
         }
@@ -239,9 +225,6 @@ class Manage extends Process
             return;
         }
 
-        App::backend()->posts      = null;
-        App::backend()->posts_list = null;
-
         App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
         App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
 
@@ -254,16 +237,6 @@ class Manage extends Process
         }
 
         // Get map elements
-
-        try {
-            $params['no_content']      = true;
-            $params['post_type']       = 'map';
-            App::backend()->posts      = App::blog()->getPosts($params);
-            App::backend()->counter    = App::blog()->getPosts($params, true);
-            App::backend()->posts_list = new BackendList(App::backend()->posts, App::backend()->counter->f(0));
-        } catch (Exception $e) {
-            App::error()->add($e->getMessage());
-        }
 
         $starting_script = '<script>' . "\n" .
             '(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({' . "\n" .
@@ -426,14 +399,10 @@ class Manage extends Process
                         (new Input('tab'))
                             ->type('hidden')
                             ->value('entries-list'),
-                        (new Input('p'))
-                            ->type('hidden')
-                            ->value(My::id()),
                     ])
                     ->render();
 
-
-        App::backend()->post_filter->display('admin.plugin.' . My::id(),$block);
+        App::backend()->post_filter->display('admin.plugin.' . My::id(), $block);
 
         # Show posts
 
@@ -467,45 +436,12 @@ class Manage extends Process
             ->render();
         }
 
-        App::backend()->post_list->display(
+        App::backend()->posts_list->display(
             App::backend()->post_filter->page,
             App::backend()->post_filter->nb,
             $block,
             App::backend()->post_filter->show()
         );
-
-        /*'<div class="multi-part" id="entries-list" title="' . __('Map elements') . '">';
-
-        if (My::settings()->myGmaps_enabled) {
-            echo '<p class="top-add"><strong><a class="button add" href="' . My::manageUrl() . '&act=map">' . __('New element') . '</a></strong></p>';
-        }
-
-        App::backend()->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="' . My::id() . '"><input type="hidden" name="tab" value="entries-list">');
-
-        // Show posts
-        App::backend()->posts_list->display(
-            App::backend()->post_filter->page,
-            App::backend()->post_filter->nb,
-            '<form action="' . My::manageUrl() . '" method="post" id="form-entries">' .
-
-            '%s' .
-
-            '<div class="two-cols">' .
-            '<p class="col checkboxes-helpers"></p>' .
-
-            // Actions
-            '<p class="col right"><label for="action" class="classic">' . __('Selected entries action:') . '</label> ' .
-            form::combo('action', App::backend()->posts_actions_page->getCombo()) .
-            '<input id="do-action" type="submit" value="' . __('ok') . '" disabled></p>' .
-            App::backend()->url()->getHiddenFormFields('admin.plugin.' . My::id(), App::backend()->post_filter->values()) .
-            App::nonce()->getFormNonce() . '</p>' .
-            '</div>' .
-            '</form>',
-            App::backend()->post_filter->show()
-        );
-
-        echo
-        '</div>';*/
 
         Page::helpBlock('myGmaps');
         Page::closeModule();
