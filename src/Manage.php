@@ -303,15 +303,45 @@ class Manage extends Process
 
         // Map elements list tab
 
+<<<<<<< Updated upstream
         '<div class="multi-part" id="entries-list" title="' . __('Map elements') . '">';
+=======
+        
+>>>>>>> Stashed changes
 
         if (My::settings()->myGmaps_enabled) {
             echo '<p class="top-add"><strong><a class="button add" href="' . My::manageUrl() . '&act=map">' . __('New element') . '</a></strong></p>';
         }
 
+<<<<<<< Updated upstream
         App::backend()->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="' . My::id() . '"><input type="hidden" name="tab" value="entries-list">');
 
         // Show posts
+=======
+        
+        echo
+        (new Div('entries-list'))
+            ->class('multi-part')
+            ->title(__('Map elements'))
+            ->items([
+                (My::settings()->myGmaps_enabled ?
+                (new Para())
+                ->class('top-add')
+                ->items([
+                    new Text(
+                        null,
+                        (new Link())
+                        ->class('button add')
+                        ->href(My::manageUrl() . '&act=map')
+                        ->text(__('New element'))->render()
+                    ),
+                ]) : (new None())),
+                
+            ])
+        ->render();
+
+
+>>>>>>> Stashed changes
         App::backend()->posts_list->display(
             App::backend()->post_filter->page,
             App::backend()->post_filter->nb,
