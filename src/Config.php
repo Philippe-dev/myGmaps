@@ -15,16 +15,11 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\myGmaps;
 
 use Dotclear\App;
-use Dotclear\Core\Backend\UserPref;
 use Exception;
-use Dotclear\Core\Backend\Action\ActionsPosts;
-use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
-use Dotclear\Core\Backend\Filter\FilterPosts;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Process;
 use Dotclear\Core\Backend\Page;
-use Dotclear\Helper\Html\Form\Form;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Fieldset;
@@ -35,9 +30,6 @@ use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Note;
 use Dotclear\Helper\Html\Form\None;
 use Dotclear\Helper\Html\Form\Text;
-use Dotclear\Helper\Html\Form\Submit;
-use Dotclear\Helper\Html\Form\Link;
-use Dotclear\Helper\Html\Form\Select;
 
 class Config extends Process
 {
@@ -59,19 +51,6 @@ class Config extends Process
         if (!self::status()) {
             return false;
         }
-
-        if (($_REQUEST['act'] ?? 'list') === 'map') {
-            ManageMap::process();
-        } elseif (($_REQUEST['act'] ?? 'list') === 'maps') {
-            ManageMaps::process();
-        }
-
-        App::backend()->default_tab = empty($_REQUEST['tab']) ? 'parameters' : $_REQUEST['tab'];
-
-        /*
-         * Admin page params.
-         */
-
         // Save activation
 
         $myGmaps_enabled = My::settings()->myGmaps_enabled;
@@ -80,7 +59,7 @@ class Config extends Process
         $myGmaps_zoom    = My::settings()->myGmaps_zoom;
         $myGmaps_type    = My::settings()->myGmaps_type;
 
-        if (!empty($_POST['saveconfig'])) {
+        if (!empty($_POST['save'])) {
             try {
                 My::settings()->put('myGmaps_enabled', !empty($_POST['myGmaps_enabled']));
                 My::settings()->put('myGmaps_API_key', $_POST['myGmaps_API_key']);
@@ -88,23 +67,17 @@ class Config extends Process
                 My::settings()->put('myGmaps_zoom', $_POST['myGmaps_zoom']);
                 My::settings()->put('myGmaps_type', $_POST['myGmaps_type']);
 
-                My::redirect(['act' => 'list', 'tab' => 'parameters','upd' => 1]);
+                Notices::addSuccessNotice(__('Configuration has been updated.'));
+                App::blog()->triggerBlog();
+
+                App::backend()->url()->redirect('admin.plugins', [
+                    'module' => My::id(),
+                    'conf'   => '1',
+                ]);
             } catch (Exception $e) {
                 App::error()->add($e->getMessage());
             }
         }
-
-        App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
-        App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
-
-        if (!empty($_GET['nb']) && (int) $_GET['nb'] > 0) {
-            App::backend()->nb_per_page = (int) $_GET['nb'];
-        }
-
-        $params['limit']      = [((App::backend()->page - 1) * App::backend()->nb_per_page), App::backend()->nb_per_page];
-        $params['post_type']  = 'map';
-        $params['no_content'] = true;
-        $params['order']      = 'post_title ASC';
 
         return true;
     }
@@ -145,19 +118,6 @@ class Config extends Process
             $map_styles_base_url = '';
         }
 
-        App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
-        App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
-
-        /*
-        * Config and list of map elements
-        */
-
-        if (isset($_GET['page'])) {
-            App::backend()->default_tab = 'entries-list';
-        }
-
-        // Get map elements
-
         $starting_script = '<script>' . "\n" .
             '(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({' . "\n" .
                 'key: "' . My::settings()->myGmaps_API_key . '",' . "\n" .
@@ -185,22 +145,18 @@ class Config extends Process
             My::name(),
             $starting_script .
             $style_script .
-            
             Page::jsConfirmClose('config-form') .
             My::jsLoad('config.map.min.js') .
             My::cssLoad('admin.css')
         );
 
-        
-        echo Notices::getNotices();
+ 
 
         // Display messages
 
-        if (isset($_GET['upd']) && isset($_GET['act'])) {
-            Notices::success(__('Configuration has been saved.'));
-        }
+        
 
-        // Config tab
+        // Config
 
         echo
         (new Div())->items([
@@ -267,11 +223,9 @@ class Config extends Process
                         ->value($map_styles_base_url),
                 ]),
             ]),
-                    
-            ])
-        ->render();
 
-        
+        ])
+        ->render();
 
         Page::helpBlock(My::id());
         Page::closeModule();
