@@ -170,7 +170,7 @@ dotclear.ready(() => {
 			geocode();
 		});
 
-		document.getElementById('config-form').addEventListener('submit', () => {
+		document.getElementById('module_config').addEventListener('submit', () => {
 			const default_location = `${map.getCenter().lat()}, ${map.getCenter().lng()}`;
 			const default_zoom = map.getZoom();
 			const default_type = map.getMapTypeId();

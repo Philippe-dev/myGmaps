@@ -141,14 +141,13 @@ class Config extends Process
             }
         }
 
-        Page::openModule(
-            My::name(),
+        echo
             $starting_script .
             $style_script .
-            Page::jsConfirmClose('config-form') .
+            Page::jsConfirmClose('module_config') .
             My::jsLoad('config.map.min.js') .
             My::cssLoad('admin.css')
-        );
+        ;
 
         echo
         (new Div())->items([
@@ -220,6 +219,5 @@ class Config extends Process
         ->render();
 
         Page::helpBlock(My::id());
-        Page::closeModule();
     }
 }
