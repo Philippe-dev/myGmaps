@@ -1,14 +1,14 @@
 # Language: Français
-# Module: myGmaps - 9.1
-# Date: 2025-03-26 09:53:24
+# Module: myGmaps - 9.3
+# Date: 2025-03-29 23:16:36
 # Translated with translater 2025.03.03
 
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: myGmaps 9.1\n"
+"Project-Id-Version: myGmaps 9.3\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-03-26T09:53:24+00:00\n"
+"PO-Revision-Date: 2025-03-29T23:16:36+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -48,7 +48,7 @@ msgid "No map"
 msgstr "Pas de carte"
 
 #: src/Backend.php:297
-#: src/Manage.php:290
+#: src/Config.php:198
 msgid "Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls."
 msgstr "Choisir le centre de la carte en la déplaçant ou en cherchant une adresse. Choisir le niveau de zoom et le type de carte en utilisant les boutons.."
 
@@ -198,39 +198,35 @@ msgstr "Éditer l'élément de carte"
 msgid "Remove map element"
 msgstr "Supprimer l'élément de carte"
 
+#: src/Config.php:157
+msgid "Enable extension for this blog"
+msgstr "Activer l'extension pour ce blog"
+
+#: src/Config.php:160
+msgid "API key"
+msgstr "Clé d'API"
+
+#: src/Config.php:170
+msgid "Google Maps Javascript browser API key:"
+msgstr "Clé d'API Google Maps Javascript pour navigateur :"
+
+#: src/Config.php:175
+msgid "You are currently using a <em>shared</em> API key. To avoid map display restrictions on your blog, use your own API key."
+msgstr "Vous utilisez actuellement une clé d'API <em>partagée</em>. Pour éviter des restrictions d'affichage des cartes sur votre blog, utilisez votre propre clé d'API"
+
+#: src/Config.php:180
+msgid "Default map options"
+msgstr "Options des cartes par défaut"
+
 #: src/FrontendTemplate.php:31
 msgid "Sorry, javascript must be activated in your browser to see this map."
 msgstr "Désolé, javascript doit être activé dans votre navigateur pour voir cette carte."
 
-#: src/Manage.php:263
-msgid "Configuration has been saved."
-msgstr "La configuration a été mise à jour."
-
-#: src/Manage.php:274
-msgid "Enable extension for this blog"
-msgstr "Activer l'extension pour ce blog"
-
-#: src/Manage.php:276
-msgid "API key"
-msgstr "Clé d'API"
-
-#: src/Manage.php:277
-msgid "Google Maps Javascript browser API key:"
-msgstr "Clé d'API Google Maps Javascript pour navigateur :"
-
-#: src/Manage.php:281
-msgid "You are currently using a <em>shared</em> API key. To avoid map display restrictions on your blog, use your own API key."
-msgstr "Vous utilisez actuellement une clé d'API <em>partagée</em>. Pour éviter des restrictions d'affichage des cartes sur votre blog, utilisez votre propre clé d'API"
-
-#: src/Manage.php:285
-msgid "Default map options"
-msgstr "Options des cartes par défaut"
-
-#: src/Manage.php:306
+#: src/Manage.php:167
 msgid "Map elements"
 msgstr "Éléments de carte"
 
-#: src/Manage.php:309
+#: src/Manage.php:188
 #: src/ManageMap.php:813
 msgid "New element"
 msgstr "Nouvel élément"
@@ -378,6 +374,9 @@ msgstr "Choisir les éléments de la carte attachée au billet :"
 #: src/ManageMaps.php:187
 msgid "Add selected map elements"
 msgstr "Ajouter les éléments de carte sélectionnés"
+
+msgid "Configuration has been saved."
+msgstr "La configuration a été mise à jour."
 
 msgid "notype"
 msgstr "aucun"
