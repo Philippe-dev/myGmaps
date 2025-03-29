@@ -15,16 +15,28 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\myGmaps;
 
 use Dotclear\App;
-use Dotclear\Core\Process;
 use Dotclear\Core\Backend\UserPref;
-use Dotclear\Core\Backend\Page;
-use Dotclear\Core\Backend\Notices;
 use Exception;
-use form;
-use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
 use Dotclear\Core\Backend\Filter\FilterPosts;
+use Dotclear\Core\Backend\Notices;
+use Dotclear\Core\Process;
+use Dotclear\Core\Backend\Page;
+use Dotclear\Helper\Html\Form\Form;
+use Dotclear\Helper\Html\Form\Checkbox;
+use Dotclear\Helper\Html\Form\Div;
+use Dotclear\Helper\Html\Form\Fieldset;
+use Dotclear\Helper\Html\Form\Input;
+use Dotclear\Helper\Html\Form\Label;
+use Dotclear\Helper\Html\Form\Legend;
+use Dotclear\Helper\Html\Form\Para;
+use Dotclear\Helper\Html\Form\Note;
+use Dotclear\Helper\Html\Form\None;
+use Dotclear\Helper\Html\Form\Text;
+use Dotclear\Helper\Html\Form\Submit;
+use Dotclear\Helper\Html\Form\Link;
+use Dotclear\Helper\Html\Form\Select;
 
 class Manage extends Process
 {
@@ -39,6 +51,47 @@ class Manage extends Process
             self::status(($_REQUEST['act'] ?? 'list') === 'map' ? ManageMap::init() : true);
         } elseif (isset($_REQUEST['act']) && $_REQUEST['act'] === 'maps') {
             self::status(($_REQUEST['act'] ?? 'list') === 'maps' ? ManageMaps::init() : true);
+        }
+
+        // Actions
+        // -------
+        App::backend()->posts_actions_page = new BackendActions(App::backend()->url()->get('admin.plugin'), ['p' => My::id(), 'tab' => '#entries-list']);
+        if (App::backend()->posts_actions_page->process()) {
+            return self::status(false);
+        }
+
+        // Filters
+        // -------
+        App::backend()->post_filter = new FilterPosts();
+
+        // get list params
+        $params = App::backend()->post_filter->params();
+
+        // lexical sort
+        $sortby_lex = [
+            // key in sorty_combo (see above) => field in SQL request
+            'post_title' => 'post_title',
+            'cat_title'  => 'cat_title',
+            'user_id'    => 'P.user_id', ];
+
+        # --BEHAVIOR-- adminPostsSortbyLexCombo -- array<int,array<string,string>>
+        App::behavior()->callBehavior('adminPostsSortbyLexCombo', [&$sortby_lex]);
+
+        $params['order'] = (array_key_exists(App::backend()->post_filter->sortby, $sortby_lex) ?
+            App::con()->lexFields($sortby_lex[App::backend()->post_filter->sortby]) :
+            App::backend()->post_filter->sortby) . ' ' . App::backend()->post_filter->order;
+
+        // List
+
+        try {
+            $params['no_content'] = true;
+            $params['post_type']  = 'map';
+
+            App::backend()->posts      = App::blog()->getPosts($params);
+            App::backend()->counter    = App::blog()->getPosts($params, true);
+            App::backend()->posts_list = new BackendList(App::backend()->posts, App::backend()->counter->f(0));
+        } catch (Exception $e) {
+            App::error()->add($e->getMessage());
         }
 
         return self::status();
@@ -99,24 +152,6 @@ class Manage extends Process
         $params['no_content'] = true;
         $params['order']      = 'post_title ASC';
 
-        App::backend()->posts_list = null;
-
-        try {
-            $pages   = App::blog()->getPosts($params);
-            $counter = App::blog()->getPosts($params, true);
-
-            App::backend()->posts_list = new BackendList($pages, $counter->f(0));
-        } catch (Exception $e) {
-            App::error()->add($e->getMessage());
-        }
-
-        // Actions combo box
-        App::backend()->pages_actions_page          = new BackendActions(App::backend()->url()->get('admin.plugin'), ['p' => 'myGmaps','tab' => 'entries-list']);
-        App::backend()->pages_actions_page_rendered = null;
-        if (App::backend()->pages_actions_page->process()) {
-            App::backend()->pages_actions_page_rendered = true;
-        }
-
         return true;
     }
 
@@ -139,8 +174,8 @@ class Manage extends Process
             return;
         }
 
-        if (App::backend()->pages_actions_page_rendered) {
-            App::backend()->pages_actions_page->render();
+        if (App::backend()->posts_actions_page_rendered) {
+            App::backend()->posts_actions_page->render();
 
             return;
         }
@@ -172,24 +207,6 @@ class Manage extends Process
             $map_styles_base_url = '';
         }
 
-        // Actions
-
-        App::backend()->posts_actions_page = new ActionsPosts(App::backend()->url()->get('admin.plugin.' . My::id()));
-        if (App::backend()->posts_actions_page->process()) {
-            return;
-        }
-
-        // Filters
-
-        App::backend()->post_filter = new FilterPosts();
-
-        // Get list params
-
-        $params = App::backend()->post_filter->params();
-
-        App::backend()->posts      = null;
-        App::backend()->posts_list = null;
-
         App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
         App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
 
@@ -202,16 +219,6 @@ class Manage extends Process
         }
 
         // Get map elements
-
-        try {
-            $params['no_content']      = true;
-            $params['post_type']       = 'map';
-            App::backend()->posts      = App::blog()->getPosts($params);
-            App::backend()->counter    = App::blog()->getPosts($params, true);
-            App::backend()->posts_list = new BackendList(App::backend()->posts, App::backend()->counter->f(0));
-        } catch (Exception $e) {
-            App::error()->add($e->getMessage());
-        }
 
         $starting_script = '<script>' . "\n" .
             '(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({' . "\n" .
@@ -242,7 +249,7 @@ class Manage extends Process
             $style_script .
             Page::jsLoad('js/_posts_list.js') .
             Page::jsMetaEditor() .
-            App::backend()->post_filter->js(App::backend()->url()->get('admin.plugin'). '&p=' . My::id() . '#entries-list') .
+            App::backend()->post_filter->js(App::backend()->url()->get('admin.plugin') . '&p=' . My::id() . '#entries-list') .
             Page::jsPageTabs(App::backend()->default_tab) .
             Page::jsConfirmClose('config-form') .
             My::jsLoad('config.map.min.js') .
@@ -266,59 +273,88 @@ class Manage extends Process
         // Config tab
 
         echo
-        '<div class="multi-part" id="parameters" title="' . __('Parameters') . '">' .
-        '<form method="post" action="' . My::manageUrl() . '" id="config-form">' .
-        '<div class="fieldset"><h3>' . __('Activation') . '</h3>' .
-            '<p><label class="classic" for="myGmaps_enabled">' .
-            form::checkbox('myGmaps_enabled', '1', My::settings()->myGmaps_enabled) .
-            __('Enable extension for this blog') . '</label></p>' .
-        '</div>' .
-        '<div class="fieldset"><h3>' . __('API key') . '</h3>' .
-            '<p><label class="maximal" for="myGmaps_API_key">' . __('Google Maps Javascript browser API key:') .
-            '<br>' . form::field('myGmaps_API_key', 80, 255, My::settings()->myGmaps_API_key) .
-            '</label></p>';
-        if (My::settings()->myGmaps_API_key == 'AIzaSyCUgB8ZVQD88-T4nSgDlgVtH5fm0XcQAi8') {
-            echo '<p class="warn">' . __('You are currently using a <em>shared</em> API key. To avoid map display restrictions on your blog, use your own API key.') . '</p>';
-        }
+        (new Div('parameters'))
+            ->class('multi-part')
+            ->title(__('Parameters'))
+            ->items([
+                (new Form('config-form'))
+                    ->method('post')
+                    ->action(My::manageUrl())
+                    ->fields([
+                        (new Fieldset())->class('fieldset')->legend((new Legend(__('Activation'))))->fields([
+                            (new Para())->items([
+                                (new Checkbox('myGmaps_enabled', (bool) My::settings()->myGmaps_enabled)),
+                                (new Label(__('Enable extension for this blog'), Label::OUTSIDE_LABEL_AFTER))->for('myGmaps_enabled')->class('classic'),
+                            ]),
+                        ]),
+                        (new Fieldset())->class('fieldset')->legend((new Legend(__('API key'))))->fields([
+                            (new Para())->items([
+                                (new Input('myGmaps_API_key'))
+                                    ->class('classic')
+                                    ->size(50)
+                                    ->maxlength(255)
+                                    ->value(My::settings()->myGmaps_API_key)
+                                    ->required(true)
+                                    ->placeholder(__('API key'))
+                                    ->label((new Label(
+                                        (new Text('abbr', '*'))->title(__('Required field'))->render() . __('Google Maps Javascript browser API key:'),
+                                        Label::OUTSIDE_TEXT_BEFORE
+                                    ))
+                                    ->id('myGmaps_API_key')->class('required')->title(__('Required field'))),
+                                (My::settings()->myGmaps_API_key == 'AIzaSyCUgB8ZVQD88-T4nSgDlgVtH5fm0XcQAi8' ?
+                                    (new Text('span', __('You are currently using a <em>shared</em> API key. To avoid map display restrictions on your blog, use your own API key.')))
+                                        ->class('warn') :
+                                    (new None())),
+                            ]),
+                        ]),
+                        (new Fieldset())->class('fieldset')->legend((new Legend(__('Default map options'))))->fields([
+                            (new Div())->class('map_toolbar')->items([
+                                (new Text('span', __('Search:')))->class('search'),
+                                (new Text('span', '&nbsp;'))->class('map_spacer'),
+                                (new Input('address'))
+                                    ->size(50)
+                                    ->maxlength(255)
+                                    ->class('qx'),
+                                (new Input('geocode'))
+                                ->type('submit')
+                                ->value(__('OK')),
 
-        echo '</div>' .
-        '<div class="fieldset"><h3>' . __('Default map options') . '</h3>' .
-        '<div class="map_toolbar"><span class="search">' . __('Search:') . '</span><span class="map_spacer">&nbsp;</span>' .
-            '<input size="50" maxlength="255" type="text" id="address" class="qx"><input id="geocode" type="submit" value="' . __('OK') . '">' .
-        '</div>' .
-        '<p class="area" id="map_canvas"></p>' .
-        '<p class="form-note info maximal mapinfo" style="width: 100%">' . __('Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls.') . '</p>' .
-            '<p>' .
-            form::hidden('myGmaps_center', My::settings()->myGmaps_center) .
-            form::hidden('myGmaps_zoom', My::settings()->myGmaps_zoom) .
-            form::hidden('myGmaps_type', My::settings()->myGmaps_type) .
-            form::hidden('map_styles_list', $map_styles_list) .
-            form::hidden('map_styles_base_url', $map_styles_base_url) .
-            App::nonce()->getFormNonce() .
-            '</p></div>' .
-            '<p><input type="submit" name="saveconfig" value="' . __('Save configuration') . '"></p>' .
-
-        '</form>' .
-        '</div>' .
+                            ]),
+                            (new Para())
+                                ->class('area')
+                                ->id('map_canvas'),
+                            (new Note())
+                                ->class('form-note info maximal mapinfo')
+                                ->text(__('Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls.')),
+                            (new Para())->items([
+                                (new Input('myGmaps_center'))
+                                    ->type('hidden')
+                                    ->value(My::settings()->myGmaps_center),
+                                (new Input('myGmaps_zoom'))
+                                    ->type('hidden')
+                                    ->value(My::settings()->myGmaps_zoom),
+                                (new Input('myGmaps_type'))
+                                    ->type('hidden')
+                                    ->value(My::settings()->myGmaps_type),
+                                (new Input('map_styles_list'))
+                                    ->type('hidden')
+                                    ->value($map_styles_list),
+                                (new Input('map_styles_base_url'))
+                                    ->type('hidden')
+                                    ->value($map_styles_base_url),
+                                (new Para())->items([
+                                    (new Submit(['saveconfig']))
+                                        ->value(__('Save configuration')),
+                                    ... My::hiddenFields(),
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+            ])
+        ->render();
 
         // Map elements list tab
 
-<<<<<<< Updated upstream
-        '<div class="multi-part" id="entries-list" title="' . __('Map elements') . '">';
-=======
-        
->>>>>>> Stashed changes
-
-        if (My::settings()->myGmaps_enabled) {
-            echo '<p class="top-add"><strong><a class="button add" href="' . My::manageUrl() . '&act=map">' . __('New element') . '</a></strong></p>';
-        }
-
-<<<<<<< Updated upstream
-        App::backend()->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="' . My::id() . '"><input type="hidden" name="tab" value="entries-list">');
-
-        // Show posts
-=======
-        
         echo
         (new Div('entries-list'))
             ->class('multi-part')
@@ -336,37 +372,60 @@ class Manage extends Process
                         ->text(__('New element'))->render()
                     ),
                 ]) : (new None())),
-                
+
             ])
         ->render();
 
+        $block = (new Para())
+                    ->items([
+                        (new Input('tab'))
+                            ->type('hidden')
+                            ->value('entries-list'),
+                    ])
+                    ->render();
 
->>>>>>> Stashed changes
+        App::backend()->post_filter->display('admin.plugin.' . My::id(), $block);
+
+        # Show posts
+
+        $combo = App::backend()->posts_actions_page->getCombo();
+        if (is_array($combo)) {
+            $block = (new Form('form-entries'))
+                ->method('post')
+                ->action(My::manageUrl())
+                ->fields([
+                    (new Text(null, '%s')), // Here will go the posts list
+                    (new Div())
+                        ->class('two-cols')
+                        ->items([
+                            (new Para())->class(['col', 'checkboxes-helpers']),
+                            (new Para())
+                                ->class(['col', 'right', 'form-buttons'])
+                                ->items([
+                                    (new Select('action'))
+                                        ->items($combo)
+                                        ->label(new Label(__('Selected entries action:'), Label::IL_TF)),
+                                    (new Submit('do-action', __('ok')))
+                                        ->disabled(true),
+                                    App::nonce()->formNonce(),
+                                    ... App::backend()->url()->hiddenFormFields('admin.plugin.' . My::id(), App::backend()->post_filter->values()),
+                                ]),
+                        ]),
+                ])
+            ->render();
+        } else {
+            $block = (new Text(null, '%s'))
+            ->render();
+        }
+
         App::backend()->posts_list->display(
             App::backend()->post_filter->page,
             App::backend()->post_filter->nb,
-            '<form action="' . My::manageUrl() . '" method="post" id="form-entries">' .
-
-            '%s' .
-
-            '<div class="two-cols">' .
-            '<p class="col checkboxes-helpers"></p>' .
-
-            // Actions
-            '<p class="col right"><label for="action" class="classic">' . __('Selected entries action:') . '</label> ' .
-            form::combo('action', App::backend()->posts_actions_page->getCombo()) .
-            '<input id="do-action" type="submit" value="' . __('ok') . '" disabled></p>' .
-            App::backend()->url()->getHiddenFormFields('admin.plugin.' . My::id(), App::backend()->post_filter->values()) .
-            App::nonce()->getFormNonce() . '</p>' .
-            '</div>' .
-            '</form>',
+            $block,
             App::backend()->post_filter->show()
         );
 
-        echo
-        '</div>';
-
-        Page::helpBlock('myGmaps');
+        Page::helpBlock(My::id());
         Page::closeModule();
     }
 }

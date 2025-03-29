@@ -150,14 +150,6 @@ class Config extends Process
             My::cssLoad('admin.css')
         );
 
- 
-
-        // Display messages
-
-        
-
-        // Config
-
         echo
         (new Div())->items([
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Activation'))))->fields([
