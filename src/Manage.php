@@ -56,7 +56,7 @@ class Manage extends Process
 
         // Actions
         // -------
-        App::backend()->posts_actions_page = new ActionsPosts(App::backend()->url()->get('admin.plugin.' . My::id()));
+        App::backend()->posts_actions_page = new BackendActions(App::backend()->url()->get('admin.plugin.' . My::id()));
         if (App::backend()->posts_actions_page->process()) {
             return self::status(false);
         }
@@ -156,13 +156,6 @@ class Manage extends Process
         $params['no_content'] = true;
         $params['order']      = 'post_title ASC';
 
-        // Actions combo box
-        App::backend()->posts_actions_page          = new BackendActions(App::backend()->url()->get('admin.plugin'), ['p' => 'myGmaps','tab' => 'entries-list']);
-        App::backend()->posts_actions_page_rendered = null;
-        if (App::backend()->posts_actions_page->process()) {
-            App::backend()->posts_actions_page_rendered = true;
-        }
-
         return true;
     }
 
@@ -216,13 +209,6 @@ class Manage extends Process
         } else {
             $map_styles_list     = '';
             $map_styles_base_url = '';
-        }
-
-        // Actions
-
-        App::backend()->posts_actions_page = new BackendActions(App::backend()->url()->get('admin.plugin.' . My::id()));
-        if (App::backend()->posts_actions_page->process()) {
-            return;
         }
 
         App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
