@@ -18,20 +18,15 @@ use Dotclear\App;
 use Dotclear\Core\Backend\UserPref;
 use Exception;
 use Dotclear\Helper\Html\Html;
-use Dotclear\Helper\Network\Http;
 use Dotclear\Core\Backend\Filter\FilterPosts;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Process;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Html\Form\Form;
-use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Div;
-use Dotclear\Helper\Html\Form\Fieldset;
 use Dotclear\Helper\Html\Form\Input;
 use Dotclear\Helper\Html\Form\Label;
-use Dotclear\Helper\Html\Form\Legend;
 use Dotclear\Helper\Html\Form\Para;
-use Dotclear\Helper\Html\Form\Note;
 use Dotclear\Helper\Html\Form\None;
 use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Form\Submit;
@@ -55,7 +50,7 @@ class Manage extends Process
 
         // Actions
         // -------
-        App::backend()->posts_actions_page = new BackendActions(App::backend()->url()->get('admin.plugin'), ['p' => My::id(), 'tab' => '#entries-list']);
+        App::backend()->posts_actions_page = new BackendActions(App::backend()->url()->get('admin.plugin'), ['p' => My::id()]);
         if (App::backend()->posts_actions_page->process()) {
             return self::status(false);
         }
@@ -112,34 +107,6 @@ class Manage extends Process
             ManageMaps::process();
         }
 
-        App::backend()->default_tab = empty($_REQUEST['tab']) ? 'parameters' : $_REQUEST['tab'];
-
-        /*
-         * Admin page params.
-         */
-
-        // Save activation
-
-        $myGmaps_enabled = My::settings()->myGmaps_enabled;
-        $myGmaps_API_key = My::settings()->myGmaps_API_key;
-        $myGmaps_center  = My::settings()->myGmaps_center;
-        $myGmaps_zoom    = My::settings()->myGmaps_zoom;
-        $myGmaps_type    = My::settings()->myGmaps_type;
-
-        if (!empty($_POST['saveconfig'])) {
-            try {
-                My::settings()->put('myGmaps_enabled', !empty($_POST['myGmaps_enabled']));
-                My::settings()->put('myGmaps_API_key', $_POST['myGmaps_API_key']);
-                My::settings()->put('myGmaps_center', $_POST['myGmaps_center']);
-                My::settings()->put('myGmaps_zoom', $_POST['myGmaps_zoom']);
-                My::settings()->put('myGmaps_type', $_POST['myGmaps_type']);
-
-                My::redirect(['act' => 'list', 'tab' => 'parameters','upd' => 1]);
-            } catch (Exception $e) {
-                App::error()->add($e->getMessage());
-            }
-        }
-
         App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
         App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
 
@@ -180,184 +147,33 @@ class Manage extends Process
             return;
         }
 
-        $myGmaps_center = My::settings()->myGmaps_center;
-        $myGmaps_zoom   = My::settings()->myGmaps_zoom;
-        $myGmaps_type   = My::settings()->myGmaps_type;
-
-        // Custom map styles
-
-        $public_path = App::blog()->public_path;
-        $public_url  = App::blog()->settings->system->public_url;
-        $blog_url    = App::blog()->url;
-
-        $map_styles_dir_path = $public_path . '/myGmaps/styles/';
-        $map_styles_dir_url  = Http::concatURL(App::blog()->url, $public_url . '/myGmaps/styles/');
-
-        if (is_dir($map_styles_dir_path)) {
-            $map_styles      = glob($map_styles_dir_path . '*.js');
-            $map_styles_list = [];
-            foreach ($map_styles as $map_style) {
-                $map_style = basename($map_style);
-                array_push($map_styles_list, $map_style);
-            }
-            $map_styles_list     = implode(',', $map_styles_list);
-            $map_styles_base_url = $map_styles_dir_url;
-        } else {
-            $map_styles_list     = '';
-            $map_styles_base_url = '';
-        }
-
         App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
         App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
 
-        /*
-        * Config and list of map elements
-        */
-
-        if (isset($_GET['page'])) {
-            App::backend()->default_tab = 'entries-list';
-        }
-
         // Get map elements
-
-        $starting_script = '<script>' . "\n" .
-            '(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({' . "\n" .
-                'key: "' . My::settings()->myGmaps_API_key . '",' . "\n" .
-                'v: "weekly",' . "\n" .
-            '});' . "\n" .
-        '</script>' . "\n" ;
-
-        $style_script = '';
-
-        if (is_dir($map_styles_dir_path)) {
-            $list = explode(',', $map_styles_list);
-            foreach ($list as $map_style) {
-                $map_style_content = json_decode(file_get_contents($map_styles_dir_path . '/' . $map_style));
-                $var_styles_name   = pathinfo($map_style, PATHINFO_FILENAME);
-                $var_name          = preg_replace('/_styles/s', '', $var_styles_name);
-                $nice_name         = ucwords(preg_replace('/_/s', ' ', $var_name));
-                $style_script .= Page::jsJson($var_name, [
-                    'style' => $map_style_content,
-                    'name'  => $nice_name,
-                ]);
-            }
-        }
 
         Page::openModule(
             My::name(),
-            $starting_script .
-            $style_script .
             Page::jsLoad('js/_posts_list.js') .
             Page::jsMetaEditor() .
             App::backend()->post_filter->js(App::backend()->url()->get('admin.plugin') . '&p=' . My::id() . '#entries-list') .
-            Page::jsPageTabs(App::backend()->default_tab) .
-            Page::jsConfirmClose('config-form') .
             My::jsLoad('config.map.min.js') .
             My::cssLoad('admin.css')
         );
 
         echo Page::breadcrumb(
             [
-                html::escapeHTML(App::blog()->name) => '',
-                My::name()                          => My::manageUrl(),
+                html::escapeHTML(App::blog()->name)     => '',
+                My::name() . ' › ' . __('Map elements') => '',
             ]
         ) .
         Notices::getNotices();
 
-        // Display messages
-
-        if (isset($_GET['upd']) && isset($_GET['act'])) {
-            Notices::success(__('Configuration has been saved.'));
-        }
-
-        // Config tab
-
-        echo
-        (new Div('parameters'))
-            ->class('multi-part')
-            ->title(__('Parameters'))
-            ->items([
-                (new Form('config-form'))
-                    ->method('post')
-                    ->action(My::manageUrl())
-                    ->fields([
-                        (new Fieldset())->class('fieldset')->legend((new Legend(__('Activation'))))->fields([
-                            (new Para())->items([
-                                (new Checkbox('myGmaps_enabled', (bool) My::settings()->myGmaps_enabled)),
-                                (new Label(__('Enable extension for this blog'), Label::OUTSIDE_LABEL_AFTER))->for('myGmaps_enabled')->class('classic'),
-                            ]),
-                        ]),
-                        (new Fieldset())->class('fieldset')->legend((new Legend(__('API key'))))->fields([
-                            (new Para())->items([
-                                (new Input('myGmaps_API_key'))
-                                    ->class('classic')
-                                    ->size(50)
-                                    ->maxlength(255)
-                                    ->value(My::settings()->myGmaps_API_key)
-                                    ->required(true)
-                                    ->placeholder(__('API key'))
-                                    ->label((new Label(
-                                        (new Text('abbr', '*'))->title(__('Required field'))->render() . __('Google Maps Javascript browser API key:'),
-                                        Label::OUTSIDE_TEXT_BEFORE
-                                    ))
-                                    ->id('myGmaps_API_key')->class('required')->title(__('Required field'))),
-                                (My::settings()->myGmaps_API_key == 'AIzaSyCUgB8ZVQD88-T4nSgDlgVtH5fm0XcQAi8' ?
-                                    (new Text('span', __('You are currently using a <em>shared</em> API key. To avoid map display restrictions on your blog, use your own API key.')))
-                                        ->class('warn') :
-                                    (new None())),
-                            ]),
-                        ]),
-                        (new Fieldset())->class('fieldset')->legend((new Legend(__('Default map options'))))->fields([
-                            (new Div())->class('map_toolbar')->items([
-                                (new Text('span', __('Search:')))->class('search'),
-                                (new Text('span', '&nbsp;'))->class('map_spacer'),
-                                (new Input('address'))
-                                    ->size(50)
-                                    ->maxlength(255)
-                                    ->class('qx'),
-                                (new Input('geocode'))
-                                ->type('submit')
-                                ->value(__('OK')),
-
-                            ]),
-                            (new Para())
-                                ->class('area')
-                                ->id('map_canvas'),
-                            (new Note())
-                                ->class('form-note info maximal mapinfo')
-                                ->text(__('Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls.')),
-                            (new Para())->items([
-                                (new Input('myGmaps_center'))
-                                    ->type('hidden')
-                                    ->value(My::settings()->myGmaps_center),
-                                (new Input('myGmaps_zoom'))
-                                    ->type('hidden')
-                                    ->value(My::settings()->myGmaps_zoom),
-                                (new Input('myGmaps_type'))
-                                    ->type('hidden')
-                                    ->value(My::settings()->myGmaps_type),
-                                (new Input('map_styles_list'))
-                                    ->type('hidden')
-                                    ->value($map_styles_list),
-                                (new Input('map_styles_base_url'))
-                                    ->type('hidden')
-                                    ->value($map_styles_base_url),
-                                (new Para())->items([
-                                    (new Submit(['saveconfig']))
-                                        ->value(__('Save configuration')),
-                                    ... My::hiddenFields(),
-                                ]),
-                            ]),
-                        ]),
-                    ]),
-            ])
-        ->render();
-
-        // Map elements list tab
+        // Map elements list
 
         echo
         (new Div('entries-list'))
-            ->class('multi-part')
+
             ->title(__('Map elements'))
             ->items([
                 (My::settings()->myGmaps_enabled ?
@@ -376,15 +192,7 @@ class Manage extends Process
             ])
         ->render();
 
-        $block = (new Para())
-                    ->items([
-                        (new Input('tab'))
-                            ->type('hidden')
-                            ->value('entries-list'),
-                    ])
-                    ->render();
-
-        App::backend()->post_filter->display('admin.plugin.' . My::id(), $block);
+        App::backend()->post_filter->display('admin.plugin.' . My::id());
 
         # Show posts
 

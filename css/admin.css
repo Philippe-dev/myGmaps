@@ -278,5 +278,6 @@ p#excerpt {
 }
 
 .form-note.mapinfo {
-  margin-top: 0
+  margin-top: 0;
+  width: 100%
 }

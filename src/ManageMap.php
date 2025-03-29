@@ -275,7 +275,7 @@ class ManageMap extends Process
                 App::behavior()->callBehavior('adminBeforePostDelete', App::backend()->post_id);
                 App::blog()->delPost(App::backend()->post_id);
 
-                My::redirect(['tab' => 'entries-list']);
+                My::redirect();
             } catch (Exception $e) {
                 App::error()->add($e->getMessage());
             }
@@ -601,7 +601,7 @@ class ManageMap extends Process
         echo Page::breadcrumb(
             [
                 Html::escapeHTML(App::blog()->name) => '',
-                My::name()                          => My::manageUrl() . '&tab=entries-list',
+                My::name()                          => My::manageUrl(),
                 $edit_entry_title                   => '',
             ]
         );
