@@ -135,7 +135,9 @@ dotclear.ready(() => {
 		google.maps.event.addListener(map, 'center_changed', () => {
 			window.setTimeout(() => {
 				const center = map.getCenter();
+				document.querySelector('input[name="myGmaps_center"]').value = center;
 			}, 100);
+			
 		});
 
 		google.maps.event.addListener(map, "maptypeid_changed", function () {
@@ -145,6 +147,13 @@ dotclear.ready(() => {
 			} else {
 				map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].clear(creditNode);
 			}
+			const default_type = map.getMapTypeId();
+			document.querySelector('input[name="myGmaps_type"]').value = default_type;
+		});
+
+		google.maps.event.addListener(map, "zoom_changed", function () {
+			const default_zoom = map.getZoom();
+			document.querySelector('input[name="myGmaps_zoom"]').value = default_zoom;
 		});
 
 		function trim(myString) {
