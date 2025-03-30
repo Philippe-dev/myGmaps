@@ -290,7 +290,6 @@ dotclear.ready(() => {
         infowindow.setPosition(event.latLng);
         infowindow.setContent(infowindowPolyline);
         infowindow.open(map);
-
       });
     }
     initPolyline();
