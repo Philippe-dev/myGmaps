@@ -291,7 +291,7 @@ class BackendDefaultActions
         if (isset($post['new_cat_id'])) {
             $ids = $ap->getIDs();
             if ($ids === []) {
-                throw new Exception(__('No entry selected'));
+                throw new Exception(__('No element selected'));
             }
             $new_cat_id = (int) $post['new_cat_id'];
             if (!empty($post['new_cat_title']) && App::auth()->check(App::auth()->makePermissions([
@@ -320,7 +320,7 @@ class BackendDefaultActions
             Notices::addSuccessNotice(
                 sprintf(
                     __(
-                        '%d entry has been successfully moved to category "%s"',
+                        '%d element has been successfully moved to category "%s"',
                         '%d elements have been successfully moved to category "%s"',
                         count($ids)
                     ),
@@ -420,7 +420,7 @@ class BackendDefaultActions
             $new_user_id = $post['new_auth_id'];
             $ids         = $ap->getIDs();
             if ($ids === []) {
-                throw new Exception(__('No entry selected'));
+                throw new Exception(__('No element selected'));
             }
             if (App::users()->getUser($new_user_id)->isEmpty()) {
                 throw new Exception(__('This user does not exist'));
@@ -437,7 +437,7 @@ class BackendDefaultActions
             Notices::addSuccessNotice(
                 sprintf(
                     __(
-                        '%d entry has been successfully set to user "%s"',
+                        '%d element has been successfully set to user "%s"',
                         '%d elements have been successfully set to user "%s"',
                         count($ids)
                     ),
@@ -518,7 +518,7 @@ class BackendDefaultActions
     {
         $ids = $ap->getIDs();
         if ($ids === []) {
-            throw new Exception(__('No entry selected'));
+            throw new Exception(__('No element selected'));
         }
         if (isset($post['new_lang'])) {
             $new_lang       = $post['new_lang'];
@@ -533,7 +533,7 @@ class BackendDefaultActions
             Notices::addSuccessNotice(
                 sprintf(
                     __(
-                        '%d entry has been successfully set to language "%s"',
+                        '%d element has been successfully set to language "%s"',
                         '%d elements have been successfully set to language "%s"',
                         count($ids)
                     ),
@@ -568,7 +568,7 @@ class BackendDefaultActions
                     $ap->checkboxes(),
                     (new Para())
                         ->items([
-                            (new Label(__('Entry language:'), Label::OUTSIDE_LABEL_BEFORE))
+                            (new Label(__('Element language:'), Label::OUTSIDE_LABEL_BEFORE))
                                 ->for('new_lang'),
                             (new Select('new_lang'))
                                 ->items($lang_combo)
