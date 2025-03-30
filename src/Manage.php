@@ -19,7 +19,6 @@ use Dotclear\Core\Backend\UserPref;
 use Exception;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Core\Backend\Filter\FilterPosts;
-use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Process;
 use Dotclear\Core\Backend\Page;
@@ -52,11 +51,6 @@ class Manage extends Process
         // -------
 
         App::backend()->posts_actions_page = new BackendActions(App::backend()->url()->get('admin.plugin'), ['p' => My::id()]);
-        if (App::backend()->posts_actions_page->process()) {
-            return self::status(false);
-        }
-
-        
 
         // Filters
         // -------
@@ -141,6 +135,10 @@ class Manage extends Process
         } elseif (($_REQUEST['act'] ?? 'list') === 'maps') {
             ManageMaps::render();
 
+            return;
+        }
+
+        if (App::backend()->posts_actions_page->process()) {
             return;
         }
 

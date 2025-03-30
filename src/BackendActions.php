@@ -24,7 +24,7 @@ use Exception;
 
 class BackendActions extends ActionsPosts
 {
-    protected bool $use_render = true;
+
 
     /**
      * Constructs a new instance.
