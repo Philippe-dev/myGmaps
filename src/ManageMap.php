@@ -546,20 +546,20 @@ class ManageMap extends Process
 
         $starting_script .= '<script>' . "\n" .
         '//<![CDATA[' . "\n" .
-        'let stroke_color_msg = \'' . __('Stroke color') . '\';' . "\n" .
-        'let stroke_opacity_msg = \'' . __('Stroke opacity') . '\';' . "\n" .
-        'let stroke_weight_msg = \'' . __('Stroke weight') . '\';' . "\n" .
-        'let circle_radius_msg = \'' . __('Circle radius') . '\';' . "\n" .
-        'let fill_color_msg = \'' . __('Fill color') . '\';' . "\n" .
-        'let fill_opacity_msg = \'' . __('Fill opacity') . '\';' . "\n" .
-        'let default_icons_msg = \'' . __('Default icons') . '\';' . "\n" .
-        'let custom_icons_msg = \'' . __('Custom icons') . '\';' . "\n" .
-        'let kml_url_msg = \'' . __('File URL:') . '\';' . "\n" .
-        'let geoRss_url_msg = \'' . __('Feed URL:') . '\';' . "\n" .
-        'let custom_kmls_msg = \'' . __('Custom Kml files') . '\';' . "\n" .
-        'let directions_start_msg = \'' . __('Start:') . '\';' . "\n" .
-        'let directions_end_msg = \'' . __('End:') . '\';' . "\n" .
-        'let directions_show_msg = \'' . __('Display directions panel in public map') . '\';' . "\n" .
+        'const stroke_color_msg = \'' . __('Stroke color') . '\';' . "\n" .
+        'const stroke_opacity_msg = \'' . __('Stroke opacity') . '\';' . "\n" .
+        'const stroke_weight_msg = \'' . __('Stroke weight') . '\';' . "\n" .
+        'const circle_radius_msg = \'' . __('Circle radius') . '\';' . "\n" .
+        'const fill_color_msg = \'' . __('Fill color') . '\';' . "\n" .
+        'const fill_opacity_msg = \'' . __('Fill opacity') . '\';' . "\n" .
+        'const default_icons_msg = \'' . __('Default icons') . '\';' . "\n" .
+        'const custom_icons_msg = \'' . __('Custom icons') . '\';' . "\n" .
+        'const kml_url_msg = \'' . __('File URL:') . '\';' . "\n" .
+        'const geoRss_url_msg = \'' . __('Feed URL:') . '\';' . "\n" .
+        'const custom_kmls_msg = \'' . __('Custom Kml files') . '\';' . "\n" .
+        'const directions_start_msg = \'' . __('Start:') . '\';' . "\n" .
+        'const directions_end_msg = \'' . __('End:') . '\';' . "\n" .
+        'const directions_show_msg = \'' . __('Display directions panel in public map') . '\';' . "\n" .
         '//]]>' . "\n" .
         '</script>';
 

@@ -249,6 +249,7 @@ dotclear.ready(() => {
     //initialize polyline
     let polyline;
     let polylinePath;
+
     function initPolyline() {
       const polylineOptions = {
         strokeColor: '#555',
@@ -446,13 +447,13 @@ dotclear.ready(() => {
     function initkmlLayer() {
       kmlLayer = new google.maps.KmlLayer({});
       google.maps.event.addListener(kmlLayer, 'click', (event) => {
-        const myKmls = [];
         if (document.getElementById("kmls_list").value != '') {
+          const myKmls = [];
           const kmls_base_url = document.getElementById("kmls_base_url").value;
           const kmls_list = document.getElementById("kmls_list").value;
           const kmls_array = kmls_list.split(',');
           for (const i in kmls_array) {
-            this_kml = `<li>${kmls_array[i]}</li>`;
+            const this_kml = `<li>${kmls_array[i]}</li>`;
             myKmls.push(this_kml);
           }
         }
@@ -1024,7 +1025,7 @@ dotclear.ready(() => {
       const nelng = parseFloat(parts[1]);
       const nelat = parseFloat(parts[2]);
       const swlng = parseFloat(parts[3]);
-      bounds = new google.maps.LatLngBounds(
+      const bounds = new google.maps.LatLngBounds(
         new google.maps.LatLng(swlat, nelng),
         new google.maps.LatLng(nelat, swlng));
 
