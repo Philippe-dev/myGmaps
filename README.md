@@ -1,18 +1,18 @@
 # Google Maps
 
-Un plugin pour ajouter des cartes personnalisées dans vos billets ou pages
+Ce plugin, basé sur l'API Google Maps, est destiné à ajouter des cartes personnalisées dans vos billets ou pages
 
-Destiné à faciliter l'insertion de cartes élaborées dans votre blog, le plugin crée un nouveau type d'entrée : les éléments de carte.
+Pour cela, le plugin crée un nouveau type d'entrée : les éléments de carte.
 
 Ces éléments, tous éditables, peuvent être
 
-- des points d'intérêts aux icônes personnalisables
+- des points d'intérêts aux icônes personnalisables (svg, jpg ou png)
 - des lignes, des polygones, des rectangles ou des cercles de couleur, opacité et épaisseur variées
 - des fichier kml distants ou provenant de votre médiathèque
 - des flux GeoRSS comme par exemple ceux de Flickr
 - des itinéraires routiers d'un point à un autre
 
-Il est ensuite possible d'associer une carte à un billet ou à une page, et d'y inclure un nombre quelconque d'éléments. Il est également possible d'insérer une carte n'importe où dans le blog grâce à une balise de template.
+Il est ensuite possible d'associer une carte à un billet ou à une page, et d'y inclure un nombre quelconque de ces éléments. Il est également possible d'insérer une carte n'importe où dans le blog grâce à une balise de template.
 
 Le plugin permet d'utiliser OpenStreetMaps comme fournisseur de cartes, ou de personnaliser le style des cartes en important des fichiers de configuration au format JSON.
 
