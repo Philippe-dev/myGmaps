@@ -1,6 +1,6 @@
 # Language: Français
 # Module: myGmaps - 9.3
-# Date: 2025-03-29 23:16:36
+# Date: 2025-03-30 17:36:40
 # Translated with translater 2025.03.03
 
 msgid ""
@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: myGmaps 9.3\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-03-29T23:16:36+00:00\n"
+"PO-Revision-Date: 2025-03-30T17:36:40+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -48,7 +48,7 @@ msgid "No map"
 msgstr "Pas de carte"
 
 #: src/Backend.php:297
-#: src/Config.php:198
+#: src/Config.php:195
 msgid "Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls."
 msgstr "Choisir le centre de la carte en la déplaçant ou en cherchant une adresse. Choisir le niveau de zoom et le type de carte en utilisant les boutons.."
 
@@ -141,29 +141,21 @@ msgstr "Voulez-vous vraiment supprimer cet élément ?"
 msgid "Attached Map"
 msgstr "Carte attachée"
 
-#: src/BackendActions.php:54
+#: src/BackendActions.php:61
 msgid "Maps actions"
 msgstr "Actions sur les cartes"
 
-#: src/BackendActions.php:76
+#: src/BackendActions.php:87
 msgid "Back to elements list"
 msgstr "Retour à la liste des éléments"
 
-#: src/BackendDefaultActions.php:107
+#: src/BackendDefaultActions.php:124
 msgid "No element selected"
 msgstr "Pas d'élement sélectionné"
 
-#: src/BackendDefaultActions.php:126
+#: src/BackendDefaultActions.php:143
 msgid "Published elements cannot be set to scheduled"
 msgstr "Les éléments publiés ne peuvent être programmés"
-
-#: src/BackendDefaultActions.php:305
-msgid "Create a new category for the element(s)"
-msgstr "Créer une nouvelle catégorie pour le(s) éléments(s)"
-
-#: src/BackendDefaultActions.php:466
-msgid "Element language:"
-msgstr "Langue de l'élément :"
 
 #: src/BackendList.php:40
 msgid "No element matches the filter"
@@ -198,23 +190,23 @@ msgstr "Éditer l'élément de carte"
 msgid "Remove map element"
 msgstr "Supprimer l'élément de carte"
 
-#: src/Config.php:157
+#: src/Config.php:154
 msgid "Enable extension for this blog"
 msgstr "Activer l'extension pour ce blog"
 
-#: src/Config.php:160
+#: src/Config.php:157
 msgid "API key"
 msgstr "Clé d'API"
 
-#: src/Config.php:170
+#: src/Config.php:167
 msgid "Google Maps Javascript browser API key:"
 msgstr "Clé d'API Google Maps Javascript pour navigateur :"
 
-#: src/Config.php:175
+#: src/Config.php:172
 msgid "You are currently using a <em>shared</em> API key. To avoid map display restrictions on your blog, use your own API key."
 msgstr "Vous utilisez actuellement une clé d'API <em>partagée</em>. Pour éviter des restrictions d'affichage des cartes sur votre blog, utilisez votre propre clé d'API"
 
-#: src/Config.php:180
+#: src/Config.php:177
 msgid "Default map options"
 msgstr "Options des cartes par défaut"
 
@@ -222,11 +214,11 @@ msgstr "Options des cartes par défaut"
 msgid "Sorry, javascript must be activated in your browser to see this map."
 msgstr "Désolé, javascript doit être activé dans votre navigateur pour voir cette carte."
 
-#: src/Manage.php:167
+#: src/Manage.php:168
 msgid "Map elements"
 msgstr "Éléments de carte"
 
-#: src/Manage.php:188
+#: src/Manage.php:189
 #: src/ManageMap.php:813
 msgid "New element"
 msgstr "Nouvel élément"
@@ -374,6 +366,12 @@ msgstr "Choisir les éléments de la carte attachée au billet :"
 #: src/ManageMaps.php:187
 msgid "Add selected map elements"
 msgstr "Ajouter les éléments de carte sélectionnés"
+
+msgid "Create a new category for the element(s)"
+msgstr "Créer une nouvelle catégorie pour le(s) éléments(s)"
+
+msgid "Element language:"
+msgstr "Langue de l'élément :"
 
 msgid "Configuration has been saved."
 msgstr "La configuration a été mise à jour."

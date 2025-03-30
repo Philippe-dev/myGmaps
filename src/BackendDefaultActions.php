@@ -121,7 +121,7 @@ class BackendDefaultActions
 
         $ids = $ap->getIDs();
         if ($ids === []) {
-            throw new Exception(__('No entry selected'));
+            throw new Exception(__('No element selected'));
         }
 
         // Do not switch to scheduled already published entries
@@ -140,7 +140,7 @@ class BackendDefaultActions
             }
         }
         if ($ids === []) {
-            throw new Exception(__('Published entries cannot be set to scheduled'));
+            throw new Exception(__('Published elements cannot be set to scheduled'));
         }
 
         // Set status of remaining entries
@@ -149,8 +149,8 @@ class BackendDefaultActions
         Notices::addSuccessNotice(
             sprintf(
                 __(
-                    '%d entry has been successfully updated to status : "%s"',
-                    '%d entries have been successfully updated to status : "%s"',
+                    '%d element has been successfully updated to status : "%s"',
+                    '%d elements have been successfully updated to status : "%s"',
                     count($ids)
                 ),
                 count($ids),
@@ -178,17 +178,17 @@ class BackendDefaultActions
         if (!is_null($status)) {
             $ids = $ap->getIDs();
             if ($ids === []) {
-                throw new Exception(__('No entry selected'));
+                throw new Exception(__('No element selected'));
             }
 
-            // Set first publication flag of entries
+            // Set first publication flag of elements
             App::blog()->updPostsFirstPub($ids, $status);
 
             Notices::addSuccessNotice(
                 sprintf(
                     __(
-                        '%d entry has been successfully updated as: "%s"',
-                        '%d entries have been successfully updated as: "%s"',
+                        '%d element has been successfully updated as: "%s"',
+                        '%d elements have been successfully updated as: "%s"',
                         count($ids)
                     ),
                     count($ids),
@@ -210,7 +210,7 @@ class BackendDefaultActions
     {
         $ids = $ap->getIDs();
         if ($ids === []) {
-            throw new Exception(__('No entry selected'));
+            throw new Exception(__('No element selected'));
         }
 
         $action = $ap->getAction();
@@ -219,8 +219,8 @@ class BackendDefaultActions
             Notices::addSuccessNotice(
                 sprintf(
                     __(
-                        '%d entry has been successfully marked as selected',
-                        '%d entries have been successfully marked as selected',
+                        '%d element has been successfully marked as selected',
+                        '%d elements have been successfully marked as selected',
                         count($ids)
                     ),
                     count($ids)
@@ -230,8 +230,8 @@ class BackendDefaultActions
             Notices::addSuccessNotice(
                 sprintf(
                     __(
-                        '%d entry has been successfully marked as unselected',
-                        '%d entries have been successfully marked as unselected',
+                        '%d element has been successfully marked as unselected',
+                        '%d elements have been successfully marked as unselected',
                         count($ids)
                     ),
                     count($ids)
@@ -252,7 +252,7 @@ class BackendDefaultActions
     {
         $ids = $ap->getIDs();
         if ($ids === []) {
-            throw new Exception(__('No entry selected'));
+            throw new Exception(__('No element selected'));
         }
         // Backward compatibility
         foreach ($ids as $id) {
@@ -267,8 +267,8 @@ class BackendDefaultActions
         Notices::addSuccessNotice(
             sprintf(
                 __(
-                    '%d entry has been successfully deleted',
-                    '%d entries have been successfully deleted',
+                    '%d element has been successfully deleted',
+                    '%d elements have been successfully deleted',
                     count($ids)
                 ),
                 count($ids)
@@ -321,7 +321,7 @@ class BackendDefaultActions
                 sprintf(
                     __(
                         '%d entry has been successfully moved to category "%s"',
-                        '%d entries have been successfully moved to category "%s"',
+                        '%d elements have been successfully moved to category "%s"',
                         count($ids)
                     ),
                     count($ids),
@@ -438,7 +438,7 @@ class BackendDefaultActions
                 sprintf(
                     __(
                         '%d entry has been successfully set to user "%s"',
-                        '%d entries have been successfully set to user "%s"',
+                        '%d elements have been successfully set to user "%s"',
                         count($ids)
                     ),
                     count($ids),
@@ -534,7 +534,7 @@ class BackendDefaultActions
                 sprintf(
                     __(
                         '%d entry has been successfully set to language "%s"',
-                        '%d entries have been successfully set to language "%s"',
+                        '%d elements have been successfully set to language "%s"',
                         count($ids)
                     ),
                     count($ids),
