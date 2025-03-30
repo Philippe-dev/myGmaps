@@ -17,6 +17,8 @@ namespace Dotclear\Plugin\myGmaps;
 use Dotclear\App;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Backend\Action\ActionsPosts;
+use Dotclear\Helper\Html\Form\Link;
+use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Html;
 use Exception;
 
@@ -34,8 +36,13 @@ class BackendActions extends ActionsPosts
     {
         parent::__construct($uri, $redirect_args);
 
-        $this->redirect_fields = [];
-        $this->caller_title    = My::name();
+        $this->redirect_fields = [
+            'user_id', 'cat_id', 'status', 'selected', 'attachment', 'month', 'lang', 'sortby', 'order', 'page', 'nb',
+        ];
+
+        $this->caller_title = My::name();
+
+        $this->loadDefaults();
     }
 
     /**
@@ -71,9 +78,15 @@ class BackendActions extends ActionsPosts
             Page::jsLoad('js/_posts_actions.js') .
             $head
         );
-        echo
-        $breadcrumb .
-        '<p><a class="back" href="' . $this->getRedirection(true) . '">' . __('Back to elements list') . '</a></p>';
+
+        echo (new Para())
+            ->items([
+                (new Link())
+                    ->class('back')
+                    ->href($this->getRedirection(true))
+                    ->text(__('Back to elements list')),
+            ])
+            ->render();
     }
 
     /**

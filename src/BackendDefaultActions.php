@@ -18,12 +18,22 @@ use ArrayObject;
 use Dotclear\App;
 use Dotclear\Core\Backend\Combos;
 use Dotclear\Core\Backend\Notices;
-use Dotclear\Core\Backend\Action\ActionsPostsDefault;
-use Dotclear\Helper\Html\Html;
 use Dotclear\Core\Backend\Page;
+use Dotclear\Database\Statement\UpdateStatement;
+use Dotclear\Core\Backend\Action\ActionsPosts;
+use Dotclear\Helper\Html\Form\Div;
+use Dotclear\Helper\Html\Form\Form;
+use Dotclear\Helper\Html\Form\Hidden;
+use Dotclear\Helper\Html\Form\Input;
+use Dotclear\Helper\Html\Form\Label;
+use Dotclear\Helper\Html\Form\Para;
+use Dotclear\Helper\Html\Form\Text;
+use Dotclear\Helper\Html\Form\Select;
+use Dotclear\Helper\Html\Form\Submit;
+use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\L10n;
+use Dotclear\Schema\Extension\User;
 use Exception;
-use form;
 
 class BackendDefaultActions
 {
@@ -38,16 +48,23 @@ class BackendDefaultActions
             App::auth()::PERMISSION_PUBLISH,
             App::auth()::PERMISSION_CONTENT_ADMIN,
         ]), App::blog()->id())) {
-            $actions = [];
-            foreach (App::status()->post()->dump(false) as $status) {
-                $actions[__($status->name())] = $status->id();
-            }
             $ap->addAction(
-                [__('Status') => $actions],
+                [__('Status') => App::status()->post()->action()],
                 self::doChangePostStatus(...)
             );
         }
-
+        if (App::auth()->check(App::auth()->makePermissions([
+            App::auth()::PERMISSION_PUBLISH,
+            App::auth()::PERMISSION_CONTENT_ADMIN,
+        ]), App::blog()->id())) {
+            $ap->addAction(
+                [__('First publication') => [
+                    __('Never published')   => 'never',
+                    __('Already published') => 'already',
+                ]],
+                self::doChangePostFirstPub(...)
+            );
+        }
         $ap->addAction(
             [__('Mark') => [
                 __('Mark as selected')   => 'selected',
@@ -65,11 +82,11 @@ class BackendDefaultActions
             [__('Change') => [
                 __('Change language') => 'lang',
             ]],
-            [self::class, 'doChangePostLang']
+            self::doChangePostLang(...)
         );
         if (App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_ADMIN,
-        ]), App::blog()->id)) {
+        ]), App::blog()->id())) {
             $ap->addAction(
                 [__('Change') => [
                     __('Change author') => 'author', ]],
@@ -79,7 +96,7 @@ class BackendDefaultActions
         if (App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_DELETE,
             App::auth()::PERMISSION_CONTENT_ADMIN,
-        ]), App::blog()->id)) {
+        ]), App::blog()->id())) {
             $ap->addAction(
                 [__('Delete') => [
                     __('Delete') => 'delete', ]],
@@ -104,7 +121,7 @@ class BackendDefaultActions
 
         $ids = $ap->getIDs();
         if ($ids === []) {
-            throw new Exception(__('No element selected'));
+            throw new Exception(__('No entry selected'));
         }
 
         // Do not switch to scheduled already published entries
@@ -123,7 +140,7 @@ class BackendDefaultActions
             }
         }
         if ($ids === []) {
-            throw new Exception(__('Published elements cannot be set to scheduled'));
+            throw new Exception(__('Published entries cannot be set to scheduled'));
         }
 
         // Set status of remaining entries
@@ -132,15 +149,53 @@ class BackendDefaultActions
         Notices::addSuccessNotice(
             sprintf(
                 __(
-                    '%d element has been successfully updated to status : "%s"',
-                    '%d elements have been successfully updated to status : "%s"',
+                    '%d entry has been successfully updated to status : "%s"',
+                    '%d entries have been successfully updated to status : "%s"',
                     count($ids)
                 ),
                 count($ids),
                 App::status()->post()->name($status)
             )
         );
+        $ap->redirect(true);
+    }
 
+     /**
+     * Does a change post status.
+     *
+     * @param   BackendActions    $ap     The BackendActions instance
+     *
+     * @throws  Exception
+     */
+    public static function doChangePostFirstPub(BackendActions $ap): void
+    {
+        $status = match ($ap->getAction()) {
+            'never'   => 0,
+            'already' => 1,
+            default   => null,
+        };
+
+        if (!is_null($status)) {
+            $ids = $ap->getIDs();
+            if ($ids === []) {
+                throw new Exception(__('No entry selected'));
+            }
+
+            // Set first publication flag of entries
+            App::blog()->updPostsFirstPub($ids, $status);
+
+            Notices::addSuccessNotice(
+                sprintf(
+                    __(
+                        '%d entry has been successfully updated as: "%s"',
+                        '%d entries have been successfully updated as: "%s"',
+                        count($ids)
+                    ),
+                    count($ids),
+                    $status !== 0 ? __('Already published') : __('Never published')
+                )
+            );
+        }
         $ap->redirect(true);
     }
 
@@ -151,11 +206,11 @@ class BackendDefaultActions
      *
      * @throws     Exception
      */
-    public static function doUpdateSelectedPost(BackendActions $ap): void
+   public static function doUpdateSelectedPost(BackendActions $ap): void
     {
         $ids = $ap->getIDs();
-        if (empty($ids)) {
-            throw new Exception(__('No element selected'));
+        if ($ids === []) {
+            throw new Exception(__('No entry selected'));
         }
 
         $action = $ap->getAction();
@@ -164,8 +219,8 @@ class BackendDefaultActions
             Notices::addSuccessNotice(
                 sprintf(
                     __(
-                        '%d element has been successfully marked as selected',
-                        '%d elements have been successfully marked as selected',
+                        '%d entry has been successfully marked as selected',
+                        '%d entries have been successfully marked as selected',
                         count($ids)
                     ),
                     count($ids)
@@ -175,8 +230,8 @@ class BackendDefaultActions
             Notices::addSuccessNotice(
                 sprintf(
                     __(
-                        '%d element has been successfully marked as unselected',
-                        '%d elements have been successfully marked as unselected',
+                        '%d entry has been successfully marked as unselected',
+                        '%d entries have been successfully marked as unselected',
                         count($ids)
                     ),
                     count($ids)
@@ -196,8 +251,8 @@ class BackendDefaultActions
     public static function doDeletePost(BackendActions $ap): void
     {
         $ids = $ap->getIDs();
-        if (empty($ids)) {
-            throw new Exception(__('No element selected'));
+        if ($ids === []) {
+            throw new Exception(__('No entry selected'));
         }
         // Backward compatibility
         foreach ($ids as $id) {
@@ -212,8 +267,8 @@ class BackendDefaultActions
         Notices::addSuccessNotice(
             sprintf(
                 __(
-                    '%d element has been successfully deleted',
-                    '%d elements have been successfully deleted',
+                    '%d entry has been successfully deleted',
+                    '%d entries have been successfully deleted',
                     count($ids)
                 ),
                 count($ids)
@@ -235,19 +290,18 @@ class BackendDefaultActions
     {
         if (isset($post['new_cat_id'])) {
             $ids = $ap->getIDs();
-            if (empty($ids)) {
-                throw new Exception(__('No element selected'));
+            if ($ids === []) {
+                throw new Exception(__('No entry selected'));
             }
-            $new_cat_id = $post['new_cat_id'];
+            $new_cat_id = (int) $post['new_cat_id'];
             if (!empty($post['new_cat_title']) && App::auth()->check(App::auth()->makePermissions([
                 App::auth()::PERMISSION_CATEGORIES,
-            ]), App::blog()->id)) {
-                $cur_cat            = App::con()->openCursor(App::con()->prefix() . dcCategories::CATEGORY_TABLE_NAME);
+            ]), App::blog()->id())) {
+                $cur_cat            = App::blog()->categories()->openCategoryCursor();
                 $cur_cat->cat_title = $post['new_cat_title'];
                 $cur_cat->cat_url   = '';
-                $title              = $cur_cat->cat_title;
 
-                $parent_cat = !empty($post['new_cat_parent']) ? $post['new_cat_parent'] : '';
+                $parent_cat = empty($post['new_cat_parent']) ? '' : $post['new_cat_parent'];
 
                 # --BEHAVIOR-- adminBeforeCategoryCreate -- Cursor
                 App::behavior()->callBehavior('adminBeforeCategoryCreate', $cur_cat);
@@ -260,14 +314,14 @@ class BackendDefaultActions
 
             App::blog()->updPostsCategory($ids, $new_cat_id);
             $title = __('(No cat)');
-            if ($new_cat_id) {
-                $title = App::blog()->getCategory((int) $new_cat_id)->cat_title;
+            if ($new_cat_id !== 0) {
+                $title = App::blog()->getCategory($new_cat_id)->cat_title;
             }
             Notices::addSuccessNotice(
                 sprintf(
                     __(
-                        '%d element has been successfully moved to category "%s"',
-                        '%d elements have been successfully moved to category "%s"',
+                        '%d entry has been successfully moved to category "%s"',
+                        '%d entries have been successfully moved to category "%s"',
                         count($ids)
                     ),
                     count($ids),
@@ -280,7 +334,7 @@ class BackendDefaultActions
             $ap->beginPage(
                 Page::breadcrumb(
                     [
-                        Html::escapeHTML(App::blog()->name)      => '',
+                        Html::escapeHTML(App::blog()->name())    => '',
                         $ap->getCallerTitle()                    => $ap->getRedirection(true),
                         __('Change category for this selection') => '',
                     ]
@@ -291,32 +345,61 @@ class BackendDefaultActions
             $categories_combo = Combos::getCategoriesCombo(
                 App::blog()->getCategories()
             );
-            echo
-            '<form action="' . $ap->getURI() . '" method="post">' .
-            $ap->getCheckboxes() .
-            '<p><label for="new_cat_id" class="classic">' . __('Category:') . '</label> ' .
-            form::combo(['new_cat_id'], $categories_combo);
+
+            $items = [
+                $ap->checkboxes(),
+                (new Para())
+                    ->items([
+                        (new Label(__('Category:'), Label::OUTSIDE_LABEL_BEFORE))
+                            ->for('new_cat_id'),
+                        (new Select('new_cat_id'))
+                            ->items($categories_combo)
+                            ->default(''),
+                    ]),
+            ];
 
             if (App::auth()->check(App::auth()->makePermissions([
                 App::auth()::PERMISSION_CATEGORIES,
-            ]), App::blog()->id)) {
-                echo
-                '<div>' .
-                '<p id="new_cat">' . __('Create a new category for the element(s)') . '</p>' .
-                '<p><label for="new_cat_title">' . __('Title:') . '</label> ' .
-                form::field('new_cat_title', 30, 255) . '</p>' .
-                '<p><label for="new_cat_parent">' . __('Parent:') . '</label> ' .
-                form::combo('new_cat_parent', $categories_combo) .
-                    '</p>' .
-                    '</div>';
+            ]), App::blog()->id())) {
+                $items[] = (new Div())
+                    ->items([
+                        (new Text('p', __('Create a new category for the post(s)')))
+                            ->id('new_cat'),
+                        (new Para())
+                            ->items([
+                                (new Label(__('Title:'), Label::OUTSIDE_LABEL_BEFORE))
+                                    ->for('new_cat_title'),
+                                (new Input('new_cat_title'))
+                                    ->size(30)
+                                    ->maxlength(255)
+                                    ->value(''),
+                            ]),
+                        (new Para())
+                            ->items([
+                                (new Label(__('Parent:'), Label::OUTSIDE_LABEL_BEFORE))
+                                    ->for('new_cat_parent'),
+                                (new Select('new_cat_parent'))
+                                    ->items($categories_combo)
+                                    ->default(''),
+                            ]),
+                    ]);
             }
 
-            echo
-            App::nonce()->getFormNonce() .
-            $ap->getHiddenFields() .
-            form::hidden(['action'], 'category') .
-            '<input type="submit" value="' . __('Save') . '"></p>' .
-                '</form>';
+            $items[] = (new Para())
+                ->items([
+                    App::nonce()->formNonce(),
+                    ...$ap->hiddenFields(),
+                    (new Hidden('action', 'category')),
+                    (new Submit('save'))
+                        ->value(__('Save')),
+                ]);
+
+            echo (new Form('dochangepostcategory'))
+                ->method('post')
+                ->action($ap->getURI())
+                ->fields($items)
+                ->render();
+
             $ap->endPage();
         }
     }
@@ -333,24 +416,29 @@ class BackendDefaultActions
     {
         if (isset($post['new_auth_id']) && App::auth()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_ADMIN,
-        ]), App::blog()->id)) {
+        ]), App::blog()->id())) {
             $new_user_id = $post['new_auth_id'];
             $ids         = $ap->getIDs();
-            if (empty($ids)) {
-                throw new Exception(__('No element selected'));
+            if ($ids === []) {
+                throw new Exception(__('No entry selected'));
             }
             if (App::users()->getUser($new_user_id)->isEmpty()) {
                 throw new Exception(__('This user does not exist'));
             }
 
-            $cur          = App::con()->openCursor(App::con()->prefix() . App::blog()::POST_TABLE_NAME);
+            $cur          = App::blog()->openPostCursor();
             $cur->user_id = $new_user_id;
-            $cur->update('WHERE post_id ' . App::con()->in($ids));
+
+            $sql = new UpdateStatement();
+            $sql
+                ->where('post_id ' . $sql->in($ids))
+                ->update($cur);
+
             Notices::addSuccessNotice(
                 sprintf(
                     __(
-                        '%d element has been successfully set to user "%s"',
-                        '%d elements have been successfully set to user "%s"',
+                        '%d entry has been successfully set to user "%s"',
+                        '%d entries have been successfully set to user "%s"',
                         count($ids)
                     ),
                     count($ids),
@@ -363,14 +451,14 @@ class BackendDefaultActions
             $usersList = [];
             if (App::auth()->check(App::auth()->makePermissions([
                 App::auth()::PERMISSION_ADMIN,
-            ]), App::blog()->id)) {
+            ]), App::blog()->id())) {
                 $params = [
                     'limit' => 100,
                     'order' => 'nb_post DESC',
                 ];
                 $rs       = App::users()->getUsers($params);
                 $rsStatic = $rs->toStatic();
-                $rsStatic->extend('rsExtUser');
+                $rsStatic->extend(User::class);
                 $rsStatic = $rsStatic->toExtStatic();
                 $rsStatic->lexicalSort('user_id');
                 while ($rsStatic->fetch()) {
@@ -380,7 +468,7 @@ class BackendDefaultActions
             $ap->beginPage(
                 Page::breadcrumb(
                     [
-                        Html::escapeHTML(App::blog()->name)    => '',
+                        Html::escapeHTML(App::blog()->name())  => '',
                         $ap->getCallerTitle()                  => $ap->getRedirection(true),
                         __('Change author for this selection') => '', ]
                 ),
@@ -388,17 +476,32 @@ class BackendDefaultActions
                 Page::jsJson('users_list', $usersList)
             );
 
-            echo
-            '<form action="' . $ap->getURI() . '" method="post">' .
-            $ap->getCheckboxes() .
-            '<p><label for="new_auth_id" class="classic">' . __('New author (author ID):') . '</label> ' .
-            form::field('new_auth_id', 20, 255);
+            echo (new Form('dochangepostauthor'))
+                ->method('post')
+                ->action($ap->getURI())
+                ->fields([
+                    $ap->checkboxes(),
+                    (new Para())
+                        ->items([
+                            (new Label(__('New author (author ID):'), Label::OUTSIDE_LABEL_BEFORE))
+                                ->for('new_auth_id'),
+                            (new Input('new_auth_id'))
+                                ->size(20)
+                                ->maxlength(255)
+                                ->value(''),
+                        ]),
+                    (new Para())
+                        ->items([
+                            App::nonce()->formNonce(),
+                            ...$ap->hiddenFields(),
+                            (new Hidden('action', 'author')),
+                            (new Submit('save'))
+                                ->value(__('Save')),
 
-            echo
-            App::nonce()->getFormNonce() . $ap->getHiddenFields() .
-            form::hidden(['action'], 'author') .
-            '<input type="submit" value="' . __('Save') . '"></p>' .
-                '</form>';
+                        ]),
+                ])
+                ->render();
+
             $ap->endPage();
         }
     }
@@ -413,23 +516,28 @@ class BackendDefaultActions
      */
     public static function doChangePostLang(BackendActions $ap, ArrayObject $post): void
     {
-        $post_ids = $ap->getIDs();
-        if (empty($post_ids)) {
-            throw new Exception(__('No element selected'));
+        $ids = $ap->getIDs();
+        if ($ids === []) {
+            throw new Exception(__('No entry selected'));
         }
         if (isset($post['new_lang'])) {
             $new_lang       = $post['new_lang'];
-            $cur            = App::con()->openCursor(App::con()->prefix() . App::blog()::POST_TABLE_NAME);
+            $cur            = App::blog()->openPostCursor();
             $cur->post_lang = $new_lang;
-            $cur->update('WHERE post_id ' . App::con()->in($post_ids));
+
+            $sql = new UpdateStatement();
+            $sql
+                ->where('post_id ' . $sql->in($ids))
+                ->update($cur);
+
             Notices::addSuccessNotice(
                 sprintf(
                     __(
-                        '%d element has been successfully set to language "%s"',
-                        '%d elements have been successfully set to language "%s"',
-                        count($post_ids)
+                        '%d entry has been successfully set to language "%s"',
+                        '%d entries have been successfully set to language "%s"',
+                        count($ids)
                     ),
-                    count($post_ids),
+                    count($ids),
                     Html::escapeHTML(L10n::getLanguageName($new_lang))
                 )
             );
@@ -438,39 +546,46 @@ class BackendDefaultActions
             $ap->beginPage(
                 Page::breadcrumb(
                     [
-                        Html::escapeHTML(App::blog()->name)      => '',
+                        Html::escapeHTML(App::blog()->name())    => '',
                         $ap->getCallerTitle()                    => $ap->getRedirection(true),
                         __('Change language for this selection') => '',
                     ]
                 )
             );
-            # lang list
-            # Languages combo
-            $rs         = App::blog()->getLangs(['order' => 'asc']);
-            $all_langs  = L10n::getISOcodes(false, true);
-            $lang_combo = ['' => '', __('Most used') => [], __('Available') => L10n::getISOcodes(true, true)];
-            while ($rs->fetch()) {
-                if (isset($all_langs[$rs->post_lang])) {
-                    $lang_combo[__('Most used')][$all_langs[$rs->post_lang]] = $rs->post_lang;
-                    unset($lang_combo[__('Available')][$all_langs[$rs->post_lang]]);
-                } else {
-                    $lang_combo[__('Most used')][$rs->post_lang] = $rs->post_lang;
-                }
-            }
-            unset($all_langs, $rs);
+            // Prepare languages combo
+            $lang_combo = Combos::getLangsCombo(
+                App::blog()->getLangs([
+                    'order_by' => 'nb_post',
+                    'order'    => 'desc',
+                ]),
+                true    // Also show never used languages
+            );
 
-            echo
-            '<form action="' . $ap->getURI() . '" method="post">' .
-            $ap->getCheckboxes() .
+            echo (new Form('dochangepostlang'))
+                ->method('post')
+                ->action($ap->getURI())
+                ->fields([
+                    $ap->checkboxes(),
+                    (new Para())
+                        ->items([
+                            (new Label(__('Entry language:'), Label::OUTSIDE_LABEL_BEFORE))
+                                ->for('new_lang'),
+                            (new Select('new_lang'))
+                                ->items($lang_combo)
+                                ->default(''),
+                        ]),
+                    (new Para())
+                        ->items([
+                            App::nonce()->formNonce(),
+                            ...$ap->hiddenFields(),
+                            (new Hidden('action', 'lang')),
+                            (new Submit('save'))
+                                ->value(__('Save')),
 
-            '<p><label for="new_lang" class="classic">' . __('Element language:') . '</label> ' .
-            form::combo('new_lang', $lang_combo);
+                        ]),
+                ])
+                ->render();
 
-            echo
-            App::nonce()->getFormNonce() . $ap->getHiddenFields() .
-            form::hidden(['action'], 'lang') .
-            '<input type="submit" value="' . __('Save') . '"></p>' .
-                '</form>';
             $ap->endPage();
         }
     }

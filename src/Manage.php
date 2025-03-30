@@ -19,12 +19,12 @@ use Dotclear\Core\Backend\UserPref;
 use Exception;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Core\Backend\Filter\FilterPosts;
+use Dotclear\Core\Backend\Action\ActionsPosts;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Process;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Html\Form\Form;
 use Dotclear\Helper\Html\Form\Div;
-use Dotclear\Helper\Html\Form\Input;
 use Dotclear\Helper\Html\Form\Label;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\None;
@@ -50,10 +50,13 @@ class Manage extends Process
 
         // Actions
         // -------
+
         App::backend()->posts_actions_page = new BackendActions(App::backend()->url()->get('admin.plugin'), ['p' => My::id()]);
         if (App::backend()->posts_actions_page->process()) {
             return self::status(false);
         }
+
+        
 
         // Filters
         // -------
