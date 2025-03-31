@@ -64,18 +64,6 @@ class Manage extends Process
             ManageMaps::process();
         }
 
-        App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
-        App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
-
-        if (!empty($_GET['nb']) && (int) $_GET['nb'] > 0) {
-            App::backend()->nb_per_page = (int) $_GET['nb'];
-        }
-
-        $params['limit']      = [((App::backend()->page - 1) * App::backend()->nb_per_page), App::backend()->nb_per_page];
-        $params['post_type']  = 'map';
-        $params['no_content'] = true;
-        $params['order']      = 'post_title ASC';
-
         return true;
     }
 
@@ -90,11 +78,9 @@ class Manage extends Process
 
         if (($_REQUEST['act'] ?? 'list') === 'map') {
             ManageMap::render();
-
             return;
         } elseif (($_REQUEST['act'] ?? 'list') === 'maps') {
             ManageMaps::render();
-
             return;
         }
 
