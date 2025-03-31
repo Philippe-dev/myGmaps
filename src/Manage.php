@@ -107,14 +107,12 @@ class Manage extends Process
 
         if (App::backend()->posts_actions_page_rendered) {
             App::backend()->posts_actions_page->render();
-
             return;
         }
 
         // Filters
         App::backend()->post_filter = new FilterPosts();
 
-        // get list params
         $params = App::backend()->post_filter->params();
 
         // lexical sort
