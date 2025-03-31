@@ -15,21 +15,21 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\myGmaps;
 
 use Dotclear\App;
-use Dotclear\Core\Backend\UserPref;
-use Exception;
-use Dotclear\Helper\Html\Html;
 use Dotclear\Core\Backend\Filter\FilterPosts;
 use Dotclear\Core\Backend\Notices;
-use Dotclear\Core\Process;
 use Dotclear\Core\Backend\Page;
-use Dotclear\Helper\Html\Form\Form;
+use Dotclear\Core\Backend\UserPref;
+use Dotclear\Core\Process;
 use Dotclear\Helper\Html\Form\Div;
+use Dotclear\Helper\Html\Form\Form;
 use Dotclear\Helper\Html\Form\Label;
-use Dotclear\Helper\Html\Form\Para;
-use Dotclear\Helper\Html\Form\Text;
-use Dotclear\Helper\Html\Form\Submit;
 use Dotclear\Helper\Html\Form\Link;
+use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Select;
+use Dotclear\Helper\Html\Form\Submit;
+use Dotclear\Helper\Html\Form\Text;
+use Dotclear\Helper\Html\Html;
+use Exception;
 
 class Manage extends Process
 {
