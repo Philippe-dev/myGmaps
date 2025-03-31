@@ -78,9 +78,11 @@ class Manage extends Process
 
         if (($_REQUEST['act'] ?? 'list') === 'map') {
             ManageMap::render();
+
             return;
         } elseif (($_REQUEST['act'] ?? 'list') === 'maps') {
             ManageMaps::render();
+
             return;
         }
 
@@ -93,6 +95,7 @@ class Manage extends Process
 
         if (App::backend()->posts_actions_page_rendered) {
             App::backend()->posts_actions_page->render();
+
             return;
         }
 
@@ -142,8 +145,8 @@ class Manage extends Process
 
         echo Page::breadcrumb(
             [
-                html::escapeHTML(App::blog()->name)     => '',
-                My::name() . ' › ' . __('Map elements') => '',
+                html::escapeHTML(App::blog()->name) => '',
+                My::name()                          => '',
             ]
         ) .
         Notices::getNotices();
@@ -182,7 +185,7 @@ class Manage extends Process
                                 ->items([
                                     (new Select('action'))
                                         ->items($combo)
-                                        ->label(new Label(__('Selected entries action:'), Label::IL_TF)),
+                                        ->label(new Label(__('Selected elements action:'), Label::IL_TF)),
                                     (new Submit('do-action', __('ok')))
                                         ->disabled(true),
                                     App::nonce()->formNonce(),

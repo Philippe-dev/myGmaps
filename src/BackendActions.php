@@ -24,8 +24,6 @@ use Exception;
 
 class BackendActions extends ActionsPosts
 {
-
-
     /**
      * Constructs a new instance.
      *
@@ -73,11 +71,21 @@ class BackendActions extends ActionsPosts
      */
     public function beginPage(string $breadcrumb = '', string $head = ''): void
     {
-        Page::openModule(
-            My::name(),
-            Page::jsLoad('js/_posts_actions.js') .
-            $head
-        );
+        if ($this->in_plugin) {
+            Page::openModule(
+                __('Maps'),
+                Page::jsLoad('js/_posts_actions.js') .
+                $head
+            );
+            echo $breadcrumb;
+        } else {
+            Page::open(
+                __('Posts'),
+                Page::jsLoad('js/_posts_actions.js') .
+                $head,
+                $breadcrumb
+            );
+        }
 
         echo (new Para())
             ->items([
@@ -94,6 +102,7 @@ class BackendActions extends ActionsPosts
      */
     public function endPage(): void
     {
+        Page::helpBlock(My::id());
         Page::closeModule();
     }
 
