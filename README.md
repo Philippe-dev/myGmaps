@@ -1,4 +1,4 @@
-# Maps
+# Cartes
 
 Ce plugin, basé sur l'API Google Maps, est destiné à ajouter des cartes personnalisées dans vos billets ou pages
 
