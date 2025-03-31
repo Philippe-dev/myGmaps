@@ -80,7 +80,7 @@ class BackendActions extends ActionsPosts
             echo $breadcrumb;
         } else {
             Page::open(
-                __('Posts'),
+                __('Maps'),
                 Page::jsLoad('js/_posts_actions.js') .
                 $head,
                 $breadcrumb
