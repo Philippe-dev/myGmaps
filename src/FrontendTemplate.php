@@ -478,14 +478,13 @@ class FrontendTemplate
         $bDisplayDirection = $aOptions['display_direction'];
 
         $sOutput = <<<EOT
-            let routePolyline_$sId;
             const routePolylineOptions_$sId = {
                 strokeColor: "{$sStrokeColor}",
                 strokeOpacity: parseFloat({$sStrokeOpacity}),
                 strokeWeight: parseFloat({$sStrokeWeight}),
                 zIndex: 1
             };
-            routePolyline_$sId = new google.maps.Polyline(routePolylineOptions_$sId);
+            const routePolyline_$sId = new google.maps.Polyline(routePolylineOptions_$sId);
             const routePolylinePath_$sId = routePolyline_$sId.getPath();
             const directionsService_$sId = new google.maps.DirectionsService();
             const polylineRendererOptions_$sId = {
