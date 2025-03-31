@@ -7,7 +7,7 @@
  *
  * @author Philippe aka amalgame and contributors
  *
- * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
+ * @copyright AGPL-3.0
  */
 $this->registerModule(
     'Maps',
