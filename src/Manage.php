@@ -26,7 +26,6 @@ use Dotclear\Helper\Html\Form\Form;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Label;
 use Dotclear\Helper\Html\Form\Para;
-use Dotclear\Helper\Html\Form\None;
 use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Form\Submit;
 use Dotclear\Helper\Html\Form\Link;
@@ -45,45 +44,6 @@ class Manage extends Process
             self::status(($_REQUEST['act'] ?? 'list') === 'map' ? ManageMap::init() : true);
         } elseif (isset($_REQUEST['act']) && $_REQUEST['act'] === 'maps') {
             self::status(($_REQUEST['act'] ?? 'list') === 'maps' ? ManageMaps::init() : true);
-        }
-
-        // Actions
-        // -------
-
-        App::backend()->posts_actions_page = new BackendActions(App::backend()->url()->get('admin.plugin'), ['p' => My::id()]);
-
-        // Filters
-        // -------
-        App::backend()->post_filter = new FilterPosts();
-
-        // get list params
-        $params = App::backend()->post_filter->params();
-
-        // lexical sort
-        $sortby_lex = [
-            // key in sorty_combo (see above) => field in SQL request
-            'post_title' => 'post_title',
-            'cat_title'  => 'cat_title',
-            'user_id'    => 'P.user_id', ];
-
-        # --BEHAVIOR-- adminPostsSortbyLexCombo -- array<int,array<string,string>>
-        App::behavior()->callBehavior('adminPostsSortbyLexCombo', [&$sortby_lex]);
-
-        $params['order'] = (array_key_exists(App::backend()->post_filter->sortby, $sortby_lex) ?
-            App::con()->lexFields($sortby_lex[App::backend()->post_filter->sortby]) :
-            App::backend()->post_filter->sortby) . ' ' . App::backend()->post_filter->order;
-
-        // List
-
-        try {
-            $params['no_content'] = true;
-            $params['post_type']  = 'map';
-
-            App::backend()->posts      = App::blog()->getPosts($params);
-            App::backend()->counter    = App::blog()->getPosts($params, true);
-            App::backend()->posts_list = new BackendList(App::backend()->posts, App::backend()->counter->f(0));
-        } catch (Exception $e) {
-            App::error()->add($e->getMessage());
         }
 
         return self::status();
@@ -138,6 +98,45 @@ class Manage extends Process
             return;
         }
 
+        // Actions
+        // -------
+
+        App::backend()->posts_actions_page = new BackendActions(App::backend()->url()->get('admin.plugin'), ['p' => My::id()]);
+
+        // Filters
+        // -------
+        App::backend()->post_filter = new FilterPosts();
+
+        // get list params
+        $params = App::backend()->post_filter->params();
+
+        // lexical sort
+        $sortby_lex = [
+            // key in sorty_combo (see above) => field in SQL request
+            'post_title' => 'post_title',
+            'cat_title'  => 'cat_title',
+            'user_id'    => 'P.user_id', ];
+
+        # --BEHAVIOR-- adminPostsSortbyLexCombo -- array<int,array<string,string>>
+        App::behavior()->callBehavior('adminPostsSortbyLexCombo', [&$sortby_lex]);
+
+        $params['order'] = (array_key_exists(App::backend()->post_filter->sortby, $sortby_lex) ?
+            App::con()->lexFields($sortby_lex[App::backend()->post_filter->sortby]) :
+            App::backend()->post_filter->sortby) . ' ' . App::backend()->post_filter->order;
+
+        // List
+
+        try {
+            $params['no_content'] = true;
+            $params['post_type']  = 'map';
+
+            App::backend()->posts      = App::blog()->getPosts($params);
+            App::backend()->counter    = App::blog()->getPosts($params, true);
+            App::backend()->posts_list = new BackendList(App::backend()->posts, App::backend()->counter->f(0));
+        } catch (Exception $e) {
+            App::error()->add($e->getMessage());
+        }
+
         if (App::backend()->posts_actions_page->process()) {
             return;
         }
@@ -173,24 +172,17 @@ class Manage extends Process
         // Map elements list
 
         echo
-        (new Div('entries-list'))
-
-            ->title(__('Map elements'))
-            ->items([
-                (My::settings()->myGmaps_enabled ?
-                (new Para())
-                ->class('top-add')
-                ->items([
-                    new Text(
-                        null,
-                        (new Link())
-                        ->class('button add')
-                        ->href(My::manageUrl() . '&act=map')
-                        ->text(__('New element'))->render()
-                    ),
-                ]) : (new None())),
-
-            ])
+        (new Para())
+        ->class('top-add')
+        ->items([
+            new Text(
+                null,
+                (new Link())
+                ->class('button add')
+                ->href(My::manageUrl() . '&act=map')
+                ->text(__('New element'))->render()
+            ),
+        ])
         ->render();
 
         App::backend()->post_filter->display('admin.plugin.' . My::id());
