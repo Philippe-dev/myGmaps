@@ -90,14 +90,26 @@ class Manage extends Process
 
         if (($_REQUEST['act'] ?? 'list') === 'map') {
             ManageMap::render();
+
             return;
         } elseif (($_REQUEST['act'] ?? 'list') === 'maps') {
             ManageMaps::render();
+
             return;
         }
 
         // Actions
         App::backend()->posts_actions_page = new BackendActions(App::backend()->url()->get('admin.plugin'), ['p' => My::id()]);
+
+        if (App::backend()->posts_actions_page->process()) {
+            return;
+        }
+
+        if (App::backend()->posts_actions_page_rendered) {
+            App::backend()->posts_actions_page->render();
+
+            return;
+        }
 
         // Filters
         App::backend()->post_filter = new FilterPosts();
@@ -119,7 +131,10 @@ class Manage extends Process
             App::con()->lexFields($sortby_lex[App::backend()->post_filter->sortby]) :
             App::backend()->post_filter->sortby) . ' ' . App::backend()->post_filter->order;
 
-        // List
+        App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+        App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
+
+        // Get map elements
 
         try {
             $params['no_content'] = true;
@@ -131,21 +146,6 @@ class Manage extends Process
         } catch (Exception $e) {
             App::error()->add($e->getMessage());
         }
-
-        if (App::backend()->posts_actions_page->process()) {
-            return;
-        }
-
-        if (App::backend()->posts_actions_page_rendered) {
-            App::backend()->posts_actions_page->render();
-
-            return;
-        }
-
-        App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
-        App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
-
-        // Get map elements
 
         Page::openModule(
             My::name(),
@@ -163,8 +163,6 @@ class Manage extends Process
             ]
         ) .
         Notices::getNotices();
-
-        // Map elements list
 
         echo
         (new Para())
