@@ -99,12 +99,9 @@ class Manage extends Process
         }
 
         // Actions
-        // -------
-
         App::backend()->posts_actions_page = new BackendActions(App::backend()->url()->get('admin.plugin'), ['p' => My::id()]);
 
         // Filters
-        // -------
         App::backend()->post_filter = new FilterPosts();
 
         // get list params
