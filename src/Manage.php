@@ -90,11 +90,9 @@ class Manage extends Process
 
         if (($_REQUEST['act'] ?? 'list') === 'map') {
             ManageMap::render();
-
             return;
         } elseif (($_REQUEST['act'] ?? 'list') === 'maps') {
             ManageMaps::render();
-
             return;
         }
 
