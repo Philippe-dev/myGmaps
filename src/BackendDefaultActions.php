@@ -342,7 +342,7 @@ class BackendDefaultActions
             # categories list
             # Getting categories
             $categories_combo = Combos::getCategoriesCombo(
-                App::blog()->getCategories()
+                App::blog()->getCategories(['post_type' => 'map'])
             );
 
             $items = [
