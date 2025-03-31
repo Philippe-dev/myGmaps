@@ -151,7 +151,7 @@ class Manage extends Process
             My::name(),
             Page::jsLoad('js/_posts_list.js') .
             Page::jsMetaEditor() .
-            App::backend()->post_filter->js(App::backend()->url()->get('admin.plugin') . '&p=' . My::id()) .
+            App::backend()->post_filter->js(App::backend()->url()->get('admin.plugin', ['p' => My::id()], '&') . '#entries-list') .
             My::jsLoad('config.map.min.js') .
             My::cssLoad('admin.css')
         );
