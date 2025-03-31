@@ -478,7 +478,7 @@ class FrontendTemplate
         $bDisplayDirection = $aOptions['display_direction'];
 
         $sOutput = <<<EOT
-            const routePolyline_$sId;
+            let routePolyline_$sId;
             const routePolylineOptions_$sId = {
                 strokeColor: "{$sStrokeColor}",
                 strokeOpacity: parseFloat({$sStrokeOpacity}),
