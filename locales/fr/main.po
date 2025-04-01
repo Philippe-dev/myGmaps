@@ -1,6 +1,6 @@
 # Language: Français
 # Module: myGmaps - 9.3
-# Date: 2025-03-30 17:42:28
+# Date: 2025-04-01 16:40:17
 # Translated with translater 2025.03.03
 
 msgid ""
@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: myGmaps 9.3\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-03-30T17:42:28+00:00\n"
+"PO-Revision-Date: 2025-04-01T16:40:17+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -74,50 +74,50 @@ msgid "none"
 msgstr "aucun"
 
 #: src/Backend.php:586
-#: src/BackendList.php:195
 #: src/BackendMiniList.php:145
+#: src/ListingElements.php:332
 msgid "point of interest"
 msgstr "point d'intérêt"
 
 #: src/Backend.php:587
-#: src/BackendList.php:197
 #: src/BackendMiniList.php:147
+#: src/ListingElements.php:334
 msgid "polyline"
 msgstr "ligne brisée"
 
 #: src/Backend.php:588
-#: src/BackendList.php:199
 #: src/BackendMiniList.php:149
+#: src/ListingElements.php:336
 msgid "polygon"
 msgstr "polygone"
 
 #: src/Backend.php:589
-#: src/BackendList.php:203
 #: src/BackendMiniList.php:153
+#: src/ListingElements.php:340
 msgid "rectangle"
 msgstr "rectangle"
 
 #: src/Backend.php:590
-#: src/BackendList.php:201
 #: src/BackendMiniList.php:151
+#: src/ListingElements.php:338
 msgid "circle"
 msgstr "cercle"
 
 #: src/Backend.php:591
-#: src/BackendList.php:205
 #: src/BackendMiniList.php:155
+#: src/ListingElements.php:342
 msgid "included kml file"
 msgstr "fichier kml inclus"
 
 #: src/Backend.php:592
-#: src/BackendList.php:207
 #: src/BackendMiniList.php:157
+#: src/ListingElements.php:344
 msgid "GeoRSS feed"
 msgstr "flux GeoRSS"
 
 #: src/Backend.php:593
-#: src/BackendList.php:209
 #: src/BackendMiniList.php:159
+#: src/ListingElements.php:346
 msgid "directions"
 msgstr "itinéraire"
 
@@ -141,45 +141,29 @@ msgstr "Voulez-vous vraiment supprimer cet élément ?"
 msgid "Attached Map"
 msgstr "Carte attachée"
 
-#: src/BackendActions.php:61
+#: src/BackendActions.php:59
 msgid "Maps actions"
 msgstr "Actions sur les cartes"
 
-#: src/BackendActions.php:87
+#: src/BackendActions.php:76
+msgid "Maps"
+msgstr "Cartes"
+
+#: src/BackendActions.php:95
 msgid "Back to elements list"
 msgstr "Retour à la liste des éléments"
 
-#: src/BackendDefaultActions.php:124
+#: src/BackendDefaultActions.php:123
 msgid "No element selected"
 msgstr "Pas d'élement sélectionné"
 
-#: src/BackendDefaultActions.php:143
+#: src/BackendDefaultActions.php:142
 msgid "Published elements cannot be set to scheduled"
 msgstr "Les éléments publiés ne peuvent être programmés"
 
-#: src/BackendDefaultActions.php:571
+#: src/BackendDefaultActions.php:570
 msgid "Element language:"
 msgstr "Langue de l'élément :"
-
-#: src/BackendList.php:40
-msgid "No element matches the filter"
-msgstr "Aucun élément correspondant au filtre"
-
-#: src/BackendList.php:42
-msgid "No map element"
-msgstr "Aucun élément"
-
-#: src/BackendList.php:56
-msgid "List of %s elements matching the filter"
-msgstr "Liste des %s éléments correspondant au filtre"
-
-#: src/BackendList.php:60
-msgid "Available elements list (%s)"
-msgstr "Liste des éléments disponibles (%s)"
-
-#: src/BackendList.php:63
-msgid "Elements list (%s)"
-msgstr "Liste des éléments (%s)"
 
 #: src/BackendMiniList.php:44
 msgid "Elements list"
@@ -218,14 +202,22 @@ msgstr "Options des cartes par défaut"
 msgid "Sorry, javascript must be activated in your browser to see this map."
 msgstr "Désolé, javascript doit être activé dans votre navigateur pour voir cette carte."
 
-#: src/Manage.php:168
-msgid "Map elements"
-msgstr "Éléments de carte"
+#: src/ListingElements.php:59
+msgid "No element matches the filter"
+msgstr "Aucun élément correspondant au filtre"
 
-#: src/Manage.php:189
+#: src/ListingElements.php:137
+msgid "List of elements (%s)"
+msgstr "Liste des éléments (%s)"
+
+#: src/Manage.php:163
 #: src/ManageMap.php:813
 msgid "New element"
 msgstr "Nouvel élément"
+
+#: src/Manage.php:188
+msgid "Selected elements action:"
+msgstr "Action sur les éléments sélectionnés :"
 
 #: src/ManageMap.php:71
 msgid "New map element"
@@ -371,6 +363,21 @@ msgstr "Choisir les éléments de la carte attachée au billet :"
 msgid "Add selected map elements"
 msgstr "Ajouter les éléments de carte sélectionnés"
 
+msgid "No map element"
+msgstr "Aucun élément"
+
+msgid "List of %s elements matching the filter"
+msgstr "Liste des %s éléments correspondant au filtre"
+
+msgid "Available elements list (%s)"
+msgstr "Liste des éléments disponibles (%s)"
+
+msgid "Elements list (%s)"
+msgstr "Liste des éléments (%s)"
+
+msgid "Map elements"
+msgstr "Éléments de carte"
+
 msgid "Create a new category for the element(s)"
 msgstr "Créer une nouvelle catégorie pour le(s) éléments(s)"
 
@@ -397,9 +404,6 @@ msgstr "Pas de carte attachée"
 
 msgid "Google Maps"
 msgstr "Cartes Google"
-
-msgid "Maps"
-msgstr "Cartes"
 
 msgid "Map:"
 msgstr "Carte :"
@@ -447,9 +451,6 @@ msgstr "Vous n'êtes pas autorisé à changer le statut de cet élément"
 
 msgid "Map elements per page"
 msgstr "Éléments de carte par page"
-
-msgid "Selected elements action:"
-msgstr "Action sur les éléments sélectionnés :"
 
 msgid "Map element status"
 msgstr "État de l'élément"
