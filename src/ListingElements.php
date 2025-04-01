@@ -257,7 +257,7 @@ class ListingElements extends Listing
                 ->class('maximal')
                 ->items([
                     (new Link())
-                        ->href(App::postTypes()->get($this->rs->post_type)->adminUrl($this->rs->post_id))
+                        ->href(My::manageUrl() . '&act=map&id=' . $this->rs->post_id )
                         ->text(Html::escapeHTML(trim(Html::clean($this->rs->post_title)))),
                 ])
             ->render(),
