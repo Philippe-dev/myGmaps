@@ -264,11 +264,11 @@ class ListingElements extends Listing
                 ->class('nowrap')
                 ->text($this->rs->user_id)
             ->render(),
-            'image' => (new Td())
+            'type' => (new Td())
                 ->class(['nowrap', 'count'])
                 ->separator(' ')
                 ->items([
-                    self::getRowImage(self::getImgTitle(), self::getImgSrc(), 'map', false),
+                    self::getRowImage(self::getImgTitle(), self::getImgSrc(), 'map'),
                 ])
                 ->title(self::getImgTitle())
             ->render(),
@@ -279,6 +279,7 @@ class ListingElements extends Listing
                     App::status()->post()->image((int) $this->rs->post_status),
                     ... $status,
                 ])
+                //->title(App::status()->post()->name((string) $this->rs->post_status))
             ->render(),
         ];
 
