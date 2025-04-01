@@ -51,7 +51,7 @@ class ListingElements extends Listing
      * @param   string  $enclose_block  The enclose block
      * @param   bool    $filter         The filter
      */
-    public function display(int $page, int $nb_per_page, string $enclose_block = '', bool $filter = false): void
+    public function display(int $page, int $nb_per_page, string $enclose_block = '', bool $filter = false, bool $include_type = false): void
     {
         if ($this->rs->isEmpty()) {
             echo (new Para())
@@ -100,6 +100,15 @@ class ListingElements extends Listing
             ->render(),
         ];
 
+        if ($include_type) {
+            $cols = array_merge($cols, [
+                'type' => (new Th())
+                    ->scope('col')
+                    ->text(__('Type'))
+                ->render(),
+            ]);
+        }
+
         $cols = new ArrayObject($cols);
         # --BEHAVIOR-- adminPostListHeaderV2 -- MetaRecord, ArrayObject
         App::behavior()->callBehavior('adminPostListHeaderV2', $this->rs, $cols);
@@ -108,9 +117,14 @@ class ListingElements extends Listing
         $this->userColumns('posts', $cols);
 
         // Prepare listing
+
         $lines = [];
+        $types = [];
         while ($this->rs->fetch()) {
-            $lines[] = $this->postLine(isset($entries[$this->rs->post_id]));
+            $lines[] = $this->postLine(isset($entries[$this->rs->post_id]), $include_type);
+            if (!in_array($this->rs->post_type, $types)) {
+                $types[] = $this->rs->post_type;
+            }
         }
 
         if ($filter) {
@@ -190,7 +204,7 @@ class ListingElements extends Listing
      *
      * @param   bool    $checked    The checked flag
      */
-    private function postLine(bool $checked): Tr
+    private function postLine(bool $checked, bool $include_type): Tr
     {
         $post_classes = ['line'];
         if (App::status()->post()->isRestricted((int) $this->rs->post_status)) {
@@ -266,9 +280,8 @@ class ListingElements extends Listing
             ->render(),
             'type' => (new Td())
                 ->class(['nowrap', 'count'])
-                ->separator(' ')
                 ->items([
-                    self::getRowImage(self::getImgTitle(), self::getImgSrc(), 'map'),
+                    self::getRowImage(self::getImgTitle(), self::getImgSrc(), 'map', false),
                 ])
                 ->title(self::getImgTitle())
             ->render(),
@@ -282,6 +295,18 @@ class ListingElements extends Listing
                 //->title(App::status()->post()->name((string) $this->rs->post_status))
             ->render(),
         ];
+
+        if ($include_type) {
+            $cols = array_merge($cols, [
+                'type' => (new Td())
+                    ->class(['nowrap', 'status'])
+                    ->separator(' ')
+                    ->items([
+                        App::postTypes()->image($this->rs->post_type),
+                    ])
+                ->render(),
+            ]);
+        }
 
         $cols = new ArrayObject($cols);
         # --BEHAVIOR-- adminPostListValueV2 -- MetaRecord, ArrayObject
