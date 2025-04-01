@@ -289,7 +289,6 @@ class ListingElements extends Listing
                     App::status()->post()->image((int) $this->rs->post_status),
                     ... $status,
                 ])
-                //->title(App::status()->post()->name((string) $this->rs->post_status))
             ->render(),
         ];
 
