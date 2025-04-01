@@ -123,7 +123,7 @@ class ListingElements extends Listing
                 (new Text(null, sprintf(__('List of elements (%s)'), $this->rs_count))),
             ];
             foreach (App::status()->post()->dump(false) as $status) {
-                $nb = (int) App::blog()->getPosts(['post_status' => $status->level()], true)->f(0);
+                $nb = (int) App::blog()->getPosts(['post_type' => 'map', 'post_status' => $status->level()], true)->f(0);
                 if ($nb !== 0) {
                     $stats[] = (new Set())
                         ->separator(' ')
@@ -264,9 +264,13 @@ class ListingElements extends Listing
                 ->class('nowrap')
                 ->text($this->rs->user_id)
             ->render(),
-            'type' => (new Td())
-                ->class('nowrap')
-                ->text($this->rs->user_id)
+            'image' => (new Td())
+                ->class(['nowrap', 'count'])
+                ->separator(' ')
+                ->items([
+                    self::getRowImage(self::getImgTitle(), self::getImgSrc(), 'map', false),
+                ])
+                ->title(self::getImgTitle())
             ->render(),
             'status' => (new Td())
                 ->class(['nowrap', 'status'])
