@@ -182,10 +182,7 @@ class ListingElements extends Listing
                             ->separator(' - ')
                             ->items([
                                 ... array_map(fn ($k): Img|Set|Text => App::status()->post()->image($k->id(), true), App::status()->post()->dump(false)),
-                                self::getRowImage(__('Protected'), 'images/locker.svg', 'locked', true),
                                 self::getRowImage(__('Selected'), 'images/selected.svg', 'selected', true),
-                                self::getRowImage(__('Attachments'), 'images/attach.svg', 'attach', true),
-                                self::getRowImage(self::getImgTitle(), self::getImgSrc(), 'map', true),
                             ])
                             ->render(),
                         )),
