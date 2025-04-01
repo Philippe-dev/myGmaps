@@ -340,6 +340,8 @@ class ListingElements extends Listing
             $img_title = __('GeoRSS feed');
         } elseif ($meta_rs === 'directions') {
             $img_title = __('directions');
+        } else {
+            $img_title = '';
         }
 
         return $img_title;
@@ -365,6 +367,8 @@ class ListingElements extends Listing
             $img_src = Page::getPF(My::id()) . '/css/img/feed.svg';
         } elseif ($meta_rs === 'directions') {
             $img_src = Page::getPF(My::id()) . '/css/img/directions.svg';
+        } else {
+            $img_src = '';
         }
 
         return $img_src;
