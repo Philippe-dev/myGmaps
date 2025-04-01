@@ -129,7 +129,7 @@ class ListingElements extends Listing
 
         if ($filter) {
             $caption = sprintf(
-                __('List of %s element matching the filter.', 'List of %s elements matching the filter.', $this->rs_count),
+                __('List of %s entry matching the filter.', 'List of %s entries matching the filter.', $this->rs_count),
                 $this->rs_count
             );
         } else {
