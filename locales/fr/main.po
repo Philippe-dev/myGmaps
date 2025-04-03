@@ -1,6 +1,6 @@
 # Language: Français
 # Module: myGmaps - 9.3
-# Date: 2025-04-01 17:07:54
+# Date: 2025-04-03 06:43:59
 # Translated with translater 2025.03.03
 
 msgid ""
@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: myGmaps 9.3\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-04-01T17:07:54+00:00\n"
+"PO-Revision-Date: 2025-04-03T06:43:59+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -74,50 +74,50 @@ msgid "none"
 msgstr "aucun"
 
 #: src/Backend.php:586
+#: src/BackendList.php:328
 #: src/BackendMiniList.php:145
-#: src/ListingElements.php:332
 msgid "point of interest"
 msgstr "point d'intérêt"
 
 #: src/Backend.php:587
+#: src/BackendList.php:330
 #: src/BackendMiniList.php:147
-#: src/ListingElements.php:334
 msgid "polyline"
 msgstr "ligne brisée"
 
 #: src/Backend.php:588
+#: src/BackendList.php:332
 #: src/BackendMiniList.php:149
-#: src/ListingElements.php:336
 msgid "polygon"
 msgstr "polygone"
 
 #: src/Backend.php:589
+#: src/BackendList.php:336
 #: src/BackendMiniList.php:153
-#: src/ListingElements.php:340
 msgid "rectangle"
 msgstr "rectangle"
 
 #: src/Backend.php:590
+#: src/BackendList.php:334
 #: src/BackendMiniList.php:151
-#: src/ListingElements.php:338
 msgid "circle"
 msgstr "cercle"
 
 #: src/Backend.php:591
+#: src/BackendList.php:338
 #: src/BackendMiniList.php:155
-#: src/ListingElements.php:342
 msgid "included kml file"
 msgstr "fichier kml inclus"
 
 #: src/Backend.php:592
+#: src/BackendList.php:340
 #: src/BackendMiniList.php:157
-#: src/ListingElements.php:344
 msgid "GeoRSS feed"
 msgstr "flux GeoRSS"
 
 #: src/Backend.php:593
+#: src/BackendList.php:342
 #: src/BackendMiniList.php:159
-#: src/ListingElements.php:346
 msgid "directions"
 msgstr "itinéraire"
 
@@ -165,6 +165,14 @@ msgstr "Les éléments publiés ne peuvent être programmés"
 msgid "Element language:"
 msgstr "Langue de l'élément :"
 
+#: src/BackendList.php:59
+msgid "No element matches the filter"
+msgstr "Aucun élément correspondant au filtre"
+
+#: src/BackendList.php:137
+msgid "List of elements (%s)"
+msgstr "Liste des éléments (%s)"
+
 #: src/BackendMiniList.php:44
 msgid "Elements list"
 msgstr "Liste des éléments"
@@ -201,14 +209,6 @@ msgstr "Options des cartes par défaut"
 #: src/FrontendTemplate.php:31
 msgid "Sorry, javascript must be activated in your browser to see this map."
 msgstr "Désolé, javascript doit être activé dans votre navigateur pour voir cette carte."
-
-#: src/ListingElements.php:59
-msgid "No element matches the filter"
-msgstr "Aucun élément correspondant au filtre"
-
-#: src/ListingElements.php:137
-msgid "List of elements (%s)"
-msgstr "Liste des éléments (%s)"
 
 #: src/Manage.php:163
 #: src/ManageMap.php:813
@@ -362,11 +362,6 @@ msgstr "Choisir les éléments de la carte attachée au billet :"
 #: src/ManageMaps.php:187
 msgid "Add selected map elements"
 msgstr "Ajouter les éléments de carte sélectionnés"
-
-msgid "List of %s entry matching the filter."
-msgid_plural "List of %s entries matching the filter."
-msgstr[0] "Liste de %s élément correspondant au filtre."
-msgstr[1] "Liste des %s éléments correspondant au filtre."
 
 msgid "No map element"
 msgstr "Aucun élément"

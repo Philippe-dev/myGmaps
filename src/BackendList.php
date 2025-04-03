@@ -41,7 +41,7 @@ use Dotclear\Helper\Html\Html;
  *
  * @since   2.20
  */
-class ListingElements extends Listing
+class BackendList extends Listing
 {
     /**
      * Display admin post list.

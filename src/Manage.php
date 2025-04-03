@@ -129,7 +129,7 @@ class Manage extends Process
 
             App::backend()->posts      = App::blog()->getPosts($params);
             App::backend()->counter    = App::blog()->getPosts($params, true);
-            App::backend()->posts_list = new ListingElements(App::backend()->posts, App::backend()->counter->f(0));
+            App::backend()->posts_list = new BackendList(App::backend()->posts, App::backend()->counter->f(0));
         } catch (Exception $e) {
             App::error()->add($e->getMessage());
         }
