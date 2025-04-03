@@ -191,7 +191,7 @@ class Config extends Process
                     ->class('area')
                     ->id('map_canvas'),
                 (new Note())
-                    ->class('form-note info maximal mapinfo')
+                    ->class(['form-note', 'info', 'maximal' 'mapinfo'])
                     ->text(__('Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls.')),
                 (new Para())->items([
                     (new Input('myGmaps_center'))
