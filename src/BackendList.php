@@ -213,6 +213,7 @@ class BackendList extends Listing
         if ($this->rs->post_password) {
             $status[] = self::getRowImage(__('Protected'), 'images/locker.svg', 'locked');
         }
+        
         if ($this->rs->post_selected) {
             $status[] = self::getRowImage(__('Selected'), 'images/selected.svg', 'selected');
         }
@@ -285,6 +286,7 @@ class BackendList extends Listing
             'status' => (new Td())
                 ->class(['nowrap', 'status'])
                 ->separator(' ')
+                ->title(App::status()->post()->name((int) $this->rs->post_status))
                 ->items([
                     App::status()->post()->image((int) $this->rs->post_status),
                     ... $status,
