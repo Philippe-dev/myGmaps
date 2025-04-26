@@ -277,8 +277,8 @@ class Backend extends Process
 
         if ($elements_list == '' && $map_options == '') {
             echo '<div class="area" id="gmap-area">' .
-            '<label class="bold" for="post-gmap">' . __('Google Map:') . '</label>' .
-            $form_note .
+            '<label class="bold" for="post-gmap">' . __('Map:') . ' ' . 
+            $form_note . '</label>' .
             '<div id="post-gmap" >' .
             '<p class="elements-list">' . __('No map') . '</p>' .
             $addmap_message .
@@ -286,8 +286,8 @@ class Backend extends Process
             '</div>';
         } elseif ($elements_list == '' && $map_options != '') {
             echo '<div class="area" id="gmap-area">' .
-            '<label class="bold" for="post-gmap">' . __('Google Map:') . '</label>' .
-            $form_note .
+            '<label class="bold" for="post-gmap">' . __('Map:') . ' ' . 
+            $form_note . '</label>' .
             '<div id="post-gmap" >' .
             '<div class="map_toolbar"><span class="search">' . __('Search:') . '</span><span class="map_spacer">&nbsp;</span>' .
                 '<input size="50" maxlength="255" type="text" id="address" class="qx"><input id="geocode" type="submit" value="' . __('OK') . '">' .
@@ -311,8 +311,8 @@ class Backend extends Process
             '</div>';
         } else {
             echo '<div class="area" id="gmap-area">' .
-            '<label class="bold" for="post-gmap">' . __('Google Map:') . '</label>' .
-            $form_note .
+            '<label class="bold" for="post-gmap">' . __('Map:') . ' ' . 
+            $form_note . '</label>' .
             '<div id="post-gmap" >' .
             '<div class="map_toolbar"><span class="search">' . __('Search:') . '</span><span class="map_spacer">&nbsp;</span>' .
                 '<input size="50" maxlength="255" type="text" id="address" class="qx"><input id="geocode" type="submit" value="' . __('OK') . '">' .
@@ -685,29 +685,56 @@ class Backend extends Process
         My::jsLoad('add.map.min.js') .
 
         '<script>' . "\n" .
-        'document.addEventListener("DOMContentLoaded", function() {' . "\n" .
-            'document.querySelector("#gmap-area label").addEventListener("click", function() {' . "\n" .
-            'let postGmap = document.querySelector("#post-gmap");' . "\n" .
-            'postGmap.style.display = postGmap.style.display === "none" ? "block" : "none";' . "\n" .
+        'function toggleWithLegend(labelEl, targetEl, options) {' . "\n" .
+            'var prefKey     = options.user_pref;' . "\n" .
+            'var legendClick = options.legend_click;' . "\n" .
+            'var arrow = document.createElement("span");' . "\n" .
+            'arrow.style.userSelect = "none";' . "\n" .
+            'arrow.style.marginRight = "0.5em";' . "\n" .
+            'labelEl.insertBefore(arrow, labelEl.firstChild);' . "\n" .
+            'var stored = localStorage.getItem(prefKey);' . "\n" .
+            'var isHidden = (stored === "false");' . "\n" .
+            'targetEl.style.display = isHidden ? "none" : "";' . "\n" .
+            'arrow.textContent = isHidden ? "▶" : "▼";' . "\n" .
+            'if (legendClick) {' . "\n" .
+                'labelEl.style.cursor = "pointer";' . "\n" .
+                'labelEl.addEventListener("click", function() {' . "\n" .
+                    'isHidden = targetEl.style.display === "none";' . "\n" .
+                    'targetEl.style.display = isHidden ? "" : "none";' . "\n" .
+                    'arrow.textContent = isHidden ? "▼" : "▶";' . "\n" .
+                    'localStorage.setItem(prefKey, targetEl.style.display === "" );' . "\n" .
+                '});' . "\n" .
+            '}' . "\n" .
+        '}' . "\n" .
+
+        'document.addEventListener(\'DOMContentLoaded\', function() {' . "\n" .
+            'document.querySelectorAll(\'#gmap-area label\').forEach(function(label) {' . "\n" .
+            'toggleWithLegend(label, document.getElementById(\'post-gmap\'), {' . "\n" .
+                'legend_click: true,' . "\n" .
+                'user_pref: \'dcx_gmap_detail\'' . "\n" .
             '});' . "\n" .
-            'document.querySelectorAll("a.map-remove").forEach(function(element) {' . "\n" .
-            'element.addEventListener("click", function(event) {' . "\n" .
-                'let msg = "' . __('Are you sure you want to remove this map?') . '";' . "\n" .
+        '});' . "\n" .
+
+        'document.querySelectorAll(\'a.map-remove\').forEach(function(el) {' . "\n" .
+            'el.addEventListener(\'click\', function(e) {' . "\n" .
+                'var msg = \'' . __('Are you sure you want to remove this map?') . '\';' . "\n" .
                 'if (!window.confirm(msg)) {' . "\n" .
-                'event.preventDefault();' . "\n" .
+                    'e.preventDefault();' . "\n" .
                 '}' . "\n" .
             '});' . "\n" .
-            '});' . "\n" .
-            'document.querySelectorAll("a.element-remove").forEach(function(element) {' . "\n" .
-            'element.addEventListener("click", function(event) {' . "\n" .
-                'let msg = "' . __('Are you sure you want to remove this element?') . '";' . "\n" .
+        '});' . "\n" .
+
+        'document.querySelectorAll(\'a.element-remove\').forEach(function(el) {' . "\n" .
+            'el.addEventListener(\'click\', function(e) {' . "\n" .
+                'var msg = \'' . __('Are you sure you want to remove this element?') . '\';' . "\n" .
                 'if (!window.confirm(msg)) {' . "\n" .
-                'event.preventDefault();' . "\n" .
+                    'e.preventDefault();' . "\n" .
                 '}' . "\n" .
-            '});' . "\n" .
+                '});' . "\n" .
             '});' . "\n" .
         '});' . "\n" .
         '</script>' . "\n" .
+
         My::cssLoad('admin-post.css') . "\n";
     }
 
