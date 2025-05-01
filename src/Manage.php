@@ -147,6 +147,7 @@ class Manage extends Process
             [
                 html::escapeHTML(App::blog()->name) => '',
                 My::name()                          => '',
+                __('Elements')                      => '',
             ]
         ) .
         Notices::getNotices();
