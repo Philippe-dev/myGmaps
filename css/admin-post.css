@@ -30,8 +30,8 @@ a.map-remove {
 }
 
 gmp-advanced-marker img[src$=".svg"] {
-  width: 40px;
-  height: 40px;
+    width: 40px;
+    height: 40px;
 }
 
 #infowindow_polyline {
@@ -145,4 +145,8 @@ gmp-advanced-marker img[src$=".svg"] {
 
 .form-note.mapinfo {
     margin-top: 0
+}
+
+.element-remove{
+    width: 1.2em;
 }

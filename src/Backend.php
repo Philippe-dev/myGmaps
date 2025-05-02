@@ -88,7 +88,7 @@ class Backend extends Process
             } catch (Exception $e) {
                 App::error()->add($e->getMessage());
             }
-        } elseif (!empty($_GET['remove']) && is_numeric($_GET['remove'])) {
+        } elseif (isset($_GET['remove']) && is_numeric($_GET['remove'])) {
             try {
                 $post_id = $_GET['id'];
 
@@ -206,7 +206,7 @@ class Backend extends Process
             return;
         }
         $id   = $post->post_id;
-        $type = $post->post_type;
+        $posttype = $post->post_type;
 
         $meta          = App::meta();
         $elements_list = $meta->getMetaStr($post->post_meta, 'map');
@@ -345,8 +345,8 @@ class Backend extends Process
             echo '<div id="form-entries">' .
             '<p class="elements-list">' . __('Included elements list') . '</p>' ;
 
-            $post_list->display(App::backend()->page, App::backend()->nb_per_page, $enclose_block = '', $post->post_id, $post->post_type);
-
+            $post_list->display(App::backend()->page, App::backend()->nb_per_page, (int) $id, $enclose_block = '', (string) $posttype );
+            //$post_list->display(...);
             echo '</div>' .
             '<ul>' .
             '<li class="add"><a href="' . App::backend()->url()->get('admin.plugin.' . My::id()) . '&act=maps&id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></li>' .
