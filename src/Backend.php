@@ -205,7 +205,7 @@ class Backend extends Process
         if (is_null($post) || !in_array($post->post_type, $postTypes)) {
             return;
         }
-        $id   = $post->post_id;
+        $id       = $post->post_id;
         $posttype = $post->post_type;
 
         $meta          = App::meta();
@@ -277,7 +277,7 @@ class Backend extends Process
 
         if ($elements_list == '' && $map_options == '') {
             echo '<div class="area" id="gmap-area">' .
-            '<label class="bold" for="post-gmap">' . __('Map:') . ' ' . 
+            '<label class="bold" for="post-gmap">' . __('Map:') . ' ' .
             $form_note . '</label>' .
             '<div id="post-gmap" >' .
             '<p class="elements-list">' . __('No map') . '</p>' .
@@ -286,7 +286,7 @@ class Backend extends Process
             '</div>';
         } elseif ($elements_list == '' && $map_options != '') {
             echo '<div class="area" id="gmap-area">' .
-            '<label class="bold" for="post-gmap">' . __('Map:') . ' ' . 
+            '<label class="bold" for="post-gmap">' . __('Map:') . ' ' .
             $form_note . '</label>' .
             '<div id="post-gmap" >' .
             '<div class="map_toolbar"><span class="search">' . __('Search:') . '</span><span class="map_spacer">&nbsp;</span>' .
@@ -311,7 +311,7 @@ class Backend extends Process
             '</div>';
         } else {
             echo '<div class="area" id="gmap-area">' .
-            '<label class="bold" for="post-gmap">' . __('Map:') . ' ' . 
+            '<label class="bold" for="post-gmap">' . __('Map:') . ' ' .
             $form_note . '</label>' .
             '<div id="post-gmap" >' .
             '<div class="map_toolbar"><span class="search">' . __('Search:') . '</span><span class="map_spacer">&nbsp;</span>' .
@@ -345,8 +345,8 @@ class Backend extends Process
             echo '<div id="form-entries">' .
             '<p class="elements-list">' . __('Included elements list') . '</p>' ;
 
-            $post_list->display(App::backend()->page, App::backend()->nb_per_page, (int) $id, $enclose_block = '', (string) $posttype );
-            //$post_list->display(...);
+            $post_list->display(App::backend()->page, App::backend()->nb_per_page, (int) $id, $enclose_block = '', (string) $posttype);
+
             echo '</div>' .
             '<ul>' .
             '<li class="add"><a href="' . App::backend()->url()->get('admin.plugin.' . My::id()) . '&act=maps&id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></li>' .

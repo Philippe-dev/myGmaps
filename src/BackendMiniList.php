@@ -23,8 +23,6 @@ use Dotclear\Helper\Date;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Link;
 use Dotclear\Helper\Html\Form\Para;
-use Dotclear\Helper\Html\Form\Image;
-use Dotclear\Helper\Html\Form\Set;
 use Dotclear\Helper\Html\Form\Table;
 use Dotclear\Helper\Html\Form\Tbody;
 use Dotclear\Helper\Html\Form\Td;
@@ -107,9 +105,6 @@ class BackendMiniList extends Listing
         # --BEHAVIOR-- adminPostListHeaderV2 -- MetaRecord, ArrayObject
         App::behavior()->callBehavior('adminPostMiniListHeaderV2', $this->rs, $cols);
 
-        // Cope with optional columns
-        //$this->userColumns('posts', $cols);
-
         // Prepare listing
 
         $lines = [];
@@ -123,8 +118,6 @@ class BackendMiniList extends Listing
                 $types[] = $this->rs->post_type;
             }
         }
-
-        
 
         $buffer = (new Div())
             ->class('table-outer')
@@ -254,9 +247,6 @@ class BackendMiniList extends Listing
         $cols = new ArrayObject($cols);
         # --BEHAVIOR-- adminPostListValueV2 -- MetaRecord, ArrayObject
         App::behavior()->callBehavior('adminPostMiniListValueV2', $this->rs, $cols);
-
-        // Cope with optional columns
-        //$this->userColumns('posts', $cols);
 
         return (new Tr())
             ->id('p' . $this->rs->post_id)
