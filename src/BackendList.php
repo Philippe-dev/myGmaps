@@ -33,6 +33,7 @@ use Dotclear\Helper\Html\Form\Td;
 use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Form\Th;
 use Dotclear\Helper\Html\Form\Thead;
+use Dotclear\Helper\Html\Form\Timestamp;
 use Dotclear\Helper\Html\Form\Tr;
 use Dotclear\Helper\Html\Html;
 
@@ -132,7 +133,7 @@ class BackendList extends Listing
                 __('List of %s entry matching the filter.', 'List of %s entries matching the filter.', $this->rs_count),
                 $this->rs_count
             );
-        } else {
+        } elseif (count($types) === 1) {
             $stats = [
                 (new Text(null, sprintf(__('List of elements (%s)'), $this->rs_count))),
             ];
@@ -143,7 +144,7 @@ class BackendList extends Listing
                         ->separator(' ')
                         ->items([
                             (new Link())
-                                ->href(App::backend()->url()->get('admin.posts', ['status' => $status->level()]))
+                                ->href(App::backend()->url()->get('admin.plugin', ['p' => My::id(), 'status' => $status->level()]))
                                 ->text(__($status->name(), $status->pluralName(), $nb)),
                             (new Text(null, sprintf('(%d)', $nb))),
                         ]);
@@ -182,7 +183,7 @@ class BackendList extends Listing
                             ->separator(' - ')
                             ->items([
                                 ... array_map(fn ($k): Img|Set|Text => App::status()->post()->image($k->id(), true), App::status()->post()->dump(false)),
-                                self::getRowImage(__('Selected'), 'images/selected.svg', 'selected', true),
+                                self::getMyRowImage(__('Selected'), 'images/selected.svg', 'selected', true),
                             ])
                             ->render(),
                         )),
@@ -210,21 +211,28 @@ class BackendList extends Listing
         $post_classes[] = 'sts-' . App::status()->post()->id((int) $this->rs->post_status);
 
         $status = [];
-        if ($this->rs->post_password) {
-            $status[] = self::getRowImage(__('Protected'), 'images/locker.svg', 'locked');
-        }
         
+        switch ((int) $this->rs->post_status) {
+            case App::status()->post()::PUBLISHED:
+                $status[] = self::getMyRowImage(__('Published'), 'images/published.svg', 'published');
+
+                break;
+            case App::status()->post()::UNPUBLISHED:
+                $status[] = self::getMyRowImage(__('Unpublished'), 'images/unpublished.svg', 'unpublished');
+
+                break;
+            case App::status()->post()::SCHEDULED:
+                $status[] = self::getMyRowImage(__('Scheduled'), 'images/scheduled.svg', 'scheduled');
+
+                break;
+            case App::status()->post()::PENDING:
+                $status[] = self::getMyRowImage(__('Pending'), 'images/pending.svg', 'pending');
+
+                break;
+        }
+
         if ($this->rs->post_selected) {
-            $status[] = self::getRowImage(__('Selected'), 'images/selected.svg', 'selected');
-        }
-
-        if ($this->rs->post_meta) {
-            $type[] = self::getRowImage(self::getImgTitle(), self::getImgSrc(), 'map');
-        }
-
-        $nb_media = $this->rs->countMedia();
-        if ($nb_media > 0) {
-            $status[] = self::getRowImage(sprintf($nb_media == 1 ? __('%d attachment') : __('%d attachments'), $nb_media), 'images/attach.svg', 'attach');
+            $status[] = self::getMyRowImage(__('Selected'), 'images/selected.svg', 'selected');
         }
 
         if ($this->rs->cat_title) {
@@ -239,6 +247,10 @@ class BackendList extends Listing
             }
         } else {
             $category = (new Text(null, __('(No cat)')));
+        }
+
+        if ($this->rs->post_meta) {
+            $type[] = self::getMyRowImage(self::getImgTitle(), self::getImgSrc(), 'map');
         }
 
         $cols = [
@@ -262,8 +274,8 @@ class BackendList extends Listing
             'date' => (new Td())
                 ->class(['nowrap', 'count'])
                 ->items([
-                    (new Text('time', Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt)))
-                        ->extra('datetime="' . Date::iso8601((int) strtotime($this->rs->post_dt), App::auth()->getInfo('user_tz')) . '"'),
+                    (new Timestamp(Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt)))
+                        ->datetime(Date::iso8601((int) strtotime($this->rs->post_dt), App::auth()->getInfo('user_tz'))),
                 ])
             ->render(),
             'category' => (new Td())
@@ -277,18 +289,16 @@ class BackendList extends Listing
                 ->text($this->rs->user_id)
             ->render(),
             'type' => (new Td())
-                ->class(['nowrap', 'count'])
+                ->class(['nowrap'])
                 ->items([
-                    self::getRowImage(self::getImgTitle(), self::getImgSrc(), 'map', false),
+                    self::getMyRowImage(self::getImgTitle(), self::getImgSrc(), 'map', false),
                 ])
                 ->title(self::getImgTitle())
             ->render(),
             'status' => (new Td())
                 ->class(['nowrap', 'status'])
                 ->separator(' ')
-                ->title(App::status()->post()->name((int) $this->rs->post_status))
                 ->items([
-                    App::status()->post()->image((int) $this->rs->post_status),
                     ... $status,
                 ])
             ->render(),
@@ -319,6 +329,21 @@ class BackendList extends Listing
             ->items([
                 (new Text(null, implode('', iterator_to_array($cols)))),
             ]);
+    }
+
+    /**
+     * Get image for table row and legend.
+     */
+    public static function getMyRowImage(string $title, string $image, string $class, bool $with_text = false): Img|Text
+    {
+        $img = (new Img($image))
+            ->alt(Html::escapeHTML($title))
+            ->class(['mark', 'mark-' . $class])
+            ->title(Html::escapeHTML($title));
+
+        return $with_text ?
+            (new Text(null, $img->render() . ' ' . Html::escapeHTML($title))) :
+            $img;
     }
 
     private function getImgTitle()

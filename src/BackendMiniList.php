@@ -20,15 +20,20 @@ use Dotclear\Core\Backend\Listing\Listing;
 use Dotclear\Core\Backend\Listing\Pager;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Date;
+use Dotclear\Helper\Html\Form\Caption;
+use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Div;
+use Dotclear\Helper\Html\Form\Img;
 use Dotclear\Helper\Html\Form\Link;
 use Dotclear\Helper\Html\Form\Para;
+use Dotclear\Helper\Html\Form\Set;
 use Dotclear\Helper\Html\Form\Table;
 use Dotclear\Helper\Html\Form\Tbody;
 use Dotclear\Helper\Html\Form\Td;
 use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Form\Th;
 use Dotclear\Helper\Html\Form\Thead;
+use Dotclear\Helper\Html\Form\Timestamp;
 use Dotclear\Helper\Html\Form\Tr;
 use Dotclear\Helper\Html\Html;
 
@@ -160,21 +165,28 @@ class BackendMiniList extends Listing
         $post_classes[] = 'sts-' . App::status()->post()->id((int) $this->rs->post_status);
 
         $status = [];
-        if ($this->rs->post_password) {
-            $status[] = self::getRowImage(__('Protected'), 'images/locker.svg', 'locked');
+
+        switch ((int) $this->rs->post_status) {
+            case App::status()->post()::PUBLISHED:
+                $status[] = self::getMyRowImage(__('Published'), 'images/published.svg', 'published');
+
+                break;
+            case App::status()->post()::UNPUBLISHED:
+                $status[] = self::getMyRowImage(__('Unpublished'), 'images/unpublished.svg', 'unpublished');
+
+                break;
+            case App::status()->post()::SCHEDULED:
+                $status[] = self::getMyRowImage(__('Scheduled'), 'images/scheduled.svg', 'scheduled');
+
+                break;
+            case App::status()->post()::PENDING:
+                $status[] = self::getMyRowImage(__('Pending'), 'images/pending.svg', 'pending');
+
+                break;
         }
 
         if ($this->rs->post_selected) {
-            $status[] = self::getRowImage(__('Selected'), 'images/selected.svg', 'selected');
-        }
-
-        if ($this->rs->post_meta) {
-            $type[] = self::getRowImage(self::getImgTitle(), self::getImgSrc(), 'map');
-        }
-
-        $nb_media = $this->rs->countMedia();
-        if ($nb_media > 0) {
-            $status[] = self::getRowImage(sprintf($nb_media == 1 ? __('%d attachment') : __('%d attachments'), $nb_media), 'images/attach.svg', 'attach');
+            $status[] = self::getMyRowImage(__('Selected'), 'images/selected.svg', 'selected');
         }
 
         if ($this->rs->cat_title) {
@@ -203,8 +215,8 @@ class BackendMiniList extends Listing
             'date' => (new Td())
                 ->class(['nowrap', 'count'])
                 ->items([
-                    (new Text('time', Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt)))
-                        ->extra('datetime="' . Date::iso8601((int) strtotime($this->rs->post_dt), App::auth()->getInfo('user_tz')) . '"'),
+                    (new Timestamp(Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt)))
+                        ->datetime(Date::iso8601((int) strtotime($this->rs->post_dt), App::auth()->getInfo('user_tz'))),
                 ])
             ->render(),
             'category' => (new Td())
@@ -216,16 +228,14 @@ class BackendMiniList extends Listing
             'type' => (new Td())
                 ->class(['nowrap'])
                 ->items([
-                    self::getRowImage(self::getImgTitle(), self::getImgSrc(), 'map', false),
+                    self::getMyRowImage(self::getImgTitle(), self::getImgSrc(), 'map', false),
                 ])
                 ->title(self::getImgTitle())
             ->render(),
             'status' => (new Td())
                 ->class(['nowrap', 'status'])
                 ->separator(' ')
-                ->title(App::status()->post()->name((int) $this->rs->post_status))
                 ->items([
-                    App::status()->post()->image((int) $this->rs->post_status),
                     ... $status,
                 ])
             ->render(),
@@ -238,7 +248,7 @@ class BackendMiniList extends Listing
                         ->title(__('Remove map element') . ' : ' . Html::escapeHTML($this->rs->post_title))
                         ->class(['mark', 'element-remove'])
                         ->items([
-                            self::getRowImage(__('Remove'), 'images/trash.svg', 'remove'),
+                            self::getMyRowImage(__('Remove'), 'images/trash.svg', 'remove'),
                         ]),
                 ])
             ->render(),
@@ -254,6 +264,21 @@ class BackendMiniList extends Listing
             ->items([
                 (new Text(null, implode('', iterator_to_array($cols)))),
             ]);
+    }
+
+    /**
+     * Get image for table row and legend.
+     */
+    public static function getMyRowImage(string $title, string $image, string $class, bool $with_text = false): Img|Text
+    {
+        $img = (new Img($image))
+            ->alt(Html::escapeHTML($title))
+            ->class(['mark', 'mark-' . $class])
+            ->title(Html::escapeHTML($title));
+
+        return $with_text ?
+            (new Text(null, $img->render() . ' ' . Html::escapeHTML($title))) :
+            $img;
     }
 
     private function getImgTitle()
