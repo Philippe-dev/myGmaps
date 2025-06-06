@@ -211,7 +211,7 @@ class BackendList extends Listing
         $post_classes[] = 'sts-' . App::status()->post()->id((int) $this->rs->post_status);
 
         $status = [];
-        
+
         switch ((int) $this->rs->post_status) {
             case App::status()->post()::PUBLISHED:
                 $status[] = self::getMyRowImage(__('Published'), 'images/published.svg', 'published');
@@ -249,9 +249,9 @@ class BackendList extends Listing
             $category = (new Text(null, __('(No cat)')));
         }
 
-        if ($this->rs->post_meta) {
+        /*if ($this->rs->post_meta) {
             $type[] = self::getMyRowImage(self::getImgTitle(), self::getImgSrc(), 'map');
-        }
+        }*/
 
         $cols = [
             'check' => (new Td())
@@ -291,9 +291,15 @@ class BackendList extends Listing
             'type' => (new Td())
                 ->class(['nowrap'])
                 ->items([
-                    self::getMyRowImage(self::getImgTitle(), self::getImgSrc(), 'map', false),
+                    (new Img(self::getImgSrc('light')))
+                        ->class('light-only mark mark-map')
+                        ->alt(self::getImgTitle())
+                        ->title(self::getImgTitle()),
+                    (new Img(self::getImgSrc('dark')))
+                        ->class('dark-only mark mark-map')
+                        ->alt(self::getImgTitle())
+                        ->title(self::getImgTitle()),
                 ])
-                ->title(self::getImgTitle())
             ->render(),
             'status' => (new Td())
                 ->class(['nowrap', 'status'])
@@ -346,6 +352,11 @@ class BackendList extends Listing
             $img;
     }
 
+    /**
+     * Get image title
+     *
+     * @return string
+     */
     private function getImgTitle()
     {
         $meta    = App::meta();
@@ -373,27 +384,34 @@ class BackendList extends Listing
 
         return $img_title;
     }
-    private function getImgSrc()
+
+    /**
+     * Get the image source
+     *
+     * @param string $mode The mode, 'light' or 'dark'
+     * @return string
+     */
+    private function getImgSrc(string $mode = 'light'): string
     {
         $meta    = App::meta();
         $meta_rs = $meta->getMetaStr($this->rs->post_meta, 'map');
 
         if ($meta_rs === 'point of interest') {
-            $img_src = Page::getPF(My::id()) . '/css/img/marker.svg';
+            $img_src = Page::getPF(My::id()) . '/css/img/marker' . ($mode === 'dark' ? '-dark' : '') . '.svg';
         } elseif ($meta_rs === 'polyline') {
-            $img_src = Page::getPF(My::id()) . '/css/img/polyline.svg';
+            $img_src = Page::getPF(My::id()) . '/css/img/polyline' . ($mode === 'dark' ? '-dark' : '') . '.svg';
         } elseif ($meta_rs === 'polygon') {
-            $img_src = Page::getPF(My::id()) . '/css/img/polygon.svg';
+            $img_src = Page::getPF(My::id()) . '/css/img/polygon' . ($mode === 'dark' ? '-dark' : '') . '.svg';
         } elseif ($meta_rs === 'circle') {
-            $img_src = Page::getPF(My::id()) . '/css/img/circle.svg';
+            $img_src = Page::getPF(My::id()) . '/css/img/circle' . ($mode === 'dark' ? '-dark' : '') . '.svg';
         } elseif ($meta_rs === 'rectangle') {
-            $img_src = Page::getPF(My::id()) . '/css/img/rectangle.svg';
+            $img_src = Page::getPF(My::id()) . '/css/img/rectangle' . ($mode === 'dark' ? '-dark' : '') . '.svg';
         } elseif ($meta_rs === 'included kml file') {
-            $img_src = Page::getPF(My::id()) . '/css/img/kml.svg';
+            $img_src = Page::getPF(My::id()) . '/css/img/kml' . ($mode === 'dark' ? '-dark' : '') . '.svg';
         } elseif ($meta_rs === 'GeoRSS feed') {
-            $img_src = Page::getPF(My::id()) . '/css/img/feed.svg';
+            $img_src = Page::getPF(My::id()) . '/css/img/feed' . ($mode === 'dark' ? '-dark' : '') . '.svg';
         } elseif ($meta_rs === 'directions') {
-            $img_src = Page::getPF(My::id()) . '/css/img/directions.svg';
+            $img_src = Page::getPF(My::id()) . '/css/img/directions' . ($mode === 'dark' ? '-dark' : '') . '.svg';
         } else {
             $img_src = '';
         }
