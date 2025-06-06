@@ -238,7 +238,7 @@ msgstr "Rectangle"
 msgid "Circle"
 msgstr "Cercle"
 
-msgid "Included Kml file"
+msgid "Included kml file"
 msgstr "Fichier kml inclus"
 
 msgid "GeoRSS Feed"

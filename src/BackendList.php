@@ -362,31 +362,49 @@ class BackendList extends Listing
         $meta    = App::meta();
         $meta_rs = $meta->getMetaStr($this->rs->post_meta, 'map');
 
-        if ($meta_rs === 'point of interest') {
-            $img_title = __('point of interest');
-        } elseif ($meta_rs === 'polyline') {
-            $img_title = __('polyline');
-        } elseif ($meta_rs === 'polygon') {
-            $img_title = __('polygon');
-        } elseif ($meta_rs === 'circle') {
-            $img_title = __('circle');
-        } elseif ($meta_rs === 'rectangle') {
-            $img_title = __('rectangle');
-        } elseif ($meta_rs === 'included kml file') {
-            $img_title = __('included kml file');
-        } elseif ($meta_rs === 'GeoRSS feed') {
-            $img_title = __('GeoRSS feed');
-        } elseif ($meta_rs === 'directions') {
-            $img_title = __('directions');
-        } else {
-            $img_title = '';
+        $img_title = '';
+        switch ($meta_rs) {
+            case 'point of interest':
+                $img_title = __('Point of interest');
+
+                break;
+            case 'polyline':
+                $img_title = __('Polyline');
+
+                break;
+            case 'polygon':
+                $img_title = __('Polygon');
+
+                break;
+            case 'circle':
+                $img_title = __('Circle');
+
+                break;
+            case 'rectangle':
+                $img_title = __('Rectangle');
+
+                break;
+            case 'included kml file':
+                $img_title = __('Included kml file');
+
+                break;
+            case 'GeoRSS feed':
+                $img_title = __('GeoRSS Feed');
+
+                break;
+            case 'directions':
+                $img_title = __('Directions');
+
+                break;
+            default:
+                $img_title = '';
         }
 
         return $img_title;
     }
 
     /**
-     * Get the image source
+     * Get the image src
      *
      * @param string $mode The mode, 'light' or 'dark'
      * @return string
@@ -396,24 +414,42 @@ class BackendList extends Listing
         $meta    = App::meta();
         $meta_rs = $meta->getMetaStr($this->rs->post_meta, 'map');
 
-        if ($meta_rs === 'point of interest') {
-            $img_src = Page::getPF(My::id()) . '/css/img/marker' . ($mode === 'dark' ? '-dark' : '') . '.svg';
-        } elseif ($meta_rs === 'polyline') {
-            $img_src = Page::getPF(My::id()) . '/css/img/polyline' . ($mode === 'dark' ? '-dark' : '') . '.svg';
-        } elseif ($meta_rs === 'polygon') {
-            $img_src = Page::getPF(My::id()) . '/css/img/polygon' . ($mode === 'dark' ? '-dark' : '') . '.svg';
-        } elseif ($meta_rs === 'circle') {
-            $img_src = Page::getPF(My::id()) . '/css/img/circle' . ($mode === 'dark' ? '-dark' : '') . '.svg';
-        } elseif ($meta_rs === 'rectangle') {
-            $img_src = Page::getPF(My::id()) . '/css/img/rectangle' . ($mode === 'dark' ? '-dark' : '') . '.svg';
-        } elseif ($meta_rs === 'included kml file') {
-            $img_src = Page::getPF(My::id()) . '/css/img/kml' . ($mode === 'dark' ? '-dark' : '') . '.svg';
-        } elseif ($meta_rs === 'GeoRSS feed') {
-            $img_src = Page::getPF(My::id()) . '/css/img/feed' . ($mode === 'dark' ? '-dark' : '') . '.svg';
-        } elseif ($meta_rs === 'directions') {
-            $img_src = Page::getPF(My::id()) . '/css/img/directions' . ($mode === 'dark' ? '-dark' : '') . '.svg';
-        } else {
-            $img_src = '';
+        $img_src = '';
+        switch ($meta_rs) {
+            case 'point of interest':
+                $img_src = Page::getPF(My::id()) . '/css/img/marker' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+
+                break;
+            case 'polyline':
+                $img_src = Page::getPF(My::id()) . '/css/img/polyline' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+
+                break;
+            case 'polygon':
+                $img_src = Page::getPF(My::id()) . '/css/img/polygon' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+
+                break;
+            case 'circle':
+                $img_src = Page::getPF(My::id()) . '/css/img/circle' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+
+                break;
+            case 'rectangle':
+                $img_src = Page::getPF(My::id()) . '/css/img/rectangle' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+
+                break;
+            case 'included kml file':
+                $img_src = Page::getPF(My::id()) . '/css/img/kml' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+
+                break;
+            case 'GeoRSS feed':
+                $img_src = Page::getPF(My::id()) . '/css/img/feed' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+
+                break;
+            case 'directions':
+                $img_src = Page::getPF(My::id()) . '/css/img/directions' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+
+                break;
+            default:
+                $img_src = '';
         }
 
         return $img_src;

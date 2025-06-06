@@ -768,7 +768,7 @@ class ManageMap extends Process
                     '<button id="add_polygon" class="add_polygon" type="button" title="' . __('Polygon') . '"><span>' . __('Polygon') . '</span></button>' .
                     '<button id="add_rectangle" class="add_rectangle" type="button" title="' . __('Rectangle') . '"><span>' . __('Rectangle') . '</span></button>' .
                     '<button id="add_circle" class="add_circle" type="button" title="' . __('Circle') . '"><span>' . __('Circle') . '</span></button>' .
-                    '<button id="add_kml" class="add_kml" type="button" title="' . __('Included Kml file') . '"><span>' . __('Included Kml file') . '</span></button>' .
+                    '<button id="add_kml" class="add_kml" type="button" title="' . __('Included kml file') . '"><span>' . __('Included Kml file') . '</span></button>' .
                     '<button id="add_georss" class="add_georss" type="button" title="' . __('GeoRSS Feed') . '"><span>' . __('GeoRSS Feed') . '</span></button>' .
                     '<button id="add_directions" class="add_directions" type="button" title="' . __('Directions') . '"><span>' . __('Directions') . '</span></button>' .
                     '<button id="delete_map" type="button" class="delete_map" title="' . __('Erase') . '"><span>' . __('Erase') . '</span></button>' .
