@@ -292,11 +292,11 @@ class BackendList extends Listing
                 ->class(['nowrap'])
                 ->items([
                     (new Img(self::getImgSrc('light')))
-                        ->class('light-only mark mark-map')
+                        ->class(['light-only', 'mark', 'mark-map'])
                         ->alt(self::getImgTitle())
                         ->title(self::getImgTitle()),
                     (new Img(self::getImgSrc('dark')))
-                        ->class('dark-only mark mark-map')
+                    ->class(['dark-only', 'mark', 'mark-map'])
                         ->alt(self::getImgTitle())
                         ->title(self::getImgTitle()),
                 ])
