@@ -249,10 +249,6 @@ class BackendList extends Listing
             $category = (new Text(null, __('(No cat)')));
         }
 
-        /*if ($this->rs->post_meta) {
-            $type[] = self::getMyRowImage(self::getImgTitle(), self::getImgSrc(), 'map');
-        }*/
-
         $cols = [
             'check' => (new Td())
                 ->class('nowrap')
