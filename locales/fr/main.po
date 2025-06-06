@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: myGmaps 9.3\n"
+"Project-Id-Version: myGmaps 9.5\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-05-01T06:21:27+00:00\n"
+"PO-Revision-Date: 2025-06-06T09:51:25+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -115,17 +115,38 @@ msgstr "Langue de l'élément :"
 msgid "No element matches the filter"
 msgstr "Aucun élément correspondant au filtre"
 
+msgid "No element"
+msgstr "Pas d'élément"
+
 msgid "List of elements (%s)"
 msgstr "Liste des éléments (%s)"
 
-msgid "Elements list"
-msgstr "Liste des éléments"
+msgid "Point of interest"
+msgstr "Point d'intérêt"
 
-msgid "Edit map element"
-msgstr "Éditer l'élément de carte"
+msgid "Polyline"
+msgstr "Ligne brisée"
 
-msgid "Remove map element"
-msgstr "Supprimer l'élément de carte"
+msgid "Polygon"
+msgstr "Polygone"
+
+msgid "Circle"
+msgstr "Cercle"
+
+msgid "Rectangle"
+msgstr "Rectangle"
+
+msgid "Included kml file"
+msgstr "Fichier kml inclus"
+
+msgid "GeoRSS Feed"
+msgstr "Flux GeoRSS"
+
+msgid "Directions"
+msgstr "Itinéraire"
+
+msgid "Remove element: "
+msgstr "Supprimer l'élément : "
 
 msgid "Enable extension for this blog"
 msgstr "Activer l'extension pour ce blog"
@@ -159,6 +180,9 @@ msgstr "Nouvel élément de carte"
 
 msgid "This map element does not exist."
 msgstr "Cet élément de carte n'existe pas"
+
+msgid "Edit map element"
+msgstr "Éditer l'élément de carte"
 
 msgid "Next element"
 msgstr "Élément suivant"
@@ -223,30 +247,6 @@ msgstr "Élément sélectionné"
 msgid "Type and position:"
 msgstr "Type et position :"
 
-msgid "Point of interest"
-msgstr "Point d'intérêt"
-
-msgid "Polyline"
-msgstr "Ligne brisée"
-
-msgid "Polygon"
-msgstr "Polygone"
-
-msgid "Rectangle"
-msgstr "Rectangle"
-
-msgid "Circle"
-msgstr "Cercle"
-
-msgid "Included kml file"
-msgstr "Fichier kml inclus"
-
-msgid "GeoRSS Feed"
-msgstr "Flux GeoRSS"
-
-msgid "Directions"
-msgstr "Itinéraire"
-
 msgid "Erase"
 msgstr "Effacer"
 
@@ -261,6 +261,12 @@ msgstr "Choisir les éléments de la carte attachée au billet :"
 
 msgid "Add selected map elements"
 msgstr "Ajouter les éléments de carte sélectionnés"
+
+msgid "Remove element"
+msgstr "Supprimer l'élément"
+
+msgid "Elements list"
+msgstr "Liste des éléments"
 
 msgid "No map element"
 msgstr "Aucun élément"

@@ -248,10 +248,10 @@ class BackendMiniList extends Listing
                 ->items([
                     (new Link())
                         ->href(App::postTypes()->get((string) $posttype)->adminUrl((int) $id) . '&remove=' . $this->rs->post_id)
-                        ->title(__('Remove map element') . ' : ' . Html::escapeHTML($this->rs->post_title))
+                        ->title(__('Remove element: ') . Html::escapeHTML($this->rs->post_title))
                         ->class(['mark', 'element-remove'])
                         ->items([
-                            self::getMyRowImage(__('Remove'), 'images/trash.svg', 'remove'),
+                            self::getMyRowImage(__('Remove element: ') . Html::escapeHTML($this->rs->post_title), 'images/trash.svg', 'remove'),
                         ]),
                 ])
             ->render(),
