@@ -124,98 +124,52 @@ span.map_spacer {
   height: 2.35em
 }
 
-button.add_marker,
-button.add_marker.inactive {
-  background-image: url(index.php?pf=myGmaps/css/img/marker-bw.svg);
+.map_toolbar button {
   background-size: 80%;
 }
 
-button.add_marker.active {
-  background-image: url(index.php?pf=myGmaps/css/img/marker.svg);
-  background-size: 80%;
-  background-color: var(--fieldset-focus-background)
+button.add_marker,
+button.add_marker.inactive {
+  background-image: url(index.php?pf=myGmaps/css/img/marker-bw.svg);
 }
 
 button.add_polyline,
 button.add_polyline.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/polyline-bw.svg);
-  background-size: 80%;
-}
-
-button.add_polyline.active {
-  background-image: url(index.php?pf=myGmaps/css/img/polyline.svg);
-  background-color: var(--fieldset-focus-background)
 }
 
 button.add_polygon,
 button.add_polygon.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/polygon-bw.svg);
-  background-size: 80%;
-}
-
-button.add_polygon.active {
-  background-image: url(index.php?pf=myGmaps/css/img/polygon.svg);
-  background-color: var(--fieldset-focus-background)
 }
 
 button.add_rectangle,
 button.add_rectangle.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/rectangle-bw.svg);
-  background-size: 80%;
-}
-
-button.add_rectangle.active {
-  background-image: url(index.php?pf=myGmaps/css/img/rectangle.svg);
-  background-color: var(--fieldset-focus-background)
 }
 
 button.add_circle,
 button.add_circle.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/circle-bw.svg);
-  background-size: 80%;
-}
-
-button.add_circle.active {
-  background-image: url(index.php?pf=myGmaps/css/img/circle.svg);
-  background-color: var(--fieldset-focus-background)
 }
 
 button.add_kml,
 button.add_kml.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/kml-bw.svg);
-  background-size: 80%;
-}
-
-button.add_kml.active {
-  background-image: url(index.php?pf=myGmaps/css/img/kml.svg);
-  background-color: var(--fieldset-focus-background)
 }
 
 button.add_georss,
 button.add_georss.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/feed-bw.svg);
-  background-size: 80%;
-}
-
-button.add_georss.active {
-  background-image: url(index.php?pf=myGmaps/css/img/feed.svg);
-  background-color: var(--fieldset-focus-background)
 }
 
 button.add_directions,
 button.add_directions.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/directions-bw.svg);
-  background-size: 80%;
-}
-
-button.add_directions.active {
-  background-image: url(index.php?pf=myGmaps/css/img/directions.svg);
-  background-color: var(--fieldset-focus-background)
 }
 
 button.delete_map {
   background-image: url(index.php?pf=myGmaps/css/img/clean.svg);
-  background-size: 80%;
   position: absolute;
   right: .5em;
   top: .2em;
@@ -225,6 +179,74 @@ button.delete_map {
 button.delete_map:disabled {
   opacity: 0.5;
   cursor: inherit
+}
+
+@media (prefers-color-scheme: light) {
+  button.add_marker.active {
+    background-image: url(index.php?pf=myGmaps/css/img/marker.svg);
+  }
+
+  button.add_polyline.active {
+    background-image: url(index.php?pf=myGmaps/css/img/polyline.svg);
+  }
+
+  button.add_polygon.active {
+    background-image: url(index.php?pf=myGmaps/css/img/polygon.svg);
+  }
+
+  button.add_rectangle.active {
+    background-image: url(index.php?pf=myGmaps/css/img/rectangle.svg);
+  }
+
+  button.add_circle.active {
+    background-image: url(index.php?pf=myGmaps/css/img/circle.svg);
+  }
+
+  button.add_kml.active {
+    background-image: url(index.php?pf=myGmaps/css/img/kml.svg);
+  }
+
+  button.add_georss.active {
+    background-image: url(index.php?pf=myGmaps/css/img/feed.svg);
+  }
+
+  button.add_directions.active {
+    background-image: url(index.php?pf=myGmaps/css/img/directions.svg);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  button.add_marker.active {
+    background-image: url(index.php?pf=myGmaps/css/img/marker-dark.svg);
+  }
+
+  button.add_polyline.active {
+    background-image: url(index.php?pf=myGmaps/css/img/polyline-dark.svg);
+  }
+
+  button.add_polygon.active {
+    background-image: url(index.php?pf=myGmaps/css/img/polygon-dark.svg);
+  }
+
+  button.add_rectangle.active {
+    background-image: url(index.php?pf=myGmaps/css/img/rectangle-dark.svg);
+  }
+
+  button.add_circle.active {
+    background-image: url(index.php?pf=myGmaps/css/img/circle-dark.svg);
+  }
+
+  button.add_kml.active {
+    background-image: url(index.php?pf=myGmaps/css/img/kml-dark.svg);
+  }
+
+  button.add_georss.active {
+    background-image: url(index.php?pf=myGmaps/css/img/feed-dark.svg);
+  }
+
+  button.add_directions.active {
+    background-image: url(index.php?pf=myGmaps/css/img/directions-dark.svg);
+  }
 }
 
 .map_toolbar .qx {
