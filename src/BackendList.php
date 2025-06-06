@@ -291,14 +291,16 @@ class BackendList extends Listing
             'type' => (new Td())
                 ->class(['nowrap'])
                 ->items([
-                    (new Img(self::getImgSrc('light')))
+                    (new Img(self::getImgInfo('light')['src'])
                         ->class(['light-only', 'mark', 'mark-map'])
-                        ->alt(self::getImgTitle())
-                        ->title(self::getImgTitle()),
-                    (new Img(self::getImgSrc('dark')))
-                    ->class(['dark-only', 'mark', 'mark-map'])
-                        ->alt(self::getImgTitle())
-                        ->title(self::getImgTitle()),
+                        ->alt(self::getImgInfo('light')['title'])
+                        ->title(self::getImgInfo('light')['title'])
+                    ),
+                    (new Img(self::getImgInfo('dark')['src'])
+                        ->class(['dark-only', 'mark', 'mark-map'])
+                        ->alt(self::getImgInfo('dark')['title'])
+                        ->title(self::getImgInfo('dark')['title'])
+                    ),
                 ])
             ->render(),
             'status' => (new Td())
@@ -353,105 +355,57 @@ class BackendList extends Listing
     }
 
     /**
-     * Get image title
-     *
-     * @return string
-     */
-    private function getImgTitle()
-    {
-        $meta    = App::meta();
-        $meta_rs = $meta->getMetaStr($this->rs->post_meta, 'map');
-
-        $img_title = '';
-        switch ($meta_rs) {
-            case 'point of interest':
-                $img_title = __('Point of interest');
-
-                break;
-            case 'polyline':
-                $img_title = __('Polyline');
-
-                break;
-            case 'polygon':
-                $img_title = __('Polygon');
-
-                break;
-            case 'circle':
-                $img_title = __('Circle');
-
-                break;
-            case 'rectangle':
-                $img_title = __('Rectangle');
-
-                break;
-            case 'included kml file':
-                $img_title = __('Included kml file');
-
-                break;
-            case 'GeoRSS feed':
-                $img_title = __('GeoRSS Feed');
-
-                break;
-            case 'directions':
-                $img_title = __('Directions');
-
-                break;
-            default:
-                $img_title = '';
-        }
-
-        return $img_title;
-    }
-
-    /**
-     * Get the image src
+    * Get image title and src for a map meta type.
      *
      * @param string $mode The mode, 'light' or 'dark'
-     * @return string
+     * @return array ['title' => string, 'src' => string]
      */
-    private function getImgSrc(string $mode = 'light'): string
+    private function getImgInfo(string $mode = 'light'): array
     {
         $meta    = App::meta();
         $meta_rs = $meta->getMetaStr($this->rs->post_meta, 'map');
 
-        $img_src = '';
+        $info = [
+            'title' => '',
+            'src'   => '',
+        ];
+
         switch ($meta_rs) {
             case 'point of interest':
-                $img_src = Page::getPF(My::id()) . '/css/img/marker' . ($mode === 'dark' ? '-dark' : '') . '.svg';
-
+                $info['title'] = __('Point of interest');
+                $info['src']   = Page::getPF(My::id()) . '/css/img/marker' . ($mode === 'dark' ? '-dark' : '') . '.svg';
                 break;
             case 'polyline':
-                $img_src = Page::getPF(My::id()) . '/css/img/polyline' . ($mode === 'dark' ? '-dark' : '') . '.svg';
-
+                $info['title'] = __('Polyline');
+                $info['src']   = Page::getPF(My::id()) . '/css/img/polyline' . ($mode === 'dark' ? '-dark' : '') . '.svg';
                 break;
             case 'polygon':
-                $img_src = Page::getPF(My::id()) . '/css/img/polygon' . ($mode === 'dark' ? '-dark' : '') . '.svg';
-
+                $info['title'] = __('Polygon');
+                $info['src']   = Page::getPF(My::id()) . '/css/img/polygon' . ($mode === 'dark' ? '-dark' : '') . '.svg';
                 break;
             case 'circle':
-                $img_src = Page::getPF(My::id()) . '/css/img/circle' . ($mode === 'dark' ? '-dark' : '') . '.svg';
-
+                $info['title'] = __('Circle');
+                $info['src']   = Page::getPF(My::id()) . '/css/img/circle' . ($mode === 'dark' ? '-dark' : '') . '.svg';
                 break;
             case 'rectangle':
-                $img_src = Page::getPF(My::id()) . '/css/img/rectangle' . ($mode === 'dark' ? '-dark' : '') . '.svg';
-
+                $info['title'] = __('Rectangle');
+                $info['src']   = Page::getPF(My::id()) . '/css/img/rectangle' . ($mode === 'dark' ? '-dark' : '') . '.svg';
                 break;
             case 'included kml file':
-                $img_src = Page::getPF(My::id()) . '/css/img/kml' . ($mode === 'dark' ? '-dark' : '') . '.svg';
-
+                $info['title'] = __('Included kml file');
+                $info['src']   = Page::getPF(My::id()) . '/css/img/kml' . ($mode === 'dark' ? '-dark' : '') . '.svg';
                 break;
             case 'GeoRSS feed':
-                $img_src = Page::getPF(My::id()) . '/css/img/feed' . ($mode === 'dark' ? '-dark' : '') . '.svg';
-
+                $info['title'] = __('GeoRSS Feed');
+                $info['src']   = Page::getPF(My::id()) . '/css/img/feed' . ($mode === 'dark' ? '-dark' : '') . '.svg';
                 break;
             case 'directions':
-                $img_src = Page::getPF(My::id()) . '/css/img/directions' . ($mode === 'dark' ? '-dark' : '') . '.svg';
-
+                $info['title'] = __('Directions');
+                $info['src']   = Page::getPF(My::id()) . '/css/img/directions' . ($mode === 'dark' ? '-dark' : '') . '.svg';
                 break;
             default:
-                $img_src = '';
         }
 
-        return $img_src;
+        return $info;
     }
 }
