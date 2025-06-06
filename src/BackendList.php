@@ -355,7 +355,7 @@ class BackendList extends Listing
     }
 
     /**
-    * Get image title and src for a map meta type.
+    * Get image title and src for elements icons
      *
      * @param string $mode The mode, 'light' or 'dark'
      * @return array ['title' => string, 'src' => string]
