@@ -364,7 +364,6 @@ class Backend extends Process
                         (new Text('span', __('Empty map')))
                             ->class('form-note info maximal'),
                     ]),
-
                     (new Ul())
                         ->items([
                             (new Li())->items([
