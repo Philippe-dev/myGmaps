@@ -20,6 +20,7 @@ use Dotclear\Core\Backend\Listing\Listing;
 use Dotclear\Core\Backend\Listing\Pager;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Date;
+use Dotclear\Helper\Html\Form\Caption;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Img;
 use Dotclear\Helper\Html\Form\Link;
@@ -126,6 +127,7 @@ class BackendMiniList extends Listing
             ->items([
                 (new Table())
                     ->class(['maximal', 'dragable'])
+                    ->caption(new Caption(__('Included elements list')))
                     ->items([
                         (new Thead())
                             ->rows([

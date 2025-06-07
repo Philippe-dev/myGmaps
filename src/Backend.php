@@ -20,6 +20,7 @@ use Dotclear\Core\Backend\Favorites;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Backend\UserPref;
 use Dotclear\Core\Process;
+use Dotclear\Helper\Html\Form\Capture;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Input;
 use Dotclear\Helper\Html\Form\Label;
@@ -28,13 +29,13 @@ use Dotclear\Helper\Html\Form\Link;
 use Dotclear\Helper\Html\Form\Note;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Span;
+use Dotclear\Helper\Html\Form\Strong;
 use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Form\Ul;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
 use Dotclear\Helper\Stack\Filter;
 use Exception;
-use form;
 
 class Backend extends Process
 {
@@ -300,7 +301,7 @@ class Backend extends Process
                 ]);
         }
 
-        if ($elements_list == '' && $map_options == '') {
+        if (empty($elements_list) && empty($map_options)) {
             echo
             (new Div())->class('area')->id('gmap-area')->items([
                 (new Label(__('Map:') . ' ' . $form_note))
@@ -316,8 +317,7 @@ class Backend extends Process
                     $addmap_message,
                 ]),
             ])->render();
-
-        } elseif ($elements_list == '' && $map_options != '') {
+        } elseif (empty($elements_list) && !empty($map_options)) {
             echo
             $style_script .
             (new Div())->class('area')->id('gmap-area')->items([
@@ -333,7 +333,7 @@ class Backend extends Process
                         (new Input('address'))
                             ->size(50)
                             ->maxlength(255)
-                            ->class('qx'), 
+                            ->class('qx'),
                         (new Input('geocode'))
                             ->type('submit')
                             ->value(__('OK')),
@@ -364,12 +364,13 @@ class Backend extends Process
                     ->items([
                         (new Text('span', __('Empty map')))
                             ->class('form-note info maximal'),
-                        ]),
-                        
+                    ]),
+
                     (new Ul())
                         ->items([
-                            (new Li())->class('add')->items([
+                            (new Li())->items([
                                 (new Link())
+                                    ->class('add')
                                     ->href(App::backend()->url()->get('admin.plugin.' . My::id()) . '&act=maps&id=' . $id)
                                     ->text(__('Add elements')),
                             ]),
@@ -381,26 +382,7 @@ class Backend extends Process
                         ]),
                 ]),
             ])->render();
-            
-        } else {
-            echo '<div class="area" id="gmap-area">' .
-            '<label class="bold" for="post-gmap">' . __('Map:') . ' ' .
-            $form_note . '</label>' .
-            '<div id="post-gmap" >' .
-            '<div class="map_toolbar"><span class="search">' . __('Search:') . '</span><span class="map_spacer">&nbsp;</span>' .
-                '<input size="50" maxlength="255" type="text" id="address" class="qx"><input id="geocode" type="submit" value="' . __('OK') . '">' .
-            '</div>' .
-            '<p class="area" id="map_canvas"></p>' .
-            $style_script .
-            '<p class="form-note info maximal mapinfo" style="width: 100%">' . __('Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls.') . '</p>' .
-            '<p>' .
-            form::hidden('myGmaps_center', $myGmaps_center) .
-            form::hidden('myGmaps_zoom', $myGmaps_zoom) .
-            form::hidden('myGmaps_type', $myGmaps_type) .
-            form::hidden('map_styles_list', $map_styles_list) .
-            form::hidden('map_styles_base_url', $map_styles_base_url) .
-            '</p>';
-
+        } elseif (!empty($elements_list) && !empty($map_options)) {
             // Get map elements
             try {
                 $params['post_id']   = $meta->splitMetaValues($elements_list);
@@ -415,18 +397,66 @@ class Backend extends Process
             App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
             App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
 
-            echo '<div id="form-entries">' .
-            '<p class="elements-list">' . __('Included elements list') . '</p>' ;
-
-            $post_list->display(App::backend()->page, App::backend()->nb_per_page, (int) $id, $enclose_block = '', (string) $posttype);
-
-            echo '</div>' .
-            '<ul>' .
-            '<li class="add"><a href="' . App::backend()->url()->get('admin.plugin.' . My::id()) . '&act=maps&id=' . $id . '"><strong>' . __('Add elements') . '</strong></a></li>' .
-            '<li class="right"><a class="map-remove delete" href="' . $removemapurl . '"><strong>' . __('Remove map') . '</strong></a></li>' .
-            '</ul>' .
-            '</div>' .
-            '</div>' . "\n" ;
+            echo
+                $style_script .
+                (new Div())->class('area')->id('gmap-area')->items([
+                    (new Label(__('Map:') . ' ' . $form_note))
+                        ->class('bold')
+                        ->for('post-gmap'),
+                    (new Div())->id('post-gmap')->items([
+                        (new Div())->class('map_toolbar')->items([
+                            (new Span(__('Search:')))
+                                ->class('search'),
+                            (new Span('&nbsp;'))
+                                ->class('map_spacer'),
+                            (new Input('address'))
+                                ->size(50)
+                                ->maxlength(255)
+                                ->class('qx'),
+                            (new Input('geocode'))
+                                ->type('submit')
+                                ->value(__('OK')),
+                        ]),
+                        (new Para())->id('map_canvas')->class('area'),
+                        (new Note())
+                            ->class('form-note info maximal mapinfo')
+                            ->text(__('Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls.')),
+                        (new Para())->items([
+                            (new Input('myGmaps_center'))
+                                ->type('hidden')
+                                ->value($myGmaps_center),
+                            (new Input('myGmaps_zoom'))
+                                ->type('hidden')
+                                ->value($myGmaps_zoom),
+                            (new Input('myGmaps_type'))
+                                ->type('hidden')
+                                ->value($myGmaps_type),
+                            (new Input('map_styles_list'))
+                                ->type('hidden')
+                                ->value($map_styles_list),
+                            (new Input('map_styles_base_url'))
+                                ->type('hidden')
+                                ->value($map_styles_base_url),
+                        ]),
+                        (new Div())->items([
+                            (new Capture($post_list->display(...), [App::backend()->page, App::backend()->nb_per_page, (int) $id, $enclose_block = '', (string) $posttype])),
+                        ]),
+                        (new Ul())
+                            ->items([
+                                (new Li())->items([
+                                    (new Link())
+                                        ->class('add')
+                                        ->href(App::backend()->url()->get('admin.plugin.' . My::id()) . '&act=maps&id=' . $id)
+                                        ->text(__('Add elements')),
+                                ]),
+                                (new Li())->class('right')->items([
+                                    (new Link())->href($removemapurl)
+                                        ->class('map-remove delete')
+                                        ->text(__('Remove map')),
+                                ]),
+                            ]),
+                    ]),
+                ])->render();
 
             // Display map elements on post map
             $script = '<script>' . "\n" .
