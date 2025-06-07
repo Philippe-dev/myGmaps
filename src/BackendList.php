@@ -338,9 +338,9 @@ class BackendList extends Listing
     /**
      * Get image title and src for status icons
      *
-     * @param string $title The title of the image
-     * @param string $image The image source
-     * @param string $class The class to apply to the image
+     * @param string $title the image title
+     * @param string $image the image source
+     * @param string $class the class to apply to the image
      * @param bool   $with_text Whether to include the title as text next to the image
      * @return Img|Text
      */
