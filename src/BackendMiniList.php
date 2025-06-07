@@ -272,7 +272,13 @@ class BackendMiniList extends Listing
     }
 
     /**
-     * Get image for table row and legend.
+     * Get image title and src for status icons
+     *
+     * @param string $title The title of the image
+     * @param string $image The image source
+     * @param string $class The class to apply to the image
+     * @param bool   $with_text Whether to include the title as text next to the image
+     * @return Img|Text
      */
     public static function getMyRowImage(string $title, string $image, string $class, bool $with_text = false): Img|Text
     {
