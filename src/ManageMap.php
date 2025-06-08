@@ -1136,28 +1136,29 @@ class ManageMap extends Process
                                             ->type('button')
                                             ->title(__('Erase')),
                                     ]),
-                                (new Div())
-                                    ->id('map_box')
-                                    ->items([
-                                        (new Div())
-                                            ->class('area')
-                                            ->id('map_canvas'),
-                                        (new Div())
-                                            ->id('panel'),
-                                    ]),
-                                (new Div())
-                                    ->class(['form-note', 'info', 'maximal', 'mapinfo'])
-                                    ->text(__('This map will not be displayed on the blog and is meant only to create, edit and position <strong>only one</strong> element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties.')),
                             ]),
+                            (new Div())
+                                ->id('map_box')
+                                ->items([
+                                    (new Div())
+                                        ->class('area')
+                                        ->id('map_canvas'),
+                                    (new Div())
+                                        ->id('panel'),
+                                ]),
+                            (new Div())
+                                ->class(['form-note', 'info', 'maximal', 'mapinfo'])
+                                ->text(__('This map will not be displayed on the blog and is meant only to create, edit and position <strong>only one</strong> element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties.')),
+
                             (new Para())->class('area')->id('excerpt')->items([
                                 (new Textarea('post_excerpt'))
                                     ->value(html::escapeHTML(App::backend()->post_excerpt))
                                     ->cols(50)
                                     ->rows(5),
-                            ])
+                            ]),
 
-                        ])
-                    
+                    ])
+
                     ->render(),
 
                     /*'post_excerpt' => '<label for="post_excerpt" class="bold">' . __('Type and position:') . '</label>' .
