@@ -20,10 +20,10 @@ use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Backend\UserPref;
 use Dotclear\Core\Process;
-use Dotclear\Helper\Html\Form\Button;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Form;
 use Dotclear\Helper\Html\Form\Hidden;
+use Dotclear\Helper\Html\Form\Link;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Submit;
 use Dotclear\Helper\Html\Form\Text;
@@ -170,11 +170,14 @@ class ManageMaps extends Process
         ) .
         Notices::getNotices();
 
-        if ($post_type === 'page') {
-            echo '<h3>' . __('Select map elements for map attached to page:') . ' <a href="' . App::postTypes()->get($post_type)->adminUrl($post_id) . '">' . $post_title . '</a></h3>';
-        } elseif ($post_type === 'post') {
-            echo '<h3>' . __('Select map elements for map attached to post:') . ' <a href="' . App::postTypes()->get($post_type)->adminUrl($post_id) . '">' . $post_title . '</a></h3>';
-        }
+        echo
+        (new Text('h3', ($post_type === 'post' ? __('Select map elements for map attached to post:') : __('Select map elements for map attached to page:')) . '&nbsp;'))
+        ->items([
+            (new Link())
+                ->href(App::postTypes()->get($post_type)->adminUrl($post_id))
+                ->text($post_title),
+        ])
+        ->render();
 
         App::backend()->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="' . My::id() . '"><input type="hidden" name="id" value="' . $post_id . '"><input type="hidden" name="act" value="maps">');
 
@@ -194,7 +197,11 @@ class ManageMaps extends Process
                             (new Para())
                                 ->class(['col', 'right', 'form-buttons'])
                                 ->items([
-
+                                    (new Submit(['addelements'], __('Add selected map elements'))),
+                                    (new Link())
+                                        ->class(['button', 'reset'])
+                                        ->href(App::postTypes()->get($post_type)->adminUrl($post_id))
+                                        ->text(__('Cancel')),
                                 ]),
                         ]),
 
@@ -205,32 +212,10 @@ class ManageMaps extends Process
                             (new Hidden(['post_type'], $post_type)),
                             (new Hidden(['id'], (string) $post_id)),
                             (new Hidden(['act'], 'maps')),
-                            (new Submit(['reorder'], __('Save pages order'))),
-                            (new Button(['back'], __('Back')))->class(['go-back','reset','hidden-if-no-js']),
                         ]),
                 ])
             ->render()
         );
-
-        /*'<form action="' . My::manageUrl() . '" method="post" id="form-entries">' .
-
-        '%s' .
-
-        '<div class="two-cols">' .
-        '<p class="col checkboxes-helpers"></p>' .
-
-        '<p class="col right">' .
-        '<input type="submit" value="' . __('Add selected map elements') . '"> <a class="button reset" href="post.php?id=' . $post_id . '">' . __('Cancel') . '</a></p>' .
-        '<p>' .
-        form::hidden(['post_type'], $post_type) .
-        form::hidden(['id'], $post_id) .
-        form::hidden(['act'], 'maps') .
-        App::backend()->url()->getHiddenFormFields('admin.plugin.' . My::id(), App::backend()->post_filter->values()) .
-        App::nonce()->getFormNonce() . '</p>' .
-        '</div>' .
-        '</form>',
-        App::backend()->post_filter->show()
-        );*/
 
         Page::helpBlock('myGmapsadd');
         Page::closeModule();
