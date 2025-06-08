@@ -1093,7 +1093,7 @@ class ManageMap extends Process
                                             ->id('add_polyline')
                                             ->type('button')
                                             ->title(__('Polyline')),
-                                            (new Span('map_spacer'))->text('&nbsp;'),
+                                        (new Span('map_spacer'))->text('&nbsp;'),
                                         (new Btn('add_polygon'))
                                             ->class(['add_polygon'])
                                             ->id('add_polygon')
@@ -1147,10 +1147,17 @@ class ManageMap extends Process
                                     ]),
                                 (new Div())
                                     ->class(['form-note', 'info', 'maximal', 'mapinfo'])
-                                    ->text(__('This map will not be displayed on the blog and is meant only to create, edit and position <strong>only one</strong> element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties.')),  
+                                    ->text(__('This map will not be displayed on the blog and is meant only to create, edit and position <strong>only one</strong> element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties.')),
                             ]),
-                            
-                    ])
+                            (new Para())->class('area')->id('excerpt')->items([
+                                (new Textarea('post_excerpt'))
+                                    ->value(html::escapeHTML(App::backend()->post_excerpt))
+                                    ->cols(50)
+                                    ->rows(5),
+                            ])
+
+                        ])
+                    
                     ->render(),
 
                     /*'post_excerpt' => '<label for="post_excerpt" class="bold">' . __('Type and position:') . '</label>' .
@@ -1176,7 +1183,7 @@ class ManageMap extends Process
                         (new Textarea('post_content'))
                                         ->value(Html::escapeHTML(App::backend()->post_content))
                                         ->cols(50)
-                                        ->rows(App::auth()->getOption('edit_size'))
+                                        ->rows(5)
                                         ->required(true)
                                         ->lang(App::backend()->post_lang)
                                         ->spellcheck(true)
@@ -1270,6 +1277,18 @@ class ManageMap extends Process
             }
             if (App::backend()->post_id) {
                 $buttons[] = (new Hidden('id', (string) App::backend()->post_id));
+                $buttons[] = (new Hidden('myGmaps_center', $myGmaps_center));
+                $buttons[] = (new Hidden('myGmaps_zoom', $myGmaps_zoom));
+                $buttons[] = (new Hidden('myGmaps_type', $myGmaps_type));
+                $buttons[] = (new Hidden('blog_url', App::blog()->url()));
+                $buttons[] = (new Hidden('plugin_QmarkURL', App::blog()->getQmarkURL()));
+                $buttons[] = (new Hidden('icons_list', $icons_list));
+                $buttons[] = (new Hidden('icons_base_url', $icons_base_url));
+                $buttons[] = (new Hidden('kmls_list', $kmls_list));
+                $buttons[] = (new Hidden('kmls_base_url', $kmls_base_url));
+                $buttons[] = (new Hidden('map_styles_list', $map_styles_list));
+                $buttons[] = (new Hidden('map_styles_base_url', $map_styles_base_url));
+                $buttons[] = (new Hidden('element_type', $meta->getMetaStr(App::backend()->post->post_meta, 'map')));
             }
 
             $format = (new Span(' &rsaquo; ' . App::formater()->getFormaterName(App::backend()->post_format)));
