@@ -23,6 +23,7 @@ use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Process;
 use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Date;
+use Dotclear\Helper\Html\Form\Btn;
 use Dotclear\Helper\Html\Form\Button;
 use Dotclear\Helper\Html\Form\Capture;
 use Dotclear\Helper\Html\Form\Checkbox;
@@ -1081,14 +1082,74 @@ class ManageMap extends Process
                                             ->value(__('OK'))
                                             ->id('geocode'),
                                         (new Span('map_spacer'))->text('&nbsp;'),
-                                        (new Button('add_marker'))
+                                        (new Btn('add_marker'))
                                             ->class(['add_marker'])
                                             ->id('add_marker')
                                             ->type('button')
-                                            ->title(__('Point of interest'))
-                                            ->text(__('Point of interest')),
+                                            ->title(__('Point of interest')),
+                                        (new Span('map_spacer'))->text('&nbsp;'),
+                                        (new Btn('add_polyline'))
+                                            ->class(['add_polyline'])
+                                            ->id('add_polyline')
+                                            ->type('button')
+                                            ->title(__('Polyline')),
+                                            (new Span('map_spacer'))->text('&nbsp;'),
+                                        (new Btn('add_polygon'))
+                                            ->class(['add_polygon'])
+                                            ->id('add_polygon')
+                                            ->type('button')
+                                            ->title(__('Polygon')),
+                                        (new Span('map_spacer'))->text('&nbsp;'),
+                                        (new Btn('add_rectangle'))
+                                            ->class(['add_rectangle'])
+                                            ->id('add_rectangle')
+                                            ->type('button')
+                                            ->title(__('Rectangle')),
+                                        (new Span('map_spacer'))->text('&nbsp;'),
+                                        (new Btn('add_circle'))
+                                            ->class(['add_circle'])
+                                            ->id('add_circle')
+                                            ->type('button')
+                                            ->title(__('Circle')),
+                                        (new Span('map_spacer'))->text('&nbsp;'),
+                                        (new Btn('add_kml'))
+                                            ->class(['add_kml'])
+                                            ->id('add_kml')
+                                            ->type('button')
+                                            ->title(__('Included Kml file')),
+                                        (new Span('map_spacer'))->text('&nbsp;'),
+                                        (new Btn('add_georss'))
+                                            ->class(['add_georss'])
+                                            ->id('add_georss')
+                                            ->type('button')
+                                            ->title(__('GeoRSS Feed')),
+                                        (new Span('map_spacer'))->text('&nbsp;'),
+                                        (new Btn('add_directions'))
+                                            ->class(['add_directions'])
+                                            ->id('add_directions')
+                                            ->type('button')
+                                            ->title(__('Directions')),
+                                        (new Span('map_spacer'))->text('&nbsp;'),
+                                        (new Btn('delete_map'))
+                                            ->class(['delete_map'])
+                                            ->id('delete_map')
+                                            ->type('button')
+                                            ->title(__('Erase')),
                                     ]),
+                                (new Div())
+                                    ->id('map_box')
+                                    ->items([
+                                        (new Div())
+                                            ->class('area')
+                                            ->id('map_canvas'),
+                                        (new Div())
+                                            ->id('panel'),
+                                    ]),
+                                (new Div())
+                                    ->class(['form-note', 'info', 'maximal', 'mapinfo'])
+                                    ->text(__('This map will not be displayed on the blog and is meant only to create, edit and position <strong>only one</strong> element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties.')),  
                             ]),
+                            
                     ])
                     ->render(),
 
@@ -1212,7 +1273,7 @@ class ManageMap extends Process
             }
 
             $format = (new Span(' &rsaquo; ' . App::formater()->getFormaterName(App::backend()->post_format)));
-            $title  = (App::backend()->post_id ? __('Edit post') : __('New post')) . $format->render();
+            $title  = (App::backend()->post_id ? __('Edit map element') : __('New post')) . $format->render();
 
             // Everything is ready, time to display this form
             echo (new Div())
