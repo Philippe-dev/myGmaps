@@ -197,9 +197,11 @@ class ManageMaps extends Process
                             (new Para())
                                 ->class(['col', 'right', 'form-buttons'])
                                 ->items([
-                                    (new Submit(['addelements'], __('Add selected map elements'))),
+                                    (new Submit(['do-action']))
+                                        ->id('do-action')
+                                        ->value(__('Add selected map elements')),
                                     (new Link())
-                                        ->class(['button', 'reset'])
+                                        ->class(['button','reset'])
                                         ->href(App::postTypes()->get($post_type)->adminUrl($post_id))
                                         ->text(__('Cancel')),
                                 ]),
