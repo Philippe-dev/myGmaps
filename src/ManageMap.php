@@ -1067,7 +1067,27 @@ class ManageMap extends Process
                         (new Div())
                             ->class('map_toolbar')
                             ->items([
-                                
+                                (new Para('map_toolbar_wrapper'))
+                                    ->items([
+                                        (new Span(__('Search:'))),
+                                        (new Span('map_spacer'))->text('&nbsp;'),
+                                        (new Input('address'))
+                                            ->size(40)
+                                            ->maxlength(255)
+                                            ->class('qx')
+                                            ->id('address'),
+                                        (new Input('geocode'))
+                                            ->type('submit')
+                                            ->value(__('OK'))
+                                            ->id('geocode'),
+                                        (new Span('map_spacer'))->text('&nbsp;'),
+                                        (new Button('add_marker'))
+                                            ->class(['add_marker'])
+                                            ->id('add_marker')
+                                            ->type('button')
+                                            ->title(__('Point of interest'))
+                                            ->text(__('Point of interest')),
+                                    ]),
                             ]),
                     ])
                     ->render(),

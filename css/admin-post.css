@@ -150,3 +150,8 @@ gmp-advanced-marker img[src$=".svg"] {
     margin-top: 0;
     width: 100%
 }
+
+p#map_toolbar_wrapper {
+    margin: 0;
+    padding: 0;
+}
