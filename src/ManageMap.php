@@ -1063,23 +1063,16 @@ class ManageMap extends Process
                     ->render(),
 
                     'post_excerpt' => (new Para())->class('area')->id('excerpt-area')->items([
-                        (new Textarea('post_excerpt'))
-                                        ->value(Html::escapeHTML(App::backend()->post_excerpt))
-                                        ->cols(50)
-                                        ->rows(5)
-                                        ->lang(App::backend()->post_lang)
-                                        ->spellcheck(true)
-                                        ->label(
-                                            (new Label(
-                                                __('Excerpt:') . ' ' . (new Span(__('Introduction to the post.')))->class('form-note')->render(),
-                                                Label::OUTSIDE_TEXT_BEFORE
-                                            ))
-                                            ->class('bold')
-                                        ),
+                        (new Label(__('Type and position:'), Label::OUTSIDE_LABEL_AFTER))->for('post_excerpt')->class('bold'),
+                        (new Div())
+                            ->class('map_toolbar')
+                            ->items([
+                                
+                            ]),
                     ])
                     ->render(),
 
-                    'post_excerpt' => '<label for="post_excerpt" class="bold">' . __('Type and position:') . '</label>' .
+                    /*'post_excerpt' => '<label for="post_excerpt" class="bold">' . __('Type and position:') . '</label>' .
                     '<div class="map_toolbar">' . __('Search:') . '<span class="map_spacer">&nbsp;</span>' .
                     '<input size="40" maxlength="255" type="text" id="address" class="qx"><input id="geocode" type="submit" value="' . __('OK') . '"><span class="map_spacer">&nbsp;</span>' .
                     '<button id="add_marker" class="add_marker" type="button" title="' . __('Point of interest') . '"><span>' . __('Point of interest') . '</span></button>' .
@@ -1096,7 +1089,7 @@ class ManageMap extends Process
                     '<div class="form-note info maximal mapinfo"><p>' . __('This map will not be displayed on the blog and is meant only to create, edit and position <strong>only one</strong> element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties.') . '</p>' .
                     '</div>' .
                     '<p class="area" id="excerpt">' . form::textarea('post_excerpt', 50, 5, html::escapeHTML(App::backend()->post_excerpt)) . '</p>',
-
+                    */
 
                     'post_content' => (new Para())->class('area')->id('content-area')->items([
                         (new Textarea('post_content'))
