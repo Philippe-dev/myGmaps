@@ -15,15 +15,21 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\myGmaps;
 
 use Dotclear\App;
-use Dotclear\Core\Backend\UserPref;
-use Exception;
-use form;
 use Dotclear\Core\Backend\Filter\FilterPosts;
-use Dotclear\Core\Process;
-use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Backend\Notices;
+use Dotclear\Core\Backend\Page;
+use Dotclear\Core\Backend\UserPref;
+use Dotclear\Core\Process;
+use Dotclear\Helper\Html\Form\Button;
+use Dotclear\Helper\Html\Form\Div;
+use Dotclear\Helper\Html\Form\Form;
+use Dotclear\Helper\Html\Form\Hidden;
+use Dotclear\Helper\Html\Form\Para;
+use Dotclear\Helper\Html\Form\Submit;
+use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
+use Exception;
 
 class ManageMaps extends Process
 {
@@ -100,8 +106,8 @@ class ManageMaps extends Process
         // get list params
         $params = App::backend()->post_filter->params();
 
-        App::backend()->posts      = null;
-        App::backend()->posts_list = null;
+        App::backend()->posts     = null;
+        App::backend()->post_list = null;
 
         App::backend()->page        = !empty($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
         App::backend()->nb_per_page = UserPref::getUserFilters('pages', 'nb');
@@ -139,7 +145,7 @@ class ManageMaps extends Process
             $params['exclude_post_id'] = $excluded;
             App::backend()->posts      = App::blog()->getPosts($params);
             App::backend()->counter    = App::blog()->getPosts($params, true);
-            App::backend()->posts_list = new BackendList(App::backend()->posts, App::backend()->counter->f(0));
+            App::backend()->post_list  = new BackendList(App::backend()->posts, App::backend()->counter->f(0));
         } catch (Exception $e) {
             App::error()->add($e->getMessage());
         }
@@ -173,28 +179,58 @@ class ManageMaps extends Process
         App::backend()->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="' . My::id() . '"><input type="hidden" name="id" value="' . $post_id . '"><input type="hidden" name="act" value="maps">');
 
         // Show posts
-        App::backend()->posts_list->display(
+        App::backend()->post_list->display(
             App::backend()->post_filter->page,
             App::backend()->post_filter->nb,
-            '<form action="' . My::manageUrl() . '" method="post" id="form-entries">' .
+            (new Form('form-entries'))
+                ->method('post')
+                ->action(App::backend()->getPageURL())
+                ->fields([
+                    (new Text(null, '%s')), // List of pages
+                    (new Div())
+                        ->class('two-cols')
+                        ->items([
+                            (new Para())->class(['col', 'checkboxes-helpers']),
+                            (new Para())
+                                ->class(['col', 'right', 'form-buttons'])
+                                ->items([
 
-            '%s' .
+                                ]),
+                        ]),
 
-            '<div class="two-cols">' .
-            '<p class="col checkboxes-helpers"></p>' .
-
-            '<p class="col right">' .
-            '<input type="submit" value="' . __('Add selected map elements') . '"> <a class="button reset" href="post.php?id=' . $post_id . '">' . __('Cancel') . '</a></p>' .
-            '<p>' .
-            form::hidden(['post_type'], $post_type) .
-            form::hidden(['id'], $post_id) .
-            form::hidden(['act'], 'maps') .
-            App::backend()->url()->getHiddenFormFields('admin.plugin.' . My::id(), App::backend()->post_filter->values()) .
-            App::nonce()->getFormNonce() . '</p>' .
-            '</div>' .
-            '</form>',
-            App::backend()->post_filter->show()
+                    (new Para())
+                        ->class('form-buttons')
+                        ->items([
+                            ...My::hiddenFields(),
+                            (new Hidden(['post_type'], $post_type)),
+                            (new Hidden(['id'], (string) $post_id)),
+                            (new Hidden(['act'], 'maps')),
+                            (new Submit(['reorder'], __('Save pages order'))),
+                            (new Button(['back'], __('Back')))->class(['go-back','reset','hidden-if-no-js']),
+                        ]),
+                ])
+            ->render()
         );
+
+        /*'<form action="' . My::manageUrl() . '" method="post" id="form-entries">' .
+
+        '%s' .
+
+        '<div class="two-cols">' .
+        '<p class="col checkboxes-helpers"></p>' .
+
+        '<p class="col right">' .
+        '<input type="submit" value="' . __('Add selected map elements') . '"> <a class="button reset" href="post.php?id=' . $post_id . '">' . __('Cancel') . '</a></p>' .
+        '<p>' .
+        form::hidden(['post_type'], $post_type) .
+        form::hidden(['id'], $post_id) .
+        form::hidden(['act'], 'maps') .
+        App::backend()->url()->getHiddenFormFields('admin.plugin.' . My::id(), App::backend()->post_filter->values()) .
+        App::nonce()->getFormNonce() . '</p>' .
+        '</div>' .
+        '</form>',
+        App::backend()->post_filter->show()
+        );*/
 
         Page::helpBlock('myGmapsadd');
         Page::closeModule();
