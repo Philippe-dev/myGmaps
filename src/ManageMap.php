@@ -15,16 +15,51 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\myGmaps;
 
 use ArrayObject;
-use Dotclear\Core\Backend\Combos;
 use Dotclear\App;
-use Dotclear\Core\Process;
-use Dotclear\Core\Backend\Page;
+use Dotclear\Core\Backend\Combos;
 use Dotclear\Core\Backend\Notices;
+use Dotclear\Core\Backend\Page;
+use Dotclear\Core\Process;
+use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Date;
+use Dotclear\Helper\Html\Form\Button;
+use Dotclear\Helper\Html\Form\Capture;
+use Dotclear\Helper\Html\Form\Checkbox;
+use Dotclear\Helper\Html\Form\Datetime;
+use Dotclear\Helper\Html\Form\Div;
+use Dotclear\Helper\Html\Form\Email;
+use Dotclear\Helper\Html\Form\Fieldset;
+use Dotclear\Helper\Html\Form\Form;
+use Dotclear\Helper\Html\Form\Hidden;
+use Dotclear\Helper\Html\Form\Img;
+use Dotclear\Helper\Html\Form\Input;
+use Dotclear\Helper\Html\Form\Label;
+use Dotclear\Helper\Html\Form\Legend;
+use Dotclear\Helper\Html\Form\Li;
+use Dotclear\Helper\Html\Form\Link;
+use Dotclear\Helper\Html\Form\None;
+use Dotclear\Helper\Html\Form\Note;
+use Dotclear\Helper\Html\Form\Para;
+use Dotclear\Helper\Html\Form\Password;
+use Dotclear\Helper\Html\Form\Select;
+use Dotclear\Helper\Html\Form\Set;
+use Dotclear\Helper\Html\Form\Span;
+use Dotclear\Helper\Html\Form\Submit;
+use Dotclear\Helper\Html\Form\Table;
+use Dotclear\Helper\Html\Form\Tbody;
+use Dotclear\Helper\Html\Form\Td;
+use Dotclear\Helper\Html\Form\Text;
+use Dotclear\Helper\Html\Form\Textarea;
+use Dotclear\Helper\Html\Form\Th;
+use Dotclear\Helper\Html\Form\Thead;
+use Dotclear\Helper\Html\Form\Tr;
+use Dotclear\Helper\Html\Form\Ul;
+use Dotclear\Helper\Html\Form\Url;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
+use Dotclear\Helper\Text as Txt;
 use Exception;
-use form;
+
 
 class ManageMap extends Process
 {
@@ -622,22 +657,21 @@ class ManageMap extends Process
         }
 
         if (App::backend()->post_id) {
-            echo
-            '<p class="nav_prevnext">';
+            $items = [];
             if (App::backend()->prev_link) {
-                echo
-                App::backend()->prev_link;
+                $items[] = new Text(null, App::backend()->prev_link);
             }
             if (App::backend()->next_link) {
-                echo
-                App::backend()->next_link;
+                $items[] = new Text(null, App::backend()->next_link);
             }
 
-            # --BEHAVIOR-- adminPostNavLinks -- MetaRecord|null, string
-            App::behavior()->callBehavior('adminPostNavLinks', App::backend()->post ?? null, 'map');
+            # --BEHAVIOR-- adminPageNavLinks -- MetaRecord|null
+            $items[] = new Capture(App::behavior()->callBehavior(...), ['adminPosNavLinks', App::backend()->post ?? null, 'post']);
 
-            echo
-            '</p>';
+            echo (new Para())
+                ->class('nav_prevnext')
+                ->items($items)
+            ->render();
         }
 
         # Exit if we cannot view page
