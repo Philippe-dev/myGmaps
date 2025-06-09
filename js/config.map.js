@@ -133,8 +133,15 @@ dotclear.ready(() => {
 		// Crée le widget autocomplete
 		const autocomplete = new google.maps.places.PlaceAutocompleteElement();
 
-		// Remplace l'input par le widget autocomplete dans le DOM
+		// Copier les classes CSS de l'ancien input
+		autocomplete.className = input.className;
+
+		// Copier les styles en ligne (optionnel)
+		autocomplete.style.cssText = input.style.cssText;
+
+		// Remplacer l'input par le widget autocomplete dans le DOM
 		input.parentNode.replaceChild(autocomplete, input);
+
 
 		// Optionnel : définir un placeholder
 		autocomplete.setAttribute('placeholder', 'Adresse...');
