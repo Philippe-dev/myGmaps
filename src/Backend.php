@@ -29,6 +29,7 @@ use Dotclear\Helper\Html\Form\Link;
 use Dotclear\Helper\Html\Form\Note;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Span;
+use Dotclear\Helper\Html\Form\Strong;
 use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Html\Form\Ul;
 use Dotclear\Helper\Html\Html;
@@ -286,7 +287,7 @@ class Backend extends Process
                     (new Link())
                         ->class('add')
                         ->href($addmapurl)
-                        ->text(__('Add a map to page')),
+                        ->text((new Strong(__('Add a map to page')))),
                 ]);
         } elseif ($post->post_type === 'post') {
             $form_note = (new Span(__('Map attached to this post.')))->class('form-note')->render();
@@ -296,7 +297,9 @@ class Backend extends Process
                     (new Link())
                         ->class('add')
                         ->href($addmapurl)
-                        ->text(__('Add a map to post')),
+                        ->items([
+                            ((new Strong(__('Add a map to post'))))
+                        ])
                 ]);
         }
 
@@ -370,12 +373,16 @@ class Backend extends Process
                                 (new Link())
                                     ->class('add')
                                     ->href(App::backend()->url()->get('admin.plugin.' . My::id()) . '&act=maps&id=' . $id)
-                                    ->text(__('Add elements')),
+                                    ->items([
+                                        ((new Strong(__('Add elements'))))
+                                    ]),
                             ]),
                             (new Li())->class('right')->items([
                                 (new Link())->href($removemapurl)
                                     ->class('map-remove delete')
-                                    ->text(__('Remove map')),
+                                    ->items([
+                                        ((new Strong(__('Remove map'))))
+                                    ]),
                             ]),
                         ]),
                 ]),
@@ -445,12 +452,16 @@ class Backend extends Process
                                 (new Link())
                                     ->class('add')
                                     ->href(App::backend()->url()->get('admin.plugin.' . My::id()) . '&act=maps&id=' . $id)
-                                    ->text(__('Add elements')),
+                                    ->items([
+                                        ((new Strong(__('Add elements'))))
+                                    ])
                             ]),
                             (new Li())->class('right')->items([
                                 (new Link())->href($removemapurl)
                                     ->class('map-remove delete')
-                                    ->text(__('Remove map')),
+                                    ->items([
+                                        ((new Strong(__('Remove map'))))
+                                    ])
                             ]),
                         ]),
                 ]),

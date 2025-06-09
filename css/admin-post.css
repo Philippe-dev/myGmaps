@@ -2,10 +2,6 @@ a.map-remove {
     color: var(--delete-color);
 }
 
-a.map-remove, a.add {
-    font-weight: bold;
-}
-
 #map_canvas {
     height: 600px;
     border: 1px solid var(--msg-info-border);

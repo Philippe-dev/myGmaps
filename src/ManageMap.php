@@ -1015,6 +1015,7 @@ class ManageMap extends Process
                                 (new Para('map_toolbar_wrapper'))
                                     ->items([
                                         (new Span(__('Search:'))),
+                                        (new Span('map_spacer'))->text('&nbsp;'),
                                         (new Input('address'))
                                             ->size(40)
                                             ->maxlength(255)
