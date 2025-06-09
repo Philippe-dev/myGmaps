@@ -205,6 +205,13 @@ class Backend extends Process
         } else {
             $csp['worker-src'] = 'blob:';
         }
+
+        if (isset($csp['connect-src'])) {
+            $csp['connect-src'] .= ' https://places.googleapis.com/ https://maps.googleapis.com/';
+        } else {
+            $csp['connect-src'] = 'https://places.googleapis.com/ https://maps.googleapis.com/';
+
+        }
     }
 
     public static function adminPostForm($post)
@@ -298,8 +305,8 @@ class Backend extends Process
                         ->class('add')
                         ->href($addmapurl)
                         ->items([
-                            ((new Strong(__('Add a map to post'))))
-                        ])
+                            ((new Strong(__('Add a map to post')))),
+                        ]),
                 ]);
         }
 
@@ -374,14 +381,14 @@ class Backend extends Process
                                     ->class('add')
                                     ->href(App::backend()->url()->get('admin.plugin.' . My::id()) . '&act=maps&id=' . $id)
                                     ->items([
-                                        ((new Strong(__('Add elements'))))
+                                        ((new Strong(__('Add elements')))),
                                     ]),
                             ]),
                             (new Li())->class('right')->items([
                                 (new Link())->href($removemapurl)
                                     ->class(['map-remove, delete'])
                                     ->items([
-                                        ((new Strong(__('Remove map'))))
+                                        ((new Strong(__('Remove map')))),
                                     ]),
                             ]),
                         ]),
@@ -453,15 +460,15 @@ class Backend extends Process
                                     ->class('add')
                                     ->href(App::backend()->url()->get('admin.plugin.' . My::id()) . '&act=maps&id=' . $id)
                                     ->items([
-                                        ((new Strong(__('Add elements'))))
-                                    ])
+                                        ((new Strong(__('Add elements')))),
+                                    ]),
                             ]),
                             (new Li())->class('right')->items([
                                 (new Link())->href($removemapurl)
                                     ->class('map-remove delete')
                                     ->items([
-                                        ((new Strong(__('Remove map'))))
-                                    ])
+                                        ((new Strong(__('Remove map')))),
+                                    ]),
                             ]),
                         ]),
                 ]),

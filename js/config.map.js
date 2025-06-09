@@ -129,7 +129,22 @@ dotclear.ready(() => {
 		// Geocoding
 		const geocoder = new google.maps.Geocoder();
 		const input = document.getElementById('address');
-		const autocomplete = new google.maps.places.Autocomplete(input);
+
+		// Crée le widget autocomplete
+		const autocomplete = new google.maps.places.PlaceAutocompleteElement();
+
+		// Remplace l'input par le widget autocomplete dans le DOM
+		input.parentNode.replaceChild(autocomplete, input);
+
+		// Optionnel : définir un placeholder
+		autocomplete.setAttribute('placeholder', 'Adresse...');
+
+		// Pour récupérer la valeur sélectionnée :
+		autocomplete.addEventListener('gmp-placechange', (event) => {
+			const place = autocomplete.value; // ou event.target.value
+			// Utilise la valeur ou l'objet place selon tes besoins
+			// console.log(place);
+		});
 
 		// Map listeners
 		google.maps.event.addListener(map, 'center_changed', () => {
