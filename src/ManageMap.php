@@ -30,6 +30,7 @@ use Dotclear\Helper\Html\Form\Datetime;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Form;
 use Dotclear\Helper\Html\Form\Hidden;
+use Dotclear\Helper\Html\Form\Img;
 use Dotclear\Helper\Html\Form\Input;
 use Dotclear\Helper\Html\Form\Label;
 use Dotclear\Helper\Html\Form\Link;
@@ -78,7 +79,7 @@ class ManageMap extends Process
         App::backend()->post_open_comment  = App::blog()->settings()->system->allow_comments;
         App::backend()->post_open_tb       = App::blog()->settings()->system->allow_trackbacks;
 
-        App::backend()->page_title = __('New post');
+        App::backend()->page_title = __('New element');
 
         App::backend()->can_view_page = true;
         App::backend()->can_edit_post = App::auth()->check(App::auth()->makePermissions([
@@ -142,7 +143,7 @@ class ManageMap extends Process
         App::backend()->post = null;
 
         if (!empty($_REQUEST['id'])) {
-            App::backend()->page_title = __('Edit post');
+            App::backend()->page_title = __('Edit element');
 
             $params['post_id']   = $_REQUEST['id'];
             $params['post_type'] = 'map';
@@ -183,7 +184,7 @@ class ManageMap extends Process
                         $next_rs->post_id,
                         'next',
                         Html::escapeHTML(trim(Html::clean($next_rs->post_title))),
-                        __('Next post') . '&nbsp;&#187;'
+                        __('Next element') . '&nbsp;&#187;'
                     );
                     App::backend()->next_headlink = sprintf(
                         $post_headlink,
@@ -199,7 +200,7 @@ class ManageMap extends Process
                         $prev_rs->post_id,
                         'prev',
                         Html::escapeHTML(trim(Html::clean($prev_rs->post_title))),
-                        '&#171;&nbsp;' . __('Previous post')
+                        '&#171;&nbsp;' . __('Previous element')
                     );
                     App::backend()->prev_headlink = sprintf(
                         $post_headlink,
@@ -623,9 +624,6 @@ class ManageMap extends Process
         if (!App::backend()->can_edit_post) {
             App::backend()->default_tab = '';
         }
-        if (!empty($_GET['co'])) {
-            App::backend()->default_tab = 'comments';
-        }
 
         $admin_post_behavior = '';
         if (App::backend()->post_editor) {
@@ -782,24 +780,14 @@ class ManageMap extends Process
             App::backend()->next_headlink . "\n" . App::backend()->prev_headlink
         );
 
-        $img_status         = '';
-        $img_status_pattern = '<img class="mark mark-%3$s" alt="%1$s" src="images/%2$s">';
-
         if (App::backend()->post_id) {
-            try {
-                $img_status = match ((int) App::backend()->post_status) {
-                    App::status()->post()::PUBLISHED   => sprintf($img_status_pattern, __('Published'), 'published.svg', 'published'),
-                    App::status()->post()::UNPUBLISHED => sprintf($img_status_pattern, __('Unpublished'), 'unpublished.svg', 'unpublished'),
-                    App::status()->post()::SCHEDULED   => sprintf($img_status_pattern, __('Scheduled'), 'scheduled.svg', 'scheduled'),
-                    App::status()->post()::PENDING     => sprintf($img_status_pattern, __('Pending'), 'pending.svg', 'pending'),
-                };
-            } catch (UnhandledMatchError) {
-            }
-
+            $img_status       = App::status()->post()->image((int) App::backend()->post_status)->render();
             $edit_entry_title = '&ldquo;' . Html::escapeHTML(trim(Html::clean(App::backend()->post_title))) . '&rdquo;' . ' ' . $img_status;
         } else {
+            $img_status       = '';
             $edit_entry_title = App::backend()->page_title;
         }
+
         echo Page::breadcrumb(
             [
                 Html::escapeHTML(App::blog()->name) => '',
@@ -873,7 +861,7 @@ class ManageMap extends Process
                                 ->items(App::backend()->status_combo)
                                 ->default(App::backend()->post_status)
                                 ->disabled(!App::backend()->can_publish)
-                                ->label(new Label(__('Entry status') . ' ' . $img_status, Label::OUTSIDE_LABEL_BEFORE)),
+                                ->label(new Label(__('Element status') . ' ' . $img_status, Label::OUTSIDE_LABEL_BEFORE)),
                         ])
                         ->render(),
 
@@ -890,7 +878,7 @@ class ManageMap extends Process
                                 ->items(App::backend()->lang_combo)
                                 ->default(App::backend()->post_lang)
                                 ->translate(false)
-                                ->label(new Label(__('Entry language'), Label::OUTSIDE_LABEL_BEFORE)),
+                                ->label(new Label(__('Element language'), Label::OUTSIDE_LABEL_BEFORE)),
                         ])
                         ->render(),
 
@@ -918,7 +906,7 @@ class ManageMap extends Process
                         'post_selected' => (new Para())->items([
                             (new Checkbox('post_selected', App::backend()->post_selected))
                                 ->value(1)
-                                ->label(new Label(__('Selected entry'), Label::IL_FT)),
+                                ->label(new Label(__('Selected element'), Label::IL_FT)),
                         ])
                         ->render(),
 
@@ -1027,7 +1015,6 @@ class ManageMap extends Process
                                 (new Para('map_toolbar_wrapper'))
                                     ->items([
                                         (new Span(__('Search:'))),
-                                        (new Span('map_spacer'))->text('&nbsp;'),
                                         (new Input('address'))
                                             ->size(40)
                                             ->maxlength(255)
@@ -1037,55 +1024,46 @@ class ManageMap extends Process
                                             ->type('submit')
                                             ->value(__('OK'))
                                             ->id('geocode'),
-                                        (new Span('map_spacer'))->text('&nbsp;'),
                                         (new Btn('add_marker'))
                                             ->class(['add_marker'])
                                             ->id('add_marker')
                                             ->type('button')
                                             ->title(__('Point of interest')),
-                                        (new Span('map_spacer'))->text('&nbsp;'),
                                         (new Btn('add_polyline'))
                                             ->class(['add_polyline'])
                                             ->id('add_polyline')
                                             ->type('button')
                                             ->title(__('Polyline')),
-                                        (new Span('map_spacer'))->text('&nbsp;'),
                                         (new Btn('add_polygon'))
                                             ->class(['add_polygon'])
                                             ->id('add_polygon')
                                             ->type('button')
                                             ->title(__('Polygon')),
-                                        (new Span('map_spacer'))->text('&nbsp;'),
                                         (new Btn('add_rectangle'))
                                             ->class(['add_rectangle'])
                                             ->id('add_rectangle')
                                             ->type('button')
                                             ->title(__('Rectangle')),
-                                        (new Span('map_spacer'))->text('&nbsp;'),
                                         (new Btn('add_circle'))
                                             ->class(['add_circle'])
                                             ->id('add_circle')
                                             ->type('button')
                                             ->title(__('Circle')),
-                                        (new Span('map_spacer'))->text('&nbsp;'),
                                         (new Btn('add_kml'))
                                             ->class(['add_kml'])
                                             ->id('add_kml')
                                             ->type('button')
                                             ->title(__('Included Kml file')),
-                                        (new Span('map_spacer'))->text('&nbsp;'),
                                         (new Btn('add_georss'))
                                             ->class(['add_georss'])
                                             ->id('add_georss')
                                             ->type('button')
                                             ->title(__('GeoRSS Feed')),
-                                        (new Span('map_spacer'))->text('&nbsp;'),
                                         (new Btn('add_directions'))
                                             ->class(['add_directions'])
                                             ->id('add_directions')
                                             ->type('button')
                                             ->title(__('Directions')),
-                                        (new Span('map_spacer'))->text('&nbsp;'),
                                         (new Btn('delete_map'))
                                             ->class(['delete_map'])
                                             ->id('delete_map')
@@ -1186,7 +1164,6 @@ class ManageMap extends Process
             if (App::backend()->post_id) {
                 $buttons[] = (new Hidden('id', (string) App::backend()->post_id));
                 $buttons[] = (new Hidden('element_type', $meta->getMetaStr(App::backend()->post->post_meta, 'map')));
-
             } else {
                 $buttons[] = (new Hidden('element_type', ''));
             }
@@ -1225,7 +1202,7 @@ class ManageMap extends Process
                                             (new Div())
                                                 ->class('constrained')
                                                 ->items([
-                                                    (new Text('h3', __('Edit post')))
+                                                    (new Text('h3', __('Edit element')))
                                                         ->class('out-of-screen-if-js'),
                                                     (new Note())
                                                         ->class('form-note')

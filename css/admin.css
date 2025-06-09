@@ -116,7 +116,7 @@ gmp-advanced-marker img[src$=".svg"], #infowindow_icons img[src$=".svg"] {
 
 .map_toolbar span {
   display: inline-block;
-  vertical-align: top;
+  vertical-align: middle;
 }
 
 span.map_spacer {
@@ -314,3 +314,6 @@ p#map_toolbar_wrapper {
   padding: 0;
 }
 
+p#map_toolbar_wrapper>input, p#map_toolbar_wrapper>button, p#map_toolbar_wrapper>span {
+  margin-right: .2em;
+}
