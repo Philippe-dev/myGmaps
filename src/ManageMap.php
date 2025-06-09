@@ -1233,7 +1233,7 @@ class ManageMap extends Process
             ->render();
         }
 
-        Page::helpBlock('core_post', 'core_trackbacks', 'core_wiki');
+        Page::helpBlock('myGmap', 'core_wiki');
         Page::closeModule();
     }
 }
