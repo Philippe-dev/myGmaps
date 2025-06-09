@@ -313,7 +313,7 @@ class Backend extends Process
                     (new Para())
                         ->items([
                             (new Text('span', __('No map')))
-                                ->class('form-note info maximal'),
+                            ->class(['form-note', 'info', 'maximal']),
                         ])
                         ->class('elements-list'),
                     $addmap_message,
@@ -342,7 +342,7 @@ class Backend extends Process
                     ]),
                     (new Para())->id('map_canvas')->class('area'),
                     (new Note())
-                        ->class('form-note info maximal mapinfo')
+                        ->class(['form-note', 'info', 'maximal', 'mapinfo'])
                         ->text(__('Choose map center by dragging map or searching for a location. Choose zoom level and map type with map controls.')),
                     (new Para())->items([
                         (new Input('myGmaps_center'))
@@ -365,7 +365,7 @@ class Backend extends Process
                     ->class('elements-list')
                     ->items([
                         (new Text('span', __('Empty map')))
-                            ->class('form-note info maximal'),
+                        ->class(['form-note', 'info', 'maximal']),
                     ]),
                     (new Ul())
                         ->items([
@@ -379,7 +379,7 @@ class Backend extends Process
                             ]),
                             (new Li())->class('right')->items([
                                 (new Link())->href($removemapurl)
-                                    ->class('map-remove delete')
+                                    ->class(['map-remove, delete'])
                                     ->items([
                                         ((new Strong(__('Remove map'))))
                                     ]),
