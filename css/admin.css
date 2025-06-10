@@ -308,6 +308,7 @@ p#map_toolbar_wrapper {
 }
 
 gmp-place-autocomplete {
+  display: inline-block;
   width: 25em;
   padding: 8px;
   font-size: 1rem;

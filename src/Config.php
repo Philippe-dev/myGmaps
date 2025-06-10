@@ -175,7 +175,7 @@ class Config extends Process
                 ]),
             ]),
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Default map options'))))->fields([
-                (new Div())->class('map_toolbar')->items([
+                (new Div())->class('map_toolbar')->id('map_toolbar')->items([
                     (new Text('span', __('Search:')))->class('search'),
                     (new Text('span', '&nbsp;'))->class('map_spacer'),
                     (new Input('address'))
