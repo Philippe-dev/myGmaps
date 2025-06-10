@@ -131,10 +131,13 @@ dotclear.ready(() => {
 		const input = document.getElementById('address');
 
 		// Crée le widget autocomplete
-		const autocomplete = new google.maps.places.PlaceAutocompleteElement();
+		const autocomplete = new google.maps.places.PlaceAutocompleteElement(input, {
+			types: ['geocode'],
+			componentRestrictions: { country: 'fr' },
+			fields: ['formatted_address', 'geometry.location', 'name']
+		});
 
-		// Remplacer l'input par le widget autocomplete dans le DOM
-		input.parentNode.replaceChild(autocomplete, input);
+		
 
 
 		// Pour récupérer la valeur sélectionnée :
