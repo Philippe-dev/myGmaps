@@ -306,3 +306,11 @@ p#map_toolbar_wrapper {
   margin: 0;
   padding: 0;
 }
+
+gmp-place-autocomplete {
+  width: 25em;
+  padding: 8px;
+  font-size: 1rem;
+  border-radius: 4px;
+  /* Ajoute ici les styles de ton input classique */
+}
