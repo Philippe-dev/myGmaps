@@ -286,7 +286,7 @@ button.delete_map:disabled {
   color: var(--button-color)
 }
 
-.add {
+.add, .delete {
   font-size: 1.5rem;
 }
 

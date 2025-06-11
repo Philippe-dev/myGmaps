@@ -386,7 +386,7 @@ class Backend extends Process
                             ]),
                             (new Li())->class('right')->items([
                                 (new Link())->href($removemapurl)
-                                    ->class(['map-remove, delete'])
+                                    ->class(['map-remove', 'delete'])
                                     ->items([
                                         ((new Strong(__('Remove map')))),
                                     ]),
@@ -467,7 +467,7 @@ class Backend extends Process
                             ]),
                             (new Li())->class('right')->items([
                                 (new Link())->href($removemapurl)
-                                    ->class('map-remove delete')
+                                    ->class(['map-remove', 'delete'])
                                     ->items([
                                         ((new Strong(__('Remove map')))),
                                     ]),
