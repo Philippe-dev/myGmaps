@@ -1,3 +1,7 @@
-#options-box, .s-tags, .s-featuredmedia, .s-attachments {
+#options-box, .s-tags, .s-featuredmedia, .s-attachments, #excerpt-area button.details-cmd {
     display: none;
+}
+
+#excerpt-area label {
+    margin-bottom: -1em
 }
