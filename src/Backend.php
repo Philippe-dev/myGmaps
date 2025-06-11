@@ -374,6 +374,7 @@ class Backend extends Process
                         ->class(['form-note', 'info', 'maximal']),
                     ]),
                     (new Ul())
+                        ->class('minilist')
                         ->items([
                             (new Li())->items([
                                 (new Link())
@@ -454,6 +455,7 @@ class Backend extends Process
                         (new Capture($post_list->display(...), [App::backend()->page, App::backend()->nb_per_page, (int) $id, $enclose_block = '', (string) $posttype])),
                     ]),
                     (new Ul())
+                        ->class('minilist')
                         ->items([
                             (new Li())->items([
                                 (new Link())

@@ -9,6 +9,10 @@ a.map-remove {
   margin-bottom: .4em
 }
 
+#map_canvas *:focus {
+  outline: none;
+}
+
 #infowindow_icons {
   min-width: 200px
 }
@@ -52,9 +56,14 @@ a.map-remove {
   min-width: 150px
 }
 
-gmp-advanced-marker img[src$=".svg"], #infowindow_icons img[src$=".svg"] {
+#infowindow_icons img[src$=".svg"] {
   width: 2.5em;
   height: 2.5em;
+}
+
+gmp-advanced-marker img[src$=".svg"] {
+  width: 3.5em;
+  height: 3.5em;
 }
 
 /* Map Toolbar */
@@ -288,6 +297,21 @@ p#excerpt {
 .element-remove img {
   vertical-align: middle;
   width: 1.2em;
+}
+
+#post-gmap ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#post-gmap li {
+  width: 50%;
+  display: inline-block;
+}
+
+#post-gmap li.right {
+  text-align: right;
 }
 
 .form-note.mapinfo {
