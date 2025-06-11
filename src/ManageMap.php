@@ -1102,10 +1102,10 @@ class ManageMap extends Process
                             ->rows(5)
                             ->lang(App::backend()->post_lang)
                             ->spellcheck(true)
-                            ->placeholder(__('Content'))
+                            ->placeholder(__('Description'))
                             ->label(
                                 (new Label(
-                                    __('Content:'),
+                                    __('Description:'),
                                     Label::OUTSIDE_TEXT_BEFORE
                                 ))
                                 ->class(['bold'])
