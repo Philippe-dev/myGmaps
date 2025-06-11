@@ -68,6 +68,7 @@ gmp-advanced-marker img[src$=".svg"], #infowindow_icons img[src$=".svg"] {
   overflow: inherit;
   position: relative;
   line-height: 30px;
+  clear: left;
 }
 
 .map_toolbar button {
