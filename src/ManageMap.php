@@ -1009,68 +1009,62 @@ class ManageMap extends Process
 
                     'post_excerpt' => (new Para())->class('area')->id('excerpt-area')->items([
                         (new Label(__('Type and position:'), Label::OUTSIDE_LABEL_AFTER))->for('post_excerpt')->class('bold'),
-                        (new Div())
-                            ->class('map_toolbar')
-                            ->items([
-                                (new Para('map_toolbar_wrapper'))
-                                    ->items([
-                                        (new Span(__('Search:'))),
-                                        (new Span('map_spacer'))->text('&nbsp;'),
-                                        (new Input('address'))
-                                            ->size(40)
-                                            ->maxlength(255)
-                                            ->class('qx')
-                                            ->id('address'),
-                                        (new Input('geocode'))
-                                            ->type('submit')
-                                            ->value(__('OK'))
-                                            ->id('geocode'),
-                                        (new Btn('add_marker'))
-                                            ->class(['add_marker'])
-                                            ->id('add_marker')
-                                            ->type('button')
-                                            ->title(__('Point of interest')),
-                                        (new Btn('add_polyline'))
-                                            ->class(['add_polyline'])
-                                            ->id('add_polyline')
-                                            ->type('button')
-                                            ->title(__('Polyline')),
-                                        (new Btn('add_polygon'))
-                                            ->class(['add_polygon'])
-                                            ->id('add_polygon')
-                                            ->type('button')
-                                            ->title(__('Polygon')),
-                                        (new Btn('add_rectangle'))
-                                            ->class(['add_rectangle'])
-                                            ->id('add_rectangle')
-                                            ->type('button')
-                                            ->title(__('Rectangle')),
-                                        (new Btn('add_circle'))
-                                            ->class(['add_circle'])
-                                            ->id('add_circle')
-                                            ->type('button')
-                                            ->title(__('Circle')),
-                                        (new Btn('add_kml'))
-                                            ->class(['add_kml'])
-                                            ->id('add_kml')
-                                            ->type('button')
-                                            ->title(__('Included Kml file')),
-                                        (new Btn('add_georss'))
-                                            ->class(['add_georss'])
-                                            ->id('add_georss')
-                                            ->type('button')
-                                            ->title(__('GeoRSS Feed')),
-                                        (new Btn('add_directions'))
-                                            ->class(['add_directions'])
-                                            ->id('add_directions')
-                                            ->type('button')
-                                            ->title(__('Directions')),
-                                        (new Btn('delete_map'))
-                                            ->class(['delete_map'])
-                                            ->id('delete_map')
-                                            ->type('button')
-                                            ->title(__('Erase')),
-                                    ]),
+                        (new Div())->class('map_toolbar')->items([
+                            (new Text('span', __('Search:')))->class('search'),
+                            (new Text('span', '&nbsp;'))->class('map_spacer'),
+                            (new Input('address'))
+                                ->size(50)
+                                ->maxlength(255)
+                                ->class('qx'),
+                            (new Input('geocode'))
+                            ->type('submit')
+                            ->value(__('OK')),
+                            (new Btn('add_marker'))
+                                ->class(['add_marker'])
+                                ->id('add_marker')
+                                ->type('button')
+                                ->title(__('Point of interest')),
+                            (new Btn('add_polyline'))
+                                ->class(['add_polyline'])
+                                ->id('add_polyline')
+                                ->type('button')
+                                ->title(__('Polyline')),
+                            (new Btn('add_polygon'))
+                                ->class(['add_polygon'])
+                                ->id('add_polygon')
+                                ->type('button')
+                                ->title(__('Polygon')),
+                            (new Btn('add_rectangle'))
+                                ->class(['add_rectangle'])
+                                ->id('add_rectangle')
+                                ->type('button')
+                                ->title(__('Rectangle')),
+                            (new Btn('add_circle'))
+                                ->class(['add_circle'])
+                                ->id('add_circle')
+                                ->type('button')
+                                ->title(__('Circle')),
+                            (new Btn('add_kml'))
+                                ->class(['add_kml'])
+                                ->id('add_kml')
+                                ->type('button')
+                                ->title(__('Included Kml file')),
+                            (new Btn('add_georss'))
+                                ->class(['add_georss'])
+                                ->id('add_georss')
+                                ->type('button')
+                                ->title(__('GeoRSS Feed')),
+                            (new Btn('add_directions'))
+                                ->class(['add_directions'])
+                                ->id('add_directions')
+                                ->type('button')
+                                ->title(__('Directions')),
+                            (new Btn('delete_map'))
+                                ->class(['delete_map'])
+                                ->id('delete_map')
+                                ->type('button')
+                                ->title(__('Erase')),
+
                             ]),
                         (new Div())
                             ->id('map_box')
