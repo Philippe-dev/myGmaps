@@ -30,7 +30,6 @@ use Dotclear\Helper\Html\Form\Datetime;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Form;
 use Dotclear\Helper\Html\Form\Hidden;
-use Dotclear\Helper\Html\Form\Img;
 use Dotclear\Helper\Html\Form\Input;
 use Dotclear\Helper\Html\Form\Label;
 use Dotclear\Helper\Html\Form\Link;
@@ -1053,7 +1052,7 @@ class ManageMap extends Process
                                 ->class(['add_kml'])
                                 ->id('add_kml')
                                 ->type('button')
-                                ->title(__('Included Kml file')),
+                                ->title(__('Included kml file')),
                             (new Btn('add_georss'))
                                 ->class(['add_georss'])
                                 ->id('add_georss')
@@ -1070,7 +1069,7 @@ class ManageMap extends Process
                                 ->type('button')
                                 ->title(__('Erase')),
 
-                            ]),
+                        ]),
                         (new Div())
                             ->id('map_box')
                             ->items([

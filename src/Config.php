@@ -68,9 +68,8 @@ class Config extends Process
                 My::settings()->put('myGmaps_type', $_POST['myGmaps_type']);
 
                 Notices::addSuccessNotice(__('Configuration has been updated.'));
-                
-                App::backend()->url()->redirect('admin.plugins', ['module' => My::id(), 'conf' => '1', 'redir' => $_REQUEST['redir']]);
 
+                App::backend()->url()->redirect('admin.plugins', ['module' => My::id(), 'conf' => '1', 'redir' => $_REQUEST['redir']]);
             } catch (Exception $e) {
                 App::error()->add($e->getMessage());
             }

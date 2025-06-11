@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: myGmaps 9.5\n"
+"Project-Id-Version: myGmaps 9.6\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-06-06T09:51:25+00:00\n"
+"PO-Revision-Date: 2025-06-11T17:10:49+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -45,9 +45,6 @@ msgstr "Ajouter des éléments"
 
 msgid "Remove map"
 msgstr "Supprimer la carte"
-
-msgid "Included elements list"
-msgstr "Liste des éléments inclus"
 
 msgid "none"
 msgstr "aucun"
@@ -145,8 +142,11 @@ msgstr "Flux GeoRSS"
 msgid "Directions"
 msgstr "Itinéraire"
 
-msgid "Remove element: "
-msgstr "Supprimer l'élément : "
+msgid "Included elements list"
+msgstr "Liste des éléments inclus"
+
+msgid "Remove element:"
+msgstr "Supprimer l'élément :"
 
 msgid "Enable extension for this blog"
 msgstr "Activer l'extension pour ce blog"
@@ -175,6 +175,15 @@ msgstr "Nouvel élément"
 msgid "Selected elements action:"
 msgstr "Action sur les éléments sélectionnés :"
 
+msgid "Edit element"
+msgstr "Éditer l'élément"
+
+msgid "Next element"
+msgstr "Élément suivant"
+
+msgid "Previous element"
+msgstr "Élément précédent"
+
 msgid "New map element"
 msgstr "Nouvel élément de carte"
 
@@ -183,12 +192,6 @@ msgstr "Cet élément de carte n'existe pas"
 
 msgid "Edit map element"
 msgstr "Éditer l'élément de carte"
-
-msgid "Next element"
-msgstr "Élément suivant"
-
-msgid "Previous element"
-msgstr "Élément précédent"
 
 msgid "No description."
 msgstr "Pas de description."
@@ -253,14 +256,17 @@ msgstr "Effacer"
 msgid "This map will not be displayed on the blog and is meant only to create, edit and position <strong>only one</strong> element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties."
 msgstr "Cette carte ne sera pas affichée sur le blog, et n'est destinée qu'à créer, positionner ou éditer <strong>un seul</strong> élément à la fois. Choisissez un outil, cliquez sur la carte pour créer votre élément, puis cliquer sur l'élément pour modifier ses propriétés."
 
-msgid "Select map elements for map attached to page:"
-msgstr "Choisir les éléments de la carte attachée à la page :"
-
 msgid "Select map elements for map attached to post:"
 msgstr "Choisir les éléments de la carte attachée au billet :"
 
+msgid "Select map elements for map attached to page:"
+msgstr "Choisir les éléments de la carte attachée à la page :"
+
 msgid "Add selected map elements"
 msgstr "Ajouter les éléments de carte sélectionnés"
+
+msgid "Remove element:"
+msgstr "Supprimer l'élément :"
 
 msgid "Remove element"
 msgstr "Supprimer l'élément"

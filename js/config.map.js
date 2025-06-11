@@ -134,7 +134,7 @@ dotclear.ready(() => {
 
 		const placeAutocomplete = new google.maps.places.PlaceAutocompleteElement();
 		toolbar.insertBefore(placeAutocomplete, geocodeok);
-		
+
 		placeAutocomplete.addEventListener('gmp-select', async ({ placePrediction }) => {
 			const place = placePrediction.toPlace();
 			await place.fetchFields({ fields: ['displayName', 'formattedAddress', 'location'] });
@@ -166,7 +166,7 @@ dotclear.ready(() => {
 				const center = map.getCenter();
 				document.querySelector('input[name="myGmaps_center"]').value = center;
 			}, 100);
-			
+
 		});
 
 		google.maps.event.addListener(map, "maptypeid_changed", function () {
