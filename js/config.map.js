@@ -126,15 +126,33 @@ dotclear.ready(() => {
 			map.mapTypes.set(mapTypeIds[i], value);
 		}
 
-		// Geocoding
+		// Autocomplete
 		const geocoder = new google.maps.Geocoder();
 		const input = document.getElementById('address');
 		const toolbar = document.getElementById('map_toolbar');
 
 		const placeAutocomplete = new google.maps.places.PlaceAutocompleteElement();
-		//@ts-ignore
 		toolbar.appendChild(placeAutocomplete);
 		toolbar.replaceChild(placeAutocomplete, input);
+
+		// Geocode
+		function geocode() {
+			const address = document.getElementById("address").value;
+			geocoder.geocode({ 'address': address, 'partialmatch': true }, geocodeResult);
+		}
+
+		function geocodeResult(results, status) {
+			if (status === 'OK' && results.length > 0) {
+				map.fitBounds(results[0].geometry.viewport);
+			} else {
+				alert(`Geocode was not successful for the following reason: ${status}`);
+			}
+		}
+
+		document.getElementById('geocode').addEventListener('click', (e) => {
+			e.preventDefault();
+			geocode();
+		});
 
 		// Map listeners
 		google.maps.event.addListener(map, 'center_changed', () => {
@@ -164,25 +182,6 @@ dotclear.ready(() => {
 		function trim(myString) {
 			return myString.replace(/^\s+/g, '').replace(/\s+$/g, '');
 		}
-
-		// Geocoding
-		function geocode() {
-			const address = document.getElementById("address").value;
-			geocoder.geocode({ 'address': address, 'partialmatch': true }, geocodeResult);
-		}
-
-		function geocodeResult(results, status) {
-			if (status === 'OK' && results.length > 0) {
-				map.fitBounds(results[0].geometry.viewport);
-			} else {
-				alert(`Geocode was not successful for the following reason: ${status}`);
-			}
-		}
-
-		document.getElementById('geocode').addEventListener('click', (e) => {
-			e.preventDefault();
-			geocode();
-		});
 
 		document.getElementById('module_config').addEventListener('submit', () => {
 			const default_location = `${map.getCenter().lat()}, ${map.getCenter().lng()}`;
