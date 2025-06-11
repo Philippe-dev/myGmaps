@@ -65,8 +65,7 @@ gmp-advanced-marker img[src$=".svg"], #infowindow_icons img[src$=".svg"] {
   box-sizing: border-box;
   padding: .2em .5em;
   border: 1px solid var(--msg-info-border);
-  overflow: hidden;
-  border-radius: 4px 4px 0 0;
+  overflow: inherit;
   position: relative;
   line-height: 30px;
 }
@@ -247,6 +246,10 @@ button.delete_map:disabled {
   }
 }
 
+.map_toolbar #address {
+  display: none
+}
+
 .map_toolbar .qx {
   border-bottom-left-radius: .3em;
   border-top-left-radius: .3em;
@@ -313,5 +316,4 @@ gmp-place-autocomplete {
   padding: 8px;
   font-size: 1rem;
   border-radius: 4px;
-  /* Ajoute ici les styles de ton input classique */
 }

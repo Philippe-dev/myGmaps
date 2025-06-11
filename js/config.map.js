@@ -129,11 +129,17 @@ dotclear.ready(() => {
 		// Autocomplete
 		const geocoder = new google.maps.Geocoder();
 		const input = document.getElementById('address');
+		const ok = document.getElementById('geocode');
 		const toolbar = document.getElementById('map_toolbar');
 
 		const placeAutocomplete = new google.maps.places.PlaceAutocompleteElement();
-		toolbar.appendChild(placeAutocomplete);
-		toolbar.replaceChild(placeAutocomplete, input);
+		toolbar.insertBefore(placeAutocomplete, ok);
+		
+		placeAutocomplete.addEventListener('gmp-select', async ({ placePrediction }) => {
+			const place = placePrediction.toPlace();
+			await place.fetchFields({ fields: ['displayName', 'formattedAddress', 'location'] });
+			input.value = place.formattedAddress;
+		});
 
 		// Geocode
 		function geocode() {
