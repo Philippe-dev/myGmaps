@@ -207,10 +207,9 @@ class Backend extends Process
         }
 
         if (isset($csp['connect-src'])) {
-            $csp['connect-src'] .= ' https://places.googleapis.com/ https://maps.googleapis.com/';
+            $csp['connect-src'] .= $csp['connect-src'] = "'self' " . 'https://places.googleapis.com/ https://maps.googleapis.com/';
         } else {
-            $csp['connect-src'] = 'https://places.googleapis.com/ https://maps.googleapis.com/';
-
+            $csp['connect-src'] = "'self' " . 'https://places.googleapis.com/ https://maps.googleapis.com/';
         }
     }
 
@@ -855,7 +854,7 @@ class Backend extends Process
         '});' . "\n" .
         '</script>' . "\n" .
 
-        My::cssLoad('admin-post.css') . "\n";
+        My::cssLoad('admin.css') . "\n";
     }
 
     public static function adminEntryListValue($rs, $cols)

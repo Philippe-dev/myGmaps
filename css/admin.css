@@ -53,27 +53,19 @@ a.map-remove {
 }
 
 gmp-advanced-marker img[src$=".svg"], #infowindow_icons img[src$=".svg"] {
-  width: 40px;
-  height: 40px;
+  width: 2.5em;
+  height: 2.5em;
 }
 
 /* Map Toolbar */
 
 .map_toolbar {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   padding: 0 .5em;
   border: 1px solid var(--msg-info-border);
   overflow: inherit;
   position: relative;
-  /*! line-height: 30px; */
   clear: left;
-}
-
-.map_toolbar button {
-  border: none;
-  background: var(--body-background)
 }
 
 .map_toolbar span.search {
@@ -94,11 +86,14 @@ gmp-advanced-marker img[src$=".svg"], #infowindow_icons img[src$=".svg"] {
 }
 
 .map_toolbar button {
-  width: 40px;
-  height: 40px;
-  margin-left: 2px;
+  border: none;
+  background: var(--body-background);
+  width: 2.5em;
+  height: 2.5em;
   background-position: 50% 50%;
   background-repeat: no-repeat;
+  background-size: 80%;
+  margin-top: -1em;
 }
 
 .map_toolbar button.active {
@@ -115,17 +110,13 @@ gmp-advanced-marker img[src$=".svg"], #infowindow_icons img[src$=".svg"] {
 }
 
 span.map_spacer {
-  width: 8px;
+  width: 0.5em;
 }
 
 .map_toolbar input {
   vertical-align: top;
-  margin: 0.2em 0 0 0;
-  height: 2.5em;
-}
-
-.map_toolbar button {
-  background-size: 80%;
+  margin: 0.3em 0 0 0;
+  height: 2.4em;
 }
 
 button.add_marker,
@@ -172,7 +163,7 @@ button.delete_map {
   background-image: url(index.php?pf=myGmaps/css/img/clean.svg);
   position: absolute;
   right: .5em;
-  top: .2em;
+  top: 1.2em;
   border-color: var(--tabs-border);
 }
 
@@ -291,10 +282,6 @@ button.delete_map:disabled {
 }
 
 p#excerpt {
-  display: none;
-}
-
-#options-box, .s-tags, .s-featuredmedia, .s-attachments {
   display: none;
 }
 

@@ -777,6 +777,7 @@ class ManageMap extends Process
             App::behavior()->callBehavior('adminPostHeaders') .
             Page::jsPageTabs(App::backend()->default_tab) .
             My::cssLoad('admin.css') .
+            My::cssLoad('adminelement.css') .
             App::backend()->next_headlink . "\n" . App::backend()->prev_headlink
         );
 
@@ -1014,7 +1015,7 @@ class ManageMap extends Process
                         ->id('map_toolbar')
                         ->items([
                             (new Text('span', __('Search:')))->class('search'),
-                            (new Text('span', '&nbsp;'))->class('map_spacer'),
+                            (new Text('span', ''))->class('map_spacer'),
                             (new Input('address'))
                                 ->size(50)
                                 ->maxlength(255)
@@ -1022,6 +1023,7 @@ class ManageMap extends Process
                             (new Input('geocode'))
                                 ->type('submit')
                                 ->value(__('OK')),
+                            (new Text('span', ''))->class('map_spacer'),
                             (new Btn('add_marker'))
                                 ->class(['add_marker'])
                                 ->id('add_marker')
