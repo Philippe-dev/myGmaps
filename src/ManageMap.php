@@ -1015,10 +1015,7 @@ class ManageMap extends Process
                         ->items([
                             (new Text('span', __('Search:')))->class('search'),
                             (new Text('span', ''))->class('map_spacer'),
-                            (new Input('address'))
-                                ->size(50)
-                                ->maxlength(255)
-                                ->class('qx'),
+                            (new Hidden('address'))->class('qx'),
                             (new Input('geocode'))
                                 ->type('submit')
                                 ->value(__('OK')),

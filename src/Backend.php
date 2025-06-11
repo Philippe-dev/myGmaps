@@ -338,10 +338,7 @@ class Backend extends Process
                             ->class('search'),
                         (new Span('&nbsp;'))
                             ->class('map_spacer'),
-                        (new Input('address'))
-                            ->size(50)
-                            ->maxlength(255)
-                            ->class('qx'),
+                        (new Hidden('address'))->class('qx'),
                         (new Input('geocode'))
                             ->type('submit')
                             ->value(__('OK')),
@@ -422,10 +419,7 @@ class Backend extends Process
                         ->items([
                             (new Text('span', __('Search:')))->class('search'),
                             (new Text('span', '&nbsp;'))->class('map_spacer'),
-                            (new Input('address'))
-                                ->size(50)
-                                ->maxlength(255)
-                                ->class('qx'),
+                            (new Hidden('address'))->class('qx'),
                             (new Input('geocode'))
                                 ->type('submit')
                                 ->value(__('OK')),

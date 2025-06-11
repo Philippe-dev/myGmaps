@@ -249,10 +249,6 @@ button.delete_map:disabled {
   }
 }
 
-.map_toolbar #address {
-  display: none
-}
-
 .map_toolbar .qx {
   border-bottom-left-radius: .3em;
   border-top-left-radius: .3em;
