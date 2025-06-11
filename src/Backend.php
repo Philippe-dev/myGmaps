@@ -416,19 +416,20 @@ class Backend extends Process
                     ->class('bold')
                     ->for('post-gmap'),
                 (new Div())->id('post-gmap')->items([
-                    (new Div())->class('map_toolbar')->items([
-                        (new Span(__('Search:')))
-                            ->class('search'),
-                        (new Span('&nbsp;'))
-                            ->class('map_spacer'),
-                        (new Input('address'))
-                            ->size(50)
-                            ->maxlength(255)
-                            ->class('qx'),
-                        (new Input('geocode'))
-                            ->type('submit')
-                            ->value(__('OK')),
-                    ]),
+                    (new Div())
+                        ->class('map_toolbar')
+                        ->id('map_toolbar')
+                        ->items([
+                            (new Text('span', __('Search:')))->class('search'),
+                            (new Text('span', '&nbsp;'))->class('map_spacer'),
+                            (new Input('address'))
+                                ->size(50)
+                                ->maxlength(255)
+                                ->class('qx'),
+                            (new Input('geocode'))
+                                ->type('submit')
+                                ->value(__('OK')),
+                        ]),
                     (new Para())->id('map_canvas')->class('area'),
                     (new Note())
                         ->class('form-note info maximal mapinfo')

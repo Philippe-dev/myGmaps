@@ -175,18 +175,20 @@ class Config extends Process
                 ]),
             ]),
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Default map options'))))->fields([
-                (new Div())->class('map_toolbar')->id('map_toolbar')->items([
-                    (new Text('span', __('Search:')))->class('search'),
-                    (new Text('span', '&nbsp;'))->class('map_spacer'),
-                    (new Input('address'))
-                        ->size(50)
-                        ->maxlength(255)
-                        ->class('qx'),
-                    (new Input('geocode'))
-                    ->type('submit')
-                    ->value(__('OK')),
-
-                ]),
+                (new Div())
+                    ->class('map_toolbar')
+                    ->id('map_toolbar')
+                    ->items([
+                        (new Text('span', __('Search:')))->class('search'),
+                        (new Text('span', '&nbsp;'))->class('map_spacer'),
+                        (new Input('address'))
+                            ->size(50)
+                            ->maxlength(255)
+                            ->class('qx'),
+                        (new Input('geocode'))
+                            ->type('submit')
+                            ->value(__('OK')),
+                    ]),
                 (new Para())
                     ->class('area')
                     ->id('map_canvas'),

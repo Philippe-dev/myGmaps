@@ -1009,7 +1009,10 @@ class ManageMap extends Process
 
                     'post_excerpt' => (new Para())->class('area')->id('excerpt-area')->items([
                         (new Label(__('Type and position:'), Label::OUTSIDE_LABEL_AFTER))->for('post_excerpt')->class('bold'),
-                        (new Div())->class('map_toolbar')->items([
+                        (new Div())
+                        ->class('map_toolbar')
+                        ->id('map_toolbar')
+                        ->items([
                             (new Text('span', __('Search:')))->class('search'),
                             (new Text('span', '&nbsp;'))->class('map_spacer'),
                             (new Input('address'))
@@ -1017,8 +1020,8 @@ class ManageMap extends Process
                                 ->maxlength(255)
                                 ->class('qx'),
                             (new Input('geocode'))
-                            ->type('submit')
-                            ->value(__('OK')),
+                                ->type('submit')
+                                ->value(__('OK')),
                             (new Btn('add_marker'))
                                 ->class(['add_marker'])
                                 ->id('add_marker')

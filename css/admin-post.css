@@ -63,22 +63,23 @@ gmp-advanced-marker img[src$=".svg"] {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    padding: .2em .5em;
+    padding: 0 .5em;
     border: 1px solid var(--msg-info-border);
-    overflow: hidden;
-    border-radius: 4px 4px 0 0;
+    overflow: inherit;
     position: relative;
-    line-height: 30px;
+    /*! line-height: 30px; */
+    clear: left;
 }
 
 .map_toolbar button {
     border: none;
-    background: var(--body-background);
+    background: var(--body-background)
 }
 
 .map_toolbar span.search {
-    display: inline-block;
-    margin-top: 0.3em;
+    height: 2.3em;
+    padding: 0;
+    margin: auto 0;
 }
 
 .map_toolbar input {
@@ -147,7 +148,13 @@ gmp-advanced-marker img[src$=".svg"] {
     width: 100%
 }
 
-p#map_toolbar_wrapper {
-    margin: 0;
-    padding: 0;
+gmp-place-autocomplete {
+    display: inline-block;
+    width: 35em;
+    padding: 8px;
+    font-size: 1rem;
+    border-radius: 4px;
+    height: 3.8em;
+    padding: .2em;
+    margin: .2em 0 0 0;
 }

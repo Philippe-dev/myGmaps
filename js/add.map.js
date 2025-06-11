@@ -139,10 +139,39 @@ dotclear.ready(() => {
 			map_add.mapTypes.set(mapTypeIds[i], value);
 		}
 
+		// Autocomplete
 		const geocoder = new google.maps.Geocoder();
+		const address = document.getElementById('address');
+		const geocodeok = document.getElementById('geocode');
+		const toolbar = document.getElementById('map_toolbar');
 
-		const input = document.getElementById('address');
-		const autocomplete = new google.maps.places.Autocomplete(input);
+		const placeAutocomplete = new google.maps.places.PlaceAutocompleteElement();
+		toolbar.insertBefore(placeAutocomplete, geocodeok);
+
+		placeAutocomplete.addEventListener('gmp-select', async ({ placePrediction }) => {
+			const place = placePrediction.toPlace();
+			await place.fetchFields({ fields: ['displayName', 'formattedAddress', 'location'] });
+			address.value = place.formattedAddress;
+		});
+
+		// Geocode
+		function geocode() {
+			const address = document.getElementById("address").value;
+			geocoder.geocode({ 'address': address, 'partialmatch': true }, geocodeResult);
+		}
+
+		function geocodeResult(results, status) {
+			if (status === 'OK' && results.length > 0) {
+				map.fitBounds(results[0].geometry.viewport);
+			} else {
+				alert(`Geocode was not successful for the following reason: ${status}`);
+			}
+		}
+
+		document.getElementById('geocode').addEventListener('click', (e) => {
+			e.preventDefault();
+			geocode();
+		});
 
 		// Map listeners
 		google.maps.event.addListener(map_add, 'center_changed', () => {
@@ -170,19 +199,6 @@ dotclear.ready(() => {
 			initElements(map_add);
 		}
 
-		function geocode() {
-			const address = document.getElementById("address").value;
-			geocoder.geocode({ 'address': address, 'partialmatch': true }, geocodeResult);
-		}
-
-		function geocodeResult(results, status) {
-			if (status == 'OK' && results.length > 0) {
-				map_add.fitBounds(results[0].geometry.viewport);
-			} else {
-				alert(`Geocode was not successful for the following reason: ${status}`);
-			}
-		}
-
 		// Misc functions
 		function trim(myString) {
 			return myString.replace(/^\s+/g, '').replace(/\s+$/g, '');
@@ -198,10 +214,6 @@ dotclear.ready(() => {
 			typeInput.value = default_type;
 		}
 
-		document.getElementById('geocode').addEventListener('click', (e) => {
-			e.preventDefault();
-			geocode();
-		});
 	}
 
 	initMap();

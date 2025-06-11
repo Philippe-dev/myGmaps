@@ -215,31 +215,6 @@ dotclear.ready(() => {
       map.mapTypes.set(mapTypeIds[i], value);
     }
 
-    // Geocoding
-
-    const geocoder = new google.maps.Geocoder();
-
-    function geocode() {
-      const address = document.getElementById("address").value;
-      geocoder.geocode({
-        'address': address,
-        'partialmatch': true
-      }, geocodeResult);
-    }
-
-    function geocodeResult(results, status) {
-      if (status == 'OK' && results.length > 0) {
-        map.fitBounds(results[0].geometry.viewport);
-      } else {
-        alert(`Geocode was not successful for the following reason: ${status}`);
-      }
-    }
-
-    document.getElementById('geocode').addEventListener('click', (e) => {
-      e.preventDefault();
-      geocode();
-    });
-
     // Set default objects
 
     let markersArray = [];
@@ -576,8 +551,39 @@ dotclear.ready(() => {
     }
     initDirections();
 
-    const input = document.getElementById('address');
-    const autocomplete = new google.maps.places.Autocomplete(input);
+    // Autocomplete
+    const geocoder = new google.maps.Geocoder();
+    const address = document.getElementById('address');
+    const geocodeok = document.getElementById('geocode');
+    const toolbar = document.getElementById('map_toolbar');
+
+    const placeAutocomplete = new google.maps.places.PlaceAutocompleteElement();
+    toolbar.insertBefore(placeAutocomplete, geocodeok);
+
+    placeAutocomplete.addEventListener('gmp-select', async ({ placePrediction }) => {
+      const place = placePrediction.toPlace();
+      await place.fetchFields({ fields: ['displayName', 'formattedAddress', 'location'] });
+      address.value = place.formattedAddress;
+    });
+
+    // Geocode
+    function geocode() {
+      const address = document.getElementById("address").value;
+      geocoder.geocode({ 'address': address, 'partialmatch': true }, geocodeResult);
+    }
+
+    function geocodeResult(results, status) {
+      if (status === 'OK' && results.length > 0) {
+        map.fitBounds(results[0].geometry.viewport);
+      } else {
+        alert(`Geocode was not successful for the following reason: ${status}`);
+      }
+    }
+
+    document.getElementById('geocode').addEventListener('click', (e) => {
+      e.preventDefault();
+      geocode();
+    });
 
     // Map listeners
 
