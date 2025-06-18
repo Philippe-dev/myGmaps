@@ -179,7 +179,14 @@ class ManageMaps extends Process
         ])
         ->render();
 
-        App::backend()->post_filter->display('admin.plugin.' . My::id(), '<input type="hidden" name="p" value="' . My::id() . '"><input type="hidden" name="id" value="' . $post_id . '"><input type="hidden" name="act" value="maps">');
+        $hidden = (new Para())
+            ->items([(new Hidden('act', 'maps')),
+                (new Hidden('id', (string) $post_id)),
+                (new Hidden('p', (string) My::id())),
+            ])
+        ->render();
+
+        App::backend()->post_filter->display('admin.plugin.' . My::id(), $hidden);
 
         // Show posts
         App::backend()->post_list->display(
