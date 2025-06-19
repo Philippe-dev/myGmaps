@@ -73,7 +73,6 @@ class BackendMiniList extends Listing
         $cols = [
             'title' => (new Th())
                 ->scope('col')
-
                 ->class('first')
                 ->text(__('Title'))
             ->render(),
@@ -127,7 +126,7 @@ class BackendMiniList extends Listing
             ->items([
                 (new Table())
                     ->class(['maximal', 'dragable'])
-                    ->caption(new Caption(__('Included elements list')))
+                    ->caption(new Caption(sprintf(__('Included elements list (%s)'), $this->rs_count)))
                     ->items([
                         (new Thead())
                             ->rows([
