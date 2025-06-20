@@ -294,7 +294,9 @@ class Backend extends Process
                     (new Link())
                         ->class('add')
                         ->href($addmapurl)
-                        ->text((new Strong(__('Add a map to page')))),
+                        ->items([
+                            ((new Strong(__('Add a map to page')))),
+                        ]),
                 ]);
         } elseif ($post->post_type === 'post') {
             $form_note = (new Span(__('Map attached to this post.')))->class('form-note')->render();
@@ -333,17 +335,18 @@ class Backend extends Process
                 (new Label(__('Map:') . ' ' . $form_note))
                     ->class('bold')
                     ->for('post-gmap'),
-                (new Div())->id('post-gmap')->items([
-                    (new Div())->class('map_toolbar')->items([
-                        (new Span(__('Search:')))
-                            ->class('search'),
-                        (new Span('&nbsp;'))
-                            ->class('map_spacer'),
-                        (new Hidden('address'))->class('qx'),
-                        (new Input('geocode'))
-                            ->type('submit')
-                            ->value(__('OK')),
-                    ]),
+                    (new Div())->id('post-gmap')->items([
+                        (new Div())
+                            ->class('map_toolbar')
+                            ->id('map_toolbar')
+                            ->items([
+                                (new Text('span', __('Search:')))->class('search'),
+                                (new Text('span', '&nbsp;'))->class('map_spacer'),
+                                (new Hidden('address'))->class('qx'),
+                                (new Input('geocode'))
+                                    ->type('submit')
+                                    ->value(__('OK')),
+                            ]),
                     (new Para())->id('map_canvas')->class('area'),
                     (new Note())
                         ->class(['form-note', 'info', 'maximal', 'mapinfo'])
@@ -741,17 +744,17 @@ class Backend extends Process
 
             $map = !empty($_GET['map']) ? $_GET['map'] : '';
 
-            $map_combo = [
-                '-'                        => '',
-                __('With attached map')    => 'map_options',
-                __('Without attached map') => 'none',
-            ];
-
             $filters->append((new Filter('map'))
-            ->param('sql', ($map === 'map_options') ? "AND post_meta LIKE '%" . 'map_options' . "%' " : "AND post_meta NOT LIKE '%" . 'map_options' . "%' ")
-            ->title(__('Google Map:'))
-            ->options($map_combo)
-            ->prime(true));
+                ->param('sql', ($map === 'map_options') ? "AND post_meta LIKE '%" . 'map_options' . "%' " : "AND post_meta NOT LIKE '%" . 'map_options' . "%' ")
+                ->title(__('Google Map:'))
+                ->options([
+                    '-'                        => '',
+                    __('With attached map')    => 'map_options',
+                    __('Without attached map') => 'none',
+                ])
+                ->prime(true));
+
+            return '';
         }
     }
 
