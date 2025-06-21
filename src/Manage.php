@@ -156,13 +156,13 @@ class Manage extends Process
         (new Para())
         ->class('top-add')
         ->items([
-            new Text(
+            (new Text(
                 null,
                 (new Link())
                 ->class('button add')
                 ->href(My::manageUrl() . '&act=map')
                 ->text(__('New element'))->render()
-            ),
+            )),
         ])
         ->render();
 

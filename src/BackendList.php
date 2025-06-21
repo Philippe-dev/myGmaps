@@ -287,16 +287,14 @@ class BackendList extends Listing
             'type' => (new Td())
                 ->class(['nowrap'])
                 ->items([
-                    (new Img(self::getImgInfo('light')['src'])
+                    (new Img(self::getImgInfo('light')['src']))
                         ->class(['light-only', 'mark', 'mark-map'])
                         ->alt(self::getImgInfo('light')['title'])
-                        ->title(self::getImgInfo('light')['title'])
-                    ),
-                    (new Img(self::getImgInfo('dark')['src'])
+                        ->title(self::getImgInfo('light')['title']),
+                    (new Img(self::getImgInfo('dark')['src']))
                         ->class(['dark-only', 'mark', 'mark-map'])
                         ->alt(self::getImgInfo('dark')['title'])
-                        ->title(self::getImgInfo('dark')['title'])
-                    ),
+                        ->title(self::getImgInfo('dark')['title']),
                 ])
             ->render(),
             'status' => (new Td())
