@@ -135,7 +135,7 @@ class BackendList extends Listing
             );
         } elseif (count($types) === 1) {
             $stats = [
-                (new Text(null, sprintf(__('List of map elements (%s)'), $this->rs_count))),
+                isset($_GET['id']) ? (new Text(null, sprintf(__('List of available map elements (%s)'), $this->rs_count))) : (new Text(null, sprintf(__('List of map elements (%s)'), $this->rs_count))),
             ];
             
             $caption = (new Set())

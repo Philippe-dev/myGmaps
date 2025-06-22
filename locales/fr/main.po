@@ -121,6 +121,9 @@ msgstr "Liste des %s éléments de carte correspondant au filtre."
 msgid "List of map elements (%s)"
 msgstr "Liste des éléments de carte (%s)"
 
+msgid "List of available map elements (%s)"
+msgstr "Liste des éléments de carte disponibles (%s)"
+
 msgid "Point of interest"
 msgstr "Point d'intérêt"
 
