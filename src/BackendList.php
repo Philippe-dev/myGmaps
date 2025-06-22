@@ -130,26 +130,14 @@ class BackendList extends Listing
 
         if ($filter) {
             $caption = sprintf(
-                __('List of %s entry matching the filter.', 'List of %s entries matching the filter.', $this->rs_count),
+                __('List of %s map elements matching the filter.', 'List of %s map elements matching the filter.', $this->rs_count),
                 $this->rs_count
             );
         } elseif (count($types) === 1) {
             $stats = [
-                (new Text(null, sprintf(__('List of elements (%s)'), $this->rs_count))),
+                (new Text(null, sprintf(__('List of map elements (%s)'), $this->rs_count))),
             ];
-            foreach (App::status()->post()->dump(false) as $status) {
-                $nb = (int) App::blog()->getPosts(['post_type' => 'map', 'post_status' => $status->level()], true)->f(0);
-                if ($nb !== 0) {
-                    $stats[] = (new Set())
-                        ->separator(' ')
-                        ->items([
-                            (new Link())
-                                ->href(App::backend()->url()->get('admin.plugin', ['p' => My::id(), 'status' => $status->level()]))
-                                ->text(__($status->name(), $status->pluralName(), $nb)),
-                            (new Text(null, sprintf('(%d)', $nb))),
-                        ]);
-                }
-            }
+            
             $caption = (new Set())
                 ->separator(', ')
                 ->items($stats)

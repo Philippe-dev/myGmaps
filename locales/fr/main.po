@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: myGmaps 9.6\n"
+"Project-Id-Version: myGmaps 10.0\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-06-19T17:15:54+00:00\n"
+"PO-Revision-Date: 2025-06-22T08:59:14+00:00\n"
 "Last-Translator: Philippe\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -73,14 +73,14 @@ msgstr "flux GeoRSS"
 msgid "directions"
 msgstr "itinéraire"
 
+msgid "Google Map:"
+msgstr "Carte Google :"
+
 msgid "With attached map"
 msgstr "Avec une carte attachée"
 
 msgid "Without attached map"
 msgstr "Sans carte attachée"
-
-msgid "Google Map:"
-msgstr "Carte Google :"
 
 msgid "Are you sure you want to remove this map?"
 msgstr "Voulez-vous vraiment supprimer cette carte ?"
@@ -115,8 +115,11 @@ msgstr "Aucun élément correspondant au filtre"
 msgid "No element"
 msgstr "Pas d'élément"
 
-msgid "List of elements (%s)"
-msgstr "Liste des éléments (%s)"
+msgid "List of %s map elements matching the filter."
+msgstr "Liste des %s éléments de carte correspondant au filtre."
+
+msgid "List of map elements (%s)"
+msgstr "Liste des éléments de carte (%s)"
 
 msgid "Point of interest"
 msgstr "Point d'intérêt"
@@ -165,9 +168,6 @@ msgstr "Options des cartes par défaut"
 
 msgid "Sorry, javascript must be activated in your browser to see this map."
 msgstr "Désolé, javascript doit être activé dans votre navigateur pour voir cette carte."
-
-msgid "Elements"
-msgstr "Éléments"
 
 msgid "New element"
 msgstr "Nouvel élément"
@@ -265,6 +265,9 @@ msgstr "Choisir les éléments de la carte attachée à la page :"
 msgid "Add selected map elements"
 msgstr "Ajouter les éléments de carte sélectionnés"
 
+msgid "Elements"
+msgstr "Éléments"
+
 msgid "Included elements list"
 msgstr "Liste des éléments inclus"
 
@@ -280,8 +283,8 @@ msgstr "Aucun élément"
 msgid "Available elements list (%s)"
 msgstr "Liste des éléments disponibles (%s)"
 
-msgid "Elements list (%s)"
-msgstr "Liste des éléments (%s)"
+msgid "Map elements list (%s)"
+msgstr "Liste des éléments de carte (%s)"
 
 msgid "Map elements"
 msgstr "Éléments de carte"
