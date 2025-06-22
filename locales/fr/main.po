@@ -396,15 +396,6 @@ msgstr "Paramètres de la carte"
 msgid "Choose options for map attached to post:"
 msgstr "Choisir les options pour la carte attachée au billet :"
 
-msgid "This map will not be displayed on the blog and is meant only to create, edit and position one element at a time. Choose a tool and click on the map to create your element, then click on the element to edit its properties."
-msgstr "Cette carte ne sera pas affichée sur le blog, et n'est destinée qu'à créer, postionner ou éditer un élément à la fois. Choisissez un outil, cliquez sur la carte pour créer votre élément, puis cliquer sur l'élément pour modifier ses propriétés."
-
-msgid "This map will not be displayed on the blog. Choose a tool and click on the map to create your element, then click on the element to edit its properties."
-msgstr "Cette carte ne sera pas affichée sur le blog. Choisissez un outil et cliquez sur la carte pour créer votre élément, puis cliquez sur l'élément pour modifier ses propriétés."
-
-msgid "This map will not be displayed on the blog. It is here only for positioning your element."
-msgstr "Cette carte ne sera pas affichée sur le blog, elle n'est destinée qu'à positionner votre élément."
-
 msgid "Choose your tool"
 msgstr "Sélectionnez votre outil"
 
