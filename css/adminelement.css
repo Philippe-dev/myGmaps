@@ -5,3 +5,14 @@
 #excerpt-area label {
     margin-bottom: -1em
 }
+
+gmp-place-autocomplete {
+    display: inline-block;
+    width: 35em;
+    padding: 8px;
+    font-size: 1rem;
+    border-radius: 4px;
+    height: 3.3em;
+    padding: .2em;
+    margin: 0.45em .2em 0 0;
+}
