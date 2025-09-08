@@ -14,10 +14,12 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\myGmaps;
 
-use Dotclear\Core\Process;
+use Dotclear\Helper\Process\TraitProcess;
 
-class Install extends Process
+class Install
 {
+    use TraitProcess;
+    
     public static function init(): bool
     {
         return self::status(My::checkContext(My::INSTALL));

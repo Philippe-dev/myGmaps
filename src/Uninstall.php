@@ -15,11 +15,13 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\myGmaps;
 
 use Dotclear\App;
-use Dotclear\Core\Process;
+use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Plugin\Uninstaller\Uninstaller;
 
-class Uninstall extends Process
+class Uninstall
 {
+    use TraitProcess;
+    
     public static function init(): bool
     {
         return self::status(My::checkContext(My::UNINSTALL));

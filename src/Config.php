@@ -17,7 +17,7 @@ namespace Dotclear\Plugin\myGmaps;
 use Dotclear\App;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Backend\Page;
-use Dotclear\Core\Process;
+use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Fieldset;
@@ -32,8 +32,10 @@ use Dotclear\Helper\Html\Form\Text;
 use Dotclear\Helper\Network\Http;
 use Exception;
 
-class Config extends Process
+class Config
 {
+    use TraitProcess;
+    
     /**
      * Initializes the page.
      */

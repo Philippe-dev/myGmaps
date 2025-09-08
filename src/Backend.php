@@ -19,7 +19,7 @@ use Dotclear\App;
 use Dotclear\Core\Backend\Favorites;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Backend\UserPref;
-use Dotclear\Core\Process;
+use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Helper\Html\Form\Capture;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Hidden;
@@ -38,8 +38,10 @@ use Dotclear\Helper\Network\Http;
 use Dotclear\Helper\Stack\Filter;
 use Exception;
 
-class Backend extends Process
+class Backend
 {
+    use TraitProcess;
+    
     public static function init(): bool
     {
         return self::status(My::checkContext(My::BACKEND));

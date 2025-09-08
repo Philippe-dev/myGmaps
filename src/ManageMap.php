@@ -20,7 +20,7 @@ use Dotclear\Core\Backend\Action\ActionsComments;
 use Dotclear\Core\Backend\Combos;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Backend\Page;
-use Dotclear\Core\Process;
+use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Date;
 use Dotclear\Helper\Html\Form\Btn;
@@ -47,8 +47,10 @@ use Dotclear\Helper\Network\Http;
 use Dotclear\Helper\Text as Txt;
 use Exception;
 
-class ManageMap extends Process
+class ManageMap
 {
+    use TraitProcess;
+    
     public static function init(): bool
     {
         $params = [];
