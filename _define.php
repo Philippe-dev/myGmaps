@@ -13,9 +13,9 @@ $this->registerModule(
     'Maps',
     'Add custom maps to your blog',
     'Philippe aka amalgame and contributors',
-    '10.3',
+    '10.4',
     [
-        'date'        => '2025-09-08T00:00:08+0100',
+        'date'        => '2025-09-17T00:00:08+0100',
         'requires'    => [['core', '2.36']],
         'permissions' => 'My',
         'type'        => 'plugin',

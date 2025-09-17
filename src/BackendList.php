@@ -77,45 +77,38 @@ class BackendList extends Listing
                 ->scope('col')
                 ->colspan(2)
                 ->class('first')
-                ->text(__('Title'))
-            ->render(),
+                ->text(__('Title')),
             'date' => (new Th())
                 ->scope('col')
-                ->text(__('Date'))
-            ->render(),
+                ->text(__('Date')),
             'category' => (new Th())
                 ->scope('col')
-                ->text(__('Category'))
-            ->render(),
+                ->text(__('Category')),
             'author' => (new Th())
                 ->scope('col')
-                ->text(__('Author'))
-            ->render(),
+                ->text(__('Author')),
             'type' => (new Th())
                 ->scope('col')
-                ->text(__('Type'))
-            ->render(),
+                ->text(__('Type')),
             'status' => (new Th())
                 ->scope('col')
-                ->text(__('Status'))
-            ->render(),
+                ->text(__('Status')),
         ];
 
         if ($include_type) {
             $cols = array_merge($cols, [
                 'type' => (new Th())
                     ->scope('col')
-                    ->text(__('Type'))
-                ->render(),
+                    ->text(__('Type')),
             ]);
         }
 
         $cols = new ArrayObject($cols);
-        # --BEHAVIOR-- adminPostListHeaderV2 -- MetaRecord, ArrayObject
-        App::behavior()->callBehavior('adminPostListHeaderV2', $this->rs, $cols);
+        # --BEHAVIOR-- adminPostListHeaderV2 -- MetaRecord, ArrayObject<string, mixed>, bool
+        App::behavior()->callBehavior('adminPostListHeaderV2', $this->rs, $cols, true);
 
         // Cope with optional columns
-        $this->userColumns('posts', $cols);
+        $this->userColumns('posts', $cols, true);
 
         // Prepare listing
 
@@ -137,7 +130,7 @@ class BackendList extends Listing
             $stats = [
                 isset($_GET['id']) ? (new Text(null, sprintf(__('List of available map elements (%s)'), $this->rs_count))) : (new Text(null, sprintf(__('List of map elements (%s)'), $this->rs_count))),
             ];
-            
+
             $caption = (new Set())
                 ->separator(', ')
                 ->items($stats)
@@ -154,9 +147,7 @@ class BackendList extends Listing
                         (new Thead())
                             ->rows([
                                 (new Tr())
-                                    ->items([
-                                        (new Text(null, implode('', iterator_to_array($cols)))),
-                                    ]),
+                                    ->items($cols),
                             ]),
                         (new Tbody())
                             ->id('pageslist')
@@ -245,33 +236,28 @@ class BackendList extends Listing
                         ->value($this->rs->post_id)
                         ->disabled(!$this->rs->isEditable())
                         ->title(__('Select this post')),
-                ])
-            ->render(),
+                ]),
             'title' => (new Td())
                 ->class('maximal')
                 ->items([
                     (new Link())
                         ->href(My::manageUrl() . '&act=map&id=' . $this->rs->post_id)
                         ->text(Html::escapeHTML(trim(Html::clean($this->rs->post_title)))),
-                ])
-            ->render(),
+                ]),
             'date' => (new Td())
                 ->class(['nowrap', 'count'])
                 ->items([
                     (new Timestamp(Date::dt2str(__('%Y-%m-%d %H:%M'), $this->rs->post_dt)))
                         ->datetime(Date::iso8601((int) strtotime($this->rs->post_dt), App::auth()->getInfo('user_tz'))),
-                ])
-            ->render(),
+                ]),
             'category' => (new Td())
                 ->class('nowrap')
                 ->items([
                     $category,
-                ])
-            ->render(),
+                ]),
             'author' => (new Td())
                 ->class('nowrap')
-                ->text($this->rs->user_id)
-            ->render(),
+                ->text($this->rs->user_id),
             'type' => (new Td())
                 ->class(['nowrap'])
                 ->items([
@@ -283,15 +269,13 @@ class BackendList extends Listing
                         ->class(['dark-only', 'mark', 'mark-map'])
                         ->alt(self::getImgInfo('dark')['title'])
                         ->title(self::getImgInfo('dark')['title']),
-                ])
-            ->render(),
+                ]),
             'status' => (new Td())
                 ->class(['nowrap', 'status'])
                 ->separator(' ')
                 ->items([
                     ... $status,
-                ])
-            ->render(),
+                ]),
         ];
 
         if ($include_type) {
@@ -301,14 +285,13 @@ class BackendList extends Listing
                     ->separator(' ')
                     ->items([
                         App::postTypes()->image($this->rs->post_type),
-                    ])
-                ->render(),
+                    ]),
             ]);
         }
 
         $cols = new ArrayObject($cols);
-        # --BEHAVIOR-- adminPostListValueV2 -- MetaRecord, ArrayObject
-        App::behavior()->callBehavior('adminPostListValueV2', $this->rs, $cols);
+        # --BEHAVIOR-- adminPostListValueV2 -- MetaRecord, ArrayObject<string, mixed>, bool
+        App::behavior()->callBehavior('adminPostListValueV2', $this->rs, $cols, true);
 
         // Cope with optional columns
         $this->userColumns('posts', $cols);
@@ -316,9 +299,7 @@ class BackendList extends Listing
         return (new Tr())
             ->id('p' . $this->rs->post_id)
             ->class($post_classes)
-            ->items([
-                (new Text(null, implode('', iterator_to_array($cols)))),
-            ]);
+            ->items($cols);
     }
 
     /**
@@ -343,7 +324,7 @@ class BackendList extends Listing
     }
 
     /**
-    * Get image title and src for elements icons
+     * Get image title and src for elements icons
      *
      * @param string $mode The mode, 'light' or 'dark'
      * @return array ['title' => string, 'src' => string]
@@ -362,34 +343,42 @@ class BackendList extends Listing
             case 'point of interest':
                 $info['title'] = __('Point of interest');
                 $info['src']   = Page::getPF(My::id()) . '/css/img/marker' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+
                 break;
             case 'polyline':
                 $info['title'] = __('Polyline');
                 $info['src']   = Page::getPF(My::id()) . '/css/img/polyline' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+
                 break;
             case 'polygon':
                 $info['title'] = __('Polygon');
                 $info['src']   = Page::getPF(My::id()) . '/css/img/polygon' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+
                 break;
             case 'circle':
                 $info['title'] = __('Circle');
                 $info['src']   = Page::getPF(My::id()) . '/css/img/circle' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+
                 break;
             case 'rectangle':
                 $info['title'] = __('Rectangle');
                 $info['src']   = Page::getPF(My::id()) . '/css/img/rectangle' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+
                 break;
             case 'included kml file':
                 $info['title'] = __('Included kml file');
                 $info['src']   = Page::getPF(My::id()) . '/css/img/kml' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+
                 break;
             case 'GeoRSS feed':
                 $info['title'] = __('GeoRSS Feed');
                 $info['src']   = Page::getPF(My::id()) . '/css/img/feed' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+
                 break;
             case 'directions':
                 $info['title'] = __('Directions');
                 $info['src']   = Page::getPF(My::id()) . '/css/img/directions' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+
                 break;
             default:
         }
