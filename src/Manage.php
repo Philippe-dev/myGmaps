@@ -16,8 +16,6 @@ namespace Dotclear\Plugin\myGmaps;
 
 use Dotclear\App;
 use Dotclear\Core\Backend\Filter\FilterPosts;
-use Dotclear\Core\Backend\Notices;
-use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Backend\UserPref;
 use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Helper\Html\Form\Div;
@@ -136,22 +134,22 @@ class Manage
             App::error()->add($e->getMessage());
         }
 
-        Page::openModule(
+        App::backend()->page()->openModule(
             My::name(),
-            Page::jsLoad('js/_posts_list.js') .
-            Page::jsMetaEditor() .
+            App::backend()->page()->jsLoad('js/_posts_list.js') .
+            App::backend()->page()->jsMetaEditor() .
             App::backend()->post_filter->js(App::backend()->url()->get('admin.plugin', ['p' => My::id()], '&')) .
             My::jsLoad('config.map.min.js') .
             My::cssLoad('admin.css')
         );
 
-        echo Page::breadcrumb(
+        echo App::backend()->page()->breadcrumb(
             [
                 html::escapeHTML(App::blog()->name) => '',
                 My::name()                          => '',
             ]
         ) .
-        Notices::getNotices();
+        App::backend()->notices()->getNotices();
 
         echo
         (new Para())
@@ -208,7 +206,7 @@ class Manage
             App::backend()->post_filter->show()
         );
 
-        Page::helpBlock(My::id());
-        Page::closeModule();
+        App::backend()->page()->helpBlock(My::id());
+        App::backend()->page()->closeModule();
     }
 }

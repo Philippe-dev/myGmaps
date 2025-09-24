@@ -15,8 +15,6 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\myGmaps;
 
 use Dotclear\App;
-use Dotclear\Core\Backend\Notices;
-use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Div;
@@ -70,7 +68,7 @@ class Config
                 My::settings()->put('myGmaps_zoom', $_POST['myGmaps_zoom']);
                 My::settings()->put('myGmaps_type', $_POST['myGmaps_type']);
 
-                Notices::addSuccessNotice(__('Configuration has been updated.'));
+                App::backend()->notices()->addSuccessNotice(__('Configuration has been updated.'));
 
                 App::backend()->url()->redirect('admin.plugins', ['module' => My::id(), 'conf' => '1', 'redir' => $_REQUEST['redir']]);
             } catch (Exception $e) {
@@ -133,7 +131,7 @@ class Config
                 $var_styles_name   = pathinfo($map_style, PATHINFO_FILENAME);
                 $var_name          = preg_replace('/_styles/s', '', $var_styles_name);
                 $nice_name         = ucwords(preg_replace('/_/s', ' ', $var_name));
-                $style_script .= Page::jsJson($var_name, [
+                $style_script .= App::backend()->page()->jsJson($var_name, [
                     'style' => $map_style_content,
                     'name'  => $nice_name,
                 ]);
@@ -143,7 +141,7 @@ class Config
         echo
             $starting_script .
             $style_script .
-            Page::jsConfirmClose('module_config') .
+            App::backend()->page()->jsConfirmClose('module_config') .
             My::jsLoad('config.map.min.js') .
             My::cssLoad('admin.css')
         ;
@@ -216,6 +214,6 @@ class Config
         ])
         ->render();
 
-        Page::helpBlock(My::id());
+        App::backend()->page()->helpBlock(My::id());
     }
 }

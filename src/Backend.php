@@ -17,7 +17,6 @@ namespace Dotclear\Plugin\myGmaps;
 use ArrayObject;
 use Dotclear\App;
 use Dotclear\Core\Backend\Favorites;
-use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Backend\UserPref;
 use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Helper\Html\Form\Capture;
@@ -276,7 +275,7 @@ class Backend
                 $var_styles_name   = pathinfo($map_style, PATHINFO_FILENAME);
                 $var_name          = preg_replace('/_styles/s', '', $var_styles_name);
                 $nice_name         = ucwords(preg_replace('/_/s', ' ', $var_name));
-                $style_script .= Page::jsJson($var_name, [
+                $style_script .= App::backend()->page()->jsJson($var_name, [
                     'style' => $map_style_content,
                     'name'  => $nice_name,
                 ]);
@@ -911,7 +910,7 @@ class Backend
             }
 
             $map = '';
-            $map = sprintf($map_img, __('Attached Map'), Page::getPF(My::id()) . '/icon.svg', 'map');
+            $map = sprintf($map_img, __('Attached Map'), App::backend()->page()->getPF(My::id()) . '/icon.svg', 'map');
 
             $cols['status'] = '<td class="nowrap status">' . $img_status . ' ' . $selected . ' ' . $protected . ' ' . $attach . ' ' . $map . '</td>';
         }

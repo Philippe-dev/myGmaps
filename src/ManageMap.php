@@ -17,9 +17,6 @@ namespace Dotclear\Plugin\myGmaps;
 use ArrayObject;
 use Dotclear\App;
 use Dotclear\Core\Backend\Action\ActionsComments;
-use Dotclear\Core\Backend\Combos;
-use Dotclear\Core\Backend\Notices;
-use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Date;
@@ -54,7 +51,7 @@ class ManageMap
     public static function init(): bool
     {
         $params = [];
-        Page::check(App::auth()->makePermissions([
+        App::backend()->page()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_USAGE,
             App::auth()::PERMISSION_CONTENT_ADMIN,
         ]));
@@ -107,7 +104,7 @@ class ManageMap
         }
 
         # Getting categories
-        App::backend()->categories_combo = Combos::getCategoriesCombo(
+        App::backend()->categories_combo = App::backend()->combos()->getCategoriesCombo(
             App::blog()->getCategories()
         );
 
@@ -124,7 +121,7 @@ class ManageMap
         App::backend()->available_formats = $available_formats;
 
         // Languages combo
-        App::backend()->lang_combo = Combos::getLangsCombo(
+        App::backend()->lang_combo = App::backend()->combos()->getLangsCombo(
             App::blog()->getLangs([
                 'order_by' => 'nb_post',
                 'order'    => 'desc',
@@ -152,7 +149,7 @@ class ManageMap
             App::backend()->post = App::blog()->getPosts($params);
 
             if (App::backend()->post->isEmpty()) {
-                Notices::addErrorNotice('This entry does not exist.');
+                App::backend()->notices()->addErrorNotice('This entry does not exist.');
                 App::backend()->url()->redirect('admin.posts');
             } else {
                 App::backend()->post_id            = App::backend()->post->post_id;
@@ -248,7 +245,7 @@ class ManageMap
         }
 
         $params = [];
-        Page::check(App::auth()->makePermissions([
+        App::backend()->page()->check(App::auth()->makePermissions([
             App::auth()::PERMISSION_CONTENT_ADMIN,
         ]));
 
@@ -299,13 +296,13 @@ class ManageMap
 
         // Getting categories
 
-        App::backend()->categories_combo = Combos::getCategoriesCombo(
+        App::backend()->categories_combo = App::backend()->combos()->getCategoriesCombo(
             App::blog()->getCategories(['post_type' => 'map'])
         );
 
         // Status combo
 
-        App::backend()->status_combo = Combos::getPostStatusesCombo();
+        App::backend()->status_combo = App::backend()->combos()->getPostStatusesCombo();
 
         // Formaters combo
 
@@ -320,7 +317,7 @@ class ManageMap
 
         // Languages combo
 
-        App::backend()->lang_combo = Combos::getLangsCombo(
+        App::backend()->lang_combo = App::backend()->combos()->getLangsCombo(
             App::blog()->getLangs(['order' => 'asc']),
             true
         );
@@ -738,7 +735,7 @@ class ManageMap
                 $var_styles_name   = pathinfo($map_style, PATHINFO_FILENAME);
                 $var_name          = preg_replace('/_styles/s', '', $var_styles_name);
                 $nice_name         = ucwords(preg_replace('/_/s', ' ', $var_name));
-                $style_script .= Page::jsJson($var_name, [
+                $style_script .= App::backend()->page()->jsJson($var_name, [
                     'style' => $map_style_content,
                     'name'  => $nice_name,
                 ]);
@@ -764,19 +761,19 @@ class ManageMap
         '//]]>' . "\n" .
         '</script>';
 
-        Page::openModule(
+        App::backend()->page()->openModule(
             App::backend()->page_title . ' - ' . My::name(),
-            Page::jsModal() .
-            Page::jsLoad('js/_post.js') .
-            Page::jsMetaEditor() .
+            App::backend()->page()->jsModal() .
+            App::backend()->page()->jsLoad('js/_post.js') .
+            App::backend()->page()->jsMetaEditor() .
             $admin_post_behavior .
             $starting_script .
             $style_script .
             My::jsLoad('element.map.min.js') .
-            Page::jsConfirmClose('entry-form') .
+            App::backend()->page()->jsConfirmClose('entry-form') .
             # --BEHAVIOR-- adminPostHeaders --
             App::behavior()->callBehavior('adminPostHeaders') .
-            Page::jsPageTabs(App::backend()->default_tab) .
+            App::backend()->page()->jsPageTabs(App::backend()->default_tab) .
             My::cssLoad('admin.css') .
             My::cssLoad('adminelement.css') .
             App::backend()->next_headlink . "\n" . App::backend()->prev_headlink
@@ -790,7 +787,7 @@ class ManageMap
             $edit_entry_title = App::backend()->page_title;
         }
 
-        echo Page::breadcrumb(
+        echo App::backend()->page()->breadcrumb(
             [
                 Html::escapeHTML(App::blog()->name) => '',
                 My::name()                          => My::manageUrl(),
@@ -799,9 +796,9 @@ class ManageMap
         );
 
         if (!empty($_GET['upd'])) {
-            Notices::success(__('Map element has been updated.'));
+            App::backend()->notices()->success(__('Map element has been updated.'));
         } elseif (!empty($_GET['crea'])) {
-            Notices::success(__('Map element has been created.'));
+            App::backend()->notices()->success(__('Map element has been created.'));
         }
 
         # HTML conversion
@@ -810,7 +807,7 @@ class ManageMap
             App::backend()->post_content = App::backend()->post_content_xhtml;
             App::backend()->post_format  = 'xhtml';
 
-            Page::message(__('Don\'t forget to validate your HTML conversion by saving your post.'));
+            App::backend()->page()->message(__('Don\'t forget to validate your HTML conversion by saving your post.'));
         }
 
         if (App::backend()->post_id) {
@@ -1230,7 +1227,7 @@ class ManageMap
             ->render();
         }
 
-        Page::helpBlock('myGmap', 'core_wiki');
-        Page::closeModule();
+        App::backend()->page()->helpBlock('myGmap', 'core_wiki');
+        App::backend()->page()->closeModule();
     }
 }

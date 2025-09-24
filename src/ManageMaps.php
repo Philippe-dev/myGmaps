@@ -16,8 +16,6 @@ namespace Dotclear\Plugin\myGmaps;
 
 use Dotclear\App;
 use Dotclear\Core\Backend\Filter\FilterPosts;
-use Dotclear\Core\Backend\Notices;
-use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Backend\UserPref;
 use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Helper\Html\Form\Div;
@@ -152,22 +150,22 @@ class ManageMaps
             App::error()->add($e->getMessage());
         }
 
-        Page::openModule(
+        App::backend()->page()->openModule(
             My::name(),
-            Page::jsLoad('js/_posts_list.js') .
+            App::backend()->page()->jsLoad('js/_posts_list.js') .
             App::backend()->post_filter->js(App::backend()->url()->get('admin.plugin', ['p' => My::id(),'id' => $post_id, 'act' => 'maps'], '&')) .            My::cssLoad('admin.css')
         );
 
         App::backend()->page_title = __('Add elements');
 
-        echo Page::breadcrumb(
+        echo App::backend()->page()->breadcrumb(
             [
                 html::escapeHTML(App::blog()->name) => '',
                 My::name()                          => My::manageUrl(),
                 App::backend()->page_title          => '',
             ]
         ) .
-        Notices::getNotices();
+        App::backend()->notices()->getNotices();
 
         echo
         (new Text('h3', ($post_type === 'post' ? __('Select map elements for map attached to post:') : __('Select map elements for map attached to page:')) . '&nbsp;'))
@@ -225,7 +223,7 @@ class ManageMaps
             ->render()
         );
 
-        Page::helpBlock('myGmapsadd');
-        Page::closeModule();
+        App::backend()->page()->helpBlock('myGmapsadd');
+        App::backend()->page()->closeModule();
     }
 }

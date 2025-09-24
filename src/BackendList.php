@@ -18,7 +18,6 @@ use ArrayObject;
 use Dotclear\App;
 use Dotclear\Core\Backend\Listing\Listing;
 use Dotclear\Core\Backend\Listing\Pager;
-use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Date;
 use Dotclear\Helper\Html\Form\Caption;
 use Dotclear\Helper\Html\Form\Checkbox;
@@ -342,42 +341,42 @@ class BackendList extends Listing
         switch ($meta_rs) {
             case 'point of interest':
                 $info['title'] = __('Point of interest');
-                $info['src']   = Page::getPF(My::id()) . '/css/img/marker' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+                $info['src']   = App::backend()->page()->getPF(My::id()) . '/css/img/marker' . ($mode === 'dark' ? '-dark' : '') . '.svg';
 
                 break;
             case 'polyline':
                 $info['title'] = __('Polyline');
-                $info['src']   = Page::getPF(My::id()) . '/css/img/polyline' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+                $info['src']   = App::backend()->page()->getPF(My::id()) . '/css/img/polyline' . ($mode === 'dark' ? '-dark' : '') . '.svg';
 
                 break;
             case 'polygon':
                 $info['title'] = __('Polygon');
-                $info['src']   = Page::getPF(My::id()) . '/css/img/polygon' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+                $info['src']   = App::backend()->page()->getPF(My::id()) . '/css/img/polygon' . ($mode === 'dark' ? '-dark' : '') . '.svg';
 
                 break;
             case 'circle':
                 $info['title'] = __('Circle');
-                $info['src']   = Page::getPF(My::id()) . '/css/img/circle' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+                $info['src']   = App::backend()->page()->getPF(My::id()) . '/css/img/circle' . ($mode === 'dark' ? '-dark' : '') . '.svg';
 
                 break;
             case 'rectangle':
                 $info['title'] = __('Rectangle');
-                $info['src']   = Page::getPF(My::id()) . '/css/img/rectangle' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+                $info['src']   = App::backend()->page()->getPF(My::id()) . '/css/img/rectangle' . ($mode === 'dark' ? '-dark' : '') . '.svg';
 
                 break;
             case 'included kml file':
                 $info['title'] = __('Included kml file');
-                $info['src']   = Page::getPF(My::id()) . '/css/img/kml' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+                $info['src']   = App::backend()->page()->getPF(My::id()) . '/css/img/kml' . ($mode === 'dark' ? '-dark' : '') . '.svg';
 
                 break;
             case 'GeoRSS feed':
                 $info['title'] = __('GeoRSS Feed');
-                $info['src']   = Page::getPF(My::id()) . '/css/img/feed' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+                $info['src']   = App::backend()->page()->getPF(My::id()) . '/css/img/feed' . ($mode === 'dark' ? '-dark' : '') . '.svg';
 
                 break;
             case 'directions':
                 $info['title'] = __('Directions');
-                $info['src']   = Page::getPF(My::id()) . '/css/img/directions' . ($mode === 'dark' ? '-dark' : '') . '.svg';
+                $info['src']   = App::backend()->page()->getPF(My::id()) . '/css/img/directions' . ($mode === 'dark' ? '-dark' : '') . '.svg';
 
                 break;
             default:
