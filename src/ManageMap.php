@@ -485,7 +485,7 @@ class ManageMap
         if (!empty($_POST) && !empty($_POST['save']) && App::backend()->can_edit_post && !App::backend()->bad_dt) {
             // Create or update post
 
-            $cur = App::con()->openCursor(App::con()->prefix() . App::blog()::POST_TABLE_NAME);
+            $cur = App::db()->con()->openCursor(App::db()->con()->prefix() . App::blog()::POST_TABLE_NAME);
 
             if ($_POST['post_content'] == '' || $_POST['post_content'] == __('No description.') || $_POST['post_content'] == '<p>' . __('No description.') . '</p>') {
                 if (App::backend()->post_format == 'xhtml') {

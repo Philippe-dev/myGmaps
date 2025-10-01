@@ -42,7 +42,7 @@ class Uninstall
         // $var   = My::id(); // Var sub-folder
 
         // Database table name
-        // $table = App::con()->prefix() . 'myGmaps';
+        // $table = App::db()->con()->prefix() . 'myGmaps';
 
         $user_actions = [
 
