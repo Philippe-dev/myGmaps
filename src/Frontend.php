@@ -16,7 +16,6 @@ namespace Dotclear\Plugin\myGmaps;
 
 use Dotclear\App;
 use Dotclear\Helper\Process\TraitProcess;
-use Dotclear\Helper\L10n;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Helper\Network\Http;
 
@@ -41,7 +40,7 @@ class Frontend
 
         App::frontend()->template()->addValue(My::id(), [self::class, 'publicTagMapContent']);
 
-        L10n::set(dirname(__FILE__) . '/locales/' . App::lang()->getLang() . '/main');
+        App::lang()->set(dirname(__FILE__) . '/locales/' . App::lang()->getLang() . '/main');
 
         return true;
     }
