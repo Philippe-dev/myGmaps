@@ -96,8 +96,6 @@ class BackendMiniList extends Listing
         ];
 
         $cols = new ArrayObject($cols);
-
-        $cols = new ArrayObject($cols);
         # --BEHAVIOR-- adminPostMiniListHeaderV2 -- MetaRecord, ArrayObject<string, mixed>, bool
         App::behavior()->callBehavior('adminPostMiniListHeaderV2', $this->rs, $cols, true);
 
