@@ -32,7 +32,7 @@ use Exception;
 class Manage
 {
     use TraitProcess;
-    
+
     /**
      * Initializes the page.
      */

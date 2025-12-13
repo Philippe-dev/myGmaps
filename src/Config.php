@@ -33,7 +33,7 @@ use Exception;
 class Config
 {
     use TraitProcess;
-    
+
     /**
      * Initializes the page.
      */

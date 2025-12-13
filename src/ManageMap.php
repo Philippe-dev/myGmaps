@@ -47,7 +47,7 @@ use Exception;
 class ManageMap
 {
     use TraitProcess;
-    
+
     public static function init(): bool
     {
         $params = [];

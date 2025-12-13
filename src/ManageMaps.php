@@ -32,7 +32,7 @@ use Exception;
 class ManageMaps
 {
     use TraitProcess;
-    
+
     /**
      * Initializes the page.
      */
@@ -153,7 +153,7 @@ class ManageMaps
         App::backend()->page()->openModule(
             My::name(),
             App::backend()->page()->jsLoad('js/_posts_list.js') .
-            App::backend()->post_filter->js(App::backend()->url()->get('admin.plugin', ['p' => My::id(),'id' => $post_id, 'act' => 'maps'], '&')) .            My::cssLoad('admin.css')
+            App::backend()->post_filter->js(App::backend()->url()->get('admin.plugin', ['p' => My::id(),'id' => $post_id, 'act' => 'maps'], '&')) . My::cssLoad('admin.css')
         );
 
         App::backend()->page_title = __('Add elements');

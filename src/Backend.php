@@ -40,7 +40,7 @@ use Exception;
 class Backend
 {
     use TraitProcess;
-    
+
     public static function init(): bool
     {
         return self::status(My::checkContext(My::BACKEND));
@@ -336,18 +336,18 @@ class Backend
                 (new Label(__('Map:') . ' ' . $form_note))
                     ->class('bold')
                     ->for('post-gmap'),
-                    (new Div())->id('post-gmap')->items([
-                        (new Div())
-                            ->class('map_toolbar')
-                            ->id('map_toolbar')
-                            ->items([
-                                (new Text('span', __('Search:')))->class('search'),
-                                (new Text('span', '&nbsp;'))->class('map_spacer'),
-                                (new Hidden('address'))->class('qx'),
-                                (new Input('geocode'))
-                                    ->type('submit')
-                                    ->value(__('OK')),
-                            ]),
+                (new Div())->id('post-gmap')->items([
+                    (new Div())
+                        ->class('map_toolbar')
+                        ->id('map_toolbar')
+                        ->items([
+                            (new Text('span', __('Search:')))->class('search'),
+                            (new Text('span', '&nbsp;'))->class('map_spacer'),
+                            (new Hidden('address'))->class('qx'),
+                            (new Input('geocode'))
+                                ->type('submit')
+                                ->value(__('OK')),
+                        ]),
                     (new Para())->id('map_canvas')->class('area'),
                     (new Note())
                         ->class(['form-note', 'info', 'maximal', 'mapinfo'])

@@ -155,7 +155,7 @@ class BackendDefaultActions
         $ap->redirect(true);
     }
 
-     /**
+    /**
      * Does a change post status.
      *
      * @param   BackendActions    $ap     The BackendActions instance
@@ -201,7 +201,7 @@ class BackendDefaultActions
      *
      * @throws     Exception
      */
-   public static function doUpdateSelectedPost(BackendActions $ap): void
+    public static function doUpdateSelectedPost(BackendActions $ap): void
     {
         $ids = $ap->getIDs();
         if ($ids === []) {
