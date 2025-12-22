@@ -769,7 +769,7 @@ class ManageMap
             $admin_post_behavior .
             $starting_script .
             $style_script .
-            My::jsLoad('element.map.js') .
+            My::jsLoad('element.map.min.js') .
             App::backend()->page()->jsConfirmClose('entry-form') .
             # --BEHAVIOR-- adminPostHeaders --
             App::behavior()->callBehavior('adminPostHeaders') .
