@@ -1,8 +1,8 @@
 # Cartes
 
-![Static Badge](https://img.shields.io/badge/Release-11.0-b7d7ee)
-![Static Badge](https://img.shields.io/badge/License-AGPL_3.0-a5cc52)
-![Static Badge](https://img.shields.io/badge/Dotclear-2.36-137bbb)
+![Release 11.0](https://img.shields.io/badge/Release-11.0-b7d7ee)
+![License AGPL 3.0](https://img.shields.io/badge/License-AGPL_3.0-a5cc52)
+![Dotclear 2.36](https://img.shields.io/badge/Dotclear-2.36-137bbb)
 
 Ce plugin, basé sur l'API Google Maps, est destiné à ajouter des cartes personnalisées dans vos billets ou pages
 
