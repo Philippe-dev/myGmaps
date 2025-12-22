@@ -418,11 +418,12 @@ dotclear.ready(() => {
     let kmlLayer;
     let custom_kmls;
     let has_custom_kmls;
+    let myKmls;
     function initkmlLayer() {
       kmlLayer = new google.maps.KmlLayer({});
       google.maps.event.addListener(kmlLayer, 'click', (event) => {
         if (document.getElementById("kmls_list").value != '') {
-          const myKmls = [];
+          myKmls = [];
           const kmls_base_url = document.getElementById("kmls_base_url").value;
           const kmls_list = document.getElementById("kmls_list").value;
           const kmls_array = kmls_list.split(',');
