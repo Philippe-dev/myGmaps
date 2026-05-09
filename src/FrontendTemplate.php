@@ -251,8 +251,6 @@ class FrontendTemplate
             $sOutput .= self::getMapElementCircleOptions($aElementOptions);
         } elseif ($sType == 'included kml file' || $sType == 'GeoRSS feed') {
             $sOutput .= self::getMapElementKmlOptions($aElementOptions);
-        } elseif ($sType == 'directions') {
-            $sOutput .= self::getMapElementDirectionsOptions($aElementOptions);
         }
 
         return $sOutput;
@@ -456,76 +454,6 @@ class FrontendTemplate
         $sOutput = <<<EOT
             const layer_{$sId} = new google.maps.KmlLayer("{$sLayer}", {preserveViewport: true});
             layer_{$sId}.setMap(map_{$sMapId});\n
-            EOT;
-
-        return $sOutput;
-    }
-
-    protected static function getMapElementDirectionsOptions(array $aOptions)
-    {
-        self::checkOptions(
-            get_called_class(),
-            array_keys($aOptions),
-            ['map_id', 'element_id', 'stroke_color', 'stroke_opacity', 'stroke_weight', 'origin', 'destination', 'display_direction']
-        );
-        $sMapId            = $aOptions['map_id'];
-        $sId               = $aOptions['element_id'];
-        $sStrokeColor      = $aOptions['stroke_color'];
-        $sStrokeOpacity    = $aOptions['stroke_opacity'];
-        $sStrokeWeight     = $aOptions['stroke_weight'];
-        $sOrigin           = $aOptions['origin'];
-        $sDestination      = $aOptions['destination'];
-        $bDisplayDirection = $aOptions['display_direction'];
-
-        $sOutput = <<<EOT
-            const routePolylineOptions_$sId = {
-                strokeColor: "{$sStrokeColor}",
-                strokeOpacity: parseFloat({$sStrokeOpacity}),
-                strokeWeight: parseFloat({$sStrokeWeight}),
-                zIndex: 1
-            };
-            const routePolyline_$sId = new google.maps.Polyline(routePolylineOptions_$sId);
-            const routePolylinePath_$sId = routePolyline_$sId.getPath();
-            const directionsService_$sId = new google.maps.DirectionsService();
-            const polylineRendererOptions_$sId = {
-                strokeColor: "{$sStrokeColor}",
-                strokeOpacity: parseFloat({$sStrokeOpacity}),
-                strokeWeight: parseFloat({$sStrokeWeight})
-            }
-            const rendererOptions_$sId = {
-                polylineOptions_$sId: polylineRendererOptions_$sId
-            }
-            const directionsDisplay_$sId = new google.maps.DirectionsRenderer(rendererOptions_$sId);
-            const request_$sId = {
-                origin: "{$sOrigin}",
-                destination: "{$sDestination}",
-                travelMode: google.maps.TravelMode.DRIVING
-            };
-            EOT;
-        if ($bDisplayDirection == 'true') {
-            $sOutput .= 'if (document.getElementById("map_box_' . $sMapId . '")) {document.getElementById("map_box_' . $sMapId . '").classList.add("directions");}' . "\n";
-        } else {
-            $sOutput .= 'if (document.getElementById("map_box_' . $sMapId . '")) {document.getElementById("map_box_' . $sMapId . '").classList.add("no-directions")};' . "\n";
-        }
-
-        $sOutput .= <<<EOT
-            directionsService_$sId.route(request_$sId, function(result, status) {
-                if (status == google.maps.DirectionsStatus.OK) {
-                    const routePath = result.routes[0].overview_path;
-                    routePolyline_$sId.setPath(routePath);
-                    directionsDisplay_$sId.setPanel(document.getElementById("panel_{$sMapId}"));
-                    directionsDisplay_$sId.setOptions({options: rendererOptions_$sId});
-                    directionsDisplay_$sId.setDirections(result);
-                    directionsDisplay_$sId.setMap(map_{$sMapId});
-                    routePolyline_$sId.setMap(map_{$sMapId});
-                } else {
-                    alert(status);
-                }
-            });
-            google.maps.event.addListener(routePolyline_$sId, "click", function(event) {
-                const pos = event.latLng;
-                openpolyinfowindow(title_{$sId},content_{$sId},pos);
-            });\n
             EOT;
 
         return $sOutput;

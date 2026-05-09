@@ -43,10 +43,6 @@ a.map-remove {
   min-width: 300px
 }
 
-#infowindow_directions {
-  min-width: 600px
-}
-
 #infowindow_kml li:hover,
 #infowindow_kml li:focus {
   background-color: var(--tabs-border);
@@ -163,11 +159,6 @@ button.add_georss.inactive {
   background-image: url(index.php?pf=myGmaps/css/img/feed-bw.svg);
 }
 
-button.add_directions,
-button.add_directions.inactive {
-  background-image: url(index.php?pf=myGmaps/css/img/directions-bw.svg);
-}
-
 button.delete_map {
   background-image: url(index.php?pf=myGmaps/css/img/clean.svg);
   position: absolute;
@@ -209,10 +200,6 @@ button.delete_map:disabled {
   button.add_georss.active {
     background-image: url(index.php?pf=myGmaps/css/img/feed.svg);
   }
-
-  button.add_directions.active {
-    background-image: url(index.php?pf=myGmaps/css/img/directions.svg);
-  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -243,10 +230,6 @@ button.delete_map:disabled {
   button.add_georss.active {
     background-image: url(index.php?pf=myGmaps/css/img/feed-dark.svg);
   }
-
-  button.add_directions.active {
-    background-image: url(index.php?pf=myGmaps/css/img/directions-dark.svg);
-  }
 }
 
 .map_toolbar .qx {
@@ -260,12 +243,6 @@ button.delete_map:disabled {
 
 .map_toolbar .qx:focus {
   border: 1px solid var(--input-focus);
-}
-
-#directions_start,
-#directions_end {
-  background: var(--body-background) url(index.php?pf=myGmaps/css/img/search.png) no-repeat 4px center !important;
-  text-indent: 18px;
 }
 
 #credit-control {

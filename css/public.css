@@ -11,30 +11,6 @@
 	width: 0% !important
 }
 
-.directions .map_canvas {
-	width: 65% !important;
-	display: inline-block;
-	vertical-align: top
-}
-
-.directions .panel {
-	width: 34% !important;
-	height: 600px;
-	overflow: auto;
-	margin: 0;
-	display: inline-block;
-	vertical-align: top;
-	font-size: 12px
-}
-
-.no-directions .map_canvas {
-	width: 100% !important
-}
-
-.no-directions .panel {
-	display: none
-}
-
 .panel table {
 	margin: 0;
 	padding: 0;

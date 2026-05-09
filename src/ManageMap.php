@@ -614,9 +614,10 @@ class ManageMap
             return;
         }
 
-        $myGmaps_center = My::settings()->myGmaps_center;
-        $myGmaps_zoom   = My::settings()->myGmaps_zoom;
-        $myGmaps_type   = My::settings()->myGmaps_type;
+        $settings       = My::settings();
+        $myGmaps_center = $settings->myGmaps_center;
+        $myGmaps_zoom   = $settings->myGmaps_zoom;
+        $myGmaps_type   = $settings->myGmaps_type;
 
         App::backend()->default_tab = 'edit-entry';
         if (!App::backend()->can_edit_post) {
@@ -721,7 +722,7 @@ class ManageMap
 
         $starting_script = '<script>' . "\n" .
             '(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({' . "\n" .
-                'key: "' . My::settings()->myGmaps_API_key . '",' . "\n" .
+                'key: "' . $settings->myGmaps_API_key . '",' . "\n" .
                 'v: "weekly",' . "\n" .
             '});' . "\n" .
         '</script>' . "\n" ;
@@ -755,9 +756,6 @@ class ManageMap
         'const kml_url_msg = \'' . __('File URL:') . '\';' . "\n" .
         'const geoRss_url_msg = \'' . __('Feed URL:') . '\';' . "\n" .
         'const custom_kmls_msg = \'' . __('Custom Kml files') . '\';' . "\n" .
-        'const directions_start_msg = \'' . __('Start:') . '\';' . "\n" .
-        'const directions_end_msg = \'' . __('End:') . '\';' . "\n" .
-        'const directions_show_msg = \'' . __('Display directions panel in public map') . '\';' . "\n" .
         '//]]>' . "\n" .
         '</script>';
 
@@ -769,7 +767,7 @@ class ManageMap
             $admin_post_behavior .
             $starting_script .
             $style_script .
-            My::jsLoad('element.map.min.js') .
+            My::jsLoad('element.map.js') .
             App::backend()->page()->jsConfirmClose('entry-form') .
             # --BEHAVIOR-- adminPostHeaders --
             App::behavior()->callBehavior('adminPostHeaders') .
@@ -1054,11 +1052,6 @@ class ManageMap
                                 ->id('add_georss')
                                 ->type('button')
                                 ->title(__('GeoRSS Feed')),
-                            (new Btn('add_directions'))
-                                ->class(['add_directions'])
-                                ->id('add_directions')
-                                ->type('button')
-                                ->title(__('Directions')),
                             (new Btn('delete_map'))
                                 ->class(['delete_map'])
                                 ->id('delete_map')

@@ -17,6 +17,7 @@ namespace Dotclear\Plugin\myGmaps;
 use ArrayObject;
 use Dotclear\App;
 use Dotclear\Core\Backend\Favorites;
+use Dotclear\Core\Backend\Menus;
 use Dotclear\Core\Backend\UserPref;
 use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Helper\Html\Form\Capture;
@@ -52,6 +53,8 @@ class Backend
             return false;
         }
 
+        $settings = My::settings();
+
         App::behavior()->addBehaviors([
             'adminDashboardFavoritesV2' => function (Favorites $favs) {
                 $favs->register(My::id(), [
@@ -66,26 +69,26 @@ class Backend
             },
         ]);
 
-        My::addBackendMenuItem(App::backend()->menus()::MENU_BLOG);
+        My::addBackendMenuItem(Menus::MENU_BLOG);
 
-        if (My::settings()->myGmaps_enabled) {
-            App::behavior()->addBehavior('adminPostListValueV2', [self::class, 'adminEntryListValue']);
-            App::behavior()->addBehavior('adminPagesListValueV2', [self::class, 'adminEntryListValue']);
+        if ($settings->myGmaps_enabled) {
+            App::behavior()->addBehavior('adminPostListValueV2', self::adminEntryListValue(...));
+            App::behavior()->addBehavior('adminPagesListValueV2', self::adminEntryListValue(...));
         }
 
-        App::behavior()->addBehavior('adminDashboardFavsIconV2', [self::class, 'dashboardFavsIcon']);
+        App::behavior()->addBehavior('adminDashboardFavsIconV2', self::dashboardFavsIcon(...));
 
-        App::behavior()->addBehavior('adminPageHelpBlock', [self::class, 'adminPageHelpBlock']);
-        App::behavior()->addBehavior('adminPageHTTPHeaderCSP', [self::class, 'adminPageHTTPHeaderCSP']);
+        App::behavior()->addBehavior('adminPageHelpBlock', self::adminPageHelpBlock(...));
+        App::behavior()->addBehavior('adminPageHTTPHeaderCSP', self::adminPageHTTPHeaderCSP(...));
 
-        App::behavior()->addBehavior('adminPostForm', [self::class,  'adminPostForm']);
-        App::behavior()->addBehavior('adminPageForm', [self::class, 'adminPostForm']);
-        App::behavior()->addBehavior('adminBeforePostUpdate', [self::class, 'adminBeforePostUpdate']);
-        App::behavior()->addBehavior('adminBeforePageUpdate', [self::class, 'adminBeforePostUpdate']);
+        App::behavior()->addBehavior('adminPostForm', self::adminPostForm(...));
+        App::behavior()->addBehavior('adminPageForm', self::adminPostForm(...));
+        App::behavior()->addBehavior('adminBeforePostUpdate', self::adminBeforePostUpdate(...));
+        App::behavior()->addBehavior('adminBeforePageUpdate', self::adminBeforePostUpdate(...));
 
-        App::behavior()->addBehavior('adminPostFilterV2', [self::class,  'adminPostFilter']);
-        App::behavior()->addBehavior('adminPostHeaders', [self::class,  'postHeaders']);
-        App::behavior()->addBehavior('adminPageHeaders', [self::class,  'postHeaders']);
+        App::behavior()->addBehavior('adminPostFilterV2', self::adminPostFilter(...));
+        App::behavior()->addBehavior('adminPostHeaders', self::postHeaders(...));
+        App::behavior()->addBehavior('adminPageHeaders', self::postHeaders(...));
 
         (isset($_GET['p']) && $_GET['p'] == 'pages') ? $type = 'page' : $type = 'post';
 
@@ -219,7 +222,9 @@ class Backend
     {
         $postTypes = ['post', 'page'];
 
-        if (!My::settings()->myGmaps_enabled) {
+        $settings = My::settings();
+
+        if (!$settings->myGmaps_enabled) {
             return;
         }
         if (is_null($post) || !in_array($post->post_type, $postTypes)) {
@@ -261,9 +266,9 @@ class Backend
             $myGmaps_zoom   = $map_options[2];
             $myGmaps_type   = $map_options[3];
         } else {
-            $myGmaps_center = My::settings()->myGmaps_center;
-            $myGmaps_zoom   = My::settings()->myGmaps_zoom;
-            $myGmaps_type   = My::settings()->myGmaps_type;
+            $myGmaps_center = $settings->myGmaps_center;
+            $myGmaps_zoom   = $settings->myGmaps_zoom;
+            $myGmaps_type   = $settings->myGmaps_type;
         }
 
         $style_script = '';
@@ -589,18 +594,6 @@ class Backend
                     $aElementOptions['layer'] = $layer;
 
                     $sElementsTemplate .= FrontendTemplate::getMapElementOptions($aElementOptions);
-                } elseif ($type == 'directions') {
-                    $has_poly = true;
-                    $parts    = explode('|', $list[0]);
-
-                    $aElementOptions['origin']            = $parts[0];
-                    $aElementOptions['destination']       = $parts[1];
-                    $aElementOptions['stroke_color']      = $parts[4];
-                    $aElementOptions['stroke_opacity']    = $parts[3];
-                    $aElementOptions['stroke_weight']     = $parts[2];
-                    $aElementOptions['display_direction'] = (isset($parts[5]) && $parts[5] == 'true' ? 'true' : 'false');
-
-                    $sElementsTemplate .= FrontendTemplate::getMapElementOptions($aElementOptions);
                 }
 
                 $script .= $sElementsTemplate;
@@ -710,7 +703,6 @@ class Backend
                 __('circle')            => 'circle',
                 __('included kml file') => 'included kml file',
                 __('GeoRSS feed')       => 'GeoRSS feed',
-                __('directions')        => 'directions',
             ];
 
             $filters->append((new Filter('element_type'))
@@ -767,7 +759,7 @@ class Backend
 
         $rs = App::blog()->getPosts($my_params);
 
-        if (!My::settings()->myGmaps_enabled) {
+        if (!$settings->myGmaps_enabled) {
             return;
         }
 
@@ -786,7 +778,9 @@ class Backend
 
     public static function postHeaders()
     {
-        if (!My::settings()->myGmaps_enabled) {
+        $settings = My::settings();
+
+        if (!$settings->myGmaps_enabled) {
             return;
         }
 
@@ -797,7 +791,7 @@ class Backend
         return
         '<script>' . "\n" .
             '(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({' . "\n" .
-                'key: "' . My::settings()->myGmaps_API_key . '",' . "\n" .
+                'key: "' . $settings->myGmaps_API_key . '",' . "\n" .
                 'v: "weekly",' . "\n" .
             '});' . "\n" .
         '</script>' . "\n" .

@@ -34,13 +34,13 @@ class Frontend
             return false;
         }
 
-        App::behavior()->addBehavior('publicEntryAfterContent', [self::class, 'publicMapContent']);
-        App::behavior()->addBehavior('publicPageAfterContent', [self::class, 'publicMapContent']);
-        App::behavior()->addBehavior('publicHeadContent', [self::class, 'publicHeadContent']);
+        $settings = My::settings();
 
-        App::frontend()->template()->addValue(My::id(), [self::class, 'publicTagMapContent']);
+        App::behavior()->addBehavior('publicEntryAfterContent', self::publicMapContent(...));
+        App::behavior()->addBehavior('publicPageAfterContent', self::publicMapContent(...));
+        App::behavior()->addBehavior('publicHeadContent', self::publicHeadContent(...));
 
-        App::lang()->set(dirname(__FILE__) . '/locales/' . App::lang()->getLang() . '/main');
+        App::frontend()->template()->addValue(My::id(), self::publicTagMapContent(...));
 
         return true;
     }
@@ -129,14 +129,16 @@ class Frontend
     {
         // Settings
 
-        if (!My::settings()->myGmaps_enabled) {
+        $settings = My::settings();
+
+        if (!$settings->myGmaps_enabled) {
             return;
         }
 
         echo My::cssLoad('public.css') .
         '<script>' . "\n" .
             '(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({' . "\n" .
-                'key: "' . My::settings()->myGmaps_API_key . '",' . "\n" .
+                'key: "' . $settings->myGmaps_API_key . '",' . "\n" .
                 'v: "weekly",' . "\n" .
             '});' . "\n" .
         '</script>' . "\n" ;
@@ -148,7 +150,9 @@ class Frontend
 
         $postTypes = ['post', 'page'];
 
-        if (My::settings()->myGmaps_enabled) {
+        $settings = My::settings();
+
+        if ($settings->myGmaps_enabled) {
             // Appel depuis un billet, ou depuis une balise de template
 
             $sTemplate     = '';
@@ -325,18 +329,6 @@ class Frontend
                         $layer = Html::clean($map_element['post_excerpt_xhtml']);
 
                         $aElementOptions['layer'] = $layer;
-
-                        $sElementsTemplate .= FrontendTemplate::getMapElementOptions($aElementOptions);
-                    } elseif ($type == 'directions') {
-                        $has_poly = true;
-                        $parts    = explode('|', $list[0]);
-
-                        $aElementOptions['origin']            = $parts[0];
-                        $aElementOptions['destination']       = $parts[1];
-                        $aElementOptions['stroke_color']      = $parts[4];
-                        $aElementOptions['stroke_opacity']    = $parts[3];
-                        $aElementOptions['stroke_weight']     = $parts[2];
-                        $aElementOptions['display_direction'] = (isset($parts[5]) && $parts[5] == 'true' ? 'true' : 'false');
 
                         $sElementsTemplate .= FrontendTemplate::getMapElementOptions($aElementOptions);
                     }

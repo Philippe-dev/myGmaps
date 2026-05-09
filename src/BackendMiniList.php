@@ -326,11 +326,6 @@ class BackendMiniList extends Listing
                 $info['src']   = App::backend()->page()->getPF(My::id()) . '/css/img/feed' . ($mode === 'dark' ? '-dark' : '') . '.svg';
 
                 break;
-            case 'directions':
-                $info['title'] = __('Directions');
-                $info['src']   = App::backend()->page()->getPF(My::id()) . '/css/img/directions' . ($mode === 'dark' ? '-dark' : '') . '.svg';
-
-                break;
             default:
         }
 

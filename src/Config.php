@@ -52,21 +52,24 @@ class Config
         if (!self::status()) {
             return false;
         }
+
+        $settings = My::settings();
+
         // Save activation
 
-        $myGmaps_enabled = My::settings()->myGmaps_enabled;
-        $myGmaps_API_key = My::settings()->myGmaps_API_key;
-        $myGmaps_center  = My::settings()->myGmaps_center;
-        $myGmaps_zoom    = My::settings()->myGmaps_zoom;
-        $myGmaps_type    = My::settings()->myGmaps_type;
+        $myGmaps_enabled = $settings->myGmaps_enabled;
+        $myGmaps_API_key = $settings->myGmaps_API_key;
+        $myGmaps_center  = $settings->myGmaps_center;
+        $myGmaps_zoom    = $settings->myGmaps_zoom;
+        $myGmaps_type    = $settings->myGmaps_type;
 
         if (!empty($_POST['save'])) {
             try {
-                My::settings()->put('myGmaps_enabled', !empty($_POST['myGmaps_enabled']));
-                My::settings()->put('myGmaps_API_key', $_POST['myGmaps_API_key']);
-                My::settings()->put('myGmaps_center', $_POST['myGmaps_center']);
-                My::settings()->put('myGmaps_zoom', $_POST['myGmaps_zoom']);
-                My::settings()->put('myGmaps_type', $_POST['myGmaps_type']);
+                $settings->put('myGmaps_enabled', !empty($_POST['myGmaps_enabled']), App::blogWorkspace()::NS_BOOL, 'Enable myGmaps plugin');
+                $settings->put('myGmaps_API_key', $_POST['myGmaps_API_key'], App::blogWorkspace()::NS_STRING, 'Google Maps Javascript browser API key');
+                $settings->put('myGmaps_center', $_POST['myGmaps_center'], App::blogWorkspace()::NS_STRING, 'Default maps center');
+                $settings->put('myGmaps_zoom', $_POST['myGmaps_zoom'], App::blogWorkspace()::NS_INT, 'Default maps zoom level');
+                $settings->put('myGmaps_type', $_POST['myGmaps_type'], App::blogWorkspace()::NS_STRING, 'Default maps type');
 
                 App::backend()->notices()->addSuccessNotice(__('Configuration has been updated.'));
 
@@ -88,9 +91,7 @@ class Config
             return;
         }
 
-        $myGmaps_center = My::settings()->myGmaps_center;
-        $myGmaps_zoom   = My::settings()->myGmaps_zoom;
-        $myGmaps_type   = My::settings()->myGmaps_type;
+        $settings = My::settings();
 
         // Custom map styles
 
@@ -117,7 +118,7 @@ class Config
 
         $starting_script = '<script>' . "\n" .
             '(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({' . "\n" .
-                'key: "' . My::settings()->myGmaps_API_key . '",' . "\n" .
+                'key: "' . $settings->myGmaps_API_key . '",' . "\n" .
                 'v: "weekly",' . "\n" .
             '});' . "\n" .
         '</script>' . "\n" ;
@@ -150,7 +151,7 @@ class Config
         (new Div())->items([
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Activation'))))->fields([
                 (new Para())->items([
-                    (new Checkbox('myGmaps_enabled', (bool) My::settings()->myGmaps_enabled)),
+                    (new Checkbox('myGmaps_enabled', (bool) $settings->myGmaps_enabled)),
                     (new Label(__('Enable extension for this blog'), Label::OUTSIDE_LABEL_AFTER))->for('myGmaps_enabled')->class('classic'),
                 ]),
             ]),
@@ -160,7 +161,7 @@ class Config
                         ->class('classic')
                         ->size(50)
                         ->maxlength(255)
-                        ->value(My::settings()->myGmaps_API_key)
+                        ->value($settings->myGmaps_API_key)
                         ->required(true)
                         ->placeholder(__('API key'))
                         ->label((new Label(
@@ -168,8 +169,8 @@ class Config
                             Label::OUTSIDE_TEXT_BEFORE
                         ))
                         ->id('myGmaps_API_key')->class('required')->title(__('Required field'))),
-                    (My::settings()->myGmaps_API_key == 'AIzaSyCUgB8ZVQD88-T4nSgDlgVtH5fm0XcQAi8' ?
-                        (new Text('span', __('You are currently using a <em>shared</em> API key. To avoid map display restrictions on your blog, use your own API key.')))
+                    ($settings->myGmaps_API_key == 'AIzaSyAfIFXVaGwrCrm0Oj2-LGhbqnMoEGtbWC8' ?
+                        (new Text('span', __('You are currently using a <em>demo</em> API key. To avoid map display restrictions on your blog, use your own API key.')))
                             ->class('warn') :
                         (new None())),
                 ]),
@@ -195,13 +196,13 @@ class Config
                 (new Para())->items([
                     (new Input('myGmaps_center'))
                         ->type('hidden')
-                        ->value(My::settings()->myGmaps_center),
+                        ->value($settings->myGmaps_center),
                     (new Input('myGmaps_zoom'))
                         ->type('hidden')
-                        ->value(My::settings()->myGmaps_zoom),
+                        ->value($settings->myGmaps_zoom),
                     (new Input('myGmaps_type'))
                         ->type('hidden')
-                        ->value(My::settings()->myGmaps_type),
+                        ->value($settings->myGmaps_type),
                     (new Input('map_styles_list'))
                         ->type('hidden')
                         ->value($map_styles_list),

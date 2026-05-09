@@ -1,6 +1,6 @@
 # Cartes
 
-![Release 11.0](https://img.shields.io/badge/Release-11.0-b7d7ee)
+![Release 12.0](https://img.shields.io/badge/Release-12.0-b7d7ee)
 ![License AGPL 3.0](https://img.shields.io/badge/License-AGPL_3.0-a5cc52)
 ![Dotclear 2.36](https://img.shields.io/badge/Dotclear-2.36-137bbb)
 
@@ -14,7 +14,6 @@ Ces éléments, tous éditables, peuvent être
 - des lignes, des polygones, des rectangles ou des cercles de couleur, opacité et épaisseur variées
 - des fichier kml distants ou provenant de votre médiathèque
 - des flux GeoRSS comme par exemple ceux de Flickr
-- des itinéraires routiers d'un point à un autre
 
 Il est ensuite possible d'associer une carte à un billet ou à une page, et d'y inclure un nombre quelconque de ces éléments. Il est également possible d'insérer une carte n'importe où dans le blog grâce à une balise de template.
 
@@ -22,4 +21,4 @@ Le plugin permet d'utiliser OpenStreetMaps comme fournisseur de cartes, ou de pe
 
 Les recherches d'adresses bénéficient de l'auto-complétion et du géo-codage.
 
-Le plugin nécessite une clé d'API pour le domaine où il est utilisé. Il est toutefois fourni avec une clé partagée pour les tests.
+Le plugin nécessite une clé d'API pour le domaine où il est utilisé. Il est toutefois fourni avec une clé de démonstration pour les tests.

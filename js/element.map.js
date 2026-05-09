@@ -478,80 +478,6 @@ dotclear.ready(() => {
     }
     initgeoRSSLayer();
 
-    //initialize directions
-    let directionsService;
-    let directionsDisplay;
-    let routePolyline;
-    let routePolylinePath;
-    function initDirections() {
-      directionsService = new google.maps.DirectionsService();
-
-      const polylineRendererOptions = {
-        strokeColor: '#555',
-        strokeOpacity: 0.8,
-        strokeWeight: 3
-      }
-      const rendererOptions = {
-        polylineOptions: polylineRendererOptions
-      }
-      directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
-
-      const routePolylineOptions = {
-        strokeColor: '#555',
-        strokeOpacity: 0,
-        strokeWeight: 20,
-        zIndex: 1
-      };
-      routePolyline = new google.maps.Polyline(routePolylineOptions);
-      routePolylinePath = routePolyline.getPath();
-
-      google.maps.event.addListener(polylinePath, 'set_at', debounce(() => {
-        updatePolyline();
-      }, 250));
-
-      google.maps.event.addListener(routePolyline, 'click', (event) => {
-        const parts = element_values.split("|");
-        const start = parts[0];
-        const end = parts[1];
-        const weight = parts[2];
-        const opacity = parts[3];
-        const color = parts[4];
-        const show = parts[5];
-        const state = show == 'true' ? 'checked = "checked"' : '';
-
-        const infowindowDirections =
-          '<div id="infowindow_directions" style="cursor: pointer">' +
-          '<div class="two-cols clearfix">' +
-          '<div class="col70">' +
-          '<p><label for="directions_start">' + directions_start_msg + '</label><input type="text" id="directions_start" size="40" value="' + start + '"></p>' +
-          '<p><label for="directions_end">' + directions_end_msg + '</label><input type="text" id="directions_end" size="40" value="' + end + '"></p>' +
-          '<p><label for="directions_show"><input type="checkbox" id="directions_show" ' + state + '>' + directions_show_msg + '</label></p>' +
-          '</div>' +
-          '<div class="col30">' +
-          '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + color + '">' +
-          '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + opacity + '">' +
-          '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + weight + '">' +
-          '</div>' +
-          '</div>' +
-          '<p><input type="submit" id="save" value="OK">' +
-          '</div>';
-
-        infowindow.setPosition(event.latLng);
-        infowindow.setContent(infowindowDirections);
-        infowindow.open(map);
-
-        // Initialize autocomplete for directions_start and directions_end
-        google.maps.event.addListenerOnce(infowindow, 'domready', () => {
-          const startInput = document.getElementById('directions_start');
-          const endInput = document.getElementById('directions_end');
-          new google.maps.places.Autocomplete(startInput);
-          new google.maps.places.Autocomplete(endInput);
-        });
-
-      });
-    }
-    initDirections();
-
     // Autocomplete
     const geocoder = new google.maps.Geocoder();
     const address = document.getElementById('address');
@@ -634,9 +560,6 @@ dotclear.ready(() => {
           addCircle(event.latLng);
           document.getElementById("delete_map").disabled = false;
         }
-      } else if (action == 'add_directions' && document.getElementById('post_excerpt').value == '') {
-        addDirections(event.latLng);
-        document.getElementById("delete_map").disabled = false;
       }
     });
 
@@ -867,59 +790,6 @@ dotclear.ready(() => {
       }
     });
 
-    document.addEventListener('click', (event) => {
-
-      if (event.target.matches('#infowindow_directions #save')) {
-        const start = document.getElementById('directions_start').value;
-        const end = document.getElementById('directions_end').value;
-        const show = document.getElementById('directions_show').checked;
-        const color = document.getElementById('stroke_color').value;
-        const opacity = document.getElementById('stroke_opacity').value;
-        const weight = document.getElementById('stroke_weight').value;
-
-        const polylineRendererOptions = {
-          strokeColor: color,
-          strokeOpacity: opacity,
-          strokeWeight: weight
-        };
-
-        const rendererOptions = {
-          polylineOptions: polylineRendererOptions
-        };
-
-        const request = {
-          origin: start,
-          destination: end,
-          travelMode: google.maps.TravelMode.DRIVING
-        };
-
-        directionsService.route(request, (result, status) => {
-          if (status == google.maps.DirectionsStatus.OK) {
-            const routePath = result.routes[0].overview_path;
-            routePolyline.setPath(routePath);
-            directionsDisplay.setOptions({
-              options: rendererOptions
-            });
-            directionsDisplay.setDirections(result);
-            directionsDisplay.setMap(map);
-          }
-
-        });
-
-        // Save values and type
-
-        element_values = `${start}|${end}|${weight}` +
-          "|" + opacity + "|" + color + "|" + show;
-
-        document.getElementById('element_type').value = 'directions';
-        document.getElementById('post_excerpt').value = element_values;
-
-        directionsDisplay.setMap(map);
-        routePolyline.setMap(map);
-        infowindow.close();
-      }
-    });
-
     // PLACE EXISTING ELEMENTS
 
     let element_values = document.getElementById('post_excerpt').value;
@@ -1112,48 +982,6 @@ dotclear.ready(() => {
       document.getElementById('add_georss').classList.add("active");
       geoRssLayer.setMap(map);
 
-      // Place existing directions if any
-
-    } else if (element_type == 'directions') {
-      const parts = element_values.split("|");
-
-      const start = parts[0];
-      const end = parts[1];
-      const weight = parts[2];
-      const opacity = parts[3];
-      const color = parts[4];
-
-      const polylineRendererOptions = {
-        strokeColor: color,
-        strokeOpacity: opacity,
-        strokeWeight: weight
-      };
-
-      const rendererOptions = {
-        polylineOptions: polylineRendererOptions
-      };
-
-      const request = {
-        origin: start,
-        destination: end,
-        travelMode: google.maps.TravelMode.DRIVING
-      };
-
-      directionsService.route(request, (result, status) => {
-        if (status == google.maps.DirectionsStatus.OK) {
-          const routePath = result.routes[0].overview_path;
-          routePolyline.setPath(routePath);
-          directionsDisplay.setOptions({
-            options: rendererOptions
-          });
-          directionsDisplay.setDirections(result);
-          directionsDisplay.setMap(map);
-
-        }
-      });
-
-      document.getElementById('add_directions').classList.add("active");
-      routePolyline.setMap(map);
     }
 
     // ADD NEW OBJECT OR VERTEX POINT
@@ -1320,44 +1148,6 @@ dotclear.ready(() => {
       infowindow.open(map);
     }
 
-    // Add directions
-
-    function addDirections(location) {
-      const color = '#555';
-      const opacity = 0.8;
-      const weight = 3;
-
-      const infowindowDirections =
-        '<div id="infowindow_directions" style="cursor: pointer">' +
-        '<div class="two-cols clearfix">' +
-        '<div class="col70">' +
-        '<p><label for="directions_start">' + directions_start_msg + '</label><input type="text" id="directions_start" size="40" value=""></p>' +
-        '<p><label for="directions_end">' + directions_end_msg + '</label><input type="text" id="directions_end" size="40" value=""></p>' +
-        '<p><label for="directions_show"><input type="checkbox" id="directions_show">' + directions_show_msg + '</label></p>' +
-        '</div>' +
-        '<div class="col30">' +
-        '<p><label for="stroke_color">' + stroke_color_msg + '</label><input type="text" id="stroke_color" size="10" class="colorpicker" value="' + color + '"></p>' +
-        '<p><label for="stroke_opacity">' + stroke_opacity_msg + '</label><input type="text" id="stroke_opacity" size="10" value="' + opacity + '"></p>' +
-        '<p><label for="stroke_weight">' + stroke_weight_msg + '</label><input type="text" id="stroke_weight" size="10" value="' + weight + '"></p>' +
-        '</div>' +
-        '</div>' +
-        '<p><input type="submit" id="save" value="OK">' +
-        '</div>';
-
-      infowindow.setPosition(location);
-      infowindow.setContent(infowindowDirections);
-      infowindow.open(map);
-
-      // Initialize autocomplete for directions_start and directions_end
-      google.maps.event.addListenerOnce(infowindow, 'domready', () => {
-        const startInput = document.getElementById('directions_start');
-        const endInput = document.getElementById('directions_end');
-        new google.maps.places.Autocomplete(startInput);
-        new google.maps.places.Autocomplete(endInput);
-      });
-    }
-
-
     // DELETE EXISTING ELEMENT
 
     function deleteMap() {
@@ -1399,10 +1189,6 @@ dotclear.ready(() => {
       geoRssLayer.setOptions({});
       geoRssLayer.setMap(null);
       initgeoRSSLayer();
-
-      routePolyline.setMap(null);
-      directionsDisplay.setMap(null);
-      initDirections();
 
       document.getElementById('element_type').value = '';
       document.getElementById('post_excerpt').value = '';
