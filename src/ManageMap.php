@@ -1168,14 +1168,17 @@ class ManageMap
             $buttons[] = (new Hidden('map_styles_list', $map_styles_list));
             $buttons[] = (new Hidden('map_styles_base_url', $map_styles_base_url));
 
-            $format = (new Span(' &rsaquo; ' . App::formater()->getFormaterName(App::backend()->post_format)));
-            $title  = (App::backend()->post_id ? __('Edit map element') : __('New element')) . $format->render();
+            $title = (App::backend()->post_id ? __('Edit map element') : __('New element'));
 
             // Everything is ready, time to display this form
             echo (new Div())
                 ->class('multi-part')
                 ->title($title)
                 ->id('edit-entry')
+                ->data([
+                    'page-tabs-info'  => ' &rsaquo; ' . App::formater()->getFormaterName(App::backend()->post_format),
+                    'page-tabs-class' => 'edit-format-' . App::backend()->post_format,
+                ])
                 ->items([
                     (new Form('entry-form'))
                         ->method('post')
