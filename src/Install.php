@@ -38,7 +38,7 @@ class Install
         $settings->put('myGmaps_center', '43.0395797336425, 6.126280043989323', App::blogWorkspace()::NS_STRING, 'Default maps center', false, true);
         $settings->put('myGmaps_zoom', 12, App::blogWorkspace()::NS_INT, 'Default maps zoom level', false, true);
         $settings->put('myGmaps_type', 'roadmap', App::blogWorkspace()::NS_STRING, 'Default maps type', false, true);
-        $settings->put('myGmaps_API_key', 'AIzaSyAfIFXVaGwrCrm0Oj2-LGhbqnMoEGtbWC8', App::blogWorkspace()::NS_STRING, 'Google Maps demo API key', false, true);
+        $settings->put('myGmaps_API_key', 'AIzaSyCJ3xIL1bSq91S0JGYD1TqrS4EkwcvHj9I', App::blogWorkspace()::NS_STRING, 'Google Maps demo API key', false, true);
 
         return true;
     }

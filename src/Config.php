@@ -169,7 +169,7 @@ class Config
                             Label::OUTSIDE_TEXT_BEFORE
                         ))
                         ->id('myGmaps_API_key')->class('required')->title(__('Required field'))),
-                    ($settings->myGmaps_API_key == 'AIzaSyAfIFXVaGwrCrm0Oj2-LGhbqnMoEGtbWC8' ?
+                    ($settings->myGmaps_API_key !== 'AIzaSyCJ3xIL1bSq91S0JGYD1TqrS4EkwcvHj9I' ?
                         (new Text('span', __('You are currently using a <em>demo</em> API key. To avoid map display restrictions on your blog, use your own API key.')))
                             ->class('warn') :
                         (new None())),
