@@ -759,6 +759,8 @@ class Backend
 
         $rs = App::blog()->getPosts($my_params);
 
+        $settings = My::settings();
+
         if (!$settings->myGmaps_enabled) {
             return;
         }
