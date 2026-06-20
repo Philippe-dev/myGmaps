@@ -145,7 +145,7 @@ class ManageMaps
             $params['exclude_post_id'] = $excluded;
             App::backend()->posts      = App::blog()->getPosts($params);
             App::backend()->counter    = App::blog()->getPosts($params, true);
-            App::backend()->post_list  = new BackendList(App::backend()->posts, App::backend()->counter->f(0));
+            App::backend()->post_list  = new BackendList(App::backend()->posts, App::backend()->counter->cardinal());
         } catch (Exception $e) {
             App::error()->add($e->getMessage());
         }

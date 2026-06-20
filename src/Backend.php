@@ -408,7 +408,7 @@ class Backend
                 $params['post_type'] = 'map';
                 $posts               = App::blog()->getPosts($params);
                 $counter             = App::blog()->getPosts($params, true);
-                $post_list           = new BackendMiniList($posts, $counter->f(0));
+                $post_list           = new BackendMiniList($posts, $counter->cardinal());
             } catch (Exception $e) {
                 App::error()->add($e->getMessage());
             }
@@ -680,7 +680,7 @@ class Backend
                 }
                 $combo[
                     str_repeat('&nbsp;', ($categories->level - 1) * 4) .
-                    Html::escapeHTML($categories->cat_title) . ' (' . App::backend()->counter->f(0) . ')'
+                    Html::escapeHTML($categories->cat_title) . ' (' . App::backend()->counter->cardinal() . ')'
                 ] = $categories->cat_id;
             }
 
